@@ -9,6 +9,7 @@ def sginup(request):
         form = SginupForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            # template에서 넘어온 인자들을 모두 합쳐 주소필드에 저장한다.
             return redirect('sginup')
     else:
         form = SginupForm()

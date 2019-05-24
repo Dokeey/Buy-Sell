@@ -20,7 +20,7 @@ class User(AbstractUser):
     phone = models.PositiveIntegerField()
     address = models.CharField(max_length=100)
     account_num = models.PositiveIntegerField()
-    # created_at = models.DateTimeField(auto_now_add=True)
-    # updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     object = UserManager()

@@ -21,6 +21,7 @@ class SginupForm(UserCreationForm):
         return value
     '''
 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         #self.fields['username'].validators = [validate_email]
@@ -41,4 +42,7 @@ class SginupForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
-        fields = UserCreationForm.Meta.fields
+        fields = UserCreationForm.Meta.fields + ('phone', 'nic_name', 'address', 'account_num')
+        widgets = {
+            'address': forms.TextInput(attrs={'readonly': True}),
+        }

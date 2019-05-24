@@ -1,20 +1,6 @@
-<input type="text" id="sample4_postcode" onclick="sample4_execDaumPostcode()" placeholder="우편번호" readonly="readonly">
-<input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" ><br>
-<input type="text" id="sample4_roadAddress" placeholder="도로명주소" readonly="readonly">
-<input type="text" id="sample4_jibunAddress" placeholder="지번주소" readonly="readonly">
-<span id="guide" style="color:#999;display:none"></span>
-<input type="text" id="sample4_detailAddress" placeholder="상세주소">
-<input type="text" id="sample4_extraAddress" placeholder="참고항목">
+{% extends "accounts/layout.html" %}
 
-
-<form action="" method="POST">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit" value="가입하기">
-</form>
-
+{% block head %}
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
     //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
@@ -45,7 +31,6 @@
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 document.getElementById('sample4_postcode').value = data.zonecode;
                 document.getElementById("sample4_roadAddress").value = roadAddr;
-                document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
 
                 // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
                 if(roadAddr !== ''){
@@ -69,7 +54,37 @@
                     guideTextBox.innerHTML = '';
                     guideTextBox.style.display = 'none';
                 }
+
+                document.getElementById("{{ form.address.id_for_label }}").value = data.zonecode+ ' ' + roadAddr + ' ' + extraRoadAddr;
             }
         }).open();
     }
 </script>
+{% endblock %}
+
+{% block content %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <table>
+        <th>
+        <tr><td>{{ form.username.label }}</td><td>{{ form.username }} <br/></td></tr>
+        <tr><td>{{ form.password1.label }}</td> <td>{{ form.password1 }}<br/></td> </tr>
+        <tr><td>{{ form.password2.label }}</td> <td>{{ form.password2 }}<br/></td></tr>
+        <tr><td>{{ form.nic_name.label }}</td> <td>{{ form.nic_name }}<br/></td></tr>
+        <tr><td>{{ form.phone.label }}</td> <td>{{ form.phone }}<br/></td></tr>
+        <tr><td>{{ form.account_num.label }}</td> <td>{{ form.account_num }}<br/></td></tr>
+        <tr><td>
+        {{ form.address.label }}</td><td>
+            <input type="text" id="sample4_postcode" onclick="sample4_execDaumPostcode()" placeholder="우편번호" readonly="readonly">
+            <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" ><br>
+            <input type="text" id="sample4_roadAddress" placeholder="도로명주소" readonly="readonly">
+            <span id="guide" style="color:#999;display:none"></span>
+            <input type="text" id="sample4_detailAddress" placeholder="상세주소">
+            <input type="text" id="sample4_extraAddress" placeholder="참고항목"><br>
+            {{ form.address }} </td></tr></th>
+    </table>
+    <input type="submit" value="가입하기">
+</form>
+
+{% endblock %}
