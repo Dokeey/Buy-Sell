@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 
 
 # Register your models here.
+from .models import UserSession
+
 
 @admin.register(get_user_model())
 class AdminUser(AuthUserAdmin):
@@ -16,3 +18,8 @@ class AdminUser(AuthUserAdmin):
         for user in queryset:
             pass
         self.message_user(request, 'hello world')
+
+
+@admin.register(UserSession)
+class Session(admin.ModelAdmin):
+    list_display = ['user', 'session_key', 'created_at']

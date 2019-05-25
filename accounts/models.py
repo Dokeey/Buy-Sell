@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.contrib.auth import user_logged_in
 from django.contrib.auth.models import AbstractUser, UserManager as AuthUserManager
 from django.db import models
 
@@ -24,3 +26,15 @@ class User(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
 
     object = UserManager()
+
+
+
+class UserSession(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
+    session_key = models.CharField(max_length=40, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+def kicked_my_other_sessions(sender, request, user, **kwargs):
+    user.is_user_logged_in = True
+
+user_logged_in.connect(kicked_my_other_sessions)

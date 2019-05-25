@@ -5,7 +5,10 @@
 
 </head>
 <body>
-    안녕하세요
+    안녕하세요 {{ user }}님 <br>
+    {% for msg in messages %}
+        {{ msg }}
+    {% endfor %}
     <hr>
     {% block content %}
     {% endblock %}
