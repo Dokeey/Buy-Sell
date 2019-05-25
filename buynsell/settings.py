@@ -123,3 +123,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+from django.urls import reverse_lazy
+
+LOGIN_URL = reverse_lazy('signup')
+LOGOUT_REDIRECT_URL = reverse_lazy('login')
+

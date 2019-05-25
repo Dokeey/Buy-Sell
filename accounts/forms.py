@@ -2,6 +2,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django.core.validators import validate_email, validate_integer   # 이메일 문법을 검사하는 클래스
 from django import forms
+from django.forms import models
+
 from .models import User
 
 
