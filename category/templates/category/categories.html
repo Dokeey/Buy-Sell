@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>{{ cate.name }}</h2>
+{% for sub in subcategory %}
+
+    <a href="{% url "category:subcategories" cate.pk sub.pk %}">{{ sub.name }}</a>
+
+{% endfor %}
+</body>
+</html>

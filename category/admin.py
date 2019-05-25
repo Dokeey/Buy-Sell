@@ -5,12 +5,12 @@ from .models import Category, SubCategory
 
 @admin.register(Category)
 class ProfileAdmin(admin.ModelAdmin):
-	list_display=['name']
+	list_display=['id','name']
 
 
 @admin.register(SubCategory)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display=('get_category','name')
+    list_display=('id','get_category','name')
 
     def get_category(self,obj):
         return obj.category.name
