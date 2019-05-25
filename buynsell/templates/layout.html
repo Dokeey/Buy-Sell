@@ -1,16 +1,107 @@
+
+{% load category_tags %}
+
 <html>
 <head>
     {% block head %}
     {% endblock %}
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
 
+    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+    <title>AskDjango Blog</title>
 </head>
 <body>
+{% category_menu as cates %}
+{% subcategory_menu as subcates %}
+<nav class="navbar navbar-expand-md navbar-dark bg-dark ">
+      <a class="navbar-brand" href="">예동이네</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="">Home <span class="sr-only">(current)</span></a>
+          </li>
+
+
+          <li class="nav-item">
+            <a class="nav-link" href="">PROFILE</a>
+          </li>
+            <li class="nav-item">
+            <a class="nav-link" href="">LOGOUT</a>
+          </li>
+
+            <li class="nav-item">
+            <a class="nav-link" href="">회원가입</a>
+          </li>
+            <li class="nav-item">
+             {% for cate in cates %}
+              <a class="nav-link" href="{% url "category:categories" cate.pk %}"> {{ cate.name }}</a>
+                {% endfor %}
+            </li>
+            <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <a class="dropdown-item" href="">admin</a>
+              <a class="dropdown-item" href="">gold</a>
+              <a class="dropdown-item" href="">shop</a>
+                <a class="dropdown-item" href="">itemshop</a>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </nav>
+
     안녕하세요 {{ user }}님 <br>
     {% for msg in messages %}
         {{ msg }}
     {% endfor %}
-    <hr>
+        <hr>
     {% block content %}
     {% endblock %}
+<table border="1">
+        <tr>
+            {% for cate in cates %}
+
+            <td>
+              <a href="{% url "category:categories" cate.pk %}">  <h2>{{ cate.name }}</h2></a>
+            </td>
+            {% for subcate in subcates %}
+                    <tr>
+                         {% if subcate.category.id == cate.id %}
+                        <td>
+
+                           <a href="{% url "category:subcategories" cate.pk subcate.pk %}">{{ subcate.name }}</a>
+
+                        </td>
+                         {% endif %}
+                    </tr>
+                    {% endfor %}
+
+            {% endfor %}
+
+        </tr>
+
+    <tr>
+
+    </tr>
+
+</table>
+
+
+<div class="container">
+<div class="col-sm-12">
+
+    {% block extra_content %}
+    {% endblock %}
+
+    <hr/>
+    </div></div>
+    &copy; 2019. yejin & donghoo
+
 </body>
 </html>
