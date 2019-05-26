@@ -56,7 +56,13 @@
       </div>
     </nav>
 
-    안녕하세요 {{ user }}님 <br>
+    {% if user.is_authenticated %}
+        안녕하세요. <a href="{% url "accounts:profile" %}">{{ user }}</a>님
+        <a href="{% url "accounts:logout" %}"> 로그아웃 </a><br>
+    {% else %}
+        <a href="{% url "accounts:login" %}">로그인</a>
+        <a href="{% url "accounts:signup" %}"> 회원가입 </a><br>
+    {% endif %}
     {% for msg in messages %}
         {{ msg }}
     {% endfor %}

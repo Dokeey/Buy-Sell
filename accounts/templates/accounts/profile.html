@@ -1,0 +1,27 @@
+{% extends "accounts/layout.html" %}
+
+{% block content %}
+
+<h3> ID </h3>
+        {{ user.username }}
+<hr>
+<h3> 닉네임 </h3>
+        {{ user.nic_name }}
+<hr>
+<h3> 주소 </h3>
+        {{ user.address }}
+<hr>
+<h3> 연락처 </h3>
+        {{ user.phone }}
+<hr>
+<h3> 계좌번호 </h3>
+        {{ user.acoount_num }}
+<hr>
+<h3> 이메일 </h3>
+        {{ user.email }}
+<hr>
+
+<a href="{% url "accounts:profile_edit" %}"> 프로필수정 </a><br>
+<a href="{% url "accounts:pw_edit" %}"> 비밀번호변경 </a>
+
+{% endblock %}

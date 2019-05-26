@@ -2,9 +2,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django.core.validators import validate_email, validate_integer   # 이메일 문법을 검사하는 클래스
 from django import forms
-from django.forms import models
 
-from .models import User
+User = get_user_model()
 
 
 
@@ -43,8 +42,13 @@ class SginupForm(UserCreationForm):
         self.fields['account_num'].label = '계좌번호'
 
     class Meta(UserCreationForm.Meta):
-        model = get_user_model()
+        model = User
         fields = UserCreationForm.Meta.fields + ('phone', 'nic_name', 'address', 'account_num')
         widgets = {
             'address': forms.TextInput(attrs={'readonly': True}),
         }
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['nic_name', 'email', 'phone', 'address', 'account_num']

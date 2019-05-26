@@ -1,0 +1,15 @@
+{% extends "accounts/layout.html" %}
+
+{% block content %}
+
+<form action="" method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="저장">
+</form>
+<hr>
+<a href="{% url "accounts:pw_edit" %}"> 비밀번호변경 </a>
+
+{% endblock %}

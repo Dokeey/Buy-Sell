@@ -129,7 +129,7 @@ AUTH_USER_MODEL = 'accounts.User'
 
 from django.urls import reverse_lazy
 
-LOGIN_URL = reverse_lazy('login')
-LOGIN_REDIRECT_URL = reverse_lazy('signup')
-LOGOUT_REDIRECT_URL = reverse_lazy('signup')
+LOGIN_URL = reverse_lazy('accounts:login')
+LOGIN_REDIRECT_URL = reverse_lazy('accounts:signup')
+LOGOUT_REDIRECT_URL = reverse_lazy('accounts:signup')
 
