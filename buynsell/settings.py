@@ -133,3 +133,24 @@ LOGIN_URL = reverse_lazy('accounts:login')
 LOGIN_REDIRECT_URL = reverse_lazy('accounts:profile')
 LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login')
 
+
+# Email
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'buysell0503@gmail.com' # ex) bum752@gmail.com
+EMAIL_HOST_PASSWORD = 'wjdqhqhdks' # ex) P@ssw0rd
+SERVER_EMAIL = 'buysell0503@gmail.com' # ex) bum752@gmail.com
+DEFAULT_FROM_MAIL = 'BuynSell' # ex) bum752
+
+
+from django.utils.translation import ugettext_lazy as _
+
+USE_I18N = True  # Enable Internationalization
+LANGUAGES = [  # Available languages
+    ('en', _("English")),
+    ('ko_kr', _("한국어")),
+]

@@ -9,7 +9,7 @@ User = get_user_model()
 
 class SginupForm(UserCreationForm):
 
-    phone = forms.IntegerField()
+    phone = forms.CharField()
     nic_name = forms.CharField()
     address = forms.CharField()
     account_num = forms.IntegerField()
@@ -25,8 +25,10 @@ class SginupForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #self.fields['username'].validators = [validate_email]
+
         #self.fields['username'].help_text = '이메일을 써야해요'
+        #self.fields['email'].validators = [validate_email]
+
         self.fields['username'].label = 'ID'
 
         self.fields['nic_name'].label = '닉네임'
@@ -43,7 +45,7 @@ class SginupForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ('phone', 'nic_name', 'address', 'account_num')
+        fields = UserCreationForm.Meta.fields + ('phone', 'nic_name', 'address', 'account_num', 'email')
         widgets = {
             'address': forms.TextInput(attrs={'readonly': True}),
         }

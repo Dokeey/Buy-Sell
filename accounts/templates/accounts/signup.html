@@ -64,25 +64,10 @@
 
 {% block content %}
 
-<form action="" method="POST">
+<form action="" method="POST" novalidate>
     {% csrf_token %}
     <table>
-        <th>
-        <tr><td>{{ form.username.label }}</td><td>{{ form.username }} <br/></td></tr>
-        <tr><td>{{ form.password1.label }}</td> <td>{{ form.password1 }}<br/></td> </tr>
-        <tr><td>{{ form.password2.label }}</td> <td>{{ form.password2 }}<br/></td></tr>
-        <tr><td>{{ form.nic_name.label }}</td> <td>{{ form.nic_name }}<br/></td></tr>
-        <tr><td>{{ form.phone.label }}</td> <td>{{ form.phone }}<br/></td></tr>
-        <tr><td>{{ form.account_num.label }}</td> <td>{{ form.account_num }}<br/></td></tr>
-        <tr><td>
-        {{ form.address.label }}</td><td>
-            <input type="text" id="sample4_postcode" onclick="sample4_execDaumPostcode()" placeholder="우편번호" readonly="readonly">
-            <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" ><br>
-            <input type="text" id="sample4_roadAddress" placeholder="도로명주소" readonly="readonly">
-            <span id="guide" style="color:#999;display:none"></span>
-            <input type="text" id="sample4_detailAddress" placeholder="상세주소">
-            <input type="text" id="sample4_extraAddress" placeholder="참고항목"><br>
-            {{ form.address }} </td></tr></th>
+        {{ form.as_table }}
     </table>
     <input type="submit" value="가입하기">
 </form>

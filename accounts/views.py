@@ -21,7 +21,7 @@ def signup(request):
         if form.is_valid():
             form.save()
             # template에서 넘어온 인자들을 모두 합쳐 주소필드에 저장한다.
-            return redirect('accounts:signup')
+            return redirect('accounts:login')
     else:
         form = SginupForm()
 
