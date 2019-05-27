@@ -55,7 +55,7 @@
         </ul>
       </div>
     </nav>
-
+     <a href="{% url "admin:index" %}">관리자</a>
     {% if user.is_authenticated %}
         안녕하세요. <a href="{% url "accounts:profile" %}">{{ user }}</a>님
         <a href="{% url "accounts:logout" %}"> 로그아웃 </a>

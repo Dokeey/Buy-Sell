@@ -133,7 +133,6 @@ LOGIN_URL = reverse_lazy('accounts:login')
 LOGIN_REDIRECT_URL = reverse_lazy('accounts:profile')
 LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login')
 
-
 # Email
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

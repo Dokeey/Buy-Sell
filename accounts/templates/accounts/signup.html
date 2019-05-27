@@ -67,7 +67,17 @@
 <form action="" method="POST" novalidate>
     {% csrf_token %}
     <table>
-        {{ form.as_table }}
+        <th>
+			{{ form.as_table}}
+        <tr><td>
+        {{ form.address.label }}</td><td>
+            <input type="text" id="sample4_postcode" onclick="sample4_execDaumPostcode()" placeholder="우편번호" readonly="readonly">
+            <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" ><br>
+            <input type="text" id="sample4_roadAddress" placeholder="도로명주소" readonly="readonly">
+            <span id="guide" style="color:#999;display:none"></span>
+            <input type="text" id="sample4_detailAddress" placeholder="상세주소">
+            <input type="text" id="sample4_extraAddress" placeholder="참고항목"><br>
+            {{ form.address }} </td></tr></th>
     </table>
     <input type="submit" value="가입하기">
 </form>
