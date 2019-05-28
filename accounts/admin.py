@@ -4,12 +4,12 @@ from django.contrib.auth import get_user_model
 
 
 # Register your models here.
-from .models import UserSession
+from .models import UserSession, Profile
 
 
 @admin.register(get_user_model())
 class AdminUser(AuthUserAdmin):
-    list_display = ('username', 'email', 'nick_name', 'phone', 'address', 'account_num', 'is_staff')
+    # list_display = ('username', 'email', 'nick_name', 'phone', 'address', 'account_num', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'date_joined')
     search_fields = ('username', 'first_name', 'last_name', 'email')
     actions = ['마케팅_이메일보내기']
@@ -23,3 +23,8 @@ class AdminUser(AuthUserAdmin):
 @admin.register(UserSession)
 class Session(admin.ModelAdmin):
     list_display = ['user', 'session_key', 'created_at']
+
+
+@admin.register(Profile)
+class AdminProfile(admin.ModelAdmin):
+    list_display = ('user', 'email', 'nick_name', 'phone', 'address', 'account_num')

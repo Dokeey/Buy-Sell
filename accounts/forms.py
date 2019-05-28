@@ -8,6 +8,7 @@ from django import forms
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from .models import Profile
 
 User = get_user_model()
 
@@ -19,6 +20,7 @@ class SignupForm(UserCreationForm):
     nick_name = forms.CharField()
     address = forms.CharField()
     account_num = forms.CharField()
+    email = forms.EmailField()
 
     '''
     def clean_username(self):
@@ -80,7 +82,17 @@ class SignupForm(UserCreationForm):
                 }),
             )
 
+        phone = self.cleaned_data.get('phone', None)
+        email = self.cleaned_data.get('email', None)
+        address = self.cleaned_data.get('address', None)
+        nick_name = self.cleaned_data.get('nick_name', None)
+        account_num = self.cleaned_data.get('account_num', None)
+
+        Profile.objects.create(user=user, email=email,
+                               phone=phone, address=address,
+                               nick_name=nick_name, account_num=account_num)
+
 class ProfileForm(forms.ModelForm):
     class Meta:
-        model = User
+        model = Profile
         fields = ['nick_name', 'email', 'phone', 'address', 'account_num']
