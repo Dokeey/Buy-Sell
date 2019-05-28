@@ -104,6 +104,9 @@ class SignupForm(UserCreationForm):
                                nick_name=nick_name, account_num=account_num)
 
 class ProfileForm(forms.ModelForm):
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+    )
     class Meta:
         model = Profile
-        fields = ['nick_name', 'email', 'phone', 'address', 'account_num']
+        fields = ['nick_name', 'email', 'phone', 'address', 'account_num', 'password']

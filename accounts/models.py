@@ -1,11 +1,8 @@
 from django.conf import settings
 from django.contrib.auth import user_logged_in, get_user_model
 from django.contrib.auth.models import AbstractUser, UserManager as AuthUserManager
-from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator, EmailValidator, _lazy_re_compile, MaxLengthValidator
 from django.db import models
 from django.utils.crypto import get_random_string
-from django.utils.translation import ugettext_lazy as _
 
 # Create your models here.
 

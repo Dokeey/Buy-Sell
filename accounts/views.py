@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login as auth_login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator, PasswordResetTokenGenerator
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
@@ -18,6 +19,7 @@ from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.generic import UpdateView, TemplateView
 
+from .models import Profile
 from .forms import SignupForm, ProfileForm
 
 # Create your views here.
@@ -65,17 +67,23 @@ signout = LogoutView.as_view()
 
 @login_required
 def profile_view(request):
-    return render(request, 'accounts/profile.html')
+    profile = get_object_or_404(Profile, user=request.user)
+    return render(request, 'accounts/profile.html',{
+        'profile': profile,
+    })
 
 @login_required
 def profile_edit(request):
-    profile = get_object_or_404(User, pk=request.user.pk)
+    profile = get_object_or_404(Profile, user=request.user)
 
     if request.method == "POST":
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
-            form.save()
-        return redirect('accounts:profile')
+            if check_password(request.POST['password'], profile.user.password):
+                form.save()
+                return redirect('accounts:profile')
+            else:
+                messages.error(request, '패스워드를 확인해주세요 :(')
     else:
         form = ProfileForm(instance=profile)
 
