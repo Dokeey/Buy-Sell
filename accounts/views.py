@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator, PasswordResetTokenGenerator
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView, \
+    PasswordResetConfirmView
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
@@ -17,6 +18,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.translation import gettext_lazy
 from django.views.generic import UpdateView, TemplateView
 
 from .models import Profile
@@ -120,5 +122,33 @@ def activate(request, uidb64, token):
     messages.error(request, '메일 인증이 실패되었습니다.')
     return redirect('accounts:login')
 
+#비밀번호 찾기
+class MyPasswordResetView(PasswordResetView):
+    success_url = reverse_lazy('accounts:login')
+    template_name = 'accounts/password_reset_form.html'
+    email_template_name='accounts/user_password_reset.html'
+    html_email_template_name='accounts/user_password_reset.html'
 
+    def form_valid(self, form):
+        messages.info(self.request, '암호 메일을 보냈습니다.')
+        return super().form_valid(form)
 
+class MyPasswordResetConfirmView(PasswordResetConfirmView):
+    success_url = reverse_lazy('accounts:login')
+    template_name = 'accounts/password_reset_confirm.html'
+
+    def form_valid(self, form):
+        messages.info(self.request, '암호를 변경 하였습니다.')
+        return super().form_valid(form)
+
+class IdFindView(PasswordResetView):
+
+    success_url = reverse_lazy('accounts:login')
+    template_name = 'accounts/password_reset_form.html'
+    subject_template_name = 'accounts/user_id_find_name.html'
+    email_template_name = 'accounts/user_id_find.html'
+    html_email_template_name = 'accounts/user_id_find.html'
+
+    def form_valid(self, form):
+        messages.info(self.request, '아이디 확인 메일을 보냈습니다.')
+        return super().form_valid(form)
