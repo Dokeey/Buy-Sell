@@ -17,6 +17,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.translation import gettext_lazy
 from django.views.generic import UpdateView, TemplateView
 
 from .forms import SignupForm, ProfileForm
@@ -133,10 +134,12 @@ class MyPasswordResetConfirmView(PasswordResetConfirmView):
         return super().form_valid(form)
 
 class IdFindView(PasswordResetView):
+
     success_url = reverse_lazy('accounts:login')
     template_name = 'accounts/password_reset_form.html'
-    email_template_name='accounts/user_id_find.html'
-    html_email_template_name='accounts/user_id_find.html'
+    subject_template_name = 'accounts/user_id_find_name.html'
+    email_template_name = 'accounts/user_id_find.html'
+    html_email_template_name = 'accounts/user_id_find.html'
 
     def form_valid(self, form):
         messages.info(self.request, '아이디 확인 메일을 보냈습니다.')
