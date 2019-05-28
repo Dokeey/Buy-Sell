@@ -15,6 +15,6 @@ urlpatterns = [
     path('', lambda req: redirect('accounts:profile')),
     path('password_reset/', views.MyPasswordResetView.as_view(), name='password_reset'),
 	path('reset/<uidb64>/<token>' ,views.MyPasswordResetConfirmView.as_view(),name='password_reset_confirm'),
-    #path('id_find/', views.IdFindView.as_view(), name='id_find'),
+    path('id_find/', views.IdFindView.as_view(), name='id_find'),
 
 ]

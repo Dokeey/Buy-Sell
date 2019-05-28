@@ -131,3 +131,13 @@ class MyPasswordResetConfirmView(PasswordResetConfirmView):
     def form_valid(self, form):
         messages.info(self.request, '암호를 변경 하였습니다.')
         return super().form_valid(form)
+
+class IdFindView(PasswordResetView):
+    success_url = reverse_lazy('accounts:login')
+    template_name = 'accounts/password_reset_form.html'
+    email_template_name='accounts/user_id_find.html'
+    html_email_template_name='accounts/user_id_find.html'
+
+    def form_valid(self, form):
+        messages.info(self.request, '아이디 확인 메일을 보냈습니다.')
+        return super().form_valid(form)
