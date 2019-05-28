@@ -57,9 +57,7 @@ class SignupForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
         fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'address', 'account_num', 'email')
-        widgets = {
-            #'address': forms.HiddenInput,
-        }
+
 
     def save(self, commit=True):
         user = super(SignupForm, self).save(commit=False)
@@ -100,3 +98,6 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['nick_name', 'email', 'phone', 'address', 'account_num', 'password']
+        widgets = {
+            'address': forms.HiddenInput,
+        }
