@@ -5,7 +5,8 @@ from django.contrib.auth import get_user_model, login as auth_login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator, PasswordResetTokenGenerator
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView, \
+    PasswordResetConfirmView
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
@@ -112,5 +113,21 @@ def activate(request, uidb64, token):
     messages.error(request, '메일 인증이 실패되었습니다.')
     return redirect('accounts:login')
 
+#비밀번호 찾기
+class MyPasswordResetView(PasswordResetView):
+    success_url = reverse_lazy('accounts:login')
+    template_name = 'accounts/password_reset_form.html'
+    email_template_name='accounts/user_password_reset.html'
+    html_email_template_name='accounts/user_password_reset.html'
 
+    def form_valid(self, form):
+        messages.info(self.request, '암호 메일을 보냈습니다.')
+        return super().form_valid(form)
 
+class MyPasswordResetConfirmView(PasswordResetConfirmView):
+    success_url = reverse_lazy('accounts:login')
+    template_name = 'accounts/password_reset_confirm.html'
+
+    def form_valid(self, form):
+        messages.info(self.request, '암호를 변경 하였습니다.')
+        return super().form_valid(form)
