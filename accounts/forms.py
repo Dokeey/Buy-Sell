@@ -18,7 +18,7 @@ class SginupForm(UserCreationForm):
     phone = forms.CharField()
     nic_name = forms.CharField()
     address = forms.CharField()
-    account_num = forms.IntegerField()
+    account_num = forms.CharField()
 
     '''
     def clean_username(self):

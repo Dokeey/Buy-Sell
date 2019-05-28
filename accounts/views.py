@@ -93,7 +93,7 @@ pw_edit = PasswordChange.as_view()
 
 
 
-#이메일 인증 활성화 뷰
+# 이메일 인증 활성화 뷰
 def activate(request, uidb64, token):
     User = get_user_model()
     try:
