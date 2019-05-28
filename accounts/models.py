@@ -1,10 +1,12 @@
 from django.conf import settings
 from django.contrib.auth import user_logged_in, get_user_model
 from django.contrib.auth.models import AbstractUser, UserManager as AuthUserManager
+from django.core.validators import RegexValidator, MaxLengthValidator
 from django.db import models
 from django.utils.crypto import get_random_string
 
 # Create your models here.
+
 
 
 class UserManager(AuthUserManager):
@@ -26,6 +28,12 @@ class UserManager(AuthUserManager):
         return user
 
 
+phone_validate = RegexValidator(
+    regex=r'^0\d{8,10}$',
+    message='정확한 연락처를 적어주세요.',
+    code='invalid_phone'
+)
+
 class User(AbstractUser):
     object = UserManager()
 
@@ -36,9 +44,9 @@ class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     nick_name = models.CharField(max_length=10, unique=True)
     email = models.EmailField()
-    phone = models.CharField(max_length=11)
+    phone = models.CharField(max_length=11, validators=[phone_validate])
     address = models.CharField(max_length=100)
-    account_num = models.CharField(max_length=20)
+    account_num = models.CharField(max_length=20, validators=[MaxLengthValidator(20)])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

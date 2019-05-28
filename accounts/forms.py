@@ -11,8 +11,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from .validators import id_validate
-from .models import Profile
+from .models import Profile, phone_validate
 
 User = get_user_model()
 
@@ -22,7 +21,7 @@ class SignupForm(UserCreationForm):
 
     phone = forms.CharField()
     nick_name = forms.CharField()
-    address = forms.CharField()
+    address = forms.CharField(widget= forms.HiddenInput)
     account_num = forms.CharField()
     email = forms.EmailField()
 
@@ -34,30 +33,20 @@ class SignupForm(UserCreationForm):
         return value
     '''
 
-
-    phone_validate = RegexValidator(
-        regex=r'^0\d{8,10}$',
-        message='정확한 연락처를 적어주세요.',
-        code='invalid_phone'
-    )
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #self.fields['username'].help_text = '이메일을 써야해요'
-        #self.fields['email'].validators = [validate_email]
 
-
-        self.fields['email'].help_text = '이메일을 써야해요' #
-        self.fields['email'].label = 'email' #없었음
+        self.fields['email'].help_text = '이메일을 써야해요'
+        self.fields['email'].label = '이메일'
 
         self.fields['username'].label = 'ID'
 
         self.fields['nick_name'].label = '닉네임'
-        self.fields['nick_name'].validators = [id_validate]
+        # self.fields['nick_name'].validators = [id_validate]
 
         self.fields['address'].label = '주소'
 
-        self.fields['phone'].validators = [validate_integer, self.phone_validate]
+        self.fields['phone'].validators = [validate_integer, phone_validate]
         self.fields['phone'].help_text = "'-'를 제외한 숫자만 입력해주세요"
         self.fields['phone'].label = '연락처'
 
@@ -69,7 +58,7 @@ class SignupForm(UserCreationForm):
         model = User
         fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'address', 'account_num', 'email')
         widgets = {
-            'address': forms.TextInput(attrs={'readonly': True}),
+            #'address': forms.HiddenInput,
         }
 
     def save(self, commit=True):
@@ -79,6 +68,7 @@ class SignupForm(UserCreationForm):
             user.is_active = False
             user.save()
 
+            # 회원가입 인증 메일 발송
             send_mail(
                 'hello,' + user.username,
                 '',
