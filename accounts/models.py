@@ -4,15 +4,20 @@ from django.contrib.auth.models import AbstractUser, UserManager as AuthUserMana
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, EmailValidator, _lazy_re_compile, MaxLengthValidator
 from django.db import models
+from django.utils.crypto import get_random_string
 from django.utils.translation import ugettext_lazy as _
 
 # Create your models here.
 
 
 class UserManager(AuthUserManager):
-    #User = get_user_model()
 
     def create_superuser(self, username, email, password, **extra_fields):
+
+        nick_name = get_random_string(length=10)
+        while User.objects.filter(nick_name=nick_name):
+            nick_name = get_random_string(length=10)
+        extra_fields.setdefault('nick_name', nick_name)
         extra_fields.setdefault('phone', 0)
         extra_fields.setdefault('address', 'blank')
         extra_fields.setdefault('account_num', 0)
@@ -21,8 +26,8 @@ class UserManager(AuthUserManager):
 
 
 def id_validate(value):
-    user = get_user_model()
-    user = user.objects.filter(nic_name=value)
+
+    user = User.objects.filter(nick_name=value)
     if user:
         raise ValidationError(
             _("'{}' is already exists.".format(value)),
@@ -31,14 +36,14 @@ def id_validate(value):
 
 
 phone_validate = RegexValidator(
-            regex=r'^0\d{10,11}$',
+            regex=r'^0\d{8,10}$',
             message='정확한 연락처를 적어주세요.',
             code='invalid_phone'
 )
 
 
 class User(AbstractUser):
-    nic_name = models.CharField(max_length=10, unique=True, validators=[id_validate])
+    nick_name = models.CharField(max_length=10, unique=True, validators=[id_validate])
     phone = models.CharField(max_length=11, validators=[phone_validate])
     address = models.CharField(max_length=100)
     account_num = models.CharField(max_length=20, validators=[MaxLengthValidator(20)])
@@ -47,6 +52,7 @@ class User(AbstractUser):
 
     object = UserManager()
 
+User = get_user_model()
 
 
 class UserSession(models.Model):

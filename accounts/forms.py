@@ -13,10 +13,10 @@ User = get_user_model()
 
 
 
-class SginupForm(UserCreationForm):
+class SignupForm(UserCreationForm):
 
     phone = forms.CharField()
-    nic_name = forms.CharField()
+    nick_name = forms.CharField()
     address = forms.CharField()
     account_num = forms.CharField()
 
@@ -40,7 +40,7 @@ class SginupForm(UserCreationForm):
 
         self.fields['username'].label = 'ID'
 
-        self.fields['nic_name'].label = '닉네임'
+        self.fields['nick_name'].label = '닉네임'
 
         self.fields['address'].label = '주소'
 
@@ -54,13 +54,13 @@ class SginupForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ('phone', 'nic_name', 'address', 'account_num', 'email')
+        fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'address', 'account_num', 'email')
         widgets = {
             'address': forms.TextInput(attrs={'readonly': True}),
         }
 
     def save(self, commit=True):
-        user = super(SginupForm, self).save(commit=False)
+        user = super(SignupForm, self).save(commit=False)
 
         if commit:
             user.is_active = False
@@ -83,4 +83,4 @@ class SginupForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['nic_name', 'email', 'phone', 'address', 'account_num']
+        fields = ['nick_name', 'email', 'phone', 'address', 'account_num']

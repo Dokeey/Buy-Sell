@@ -18,7 +18,7 @@ from django.utils.encoding import force_text, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.generic import UpdateView, TemplateView
 
-from .forms import SginupForm, ProfileForm
+from .forms import SignupForm, ProfileForm
 
 # Create your views here.
 User = get_user_model()
@@ -26,7 +26,7 @@ User = get_user_model()
 
 def signup(request):
     if request.method == "POST":
-        form = SginupForm(request.POST, request.FILES)
+        form = SignupForm(request.POST, request.FILES)
 
         if form.is_valid():
             form.save()
@@ -37,7 +37,7 @@ def signup(request):
             # template에서 넘어온 인자들을 모두 합쳐 주소필드에 저장한다.
             return redirect('accounts:login')
     else:
-        form = SginupForm()
+        form = SignupForm()
 
     return render(request, 'accounts/signup.html', {
         'form': form,
