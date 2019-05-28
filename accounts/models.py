@@ -29,22 +29,6 @@ class UserManager(AuthUserManager):
         return user
 
 
-def id_validate(value):
-    user = User.objects.filter(nick_name=value)
-    if user:
-        raise ValidationError(
-            _("'{}' is already exists.".format(value)),
-        )
-    return None
-
-
-phone_validate = RegexValidator(
-            regex=r'^0\d{8,10}$',
-            message='정확한 연락처를 적어주세요.',
-            code='invalid_phone'
-)
-
-
 class User(AbstractUser):
     object = UserManager()
 
@@ -53,11 +37,11 @@ User = get_user_model()
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    nick_name = models.CharField(max_length=10, unique=True, validators=[id_validate])
+    nick_name = models.CharField(max_length=10, unique=True)
     email = models.EmailField()
-    phone = models.CharField(max_length=11, validators=[phone_validate])
+    phone = models.CharField(max_length=11)
     address = models.CharField(max_length=100)
-    account_num = models.CharField(max_length=20, validators=[MaxLengthValidator(20)])
+    account_num = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

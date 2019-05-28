@@ -2,12 +2,16 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator, default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
-from django.core.validators import validate_email, validate_integer   # 이메일 문법을 검사하는 클래스
+from django.core.validators import validate_email, validate_integer, RegexValidator, \
+    MaxLengthValidator  # 이메일 문법을 검사하는 클래스
 from django import forms
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
+from .validators import id_validate
 from .models import Profile
 
 User = get_user_model()
@@ -31,6 +35,12 @@ class SignupForm(UserCreationForm):
     '''
 
 
+    phone_validate = RegexValidator(
+        regex=r'^0\d{8,10}$',
+        message='정확한 연락처를 적어주세요.',
+        code='invalid_phone'
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         #self.fields['username'].help_text = '이메일을 써야해요'
@@ -43,14 +53,15 @@ class SignupForm(UserCreationForm):
         self.fields['username'].label = 'ID'
 
         self.fields['nick_name'].label = '닉네임'
+        self.fields['nick_name'].validators = [id_validate]
 
         self.fields['address'].label = '주소'
 
-        self.fields['phone'].validators = [validate_integer]
+        self.fields['phone'].validators = [validate_integer, self.phone_validate]
         self.fields['phone'].help_text = "'-'를 제외한 숫자만 입력해주세요"
         self.fields['phone'].label = '연락처'
 
-        self.fields['account_num'].validators = [validate_integer]
+        self.fields['account_num'].validators = [validate_integer, MaxLengthValidator(20)]
         self.fields['account_num'].help_text = "'-'를 제외한 숫자만 입력해주세요"
         self.fields['account_num'].label = '계좌번호'
 
