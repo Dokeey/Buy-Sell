@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'category',
     'trade',
+    'imagekit',
 ]
 
 MIDDLEWARE = [

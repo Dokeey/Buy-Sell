@@ -1,0 +1,20 @@
+{% extends "trade/layout.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<h2>아이템 목록</h2>
+
+{% for item in items %}
+
+<br>
+상품명 : {{ item.title }} <br>
+가격 : {{ item.amount }} <br>
+사진 : <a href="{% url "trade:item_detail" pk=item.pk %}"><img src="{{ item.photo.url }}"/><br></a>
+상태 : {{ item.status }} <br>
+최근 업데이트 : {{ item.updated_at }} <br>
+<br>
+
+{% endfor %}
+
+{% endblock %}

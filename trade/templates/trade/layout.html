@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<a href="{% url "trade:item_new" %}"> 아이템 등록 </a>
+<a href="{% url "trade:item_list" %}"> 아이템 목록 </a>
+<a href="{% url "trade:my_item_list" %}"> 내 아이템 관리 </a><br>
+{% endblock %}
