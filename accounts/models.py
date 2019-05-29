@@ -37,8 +37,6 @@ phone_validate = RegexValidator(
 class User(AbstractUser):
     object = UserManager()
 
-User = get_user_model()
-
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
