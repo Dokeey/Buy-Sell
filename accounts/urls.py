@@ -10,7 +10,7 @@ urlpatterns = [
     path('logout/', views.signout, name='logout'),
     path('profile/', views.profile_view, name='profile'),
     path('profile/edit/', views.profile_edit, name='profile_edit'),
-    path('profile/edit/pw', views.pw_edit, name='pw_edit'),
+    path('profile/edit/pw/', views.pw_edit, name='pw_edit'),
     path('accounts/<str:uidb64>/<str:token>', views.activate, name='activate'),
     path('', lambda req: redirect('accounts:profile')),
     path('password_reset/', views.MyPasswordResetView.as_view(), name='password_reset'),

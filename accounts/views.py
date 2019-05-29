@@ -29,6 +29,16 @@ User = get_user_model()
 
 
 def signup(request):
+    get_success_url = settings.LOGIN_REDIRECT_URL
+    if request.user.is_authenticated:
+        redirect_to = get_success_url
+        if redirect_to == request.path:
+            raise ValueError(
+                "Redirection loop for authenticated user detected. Check that "
+                "your LOGIN_REDIRECT_URL doesn't point to a login page."
+            )
+        return HttpResponseRedirect(redirect_to)
+
     if request.method == "POST":
         form = SignupForm(request.POST, request.FILES)
 
