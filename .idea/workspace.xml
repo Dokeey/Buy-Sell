@@ -2,35 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6514935f-487e-4faf-a5a3-af107a0549f8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/media/4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/main2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/main2_1PiuNmZ.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/main2_6eyQxRF.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/main2_Hfny7te.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/media/main2_Q9ipHTW.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/migrations/0002_auto_20190529_1137.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/templates/trade/item_new.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/trade/views.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/blog/post/5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/media/blog/post/main2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/trade/templates/trade/item_detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/trade/templates/trade/item_list.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/trade/templates/trade/layout.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/templates/accounts/password_reset_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/templates/accounts/password_reset_form.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/buynsell/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/buynsell/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/buynsell/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/buynsell/templates/layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/buynsell/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/buynsell/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/category/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/category/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/store/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/store/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/store/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/store/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trade/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/trade/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trade/templates/trade/item_new.html" beforeDir="false" afterPath="$PROJECT_DIR$/trade/templates/trade/item_new.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trade/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/trade/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trade/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/trade/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -65,7 +50,7 @@
         <entry file="file://$PROJECT_DIR$/store/admin.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="105">
-              <caret line="7" column="32" lean-forward="true" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
+              <caret line="7" column="32" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -100,7 +85,7 @@
         <entry file="file://$PROJECT_DIR$/trade/models.py">
           <provider selected="true" editor-type-id="text-editor">
             <state>
-              <caret column="32" lean-forward="true" selection-start-column="32" selection-end-column="32" />
+              <caret column="32" selection-start-column="32" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -120,8 +105,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/buynsell/templates/layout.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="268">
-              <caret line="30" column="65" selection-start-line="30" selection-start-column="65" selection-end-line="30" selection-end-column="65" />
+            <state relative-caret-position="238">
+              <caret line="34" column="73" selection-start-line="34" selection-start-column="73" selection-end-line="34" selection-end-column="73" />
             </state>
           </provider>
         </entry>
@@ -142,7 +127,7 @@
         <entry file="file://$PROJECT_DIR$/category/models.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="195">
-              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="14" selection-end-column="24" />
+              <caret line="13" selection-start-line="13" selection-end-line="14" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -582,7 +567,7 @@
     <entry file="file://$PROJECT_DIR$/store/admin.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
-          <caret line="7" column="32" lean-forward="true" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
+          <caret line="7" column="32" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>
@@ -592,7 +577,7 @@
     <entry file="file://$PROJECT_DIR$/trade/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <caret column="32" lean-forward="true" selection-start-column="32" selection-end-column="32" />
+          <caret column="32" selection-start-column="32" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -628,7 +613,7 @@
     <entry file="file://$PROJECT_DIR$/category/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
-          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="14" selection-end-column="24" />
+          <caret line="13" selection-start-line="13" selection-end-line="14" selection-end-column="24" />
         </state>
       </provider>
     </entry>
@@ -651,8 +636,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/buynsell/templates/layout.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="268">
-          <caret line="30" column="65" selection-start-line="30" selection-start-column="65" selection-end-line="30" selection-end-column="65" />
+        <state relative-caret-position="238">
+          <caret line="34" column="73" selection-start-line="34" selection-start-column="73" selection-end-line="34" selection-end-column="73" />
         </state>
       </provider>
     </entry>

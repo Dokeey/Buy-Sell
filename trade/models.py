@@ -3,6 +3,9 @@ from django.db import models
 from category.models import Category, SubCategory
 
 # Create your models here.
+# from imagekit.generatorlibrary import Thumbnail
+from imagekit.models import ProcessedImageField
+from pilkit.processors import ResizeToFill
 
 
 class Item(models.Model):
@@ -10,7 +13,12 @@ class Item(models.Model):
     title = models.CharField(max_length=20)
     desc = models.TextField(blank=True)
     amount = models.PositiveIntegerField()
-    photo = models.ImageField()
+    photo = ProcessedImageField(
+            upload_to = 'blog/post',
+            processors = [ResizeToFill(100, 100)], # 처리할 작업 목룍
+            format = 'PNG',					# 최종 저장 포맷
+            options = {'quality': 60}
+        )
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     status = models.CharField(max_length=10)

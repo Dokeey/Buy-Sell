@@ -29,6 +29,10 @@
             {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{% url "store:store_profile" %}">PROFILE</a>
+
+          </li>
+            <li class="nav-item">
+            <a class="nav-link" href="{% url "trade:item_list" %}">거래</a>
           </li>
             <li class="nav-item">
             <a class="nav-link" href="">LOGOUT</a>

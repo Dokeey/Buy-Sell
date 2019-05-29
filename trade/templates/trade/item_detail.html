@@ -1,0 +1,22 @@
+{% extends "trade/layout.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<h2>{{ item.title }}</h2>
+
+<br>
+{{ item.user }} <br>
+{{ item.title }} <br>
+{{ item.desc }} <br>
+{{ item.amount }} <br>
+<img src="{{ item.photo.url }}"/><br>
+{{ item.category }} <br>
+{{ item.sub_category }} <br>
+{{ item.status }} <br>
+{{ item.is_public }} <br>
+{{ item.created_at }} <br>
+{{ item.updated_at }} <br>
+<br>
+
+{% endblock %}
