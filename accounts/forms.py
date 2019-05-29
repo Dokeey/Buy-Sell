@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
+from store.models import StoreProfile
 from .models import Profile, phone_validate
 
 User = get_user_model()
@@ -90,6 +91,8 @@ class SignupForm(UserCreationForm):
         Profile.objects.create(user=user, email=email,
                                phone=phone, address=address,
                                nick_name=nick_name, account_num=account_num)
+
+        StoreProfile.objects.create(user=user, name=user.profile.nick_name + '의 가게')
 
 class ProfileForm(forms.ModelForm):
     password = forms.CharField(
