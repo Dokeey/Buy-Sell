@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('category/', include('category.urls')),
+    path('store/', include('store.urls')),
     path('', lambda req: redirect('accounts:profile'), name='root'),
 ]
