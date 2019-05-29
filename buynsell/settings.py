@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'category',
     'store',
+    'trade',
 ]
 
 MIDDLEWARE = [
@@ -154,3 +155,8 @@ LANGUAGES = [  # Available languages
     ('en', _("English")),
     ('ko_kr', _("한국어")),
 ]
+
+# Media
+
+MEDIA_URL = '/files/' # 업로드 할 경로
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

@@ -1,3 +1,12 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-# Create your views here.
+from .models import StoreProfile
+
+@login_required
+def store_profile(request):
+    model = StoreProfile
+    return render(request, 'store/storeprofile.html')
+
+
+
