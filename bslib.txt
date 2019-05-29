@@ -1,3 +1,11 @@
 Django==2.1
+django-appconf==1.0.3
+django-imagekit==4.0.2
+idna==2.8
+pilkit==2.0
 Pillow==6.0.0
 pytz==2019.1
+requests==2.22.0
+six==1.12.0
+urllib3==1.25.3
+

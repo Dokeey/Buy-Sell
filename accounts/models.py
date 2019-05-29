@@ -7,8 +7,6 @@ from django.utils.crypto import get_random_string
 
 # Create your models here.
 
-
-
 class UserManager(AuthUserManager):
     def _create_user(self, username, email, password, **extra_fields):
         if not username:
@@ -53,7 +51,6 @@ class Profile(models.Model):
     def __str__(self):
         return self.nick_name
 
-
 class UserSession(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
     session_key = models.CharField(max_length=40, editable=False)
@@ -63,3 +60,4 @@ def kicked_my_other_sessions(sender, request, user, **kwargs):
     user.is_user_logged_in = True
 
 user_logged_in.connect(kicked_my_other_sessions)
+

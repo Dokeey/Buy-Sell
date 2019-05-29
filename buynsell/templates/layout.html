@@ -31,13 +31,12 @@
             <a class="nav-link" href="{% url "store:store_profile" %}">PROFILE</a>
 
           </li>
-            <li class="nav-item">
-            <a class="nav-link" href="{% url "trade:item_list" %}">거래</a>
-          </li>
+
             <li class="nav-item">
             <a class="nav-link" href="">LOGOUT</a>
           </li>
              {% else %}
+
             <li class="nav-item">
             <a class="nav-link" href="">로그인</a>
           </li>
@@ -46,6 +45,9 @@
           </li>
 
             {% endif %}
+            <li class="nav-item">
+            <a class="nav-link" href="{% url "trade:item_list" %}">거래</a>
+          </li>
             <li class="nav-item">
              {% for cate in cates %}
               <a class="nav-link" href="{% url "category:categories" cate.pk %}"> {{ cate.name }}</a>
