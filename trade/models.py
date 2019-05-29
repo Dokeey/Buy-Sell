@@ -7,14 +7,13 @@ from category.models import Category, SubCategory
 
 class Item(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=20)
     desc = models.TextField(blank=True)
     amount = models.PositiveIntegerField()
     photo = models.ImageField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     status = models.CharField(max_length=10)
-    photo = models.ImageField()
-    is_public = models.BooleanField(default=False, db_index=True)
+    is_public = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
