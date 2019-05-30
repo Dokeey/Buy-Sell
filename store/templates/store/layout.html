@@ -1,7 +1,33 @@
 {% extends "layout.html" %}
 
 {% block content %}
-hi
+    <h2 style="margin:20px">{{ stores.name }}</h2>
+    <hr/>
+
+    <table style="margin:20px">
+        <tr>
+            <td>사진 : </td><td><img src="{{ stores.photo.url }}"/> </td>
+        </tr>
+        <tr>
+            <td>가게 소개 : </td><td>{{ stores.comment }}</td>
+        </tr>
+        <tr>
+            <td>평점 : </td><td> 4.5 </td>
+        </tr>
+        <tr>
+            <td>개점일 : </td><td> {{ stores.created_at }}</td>
+        </tr>
+        <tr>
+           <td> <a href="{% url "store:store_profile_edit" %}">프로필 수정</a> </td>
+        </tr>
+    </table>
+    <hr/>
+    <table style="margin:20px">
+        <tr>
+            <td>상품 리스트 / </td><td>가게 평점 / </td><td>가게 문의</td>
+        </tr>
+    </table>
+    <hr/>
 {% endblock %}
 
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from store.models import StoreProfile
+from .models import StoreProfile
 
 
 @admin.register(StoreProfile)
