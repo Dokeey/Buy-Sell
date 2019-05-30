@@ -87,22 +87,18 @@
 <table border="1">
         <tr>
             {% for cate in cates %}
-
             <td>
               <a href="{% url "category:categories" cate.pk %}">  <h2>{{ cate.name }}</h2></a>
             </td>
-            {% for subcate in subcates %}
+                {% for subcate in subcates %}
                     <tr>
-                         {% if subcate.category.id == cate.id %}
+                         {% if subcate.category == cate %}
                         <td>
-
                            <a href="{% url "category:subcategories" cate.pk subcate.pk %}">{{ subcate.name }}</a>
-
                         </td>
                          {% endif %}
                     </tr>
-                    {% endfor %}
-
+                {% endfor %}
             {% endfor %}
 
         </tr>

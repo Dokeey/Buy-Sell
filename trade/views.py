@@ -40,3 +40,6 @@ def item_detail(request, pk):
     return render(request, 'trade/item_detail.html', {
         'item': item
     })
+
+def test(request):
+    return render(request, 'trade/test.html')
