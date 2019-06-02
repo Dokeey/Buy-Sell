@@ -20,3 +20,9 @@ class StoreProfile(models.Model):
     comment = models.CharField(max_length=200, blank=True, verbose_name="소개", default="반갑습니다.")
     created_at = models.DateTimeField(auto_now_add=True)
 
+class QuestionComment(models.Model):
+    store_profile = models.ForeignKey(StoreProfile, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    comment = models.TextField(max_length=1000)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
