@@ -1,25 +1,10 @@
 from django import forms
 
 from category.models import Category, SubCategory
-from .models import Item
+from .models import Item, ItemComment
 
 
 class ItemForm(forms.ModelForm):
-    CHOICESES = (
-        ('Debt', (
-            (11, 'Credit Card'),
-            (12, 'Student Loans'),
-            (13, 'Taxes'),
-        )),
-        ('Entertainment', (
-            (21, 'Books'),
-            (22, 'Games'),
-        )),
-        ('Everyday', (
-            (31, 'Groceries'),
-            (32, 'Restaurants'),
-        )),
-    )
     CHOICES = []
     for cate in Category.objects.all():
         category = []
@@ -38,3 +23,10 @@ class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = ['title','desc','amount','photo','category','sub_category','status','is_public', 'tmp']
+
+
+class ItemCommentForm(forms.ModelForm):
+    message = forms.CharField(widget=forms.Textarea(attrs={'rows':3, 'cols':50}))
+    class Meta:
+        model = ItemComment
+        fields = ['message']
