@@ -84,5 +84,10 @@ def item_update(request, pk):
         'form': form
     })
 
+def item_delete(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    item.delete()
+    return redirect('trade:item_list')
+
 def test(request):
     return render(request, 'trade/test.html')

@@ -11,5 +11,6 @@ urlpatterns = [
     path('my_item_list/', views.my_item_list, name='my_item_list'),
     path('item_detail/<int:pk>/', views.item_detail, name='item_detail'),
     path('item_update/<int:pk>/', views.item_update, name='item_update'),
+    path('item_delete/<int:pk>/', views.item_delete, name='item_delete'),
     path('test/', views.test),
 ]
