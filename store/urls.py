@@ -9,4 +9,6 @@ urlpatterns = [
     path('profile/', views.store_profile, name='store_profile'),
     path('profile/edit/', views.store_profile_edit, name='store_profile_edit'),
     path('question/<int:pk>/', views.store_question, name='store_question'),
+    path('question/<int:pk>/edit/<int:cid>/', views.store_question_edit, name='store_question_edit'),
+    path('question/<int:pk>/delete/<int:cid>/', views.store_question_del, name='store_question_del'),
 ]

@@ -5,17 +5,61 @@
     {{ block.super }}
 
 
-<form action="" method="POST" enctype="multipart/form-data">
+<form action="" method="POST">
      {% csrf_token %}
-    <table>
-        {{ form.as_table }}
 
-    </table>
+          {{ form.as_table }}
+    <input type="submit" value="등록">
+
+
+</form>
+<hr/>
+{% for comm in comms %}
+<table>
+    <tr>
+        <td><h3>{{ comm.author }}</h3></td><td><h6>{{ comm.created_at }}</h6></td>
+    </tr>
+    <tr>
+        <td><h4>{{ comm.comment }}</h4></td>
+    </tr>
+    <tr>
+        <td><a href="{% url "store:store_question_edit" pk=stores.pk cid=comm.pk  %}">수정</a> </td>
+        <td><a href="{% url "store:store_question_del" pk=stores.pk cid=comm.pk  %}">삭제</a> </td>
+    </tr>
+</table>
+<hr/>
+
+
+
+{% for replay in comm.replies.all %}
+<table>
+    -> replay
+    <tr>
+        <td><h3>{{ replay.author }}</h3></td><td><h6>{{ replay.created_at }}</h6></td>
+    </tr>
+    <tr>
+        <td><h4>{{ replay.comment }}</h4></td>
+    </tr>
+    <tr>
+        <td><a href="{% url "store:store_question_edit" pk=stores.pk cid=replay.pk  %}">수정</a> </td>
+        <td><a href="{% url "store:store_question_del" pk=stores.pk cid=replay.pk  %}">삭제</a> </td>
+    </tr>
+</table>
+<hr/>
+
+
+{% endfor %}
+
+<h5>Replay</h5>
+
+<form action="." method="post">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <input type="hidden" name="parent_id" value="{{ comm.id }}">
     <input type="submit" value="등록하기">
 </form>
 
-{% for comm in comms %}
-{{ comm.author }}
-{{ comm.comment }}
+{% empty %}
+<h4>There are no comments yet.</h4>
 {% endfor %}
 {% endblock content %}

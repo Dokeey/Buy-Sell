@@ -26,3 +26,8 @@ class QuestionComment(models.Model):
     comment = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('created_at',)
