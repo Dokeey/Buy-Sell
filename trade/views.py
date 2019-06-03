@@ -102,5 +102,10 @@ def comment_update(request, pk, cid):
         'form':form
     })
 
+def comment_delete(reuqest, pk, cid):
+    comment = get_object_or_404(ItemComment, pk=cid)
+    comment.delete()
+    return redirect('trade:item_detail', pk)
+
 def test(request):
     return render(request, 'trade/test.html')
