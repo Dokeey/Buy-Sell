@@ -10,5 +10,6 @@ urlpatterns = [
     path('item_list/', views.item_list, name='item_list'),
     path('my_item_list/', views.my_item_list, name='my_item_list'),
     path('item_detail/<int:pk>/', views.item_detail, name='item_detail'),
+    path('item_update/<int:pk>/', views.item_update, name='item_update'),
     path('test/', views.test),
 ]

@@ -19,10 +19,16 @@ class ItemForm(forms.ModelForm):
         category.append(sub_category_group)
         CHOICES.append(category)
 
-    tmp = forms.ChoiceField(choices=CHOICES)
+    category_tmp = forms.ChoiceField(choices=CHOICES)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['category_tmp'].label = '카테고리'
+
+
     class Meta:
         model = Item
-        fields = ['title','desc','amount','photo','category','sub_category','status','is_public', 'tmp']
+        fields = ['title','desc','amount','photo','category_tmp', 'status','is_public']
 
 
 class ItemCommentForm(forms.ModelForm):

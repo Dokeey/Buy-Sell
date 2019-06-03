@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
+from category.models import SubCategory
 from .models import Item, ItemComment
 from .forms import ItemForm, ItemCommentForm
 
@@ -12,6 +13,7 @@ def item_new(request):
         form = ItemForm(request.POST, request.FILES)
         if form.is_valid():
             item = form.save(commit=False)
+            item.category = get_object_or_404(SubCategory, id=form.cleaned_data['category_tmp'])
             item.user = request.user
             item.photo = form.cleaned_data['photo']
             form.save()
@@ -63,6 +65,23 @@ def item_detail(request, pk):
         'item': item,
         'comments': comments,
         'form': form,
+    })
+
+def item_update(request, pk):
+    item = get_object_or_404(Item, pk=pk)
+    if request.method == "POST":
+        form = ItemForm(request.POST, request.FILES, instance=item)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.category = get_object_or_404(SubCategory, id=form.cleaned_data['category_tmp'])
+            item.user = request.user
+            item.photo = form.cleaned_data['photo']
+            form.save()
+        return redirect('trade:item_detail', pk)
+    else:
+        form = ItemForm(instance=item)
+    return render(request, 'trade/item_new.html',{
+        'form': form
     })
 
 def test(request):

@@ -19,8 +19,7 @@ class Item(models.Model):
             format = 'PNG',					# 최종 저장 포맷
             options = {'quality': 60}
         )
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
+    category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     status = models.CharField(max_length=10)
     is_public = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
