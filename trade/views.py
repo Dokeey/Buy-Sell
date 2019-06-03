@@ -89,5 +89,18 @@ def item_delete(request, pk):
     item.delete()
     return redirect('trade:item_list')
 
+def comment_update(request, pk, cid):
+    comment = get_object_or_404(ItemComment, pk=cid)
+    if request.method == "POST":
+        form = ItemCommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+        return redirect('trade:item_detail', pk)
+    else:
+        form = ItemCommentForm(instance=comment)
+    return render(request, 'trade/comment_update.html',{
+        'form':form
+    })
+
 def test(request):
     return render(request, 'trade/test.html')

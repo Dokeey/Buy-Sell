@@ -35,7 +35,8 @@
 <!-- Comment with nested comments -->
 {% for comment in comments %}
     <div class="comment" style="background-color: powderblue">
-        <p class="info">{{ comment.user }} | {{ comment.created_at }}</p>
+        <p class="info">{{ comment.user }} | {{ comment.created_at }}
+            <a href="{% url "trade:comment_update" pk=item.pk cid=comment.pk %}">수정</a></p>
             {{ comment.message|linebreaks }}
 
         {% for replay in comment.replies.all %}

@@ -1,39 +1,7 @@
 {% extends "trade/layout.html" %}
-{% load category_tags %}
-
 
 {% block content %}
 {{ block.super }}
-
-<script>
-
-    function checkcate(forms, value) {
-        tmp = document.getElementById("{{ form.tmp.id_for_label }}");
-        tmp.value = value
-        alert(tmp.value)
-        alert('{{ form.tmp.value }}')
-        forms.sub_category.options[0] = new Option(' - 선 택 - ','','','true');
-
-
-
-    }
-
-    function setMajor(form) {
-
-        var frm = form;
-
-        frm.major.options[0] = new Option(' - 선 택 - ','','','');
-        frm.major.options[1] = new Option('내과','AA005','','');
-        frm.major.options[2] = new Option(' -Internal Medicine(일반내과)','AA010','','true');
-        frm.major.options[3] = new Option(' -Allergy(알러지)','AA020','','');
-        frm.major.options[4] = new Option(' -Cardiology(순환기)','AA030','','');
-        frm.major.options[5] = new Option(' -Endocrinology(내분비)','AA040','','');
-    }
-
-</script>
-
-
-
 
 <h2>아이템 등록</h2>
 
