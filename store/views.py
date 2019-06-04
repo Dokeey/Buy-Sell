@@ -8,6 +8,7 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 @login_required
 def store_profile(request):
     stores = get_object_or_404(StoreProfile, user=request.user)
+
     return render(request, 'store/layout.html',{
         'stores': stores,
     })
@@ -99,8 +100,8 @@ def store_grade(request, pk):
 
 @login_required
 def store_grade_new(request, pk):
+    stores = get_object_or_404(StoreProfile, pk=pk)
     form_cls = StoreGradeForm
-    grades = get_object_or_404(StoreProfile, pk = pk)
     if request.method == 'POST':
         form = form_cls(request.POST)
         if form.is_valid():

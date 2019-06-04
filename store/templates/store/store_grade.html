@@ -3,12 +3,12 @@
 
 {% block content %}
 {{ block.super }}
-
-{% for grade in grades %}
 <a href="{% url "store:store_grade_new" stores.pk %}" > 평점쓰러가기</a>
+{% for grade in grades %}
+
 <table>
     <tr>
-        <td><h3>{{ grade.grade }}</h3></td><td>{{ grade.author }}</td>
+        <td><h3>{{ grade.get_rating_display }}</h3></td><td>{{ grade.author }}</td>
     </tr>
     <tr>
         <td><h5>{{ grade.grade_comment }}</h5></td>

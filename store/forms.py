@@ -18,4 +18,4 @@ class StoreQuestionForm(forms.ModelForm):
 class StoreGradeForm(forms.ModelForm):
     class Meta:
         model = StoreGrade
-        fields = ['grade_comment', 'grade']
+        fields = ['grade_comment', 'rating']

@@ -37,7 +37,18 @@ class StoreGrade(models.Model):
     store_profile = models.ForeignKey(StoreProfile, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     grade_comment = models.TextField()
-    grade = models.IntegerField(verbose_name="grades")
+    rating = models.CharField(max_length=10,
+        choices=(
+            ('0', '☆☆☆☆☆'),
+            ('1', '★☆☆☆☆'),
+            ('2', '★★☆☆☆'),
+            ('3', '★★★☆☆'),
+            ('4', '★★★★☆'),
+            ('5', '★★★★★')
+        ),
+        default=0,
+        db_index=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

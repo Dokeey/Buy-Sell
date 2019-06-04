@@ -13,4 +13,4 @@ class Comment(admin.ModelAdmin):
 
 @admin.register(StoreGrade)
 class StoreGrade(admin.ModelAdmin):
-	list_display = ['pk', 'author', 'grade']
+	list_display = ['pk', 'author', 'rating']

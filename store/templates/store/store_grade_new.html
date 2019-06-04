@@ -1,3 +1,6 @@
+{% extends "layout.html" %}
+{% block content %}
+    {{ block.super }}
 <form action="" method="POST" enctype="multipart/form-data">
      {% csrf_token %}
     <table>
@@ -6,3 +9,5 @@
     </table>
     <input type="submit" value="등록하기">
 </form>
+
+{% endblock content %}
