@@ -1,7 +1,11 @@
+certifi==2019.3.9
+chardet==3.0.4
 Django==2.1
 django-appconf==1.0.3
 django-imagekit==4.0.2
+iamport-rest-client==0.7.0
 idna==2.8
+jsonfield==2.0.2
 pilkit==2.0
 Pillow==6.0.0
 pytz==2019.1
