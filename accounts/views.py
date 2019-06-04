@@ -22,7 +22,7 @@ from django.utils.translation import gettext_lazy
 from django.views.generic import UpdateView, TemplateView
 
 from .models import Profile
-from .forms import SignupForm, ProfileForm
+from .forms import SignupForm, AuthProfileForm
 
 # Create your views here.
 User = get_user_model()
@@ -89,7 +89,7 @@ def profile_edit(request):
     profile = get_object_or_404(Profile, user=request.user)
 
     if request.method == "POST":
-        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        form = AuthProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             if check_password(request.POST['password'], profile.user.password):
                 form.save()
@@ -97,7 +97,7 @@ def profile_edit(request):
             else:
                 messages.error(request, '패스워드를 확인해주세요 :(')
     else:
-        form = ProfileForm(instance=profile)
+        form = AuthProfileForm(instance=profile)
 
     return render(request, 'accounts/profile_form.html',{
         'form': form

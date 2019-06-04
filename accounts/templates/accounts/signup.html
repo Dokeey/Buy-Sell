@@ -1,33 +1,13 @@
 {% extends "accounts/layout.html" %}
 
-{% block head %}
-
-{% endblock %}
-
 {% block content %}
-<script>
-    function Address_merge(){
-        address = document.getElementById("{{ form.address.id_for_label }}");
-        detail_addr = document.getElementById("detailAddress").value;
-        address.value += ' ' + detail_addr;
-        document.getElementById('signup').submit();
-    }
-</script>
 
 <form action="" method="POST" id="signup" novalidate>
     {% csrf_token %}
     <table>
         <th>
 			{{ form.as_table}}
-        <tr><td>
-        {{ form.address.label }}</td><td>
-            <input type="text" id="postcode" onclick="Postcode()" placeholder="우편번호" readonly="readonly">
-            <input type="button" onclick="Postcode()" value="우편번호 찾기" ><br>
-            <input type="text" id="roadAddress" placeholder="도로명주소" readonly="readonly">
-            <span id="guide" style="color:#999;display:none"></span>
-            <input type="text" id="detailAddress" placeholder="상세주소">
-            <input type="text" id="extraAddress" placeholder="참고항목" readonly="readonly"><br>
-            </td></tr></th>
+        </th>
     </table>
     <input type="submit" onclick="Address_merge()" value="가입하기">
 </form>

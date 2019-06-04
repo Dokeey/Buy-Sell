@@ -3,6 +3,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from category.models import SubCategory
+from accounts.models import Profile
+
+from accounts.forms import ProfileForm
 from .models import Item, ItemComment
 from .forms import ItemForm, ItemCommentForm
 
@@ -24,11 +27,13 @@ def item_new(request):
         'form': form
     })
 
+
 def item_list(request):
     items = Item.objects.all()
     return render(request, 'trade/item_list.html', {
         'items': items
     })
+
 
 @login_required
 def my_item_list(request):
@@ -36,6 +41,7 @@ def my_item_list(request):
     return render(request, 'trade/item_list.html', {
         'items': items
     })
+
 
 def item_detail(request, pk):
     item = get_object_or_404(Item, pk=pk)
@@ -67,6 +73,7 @@ def item_detail(request, pk):
         'form': form,
     })
 
+
 def item_update(request, pk):
     item = get_object_or_404(Item, pk=pk)
     if request.method == "POST":
@@ -84,10 +91,12 @@ def item_update(request, pk):
         'form': form
     })
 
+
 def item_delete(request, pk):
     item = get_object_or_404(Item, pk=pk)
     item.delete()
     return redirect('trade:item_list')
+
 
 def comment_update(request, pk, cid):
     comment = get_object_or_404(ItemComment, pk=cid)
@@ -102,10 +111,26 @@ def comment_update(request, pk, cid):
         'form':form
     })
 
+
 def comment_delete(reuqest, pk, cid):
     comment = get_object_or_404(ItemComment, pk=cid)
     comment.delete()
     return redirect('trade:item_detail', pk)
+
+
+def order_new(request, item_id):
+    item = get_object_or_404(Item, pk=item_id)
+    buyer = get_object_or_404(Profile, user=request.user)
+    form = ProfileForm(instance=buyer)
+    return render(request, 'trade/order_form.html',{
+        'item':item,
+        'form':form,
+    })
+
+
+def order_pay(request, item_id, merchant_uid):
+    pass
+
 
 def test(request):
     return render(request, 'trade/test.html')

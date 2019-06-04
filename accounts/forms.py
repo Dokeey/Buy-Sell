@@ -22,7 +22,17 @@ class SignupForm(UserCreationForm):
 
     phone = forms.CharField()
     nick_name = forms.CharField()
-    address = forms.CharField(widget= forms.HiddenInput)
+    address = forms.CharField(widget=forms.Textarea(attrs={
+                'readonly':'readonly',
+                'onclick': 'Postcode()',
+                'placeholder': '주소 입력',
+                'rows': 1,
+                'cols': 80,
+            }),
+    )
+    detail_address = forms.CharField(widget=forms.TextInput(attrs={
+                'placeholder': '상세 주소',
+            }),)
     account_num = forms.CharField()
     email = forms.EmailField()
 
@@ -57,7 +67,7 @@ class SignupForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'address', 'account_num', 'email')
+        fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'address', 'detail_address', 'account_num', 'email')
 
 
     def save(self, commit=True):
@@ -94,13 +104,33 @@ class SignupForm(UserCreationForm):
 
         StoreProfile.objects.create(user=user, name=user.profile.nick_name + '의 가게')
 
+
 class ProfileForm(forms.ModelForm):
+    detail_address = forms.CharField()
+    class Meta:
+        model = Profile
+        fields = ['nick_name', 'email', 'phone', 'address', 'detail_address','account_num']
+        widgets = {
+            'address': forms.Textarea(attrs={
+                'readonly':'readonly',
+                'onclick': 'Postcode()',
+                'placeholder': '주소 입력',
+                'rows': 1,
+                'cols': 80,
+            }),
+            'detail_address': forms.TextInput(attrs={
+                'placeholder': '상세 주소',
+            }),
+
+        }
+
+
+class AuthProfileForm(ProfileForm):
     password = forms.CharField(
         widget=forms.PasswordInput,
     )
+
     class Meta:
-        model = Profile
-        fields = ['nick_name', 'email', 'phone', 'address', 'account_num', 'password']
-        widgets = {
-            'address': forms.HiddenInput,
-        }
+        model = ProfileForm.Meta.model
+        fields = ProfileForm.Meta.fields + ['password']
+        widgets = ProfileForm.Meta.widgets

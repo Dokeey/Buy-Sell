@@ -1,0 +1,26 @@
+{% extends "trade/layout.html" %}
+
+
+{% block content %}
+
+
+
+<img src="{{ item.photo.url }}"/>
+{{ item.title }}
+{{ item.desc }} <br>
+{{ item.status }} <br>
+{{ item.user }} <br>
+{{ item.amount }} <br>
+{{ item.created_at }} <br>
+
+
+
+<form method="POST" action="">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="구매하기">
+</form>
+
+{% endblock %}
