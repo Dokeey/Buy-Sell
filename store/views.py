@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404, redirect
 
-
+from trade.models import Item
 from .models import StoreProfile, QuestionComment, StoreGrade
 from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 
@@ -94,27 +94,12 @@ def store_question_del(request,pk, cid):
 def store_grade(request, pk):
     stores = get_object_or_404(StoreProfile, pk=pk)
     grades = StoreGrade.objects.filter(store_profile_id=pk)
-    # plusrates = 0
-    rates = StoreGrade.objects.filter(store_profile_id=pk).count()
-    sum = StoreGrade.objects.filter(store_profile_id=pk).aggregate(Sum('rating'))['rating__sum']
+    rates = grades.count()
+    sum = grades.aggregate(Sum('rating'))['rating__sum']
     if rates:
         end = sum/rates
     else:
         end = 0
-    # for rate in range(0,rates):
-    #     if grades.rating == '0':
-    #         plusrates= plusrates+0
-    #     elif grades.rating == '1':
-    #         plusrates = plusrates + 1
-    #     elif grades.rating == '2':
-    #         plusrates = plusrates + 2
-    #     elif grades.rating == '3':
-    #         plusrates = plusrates + 3
-    #     elif grades.rating == '4':
-    #         plusrates = plusrates + 4
-    #     else:
-    #         plusrates = plusrates + 5
-    #     plusrate=plusrates
     return render(request, 'store/store_grade.html', {
         'stores':stores,
         'grades':grades,
@@ -141,3 +126,11 @@ def store_grade_new(request, pk):
         'form':form
     })
 
+def store_sell_list(request, pk):
+    stores = get_object_or_404(StoreProfile,pk=pk)
+    store_item = Item.objects.filter(user_id = stores.user_id)
+
+    return render(request, 'store/store_sell_list.html', {
+        'store_item':store_item,
+        'stores':stores
+    })

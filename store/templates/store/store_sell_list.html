@@ -1,0 +1,23 @@
+{% extends "store/layout.html" %}
+
+{% block content %}
+{{ block.super }}
+{% for list in store_item %}
+<table>
+    <tr>
+        <td><h3>{{ list.title }}</h3></td>
+    </tr>
+    <tr>
+        <td>가격:</td><td> {{ list.amount }}</td>
+    </tr>
+    <tr>
+        <td> <img src="{{ list.photo.url }}" /></td>
+    </tr>
+
+</table>
+
+    <hr/>
+
+{% endfor %}
+
+{% endblock %}

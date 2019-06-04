@@ -3,12 +3,10 @@
 
 {% block content %}
 {{ block.super }}
+평균 : {{ end }} / 5 <br>
 <a href="{% url "store:store_grade_new" stores.pk %}" > 평점쓰러가기</a>
-평균 : {{ end }}
 
 {% for grade in grades %}
-
-
 <table>
     <tr>
         <td><h3>{{ grade.get_rating_display }}</h3></td><td>{{ grade.author }}</td>
