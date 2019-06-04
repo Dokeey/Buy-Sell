@@ -116,8 +116,6 @@ class SignupForm(UserCreationForm):
 
 
 class ProfileForm(forms.ModelForm):
-    detail_address = forms.CharField()
-    post_code = forms.CharField()
     class Meta:
         model = Profile
         fields = ['nick_name', 'email', 'phone', 'post_code', 'address', 'detail_address','account_num']
