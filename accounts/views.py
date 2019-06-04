@@ -21,6 +21,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.translation import gettext_lazy
 from django.views.generic import UpdateView, TemplateView
 
+from trade.models import Order
 from .models import Profile
 from .forms import SignupForm, AuthProfileForm
 
@@ -80,8 +81,16 @@ signout = LogoutView.as_view()
 @login_required
 def profile_view(request):
     profile = get_object_or_404(Profile, user=request.user)
+    order_list = request.user.order_set.all()
+    orders = Order.objects.all()
+    sell_list = []
+    for order in orders:
+        if order.item.user == request.user:
+            sell_list.append(order)
     return render(request, 'accounts/profile.html',{
         'profile': profile,
+        'order_list': order_list,
+        'sell_list': sell_list,
     })
 
 @login_required

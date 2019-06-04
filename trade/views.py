@@ -125,9 +125,12 @@ def order_new(request, item_id):
     if request.method == "POST":
         form = ProfileForm(request.POST, instance=buyer)
         if form.is_valid():
-            order = Order.objects.create(user=request.user, item=item, name=item.title, amount=item.amount)
-            profile = form.save(commit=False)
-            return redirect('trade:order_pay', item_id, str(order.merchant_uid), profile)
+            order = Order.objects.create(user=request.user, item=item, name=item.title, amount=item.amount,
+                buyer_email=form.cleaned_data['email'], buyer_name=form.cleaned_data['nick_name'],
+                buyer_tel=form.cleaned_data['phone'], buyer_postcode=form.cleaned_data['post_code'],
+                buyer_addr=form.cleaned_data['address'] + form.cleaned_data['detail_address'],
+            )
+            return redirect('trade:order_pay', item_id, str(order.merchant_uid))
         else:
             messages.error(request, '유효하지 않은 상품입니다.')
     else:
@@ -138,8 +141,19 @@ def order_new(request, item_id):
     })
 
 
-def order_pay(request, item_id, merchant_uid, profile):
-    pass
+def order_pay(request, item_id, merchant_uid):
+    order = get_object_or_404(Order, user=request.user, merchant_uid=merchant_uid, status='ready')
+
+    if request.method == 'POST':
+        form = PayForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('accounts:profile')
+    else:
+        form = PayForm(instance=order)
+    return render(request, 'trade/pay_form.html', {
+        'form': form,
+    })
 
 
 def test(request):

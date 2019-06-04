@@ -66,8 +66,20 @@ class PayForm(forms.ModelForm):
             'merchant_uid': str(self.instance.merchant_uid),
             'name': self.instance.name,
             'amount': self.instance.amount,
+            'buyer_email': self.instance.buyer_email,
+            'buyer_name': self.instance.buyer_name,
+            'buyer_tel': self.instance.buyer_tel,
+            'buyer_addr': self.instance.buyer_addr,
+            'buyer_postcode': self.instance.buyer_postcode,
         }
-        return hidden_fields + render_to_string('shop/_iamport.html', {
+        return hidden_fields + render_to_string('trade/_iamport.html', {
             'json_fields': mark_safe(json.dumps(fields, ensure_ascii=False)),
             'iamport_shop_id': settings.IAMPORT_SHOP_ID, # FIXME: 각자의 상점 아이디로 변경 가능
         })
+
+    def save(self):
+        order = super().save(commit=False)
+        # order.status = 'paid' # FIXME: 아임포트 API를 통한 확인 후에 변경을 해야만 합니다.
+        # order.save()
+        order.update()
+        return order

@@ -69,7 +69,12 @@ class ItemComment(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    buyer_email = models.EmailField()
+    buyer_name = models.CharField(max_length=10)
+    buyer_tel = models.CharField(max_length=11)
+    buyer_addr = models.CharField(max_length=100)
+    buyer_postcode = models.CharField(max_length=10)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='item_set')
     merchant_uid = models.UUIDField(default=uuid4, editable=False)
     imp_uid = models.CharField(max_length=100, blank=True)
     name = models.CharField(max_length=100, verbose_name='상품명')

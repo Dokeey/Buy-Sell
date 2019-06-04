@@ -165,6 +165,6 @@ MEDIA_URL = '/files/' # 업로드 할 경로
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
-IAMPORT_SHOP_ID = 'buynsell' # 가맹점 식별코드
+IAMPORT_SHOP_ID = 'iamport' # 가맹점 식별코드
 IAMPORT_API_KEY = 'imp_apikey' # REST API 키
 IAMPORT_API_SECRET = 'ekKoeW8RyKuT0zgaZsUtXXTLQ4AhPFW3ZGseDA6bkA5lamv9OqDMnxyeB9wqOsuO9W3Mx9YSJ4dTqJ3f' # REST API SECRET
