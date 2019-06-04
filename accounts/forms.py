@@ -22,10 +22,16 @@ class SignupForm(UserCreationForm):
 
     phone = forms.CharField()
     nick_name = forms.CharField()
+    post_code = forms.CharField(widget=forms.TextInput(attrs={
+                'readonly': 'readonly',
+                'onclick': 'Postcode()',
+                'placeholder': '우편 번호',
+            }),
+    )
     address = forms.CharField(widget=forms.Textarea(attrs={
                 'readonly':'readonly',
                 'onclick': 'Postcode()',
-                'placeholder': '주소 입력',
+                'placeholder': '주소',
                 'rows': 1,
                 'cols': 80,
             }),
@@ -67,7 +73,7 @@ class SignupForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'address', 'detail_address', 'account_num', 'email')
+        fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'post_code', 'address', 'detail_address', 'account_num', 'email')
 
 
     def save(self, commit=True):
@@ -94,32 +100,42 @@ class SignupForm(UserCreationForm):
 
         phone = self.cleaned_data.get('phone', None)
         email = self.cleaned_data.get('email', None)
+        post_code = self.cleaned_data.get('post_code', None)
         address = self.cleaned_data.get('address', None)
+        detail_address = self.cleaned_data.get('detail_address', None)
         nick_name = self.cleaned_data.get('nick_name', None)
         account_num = self.cleaned_data.get('account_num', None)
 
         Profile.objects.create(user=user, email=email,
                                phone=phone, address=address,
-                               nick_name=nick_name, account_num=account_num)
+                               nick_name=nick_name, account_num=account_num,
+                               post_code=post_code, detail_address=detail_address
+                               )
 
         StoreProfile.objects.create(user=user, name=user.profile.nick_name + '의 가게')
 
 
 class ProfileForm(forms.ModelForm):
     detail_address = forms.CharField()
+    post_code = forms.CharField()
     class Meta:
         model = Profile
-        fields = ['nick_name', 'email', 'phone', 'address', 'detail_address','account_num']
+        fields = ['nick_name', 'email', 'phone', 'post_code', 'address', 'detail_address','account_num']
         widgets = {
             'address': forms.Textarea(attrs={
                 'readonly':'readonly',
                 'onclick': 'Postcode()',
-                'placeholder': '주소 입력',
+                'placeholder': '주소',
                 'rows': 1,
                 'cols': 80,
             }),
             'detail_address': forms.TextInput(attrs={
                 'placeholder': '상세 주소',
+            }),
+            'post_code': forms.TextInput(attrs={
+                'readonly': 'readonly',
+                'onclick': 'Postcode()',
+                'placeholder': '우편 번호',
             }),
 
         }

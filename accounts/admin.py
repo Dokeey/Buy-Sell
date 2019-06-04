@@ -27,4 +27,4 @@ class Session(admin.ModelAdmin):
 
 @admin.register(Profile)
 class AdminProfile(admin.ModelAdmin):
-    list_display = ('user', 'email', 'nick_name', 'phone', 'address', 'account_num')
+    list_display = ('user', 'email', 'nick_name', 'phone', 'post_code','address', 'detail_address','account_num')

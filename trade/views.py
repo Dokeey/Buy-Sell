@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -6,8 +7,8 @@ from category.models import SubCategory
 from accounts.models import Profile
 
 from accounts.forms import ProfileForm
-from .models import Item, ItemComment
-from .forms import ItemForm, ItemCommentForm
+from .models import Item, ItemComment, Order
+from .forms import ItemForm, ItemCommentForm, PayForm
 
 
 @login_required
@@ -121,14 +122,23 @@ def comment_delete(reuqest, pk, cid):
 def order_new(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
     buyer = get_object_or_404(Profile, user=request.user)
-    form = ProfileForm(instance=buyer)
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=buyer)
+        if form.is_valid():
+            order = Order.objects.create(user=request.user, item=item, name=item.title, amount=item.amount)
+            profile = form.save(commit=False)
+            return redirect('trade:order_pay', item_id, str(order.merchant_uid), profile)
+        else:
+            messages.error(request, '유효하지 않은 상품입니다.')
+    else:
+        form = ProfileForm(instance=buyer)
     return render(request, 'trade/order_form.html',{
         'item':item,
         'form':form,
     })
 
 
-def order_pay(request, item_id, merchant_uid):
+def order_pay(request, item_id, merchant_uid, profile):
     pass
 
 

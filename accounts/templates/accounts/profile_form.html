@@ -3,14 +3,14 @@
 {% block content %}
 
 
-<form action="" method="POST" id="signup" novalidate>
+<form action="" method="POST" novalidate>
     {% csrf_token %}
     <table>
         <th>
             {{ form.as_table}}
         </th>
     </table>
-    <input type="submit" onclick="Address_merge()" value="가입하기">
+    <input type="submit" value="가입하기">
 </form>
 <hr>
 <a href="{% url "accounts:pw_edit" %}"> 비밀번호변경 </a>

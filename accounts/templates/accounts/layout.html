@@ -28,19 +28,13 @@
                     extraRoadAddr = ' (' + extraRoadAddr + ')';
                 }
 
+                post_code = document.getElementById("{{ form.post_code.id_for_label }}");
+                post_code.value = data.zonecode;
+
                 address = document.getElementById("{{ form.address.id_for_label }}");
-                address.value = data.zonecode+ ' ' + roadAddr + ' ' + extraRoadAddr;
+                address.value = roadAddr + ' ' + extraRoadAddr;
             }
         }).open();
-    }
-</script>
-
-<script>
-    function Address_merge(){
-        address = document.getElementById("{{ form.address.id_for_label }}");
-        detail_addr = document.getElementById("{{ form.detail_address.id_for_label }}").value;
-        address.value += ' ' + detail_addr;
-        document.getElementById('signup').submit();
     }
 </script>
 {% endblock %}

@@ -18,6 +18,6 @@ urlpatterns = [
     path('comment_delete/<int:pk>/<int:cid>/', views.comment_delete, name='comment_delete'),
 
     path('order/new/<int:item_id>/', views.order_new, name='order_new'),
-    path('order/<int:item_id>/pay/<merchant_uid>/', views.order_pay, name='order_pay'),
+    path('order/<int:item_id>/pay/<merchant_uid>/<profile>/', views.order_pay, name='order_pay'),
     path('test/', views.test),
 ]

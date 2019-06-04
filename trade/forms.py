@@ -54,6 +54,9 @@ class PayForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ['imp_uid',]
+        widgets = {
+            'imp_uid': forms.HiddenInput,
+        }
 
     def as_iamport(self):
         # 본 Form의 Hidden 필드 위젯
