@@ -11,4 +11,6 @@ urlpatterns = [
     path('question/<int:pk>/', views.store_question, name='store_question'),
     path('question/<int:pk>/edit/<int:cid>/', views.store_question_edit, name='store_question_edit'),
     path('question/<int:pk>/delete/<int:cid>/', views.store_question_del, name='store_question_del'),
+    path('grade/<int:pk>/', views.store_grade, name='store_grade'),
+    path('grade/<int:pk>/new/',views.store_grade_new, name='store_grade_new'),
 ]

@@ -31,3 +31,15 @@ class QuestionComment(models.Model):
 
     class Meta:
         ordering = ('created_at',)
+
+
+class StoreGrade(models.Model):
+    store_profile = models.ForeignKey(StoreProfile, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    grade_comment = models.TextField()
+    grade = models.IntegerField(verbose_name="grades")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('created_at',)

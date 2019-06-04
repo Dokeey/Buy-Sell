@@ -1,7 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import StoreProfile, QuestionComment
-from .forms import StoreProfileForm, StoreQuestionForm
+
+
+from .models import StoreProfile, QuestionComment, StoreGrade
+from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 
 @login_required
 def store_profile(request):
@@ -65,6 +67,7 @@ def store_question(request, pk):
         'stores': stores,
     })
 
+@login_required
 def store_question_edit(request, pk, cid):
     form_cls = StoreQuestionForm
     comment = get_object_or_404(QuestionComment, pk=cid)
@@ -79,7 +82,37 @@ def store_question_edit(request, pk, cid):
         'forms':forms
     })
 
+@login_required
 def store_question_del(request,pk, cid):
     comment = get_object_or_404(QuestionComment, pk=cid)
     comment.delete()
     return redirect('store:store_question', pk)
+
+@login_required
+def store_grade(request, pk):
+    stores = get_object_or_404(StoreProfile, pk=pk)
+    grades = StoreGrade.objects.filter(store_profile_id=pk)
+    return render(request, 'store/store_grade.html', {
+        'stores':stores,
+        'grades':grades
+    })
+
+@login_required
+def store_grade_new(request, pk):
+    form_cls = StoreGradeForm
+    grades = get_object_or_404(StoreProfile, pk = pk)
+    if request.method == 'POST':
+        form = form_cls(request.POST)
+        if form.is_valid():
+            gradeform = form.save(commit=False)
+            gradeform.author = request.user
+            gradeform.store_profile_id = pk
+            gradeform.save()
+        return redirect('store:store_grade', pk)
+    else :
+        form = form_cls
+
+    return render(request, 'store/store_grade_new.html',{
+        'form':form
+    })
+

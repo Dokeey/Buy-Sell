@@ -1,0 +1,8 @@
+<form action="" method="POST" enctype="multipart/form-data">
+     {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+
+    </table>
+    <input type="submit" value="등록하기">
+</form>

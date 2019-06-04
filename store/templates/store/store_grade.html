@@ -1,0 +1,21 @@
+
+{% extends "store/layout.html" %}
+
+{% block content %}
+{{ block.super }}
+
+{% for grade in grades %}
+<a href="{% url "store:store_grade_new" stores.pk %}" > 평점쓰러가기</a>
+<table>
+    <tr>
+        <td><h3>{{ grade.grade }}</h3></td><td>{{ grade.author }}</td>
+    </tr>
+    <tr>
+        <td><h5>{{ grade.grade_comment }}</h5></td>
+    </tr>
+</table>
+{% empty %}
+<h4>가게 평점이 없습니다.</h4>
+
+{% endfor %}
+{% endblock %}
