@@ -6,10 +6,10 @@ from category.models import Category, SubCategory
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_text
+from django.utils.safestring import mark_safe
 
 from .models import Item, ItemComment, Order
-
-from django.utils.safestring import mark_safe
+from accounts.forms import ProfileForm
 
 
 class ItemForm(forms.ModelForm):
@@ -84,8 +84,13 @@ class PayForm(forms.ModelForm):
         order.update()
         return order
 
-
-class OrderForm(forms.Form):
-    queryset = forms.MultipleChoiceField
+class OrderForm(ProfileForm):
+    CHOICE = (
+        ('import', '이니페이 카드결제'),
+        ('bank_trans', '계좌이체'),
+    )
+    pay_choice = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICE)
     class Meta:
-        fields = ['queryset']
+        model = ProfileForm.Meta.model
+        fields = ProfileForm.Meta.fields + ['pay_choice']
+        widgets = ProfileForm.Meta.widgets

@@ -85,7 +85,7 @@ class Order(models.Model):
             ('ready', '미결제'),
             ('paid', '결제완료'),
             ('cancelled', '결제취소'),
-            ('faild', '결제실패'),
+            ('failed', '결제실패'),
         },
         default='ready',
         db_index=True
@@ -191,4 +191,4 @@ class Order(models.Model):
         except Iamport.ResponseError as e:  # 취소시 오류 예외처리(이미 취소된 결제는 에러가 발생함)
             self.update(commit=commit)
         if commit:
-            self.update()
+            self.save()

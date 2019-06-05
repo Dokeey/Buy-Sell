@@ -61,17 +61,19 @@
                 <th>결과일시</th>
                 <th>영수증</th>
                 <th>구매자 정보</th>
+                <th>관리</th>
             </tr>
         </thead>
         <tbody>
             {% for sell in sell_list %}
             <tr>
-                <td>{{ sell.item }}</td>
+                <td>{{ sell.name }}</td>
                 <td>{{ sell.amount_html }}</td>
                 <td>{{ sell.status_html }}</td>
                 <td>{{ sell.paid_at|default:"-" }}</td>
                 <td>{{ sell.receipt_link|default:"-" }}</td>
                 <td>{{ sell.user.profile.nick_name }}</td>
+                <td><a href="{% url "trade:order_cancle" sell.id %}">주문 취소</a></td>
             </tr>
             {% endfor %}
         </tbody>
