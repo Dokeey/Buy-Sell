@@ -13,7 +13,7 @@ urlpatterns = [
     path('question/<int:pk>/delete/<int:cid>/', views.store_question_del, name='store_question_del'),
 
     path('grade/<int:pk>/', views.store_grade, name='store_grade'),
-    path('grade/<int:pk>/new/',views.store_grade_new, name='store_grade_new'),
+    path('grade/<int:pk>/new/<int:item_id>',views.store_grade_new, name='store_grade_new'),
     path('grade/<int:pk>/edit/<int:gid>/', views.store_grade_edit, name='store_grade_edit'),
     path('grade/<int:pk>/del/<int:gid>/',views.store_grade_del, name='store_grade_del'),
 

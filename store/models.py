@@ -4,6 +4,7 @@ from imagekit.models import ProcessedImageField
 from pilkit.processors import ResizeToFill
 
 from accounts.models import Profile
+from trade.models import Item
 
 
 class StoreProfile(models.Model):
@@ -36,6 +37,7 @@ class QuestionComment(models.Model):
 class StoreGrade(models.Model):
     store_profile = models.ForeignKey(StoreProfile, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    store_item = models.ForeignKey(Item, on_delete=models.PROTECT)
     grade_comment = models.TextField()
     rating = models.CharField(max_length=10,
         choices=(
