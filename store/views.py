@@ -109,7 +109,7 @@ def store_grade(request, pk):
 
 @login_required
 def store_grade_new(request, pk):
-    stores = get_object_or_404(StoreProfile, pk=pk)
+
     form_cls = StoreGradeForm
     if request.method == 'POST':
         form = form_cls(request.POST)
@@ -125,6 +125,29 @@ def store_grade_new(request, pk):
     return render(request, 'store/store_grade_new.html',{
         'form':form
     })
+
+
+@login_required
+def store_grade_edit(request, pk, gid):
+    stores = get_object_or_404(StoreProfile, pk=pk)
+    grade = get_object_or_404(StoreGrade, pk=gid)
+    form_cls = StoreGradeForm
+    if request.method == 'POST':
+        form = form_cls(request.POST, instance=grade)
+        if form.is_valid():
+            form.save()
+            return redirect('store:store_grade',pk)
+    else :
+        form = form_cls(instance=grade)
+    return render(request, 'store/store_grade_new.html',{
+        'form':form,
+        'stores':stores
+    })
+
+def store_grade_del(request, pk, gid):
+    grade = get_object_or_404(StoreGrade, pk= gid)
+    grade.delete()
+    return redirect('store:store_grade',pk)
 
 def store_sell_list(request, pk):
     stores = get_object_or_404(StoreProfile,pk=pk)
