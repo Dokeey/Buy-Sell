@@ -41,11 +41,7 @@ class ItemForm(forms.ModelForm):
 class ItemUpdateForm(ItemForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        try:
-            if kwargs['instance']:
-                self.fields['category_tmp'].initial = self.instance.category.id
-        except:
-            pass
+        self.fields['category_tmp'].initial = self.instance.category.id
 
     class Meta:
         model = ItemForm.Meta.model

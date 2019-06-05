@@ -3,6 +3,7 @@
 {% block content %}
 {{ block.super }}
 
+{% if item.pay_status == "ready" %}
 <h2>{{ item.title }}</h2>
 
 
@@ -20,10 +21,16 @@
 <br>
 
 <a href="{% url "trade:order_new" item.pk %}" class="btn btn-primary">구매하기</a><br>
+{% else %}
 
-<a href="{% url "trade:item_update" item.pk %}">수정하기</a>
-<a href="{% url "trade:item_delete" item.pk %}">삭제하기</a>
+판매중이거나 예약중인 상품입니다 ^^7<br>
 
+{% endif %}
+
+{% if item.user == request.user %}
+    <a href="{% url "trade:item_update" item.pk %}">수정하기</a>
+    <a href="{% url "trade:item_delete" item.pk %}">삭제하기</a>
+{% endif %}
 
 
 <!-- Comments Form -->

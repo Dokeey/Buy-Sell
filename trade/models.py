@@ -44,7 +44,7 @@ class Item(models.Model):
         )
     category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     item_status = models.CharField(
-        max_length=9,
+        max_length=3,
         choices={
             ('c', 'C급 이하'),
             ('b', 'B급'),
@@ -54,7 +54,7 @@ class Item(models.Model):
         default='a',
     )
     pay_status = models.CharField(
-        max_length=9,
+        max_length=15,
         choices={
             ('ready', '재고있음'),
             ('reservation', '예약'),

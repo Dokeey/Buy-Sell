@@ -7,14 +7,25 @@
 
 {% for item in items %}
 
+{% if item.pay_status == "reservation" %}
+예약중인 상품입니다. ^^7
+<br>
+
+{% elif item.pay_status == "sale_complete" %}
+판매완료 상품입니다. ^^7
+<br>
+
+{% else %}
+
 <br>
 상품명 : {{ item.title }} <br>
 가격 : {{ item.amount }} <br>
 사진 : <a href="{% url "trade:item_detail" pk=item.pk %}"><img src="{{ item.photo.url }}"/><br></a>
-상태 : {{ item.status }} <br>
+상태 : {{ item.get_item_status_display }} <br>
 최근 업데이트 : {{ item.updated_at }} <br>
 <br>
 
+{% endif %}
 {% endfor %}
 
 {% endblock %}

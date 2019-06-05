@@ -120,26 +120,29 @@ def comment_delete(reuqest, pk, cid):
 
 def order_new(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
-    buyer = get_object_or_404(Profile, user=request.user)
-    if request.method == "POST":
-        form = OrderForm(request.POST, instance=buyer)
-        if form.is_valid():
-            if form.cleaned_data['pay_choice'] == 'import':
-                order = Order.objects.create(user=request.user, item=item, name=item.title, amount=item.amount,
-                    buyer_email=form.cleaned_data['email'], buyer_name=form.cleaned_data['nick_name'],
-                    buyer_tel=form.cleaned_data['phone'], buyer_postcode=form.cleaned_data['post_code'],
-                    buyer_addr=form.cleaned_data['address'] + form.cleaned_data['detail_address'],
-                )
-                return redirect('trade:order_pay', item_id, str(order.merchant_uid))
-            elif form.cleaned_data['pay_choice'] == 'bank_trans':
-                return render(request, 'trade/seller_info.html', {
-                    'seller': item.user
-                })
+    if item.pay_status != 'ready':
+        buyer = get_object_or_404(Profile, user=request.user)
+        if request.method == "POST":
+            form = OrderForm(request.POST, instance=buyer)
+            if form.is_valid():
+                if form.cleaned_data['pay_choice'] == 'import':
+                    order = Order.objects.create(user=request.user, item=item, name=item.title, amount=item.amount,
+                        buyer_email=form.cleaned_data['email'], buyer_name=form.cleaned_data['nick_name'],
+                        buyer_tel=form.cleaned_data['phone'], buyer_postcode=form.cleaned_data['post_code'],
+                        buyer_addr=form.cleaned_data['address'] + form.cleaned_data['detail_address'],
+                    )
+                    return redirect('trade:order_pay', item_id, str(order.merchant_uid))
+                elif form.cleaned_data['pay_choice'] == 'bank_trans':
+                    return render(request, 'trade/seller_info.html', {
+                        'seller': item.user
+                    })
 
+            else:
+                messages.error(request, '유효하지 않은 상품입니다.')
         else:
-            messages.error(request, '유효하지 않은 상품입니다.')
+            form = OrderForm(instance=buyer)
     else:
-        form = OrderForm(instance=buyer)
+        messages.error(request, '이미 예약이 되었거나 판매완료 상품입니다.')
     return render(request, 'trade/order_form.html',{
         'item':item,
         'form':form,
