@@ -14,8 +14,7 @@
 {{ item.amount }} <br>
 <img src="{{ item.photo.url }}"/><br>
 {{ item.category }} <br>
-{{ item.status }} <br>
-{{ item.is_public }} <br>
+{{ item.get_item_status_display }} <br>
 {{ item.created_at }} <br>
 {{ item.updated_at }} <br>
 <br>

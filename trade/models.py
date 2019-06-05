@@ -43,8 +43,26 @@ class Item(models.Model):
             options = {'quality': 60}
         )
     category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
-    status = models.CharField(max_length=10)
-    is_public = models.BooleanField(default=False)
+    item_status = models.CharField(
+        max_length=9,
+        choices={
+            ('c', 'C급 이하'),
+            ('b', 'B급'),
+            ('a', 'A급'),
+            ('s', 'S급'),
+        },
+        default='a',
+    )
+    pay_status = models.CharField(
+        max_length=9,
+        choices={
+            ('ready', '재고있음'),
+            ('reservation', '예약'),
+            ('sale_complete', '판매완료'),
+        },
+        default='ready',
+        db_index=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

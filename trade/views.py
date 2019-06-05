@@ -7,7 +7,7 @@ from category.models import SubCategory
 from accounts.models import Profile
 
 from .models import Item, ItemComment, Order
-from .forms import ItemForm, ItemCommentForm, PayForm, OrderForm
+from .forms import ItemForm, ItemUpdateForm, ItemCommentForm, PayForm, OrderForm
 
 
 @login_required
@@ -77,7 +77,7 @@ def item_detail(request, pk):
 def item_update(request, pk):
     item = get_object_or_404(Item, pk=pk)
     if request.method == "POST":
-        form = ItemForm(request.POST, request.FILES, instance=item)
+        form = ItemUpdateForm(request.POST, request.FILES, instance=item)
         if form.is_valid():
             item = form.save(commit=False)
             item.category = get_object_or_404(SubCategory, id=form.cleaned_data['category_tmp'])
@@ -86,7 +86,7 @@ def item_update(request, pk):
             form.save()
         return redirect('trade:item_detail', pk)
     else:
-        form = ItemForm(instance=item)
+        form = ItemUpdateForm(instance=item)
     return render(request, 'trade/item_new.html',{
         'form': form
     })

@@ -33,14 +33,23 @@ class ItemForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['category_tmp'].label = '카테고리'
 
+    class Meta:
+        model = Item
+        fields = ['title','desc','amount','photo','category_tmp', 'item_status']
+
+
+class ItemUpdateForm(ItemForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         try:
             if kwargs['instance']:
                 self.fields['category_tmp'].initial = self.instance.category.id
         except:
             pass
+
     class Meta:
-        model = Item
-        fields = ['title','desc','amount','photo','category_tmp', 'status','is_public']
+        model = ItemForm.Meta.model
+        fields = ItemForm.Meta.fields + ['pay_status']
 
 
 class ItemCommentForm(forms.ModelForm):
