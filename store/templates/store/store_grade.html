@@ -1,9 +1,15 @@
 
 {% extends "store/layout.html" %}
+{% load store.store_tags %}
 
 {% block content %}
 {{ block.super }}
-평균 : {{ end }} / 5 <br>
+
+{% store_rating stores.pk as end %}
+{% store_item_list stores.pk as item_count %}
+{% store_grade_list stores.pk as grade_count %}
+{% store_question_list stores.pk as question_count %}
+
 <a href="{% url "store:store_grade_new" stores.pk %}" > 평점쓰러가기</a>
 
 {% for grade in grades %}

@@ -9,9 +9,9 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 @login_required
 def store_profile(request):
     stores = get_object_or_404(StoreProfile, user=request.user)
-
     return render(request, 'store/layout.html',{
         'stores': stores,
+
     })
 
 
@@ -94,17 +94,10 @@ def store_question_del(request,pk, cid):
 def store_grade(request, pk):
     stores = get_object_or_404(StoreProfile, pk=pk)
     grades = StoreGrade.objects.filter(store_profile_id=pk)
-    rates = grades.count()
-    sum = grades.aggregate(Sum('rating'))['rating__sum']
-    if rates:
-        end = sum/rates
-    else:
-        end = 0
+
     return render(request, 'store/store_grade.html', {
         'stores':stores,
         'grades':grades,
-        'plusrate':rates,
-        'end':end
     })
 
 @login_required

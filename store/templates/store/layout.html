@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-
+{% load store.store_tags %}
 {% block content %}
     <h2 style="margin:20px">{{ stores.name }}</h2>
     <hr/>
@@ -11,9 +11,12 @@
         <tr>
             <td>가게 소개 : </td><td>{{ stores.comment }}</td>
         </tr>
+
+        {% store_rating stores.pk as end %}
         <tr>
-            <td>평점 : </td><td>{{ store_grade.end }} /5 </td>
+            <td>평점 : </td><td>{{ end }} /5 </td>
         </tr>
+
         <tr>
             <td>개점일 : </td><td> {{ stores.created_at }}</td>
         </tr>
@@ -30,7 +33,14 @@
     <hr/>
     <table style="margin:20px">
         <tr>
-            <td><a href="{% url "store:store_sell_list" stores.pk %}">리스트 /</a></td><td><a href="{% url "store:store_grade" stores.pk %}">가게 평점 /</a>  </td><td><a href="{% url "store:store_question" stores.pk %}">가게 문의</a></td>
+            {% store_item_list stores.pk as item_count %}
+            <td><a href="{% url "store:store_sell_list" stores.pk %}">리스트({{ item_count }})/</a></td>
+
+            {% store_grade_list stores.pk as grade_count %}
+            <td><a href="{% url "store:store_grade" stores.pk %}">가게 평점({{ grade_count }}) /</a>  </td>
+
+            {% store_question_list stores.pk as question_count %}
+            <td><a href="{% url "store:store_question" stores.pk %}">가게 문의({{ question_count }})</a></td>
         </tr>
     </table>
     <hr/>
