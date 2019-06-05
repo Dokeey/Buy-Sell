@@ -3,7 +3,7 @@ from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
 from store.models import StoreProfile, StoreGrade, QuestionComment
-from trade.models import Item
+from trade.models import Item, Order
 
 register = template.Library()
 
@@ -37,3 +37,16 @@ def store_question_list(pk):
     stores = get_object_or_404(StoreProfile, pk=pk)
     question_count = QuestionComment.objects.filter(store_profile_id=stores.pk).count()
     return question_count
+
+@register.simple_tag
+def store_sell_list(pk):
+    stores = get_object_or_404(StoreProfile, pk=pk)
+    order = Item.objects.filter(user=stores.user, pay_status='sale_complete').count()
+    return order
+
+@register.simple_tag
+def store_ident(pk):
+    items = get_object_or_404(Item, pk=pk)
+    store_pk = StoreProfile.objects.get(user=items.user).pk
+    #grade_pk = StoreGrade.objects.get()
+    return store_pk

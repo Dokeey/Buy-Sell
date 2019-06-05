@@ -1,5 +1,7 @@
 {% extends "accounts/layout.html" %}
 
+{% load store.store_tags %}
+
 {% block content %}
 
 <h3> ID </h3>
@@ -44,6 +46,10 @@
                 <td>{{ order.receipt_link|default:"-" }}</td>
                 <td>{{ order.item.user.profile.nick_name }}</td>
                 <td><a href="{% url "trade:order_cancle" order.id %}">주문 취소</a></td>
+                {% if order.status == 'paid' %}
+                {% store_ident order.item.pk as store_pk %}
+                    <td><a href="{% url "store:store_grade_new" store_pk %}">리뷰쓰러가기</a></td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>

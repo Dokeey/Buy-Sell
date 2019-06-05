@@ -102,7 +102,9 @@ def store_grade(request, pk):
 
 @login_required
 def store_grade_new(request, pk):
-
+    #items = Item.objects.filter(pk=item_id)
+    #grades = StoreGrade.objects.get(pk=gid)
+    #items = get_object_or_404(Item, user=grades.store_profile.user)
     form_cls = StoreGradeForm
     if request.method == 'POST':
         form = form_cls(request.POST)
@@ -116,7 +118,8 @@ def store_grade_new(request, pk):
         form = form_cls
 
     return render(request, 'store/store_grade_new.html',{
-        'form':form
+        'form':form,
+        #'items':items,
     })
 
 
