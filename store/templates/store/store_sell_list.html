@@ -1,0 +1,30 @@
+{% extends "store/layout.html" %}
+{% load store.store_tags %}
+
+{% block content %}
+{{ block.super }}
+
+{% store_rating stores.pk as end %}
+{% store_item_list stores.pk as item_count %}
+{% store_grade_list stores.pk as grade_count %}
+{% store_question_list stores.pk as question_count %}
+
+{% for list in store_item %}
+<table>
+    <tr>
+        <td><h3>{{ list.title }}</h3></td>
+    </tr>
+    <tr>
+        <td>가격:</td><td> {{ list.amount }}</td>
+    </tr>
+    <tr>
+        <td> <img src="{{ list.photo.url }}" /></td>
+    </tr>
+
+</table>
+
+    <hr/>
+
+{% endfor %}
+
+{% endblock %}
