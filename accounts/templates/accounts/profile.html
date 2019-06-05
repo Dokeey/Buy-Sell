@@ -31,6 +31,7 @@
                 <th>결과일시</th>
                 <th>영수증</th>
                 <th>판매자 정보</th>
+                <th>관리</th>
             </tr>
         </thead>
         <tbody>
@@ -42,6 +43,7 @@
                 <td>{{ order.paid_at|default:"-" }}</td>
                 <td>{{ order.receipt_link|default:"-" }}</td>
                 <td>{{ order.item.user.profile.nick_name }}</td>
+                <td><a href="{% url "trade:order_cancle" order.id %}">주문 취소</a></td>
             </tr>
             {% endfor %}
         </tbody>

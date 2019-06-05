@@ -154,8 +154,8 @@ class Order(models.Model):
              <i class="{class_names}"></i>
              {label}
              </span>'''.format(class_names=cls, text_color=text_color, label=self.get_status_display())
-        if help_text:
-            html += '<br/>' + help_text
+        # if help_text:
+        #     html += '<br/>' + help_text
         return mark_safe(html)
 
     @named_property('영수증 링크')
@@ -191,4 +191,4 @@ class Order(models.Model):
         except Iamport.ResponseError as e:  # 취소시 오류 예외처리(이미 취소된 결제는 에러가 발생함)
             self.update(commit=commit)
         if commit:
-            self.save()
+            self.update()

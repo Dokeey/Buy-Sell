@@ -83,3 +83,9 @@ class PayForm(forms.ModelForm):
         # order.save()
         order.update()
         return order
+
+
+class OrderForm(forms.Form):
+    queryset = forms.MultipleChoiceField
+    class Meta:
+        fields = ['queryset']

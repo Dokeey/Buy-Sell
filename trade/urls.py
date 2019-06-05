@@ -19,5 +19,6 @@ urlpatterns = [
 
     path('order/new/<int:item_id>/', views.order_new, name='order_new'),
     path('order/<int:item_id>/pay/<merchant_uid>/', views.order_pay, name='order_pay'),
+    path('order/cancle/<int:order_id>/', views.order_cancle, name='order_cancle'),
     path('test/', views.test),
 ]

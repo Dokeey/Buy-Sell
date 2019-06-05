@@ -156,5 +156,18 @@ def order_pay(request, item_id, merchant_uid):
     })
 
 
+def order_cancle(request, order_id):
+    '선택된 주문에 대해 결제취소요청을 합니다.'
+
+    try:
+        queryset = Order.objects.get(pk=order_id, status='paid')
+        queryset.cancel()
+        messages.info(request, '주문을 취소하셨습니다.')
+    except:
+        messages.error(request, '이미 취소하셨거나, 유효하지 않은 상품입니다.')
+
+    return redirect('accounts:profile')
+
+
 def test(request):
     return render(request, 'trade/test.html')
