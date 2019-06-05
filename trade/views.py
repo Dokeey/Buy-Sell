@@ -120,7 +120,8 @@ def comment_delete(reuqest, pk, cid):
 
 def order_new(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
-    if item.pay_status != 'ready':
+    form = None
+    if item.pay_status == 'ready':
         buyer = get_object_or_404(Profile, user=request.user)
         if request.method == "POST":
             form = OrderForm(request.POST, instance=buyer)
@@ -133,6 +134,8 @@ def order_new(request, item_id):
                     )
                     return redirect('trade:order_pay', item_id, str(order.merchant_uid))
                 elif form.cleaned_data['pay_choice'] == 'bank_trans':
+                    item.pay_status = 'reservation'
+                    item.save()
                     return render(request, 'trade/seller_info.html', {
                         'seller': item.user
                     })

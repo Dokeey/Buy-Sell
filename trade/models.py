@@ -196,6 +196,12 @@ class Order(models.Model):
             # if self.amount != self.meta['amount']:
             #     pass
             self.status = self.meta['status']
+
+            if self.status == 'paid':
+                self.item.pay_status = 'sale_complete'
+            else:
+                self.item.pay_status = 'ready'
+            self.item.save()
         if commit:
             self.save()
 
