@@ -84,8 +84,13 @@ WSGI_APPLICATION = 'buynsell.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # Database 엔진으로 postgresql을 사용
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'buynselldb',
+        'USER': 'bns',
+        'PASSWORD': 'wjdqhqhdks',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
