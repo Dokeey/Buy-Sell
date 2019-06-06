@@ -1,3 +1,5 @@
+from time import time
+
 from django.conf import settings
 from django.db import models
 from category.models import Category, SubCategory
@@ -205,6 +207,7 @@ class Order(models.Model):
             self.item.pay_status = 'sale_complete'
         elif self.status == 'reserv':
             self.item.pay_status = 'reservation'
+            self.meta['paid_at'] = int(time())
         else:
             self.item.pay_status = 'ready'
         self.item.save()
@@ -217,6 +220,7 @@ class Order(models.Model):
         '결제내역 취소'
         if self.status == 'reserv':
             self.status = 'cancelled'
+            self.meta['cancelled_at'] = int(time())
         try:
             meta = self.api.cancel(reason, imp_uid=self.imp_uid)
             assert str(self.merchant_uid) == self.meta['merchant_uid']

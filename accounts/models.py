@@ -4,8 +4,10 @@ from django.contrib.auth.models import AbstractUser, UserManager as AuthUserMana
 from django.core.validators import RegexValidator, MaxLengthValidator
 from django.db import models
 from django.utils.crypto import get_random_string
+from store.models import StoreProfile
 
 # Create your models here.
+
 
 class UserManager(AuthUserManager):
     def _create_user(self, username, email, password, **extra_fields):
@@ -22,6 +24,7 @@ class UserManager(AuthUserManager):
             nick_name = get_random_string(length=10)
 
         Profile.objects.create(user=user, email=email, phone='0', address='', nick_name=nick_name, account_num='0')
+        StoreProfile.objects.create(user=user, name=user.profile.nick_name + '의 가게')
 
         return user
 

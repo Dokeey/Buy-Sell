@@ -3,12 +3,11 @@ from django.db import models
 from imagekit.models import ProcessedImageField
 from pilkit.processors import ResizeToFill
 
-from accounts.models import Profile
 
 
 class StoreProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=20, unique=True)
     photo = ProcessedImageField(
         blank=True,
         upload_to='profile/storephoto',
