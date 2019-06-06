@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404, redirect
@@ -11,7 +12,6 @@ def store_profile(request):
     stores = get_object_or_404(StoreProfile, user=request.user)
     return render(request, 'store/layout.html',{
         'stores': stores,
-
     })
 
 
@@ -101,23 +101,29 @@ def store_grade(request, pk):
     })
 
 @login_required
-def store_grade_new(request, pk):
-
-    form_cls = StoreGradeForm
-    if request.method == 'POST':
-        form = form_cls(request.POST)
-        if form.is_valid():
-            gradeform = form.save(commit=False)
-            gradeform.author = request.user
-            gradeform.store_profile_id = pk
-            gradeform.save()
-        return redirect('store:store_grade', pk)
+def store_grade_new(request, pk, item_id):
+    items = get_object_or_404(Item, pk=item_id)
+    grades = StoreGrade.objects.get(store_item_id = items.pk)
+    if grades:
+        messages.error(request, '이미 리뷰를 작성하셨습니다.')
+        return redirect("accounts:profile")
     else :
-        form = form_cls
+        form_cls = StoreGradeForm
+        if request.method == 'POST':
+            form = form_cls(request.POST, instance=grades)
+            if form.is_valid():
+                gradeform = form.save(commit=False)
+                gradeform.author = request.user
+                gradeform.store_profile_id = pk
+                gradeform.save()
+            return redirect('store:store_grade', pk)
+        else :
+            form = form_cls(instance=grades)
 
-    return render(request, 'store/store_grade_new.html',{
-        'form':form
-    })
+        return render(request, 'store/store_grade_new.html',{
+            'form':form,
+            'items':items,
+        })
 
 
 @login_required

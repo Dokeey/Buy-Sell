@@ -10,7 +10,6 @@
 {% store_grade_list stores.pk as grade_count %}
 {% store_question_list stores.pk as question_count %}
 
-<a href="{% url "store:store_grade_new" stores.pk %}" > 평점쓰러가기</a>
 
 {% for grade in grades %}
 <table>

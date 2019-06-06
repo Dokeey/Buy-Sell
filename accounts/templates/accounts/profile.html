@@ -1,5 +1,7 @@
 {% extends "accounts/layout.html" %}
 
+{% load store.store_tags %}
+
 {% block content %}
 
 <h3> ID </h3>
@@ -36,17 +38,21 @@
         </thead>
         <tbody>
             {% for order in order_list %}
+            {% store_ident order.item.pk as store_pk %}
             <tr>
                 <td>{{ order.name }}</td>
                 <td>{{ order.amount_html }}</td>
                 <td>{{ order.status_html }}</td>
                 <td>{{ order.paid_at|default:"-" }}</td>
                 <td>{{ order.receipt_link|default:"-" }}</td>
-                <td>{{ order.item.user.profile.nick_name }}
+                <td><a href="{% url "store:store_sell_list" store_pk %}">{{ order.item.user.profile.nick_name }}</a>
                     {% if order.status == "reserv" %}
                     <br>계좌번호 : {{ order.item.user.profile.account_num }}
                     {% endif %}</td>
-                <td><a href="{% url "trade:order_cancle" order.id %}">주문 취소</a></td>
+                <td><a href="{% url "trade:order_cancle" order.id %}">주문 취소</a>
+                {% if order.status == 'paid' %}
+                    <br><a href="{% url "store:store_grade_new" store_pk order.item.pk %}">리뷰쓰러가기</a></td>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>

@@ -5,6 +5,7 @@
 {% store_item_list stores.pk as item_count %}
 {% store_grade_list stores.pk as grade_count %}
 {% store_question_list stores.pk as question_count %}
+{% store_sell_list stores.pk as order %}
 
     <h2 style="margin:20px">{{ stores.name }}</h2>
     <hr/>
@@ -29,6 +30,9 @@
             </td>
         </tr>
 
+        <tr>
+            <td>판매 횟수</td><td>{{ order }}</td>
+        </tr>
         <tr>
             <td>개점일 : </td><td> {{ stores.created_at }}</td>
         </tr>

@@ -1,6 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
     {{ block.super }}
+<h2>구매 정보</h2>
+{{ grades.pk }}
+{{ items.title}}<br>
+{{ items.amount }}<br>
+<img src="{{ items.photo.url }}"/>
+
+<hr/>
 <form action="" method="POST" enctype="multipart/form-data">
      {% csrf_token %}
     <table>
