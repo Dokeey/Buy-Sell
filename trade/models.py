@@ -92,7 +92,7 @@ class Order(models.Model):
     buyer_tel = models.CharField(max_length=11)
     buyer_addr = models.CharField(max_length=100)
     buyer_postcode = models.CharField(max_length=10)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='item_set')
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     merchant_uid = models.UUIDField(default=uuid4, editable=False)
     imp_uid = models.CharField(max_length=100, blank=True)
     name = models.CharField(max_length=100, verbose_name='상품명')
@@ -104,6 +104,7 @@ class Order(models.Model):
             ('paid', '결제완료'),
             ('cancelled', '결제취소'),
             ('failed', '결제실패'),
+            ('reserv', '결제예약'),
         },
         default='ready',
         db_index=True
@@ -117,6 +118,7 @@ class Order(models.Model):
     is_paid_ok = property(lambda self: self.status == 'paid' and self.amount == self.meta.get('amount'))
     is_cancelled = property(lambda self: self.status == 'cancelled')
     is_failed = property(lambda self: self.status == 'failed')
+    is_reserv = property(lambda self: self.status == 'reserv')
 
     receipt_url = named_property('영수증')(lambda self: self.meta.get('receipt_url'))
     cancel_reason = named_property('취소이유')(lambda self: self.meta.get('cancel_reason'))
@@ -167,6 +169,8 @@ class Order(models.Model):
         elif self.is_failed:
             cls, text_color = 'fa fa-ban', 'red'
             help_text = self.fail_reason
+        elif self.is_reserv:
+            cls, text_color = 'fa fa-check-circle', 'blue'
         html = '''
              <span style="color: {text_color};" title="this is title">
              <i class="{class_names}"></i>
@@ -197,22 +201,28 @@ class Order(models.Model):
             #     pass
             self.status = self.meta['status']
 
-            if self.status == 'paid':
-                self.item.pay_status = 'sale_complete'
-            else:
-                self.item.pay_status = 'ready'
-            self.item.save()
+        if self.status == 'paid':
+            self.item.pay_status = 'sale_complete'
+        elif self.status == 'reserv':
+            self.item.pay_status = 'reservation'
+        else:
+            self.item.pay_status = 'ready'
+        self.item.save()
+
         if commit:
             self.save()
 
 
     def cancel(self, reason=None, commit=True):
         '결제내역 취소'
+        if self.status == 'reserv':
+            self.status = 'cancelled'
         try:
             meta = self.api.cancel(reason, imp_uid=self.imp_uid)
             assert str(self.merchant_uid) == self.meta['merchant_uid']
             self.update(commit=commit, meta=meta)
-        except Iamport.ResponseError as e:  # 취소시 오류 예외처리(이미 취소된 결제는 에러가 발생함)
+        # except Iamport.ResponseError as e:  # 취소시 오류 예외처리(이미 취소된 결제는 에러가 발생함)
+        except:  # 취소시 오류 예외처리(이미 취소된 결제는 에러가 발생함)
             self.update(commit=commit)
         if commit:
             self.save()

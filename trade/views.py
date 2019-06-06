@@ -80,10 +80,13 @@ def item_update(request, pk):
         form = ItemUpdateForm(request.POST, request.FILES, instance=item)
         if form.is_valid():
             item = form.save(commit=False)
-            item.category = get_object_or_404(SubCategory, id=form.cleaned_data['category_tmp'])
-            item.user = request.user
-            item.photo = form.cleaned_data['photo']
-            form.save()
+            if item.order_set.filter(status='reserv'):
+                messages.error(request, '예약중인 상품은 변경할 수 없습니다.')
+            else:
+                item.category = get_object_or_404(SubCategory, id=form.cleaned_data['category_tmp'])
+                item.user = request.user
+                item.photo = form.cleaned_data['photo']
+                form.save()
         return redirect('trade:item_detail', pk)
     else:
         form = ItemUpdateForm(instance=item)
@@ -126,16 +129,23 @@ def order_new(request, item_id):
         if request.method == "POST":
             form = OrderForm(request.POST, instance=buyer)
             if form.is_valid():
+                order = Order.objects.create(user=request.user, item=item, name=item.title, amount=item.amount,
+                    buyer_email=form.cleaned_data['email'],
+                    buyer_name=form.cleaned_data['nick_name'],
+                    buyer_tel=form.cleaned_data['phone'],
+                    buyer_postcode=form.cleaned_data['post_code'],
+                    buyer_addr=form.cleaned_data['address'] + form.cleaned_data['detail_address'],
+                )
                 if form.cleaned_data['pay_choice'] == 'import':
-                    order = Order.objects.create(user=request.user, item=item, name=item.title, amount=item.amount,
-                        buyer_email=form.cleaned_data['email'], buyer_name=form.cleaned_data['nick_name'],
-                        buyer_tel=form.cleaned_data['phone'], buyer_postcode=form.cleaned_data['post_code'],
-                        buyer_addr=form.cleaned_data['address'] + form.cleaned_data['detail_address'],
-                    )
                     return redirect('trade:order_pay', item_id, str(order.merchant_uid))
                 elif form.cleaned_data['pay_choice'] == 'bank_trans':
-                    item.pay_status = 'reservation'
-                    item.save()
+                    Order.objects.filter(user=request.user,
+                                         merchant_uid=order.merchant_uid,
+                                         status='ready'
+                                         ).update(status='reserv')
+                    reserv_order = Order.objects.get(user=request.user, merchant_uid=order.merchant_uid, status='reserv')
+                    reserv_order.update()
+
                     return render(request, 'trade/seller_info.html', {
                         'seller': item.user
                     })
@@ -171,11 +181,11 @@ def order_cancle(request, order_id):
     '선택된 주문에 대해 결제취소요청을 합니다.'
 
     try:
-        queryset = Order.objects.get(pk=order_id, status='paid')
+        queryset = Order.objects.get(id=order_id)
         queryset.cancel()
         messages.info(request, '주문을 취소하셨습니다.')
     except:
-        messages.error(request, '이미 취소하셨거나, 유효하지 않은 상품입니다.')
+        messages.error(request, '유효하지 않은 상품입니다.')
 
     return redirect('accounts:profile')
 
