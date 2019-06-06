@@ -12,8 +12,8 @@ def store_rating(pk):
     stores = get_object_or_404(StoreProfile, pk=pk)
     grades = StoreGrade.objects.filter(store_profile_id=stores.pk)
     rates = grades.count()
-    sum = grades.aggregate(Sum('rating'))['rating__sum']
     if rates:
+        sum = grades.aggregate(Sum('rating'))['rating__sum']
         end = round((sum / rates), 1)
     else:
         end = 0

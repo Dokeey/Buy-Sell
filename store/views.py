@@ -12,7 +12,6 @@ def store_profile(request):
     stores = get_object_or_404(StoreProfile, user=request.user)
     return render(request, 'store/layout.html',{
         'stores': stores,
-
     })
 
 
