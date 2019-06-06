@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6514935f-487e-4faf-a5a3-af107a0549f8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/store/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/store/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/templatetags/store/store_tags.py" beforeDir="false" afterPath="$PROJECT_DIR$/store/templatetags/store/store_tags.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/store/tests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/store/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/store/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trade/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/trade/forms.py" afterDir="false" />
-    </list>
+    <list default="true" id="6514935f-487e-4faf-a5a3-af107a0549f8" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,11 +10,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/store/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="6" selection-start-line="6" selection-end-line="6" />
+            <state relative-caret-position="390">
+              <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+              <folding>
+                <element signature="e#0#4#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -62,11 +56,11 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/store/tests.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
-              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+              <caret line="4" selection-start-line="4" selection-end-line="4" />
             </state>
           </provider>
         </entry>
@@ -184,10 +178,10 @@
         <option value="$PROJECT_DIR$/trade/forms.py" />
         <option value="$PROJECT_DIR$/store/templatetags/store/store_tags.py" />
         <option value="$PROJECT_DIR$/store/views.py" />
-        <option value="$PROJECT_DIR$/store/tests.py" />
         <option value="$PROJECT_DIR$/store/admin.py" />
         <option value="$PROJECT_DIR$/accounts/models.py" />
         <option value="$PROJECT_DIR$/store/models.py" />
+        <option value="$PROJECT_DIR$/store/tests.py" />
       </list>
     </option>
   </component>
@@ -263,17 +257,6 @@
               <item name="store" type="462c0819:PsiDirectoryNode" />
               <item name="templatetags" type="462c0819:PsiDirectoryNode" />
               <item name="store" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Buy-Sell" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Buy-Sell" type="462c0819:PsiDirectoryNode" />
-              <item name="trade" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Buy-Sell" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Buy-Sell" type="462c0819:PsiDirectoryNode" />
-              <item name="trade" type="462c0819:PsiDirectoryNode" />
-              <item name="migrations" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -659,22 +642,12 @@
     <entry file="file://$PROJECT_DIR$/store/migrations/0010_storegrade_rasting.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/store/tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.pyenv/versions/3.6.4/lib/python3.6/random.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6474">
           <caret line="744" selection-start-line="744" selection-end-line="744" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trade/tests.py">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/trade/models.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -711,8 +684,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/store/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        <state relative-caret-position="390">
+          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+          <folding>
+            <element signature="e#0#4#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trade/tests.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/store/tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
         </state>
       </provider>
     </entry>
