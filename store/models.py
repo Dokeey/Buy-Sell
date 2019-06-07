@@ -5,7 +5,6 @@ from django.db import models
 from imagekit.models import ProcessedImageField
 from pilkit.processors import ResizeToFill
 
-from trade.models import Item
 
 
 def get_random():
@@ -42,6 +41,10 @@ class QuestionComment(models.Model):
     class Meta:
         ordering = ('created_at',)
 
+
+from trade.models import Item
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class StoreGrade(models.Model):
     store_profile = models.ForeignKey(StoreProfile, on_delete=models.CASCADE)

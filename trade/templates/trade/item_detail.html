@@ -44,13 +44,13 @@
 <!-- Comment with nested comments -->
 {% for comment in comments %}
     <div class="comment" style="background-color: powderblue">
-        <p class="info">{{ comment.user }} | {{ comment.created_at }}
+        <p class="info">{{ comment.user.profile.nick_name }} | {{ comment.created_at }}
             <a href="{% url "trade:comment_update" pk=item.pk cid=comment.pk %}">수정</a>
             <a href="{% url "trade:comment_delete" pk=item.pk cid=comment.pk %}">삭제</a></p>
             {{ comment.message|linebreaks }}
 
         {% for replay in comment.replies.all %}
-            <p class="info">{{ replay.user }} | {{ replay.created_at }}
+            <p class="info">{{ replay.user.profile.nick_name }} | {{ replay.created_at }}
             <a href="{% url "trade:comment_update" pk=item.pk cid=replay.pk %}">수정</a>
             <a href="{% url "trade:comment_delete" pk=item.pk cid=replay.pk %}">삭제</a></p>
             <li>{{ replay.message }}</li>

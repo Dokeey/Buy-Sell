@@ -72,14 +72,18 @@ class Item(models.Model):
         return self.title
 
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+user_pk = User.objects.get(username='deleteuser').id
+
 class ItemComment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_DEFAULT, default=user_pk)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     message = models.TextField()
     secret = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    parent = models.ForeignKey('self', on_delete=models.PROTECT, null=True, blank=True, related_name='replies')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
 
     class Meta:
         # sort comments in chronological order by default

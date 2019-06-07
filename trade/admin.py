@@ -10,7 +10,7 @@ class ItemAdmin(admin.ModelAdmin):
 
 @admin.register(ItemComment)
 class ItemCommentAdmin(admin.ModelAdmin):
-    list_display = ['parent', 'message', 'item', 'secret','created_at', 'updated_at']
+    list_display = ['parent', 'message', 'id', 'item', 'secret','created_at', 'updated_at']
 
 
 @admin.register(Order)
