@@ -16,7 +16,7 @@ class StoreProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, unique=True)
     photo = ProcessedImageField(
-        null=True, blank=True,
+        null=True,
         default=get_random,
         upload_to='profile/storephoto',
         processors=[ResizeToFill(100,100)],
@@ -48,14 +48,14 @@ class StoreGrade(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     store_item = models.ForeignKey(Item, on_delete=models.PROTECT)
     grade_comment = models.TextField()
-    rating = models.CharField(max_length=10,
+    rating = models.PositiveIntegerField(
         choices=(
-            ('0', '☆☆☆☆☆'),
-            ('1', '★☆☆☆☆'),
-            ('2', '★★☆☆☆'),
-            ('3', '★★★☆☆'),
-            ('4', '★★★★☆'),
-            ('5', '★★★★★')
+            (0, '☆☆☆☆☆'),
+            (1, '★☆☆☆☆'),
+            (2, '★★☆☆☆'),
+            (3, '★★★☆☆'),
+            (4, '★★★★☆'),
+            (5, '★★★★★')
         ),
         default=0,
         db_index=True
