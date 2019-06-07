@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
+from store.models import StoreProfile
 from .models import Profile, phone_validate
 
 User = get_user_model()
@@ -21,7 +22,23 @@ class SignupForm(UserCreationForm):
 
     phone = forms.CharField()
     nick_name = forms.CharField()
-    address = forms.CharField(widget= forms.HiddenInput)
+    post_code = forms.CharField(widget=forms.TextInput(attrs={
+                'readonly': 'readonly',
+                'onclick': 'Postcode()',
+                'placeholder': '우편 번호',
+            }),
+    )
+    address = forms.CharField(widget=forms.Textarea(attrs={
+                'readonly':'readonly',
+                'onclick': 'Postcode()',
+                'placeholder': '주소',
+                'rows': 1,
+                'cols': 80,
+            }),
+    )
+    detail_address = forms.CharField(widget=forms.TextInput(attrs={
+                'placeholder': '상세 주소',
+            }),)
     account_num = forms.CharField()
     email = forms.EmailField()
 
@@ -56,7 +73,7 @@ class SignupForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'address', 'account_num', 'email')
+        fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'post_code', 'address', 'detail_address', 'account_num', 'email')
 
 
     def save(self, commit=True):
@@ -83,21 +100,51 @@ class SignupForm(UserCreationForm):
 
         phone = self.cleaned_data.get('phone', None)
         email = self.cleaned_data.get('email', None)
+        post_code = self.cleaned_data.get('post_code', None)
         address = self.cleaned_data.get('address', None)
+        detail_address = self.cleaned_data.get('detail_address', None)
         nick_name = self.cleaned_data.get('nick_name', None)
         account_num = self.cleaned_data.get('account_num', None)
 
         Profile.objects.create(user=user, email=email,
                                phone=phone, address=address,
-                               nick_name=nick_name, account_num=account_num)
+                               nick_name=nick_name, account_num=account_num,
+                               post_code=post_code, detail_address=detail_address
+                               )
+
+        StoreProfile.objects.create(user=user, name=user.profile.nick_name + '의 가게')
+
 
 class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['nick_name', 'email', 'phone', 'post_code', 'address', 'detail_address','account_num']
+        widgets = {
+            'address': forms.Textarea(attrs={
+                'readonly':'readonly',
+                'onclick': 'Postcode()',
+                'placeholder': '주소',
+                'rows': 1,
+                'cols': 80,
+            }),
+            'detail_address': forms.TextInput(attrs={
+                'placeholder': '상세 주소',
+            }),
+            'post_code': forms.TextInput(attrs={
+                'readonly': 'readonly',
+                'onclick': 'Postcode()',
+                'placeholder': '우편 번호',
+            }),
+
+        }
+
+
+class AuthProfileForm(ProfileForm):
     password = forms.CharField(
         widget=forms.PasswordInput,
     )
+
     class Meta:
-        model = Profile
-        fields = ['nick_name', 'email', 'phone', 'address', 'account_num', 'password']
-        widgets = {
-            'address': forms.HiddenInput,
-        }
+        model = ProfileForm.Meta.model
+        fields = ProfileForm.Meta.fields + ['password']
+        widgets = ProfileForm.Meta.widgets

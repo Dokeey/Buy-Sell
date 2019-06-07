@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% load store.store_tags %}
+{% block content %}
+{% store_rating stores.pk as end %}
+{% store_item_list stores.pk as item_count %}
+{% store_grade_list stores.pk as grade_count %}
+{% store_question_list stores.pk as question_count %}
+{% store_sell_list stores.pk as order %}
+
+    <h2 style="margin:20px">{{ stores.name }}</h2>
+    <hr/>
+
+    <table style="margin:20px">
+        <tr>
+            <td>사진 : </td><td><img src="{{ stores.photo.url }}"/> </td>
+        </tr>
+        <tr>
+            <td>가게 소개 : </td><td>{{ stores.comment }}</td>
+        </tr>
+
+
+        <tr>
+            <td>평점 : </td>
+            <td>
+                {% if grade_count == 0 %}
+                    평점이 없습니다.
+                {% else %}
+                    {{ end }} /5
+                {% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <td>판매 횟수</td><td>{{ order }}</td>
+        </tr>
+        <tr>
+            <td>개점일 : </td><td> {{ stores.created_at }}</td>
+        </tr>
+        {% if user.is_authenticated and request.user.pk == stores.user.pk %}
+
+        <tr>
+           <td> <a href="{% url "store:store_profile_edit" %}">프로필 수정</a> </td>
+        </tr>
+        {% endif %}
+
+    </table>
+    <hr/>
+    <table style="margin:20px">
+        <tr>
+            <td><a href="{% url "store:store_sell_list" stores.pk %}">리스트({{ item_count }})/</a></td>
+            <td><a href="{% url "store:store_grade" stores.pk %}">가게 평점({{ grade_count }}) /</a>  </td>
+            <td><a href="{% url "store:store_question" stores.pk %}">가게 문의({{ question_count }})</a></td>
+        </tr>
+    </table>
+    <hr/>
+{% endblock %}
+
+

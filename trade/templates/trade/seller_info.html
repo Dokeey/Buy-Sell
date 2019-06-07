@@ -1,0 +1,18 @@
+{% extends "trade/layout.html" %}
+
+{% block content %}
+
+<h2> 아래 해당하는 정보를 참고하시고 거래를 마쳐주세요. </h2>
+
+<hr>
+<h3> 판매자 닉네임 </h3>
+        {{ seller.profile.nick_name }}
+<hr>
+<h3> 계좌번호 </h3>
+        {{ seller.profile.account_num }}
+<hr>
+<h3> 이메일 </h3>
+        {{ seller.email }}
+<hr>
+
+{% endblock %}

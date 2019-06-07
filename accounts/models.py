@@ -1,12 +1,11 @@
 from django.conf import settings
-from django.contrib.auth import user_logged_in, get_user_model
+from django.contrib.auth import user_logged_in
 from django.contrib.auth.models import AbstractUser, UserManager as AuthUserManager
 from django.core.validators import RegexValidator, MaxLengthValidator
 from django.db import models
 from django.utils.crypto import get_random_string
 
 # Create your models here.
-
 
 
 class UserManager(AuthUserManager):
@@ -25,6 +24,9 @@ class UserManager(AuthUserManager):
 
         Profile.objects.create(user=user, email=email, phone='0', address='', nick_name=nick_name, account_num='0')
 
+        from store.models import StoreProfile
+        StoreProfile.objects.create(user=user, name=user.profile.nick_name + '의 가게')
+
         return user
 
 
@@ -37,19 +39,21 @@ phone_validate = RegexValidator(
 class User(AbstractUser):
     object = UserManager()
 
-User = get_user_model()
-
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     nick_name = models.CharField(max_length=10, unique=True)
     email = models.EmailField()
     phone = models.CharField(max_length=11, validators=[phone_validate])
+    post_code = models.CharField(max_length=10)
     address = models.CharField(max_length=100)
+    detail_address = models.CharField(max_length=20)
     account_num = models.CharField(max_length=20, validators=[MaxLengthValidator(20)])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.nick_name
 
 class UserSession(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
@@ -60,3 +64,4 @@ def kicked_my_other_sessions(sender, request, user, **kwargs):
     user.is_user_logged_in = True
 
 user_logged_in.connect(kicked_my_other_sessions)
+

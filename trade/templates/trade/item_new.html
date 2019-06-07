@@ -1,0 +1,18 @@
+{% extends "trade/layout.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<h2>아이템 등록</h2>
+
+<form name="forms" action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        <th>
+            {{ form.as_table }}
+        </th>
+    </table>
+    <input type="submit" value="등록하기">
+</form>
+
+{% endblock %}

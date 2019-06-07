@@ -1,0 +1,13 @@
+{% extends "trade/layout.html" %}
+
+{% block content %}
+
+<!-- Comments Form -->
+<h4>댓글을 수정하기</h4>
+<form action="." method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary" >수정하기</button>
+</form>
+
+{% endblock %}

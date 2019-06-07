@@ -1,0 +1,72 @@
+{% extends "trade/layout.html" %}
+
+{% block content %}
+{{ block.super }}
+
+{% if item.pay_status == "ready" %}
+<h2>{{ item.title }}</h2>
+
+
+
+<br>
+{{ item.user }} <br>
+{{ item.title }} <br>
+{{ item.desc }} <br>
+{{ item.amount }} <br>
+<img src="{{ item.photo.url }}"/><br>
+{{ item.category }} <br>
+{{ item.get_item_status_display }} <br>
+{{ item.created_at }} <br>
+{{ item.updated_at }} <br>
+<br>
+
+<a href="{% url "trade:order_new" item.pk %}" class="btn btn-primary">구매하기</a><br>
+{% else %}
+
+판매중이거나 예약중인 상품입니다 ^^7<br>
+
+{% endif %}
+
+{% if item.user == request.user %}
+    <a href="{% url "trade:item_update" item.pk %}">수정하기</a>
+    <a href="{% url "trade:item_delete" item.pk %}">삭제하기</a>
+{% endif %}
+
+
+<!-- Comments Form -->
+<h4>댓글을 달아보세요 !</h4>
+<form action="." method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary" >댓글 달기</button>
+</form>
+
+<!-- Comment with nested comments -->
+{% for comment in comments %}
+    <div class="comment" style="background-color: powderblue">
+        <p class="info">{{ comment.user.profile.nick_name }} | {{ comment.created_at }}
+            <a href="{% url "trade:comment_update" pk=item.pk cid=comment.pk %}">수정</a>
+            <a href="{% url "trade:comment_delete" pk=item.pk cid=comment.pk %}">삭제</a></p>
+            {{ comment.message|linebreaks }}
+
+        {% for replay in comment.replies.all %}
+            <p class="info">{{ replay.user.profile.nick_name }} | {{ replay.created_at }}
+            <a href="{% url "trade:comment_update" pk=item.pk cid=replay.pk %}">수정</a>
+            <a href="{% url "trade:comment_delete" pk=item.pk cid=replay.pk %}">삭제</a></p>
+            <li>{{ replay.message }}</li>
+        {% endfor %}
+
+        <h5>Replay</h5>
+        <form action="." method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <!-- Hidden input for parent comment.id -->
+            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+            <input class="btn btn-primary" type="submit" value="답글 달기">
+        </form>
+    </div>
+{% empty %}
+<h4>There are no comments yet.</h4>
+{% endfor %}
+
+{% endblock %}

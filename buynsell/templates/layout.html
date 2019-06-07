@@ -26,16 +26,27 @@
             <a class="nav-link" href="">Home <span class="sr-only">(current)</span></a>
           </li>
 
-
+            {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href="">PROFILE</a>
+            <a class="nav-link" href="{% url "store:store_profile" %}">PROFILE</a>
+
           </li>
+
             <li class="nav-item">
             <a class="nav-link" href="">LOGOUT</a>
           </li>
+             {% else %}
 
             <li class="nav-item">
+            <a class="nav-link" href="">로그인</a>
+          </li>
+            <li class="nav-item">
             <a class="nav-link" href="">회원가입</a>
+          </li>
+
+            {% endif %}
+            <li class="nav-item">
+            <a class="nav-link" href="{% url "trade:item_list" %}">거래</a>
           </li>
             <li class="nav-item">
              {% for cate in cates %}
@@ -76,22 +87,18 @@
 <table border="1">
         <tr>
             {% for cate in cates %}
-
             <td>
               <a href="{% url "category:categories" cate.pk %}">  <h2>{{ cate.name }}</h2></a>
             </td>
-            {% for subcate in subcates %}
+                {% for subcate in subcates %}
                     <tr>
-                         {% if subcate.category.id == cate.id %}
+                         {% if subcate.category == cate %}
                         <td>
-
                            <a href="{% url "category:subcategories" cate.pk subcate.pk %}">{{ subcate.name }}</a>
-
                         </td>
                          {% endif %}
                     </tr>
-                    {% endfor %}
-
+                {% endfor %}
             {% endfor %}
 
         </tr>

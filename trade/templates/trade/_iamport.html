@@ -1,0 +1,22 @@
+<script id="iamport-script">
+$(function() {
+    var params = {{ json_fields }};
+    IMP.init("{{ iamport_shop_id }}");
+    IMP.request_pay(params, function(response_data){
+        if ( ! response_data.success ) {
+            alert(response_data.error_msg + "(" + response_data.error_code + ")");
+            location.href = '{% url "trade:item_list" %}';
+        }
+        var $form = $("#iamport-script").closest("form");
+
+        // 아임포트 서버로부터 받은 모든 필드를 서버로 넘기려하지만
+        // PayForm의 fields에 지정된 필드만 값이 지정되어 서버로 값이 넘겨집니다. => 현재는 imp_uid필드
+        // 변조가능성이 있기에 나머지 필드는 REST_API를 통해 아임포트 서버로부터 받도록 하겠습니다.
+
+        $.each(response_data, function(key, value) {
+            $form.find("input[name=" + key + "]").val(value);
+        });
+        $form.submit();
+    });
+});
+</script>

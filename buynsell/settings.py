@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'category',
+    'store',
+    'trade',
+    'imagekit',
 ]
 
 MIDDLEWARE = [
@@ -81,8 +84,13 @@ WSGI_APPLICATION = 'buynsell.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # Database 엔진으로 postgresql을 사용
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'buynselldb',
+        'USER': 'bns',
+        'PASSWORD': 'wjdqhqhdks',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -120,6 +128,8 @@ USE_L10N = True
 USE_TZ = True
 
 
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
@@ -153,3 +163,13 @@ LANGUAGES = [  # Available languages
     ('en', _("English")),
     ('ko_kr', _("한국어")),
 ]
+
+# Media
+
+MEDIA_URL = '/files/' # 업로드 할 경로
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+
+IAMPORT_SHOP_ID = 'iamport' # 가맹점 식별코드
+IAMPORT_API_KEY = 'imp_apikey' # REST API 키
+IAMPORT_API_SECRET = 'ekKoeW8RyKuT0zgaZsUtXXTLQ4AhPFW3ZGseDA6bkA5lamv9OqDMnxyeB9wqOsuO9W3Mx9YSJ4dTqJ3f' # REST API SECRET

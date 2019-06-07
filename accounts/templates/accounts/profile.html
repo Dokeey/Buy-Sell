@@ -1,5 +1,7 @@
 {% extends "accounts/layout.html" %}
 
+{% load store.store_tags %}
+
 {% block content %}
 
 <h3> ID </h3>
@@ -9,7 +11,7 @@
         {{ profile.nick_name }}
 <hr>
 <h3> 주소 </h3>
-        {{ profile.address }}
+        {{ profile.post_code }} {{ profile.address }} {{ profile.detail_address }}
 <hr>
 <h3> 연락처 </h3>
         {{ profile.phone }}
@@ -19,6 +21,73 @@
 <hr>
 <h3> 이메일 </h3>
         {{ user.email }}
+<hr>
+
+<h4>구매 내역</h4>
+        <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>상품명</th>
+                <th>결제가격</th>
+                <th>처리결과</th>
+                <th>결과일시</th>
+                <th>영수증</th>
+                <th>판매자 정보</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in order_list %}
+            {% store_ident order.item.pk as store_pk %}
+            <tr>
+                <td>{{ order.name }}</td>
+                <td>{{ order.amount_html }}</td>
+                <td>{{ order.status_html }}</td>
+                <td>{{ order.paid_at|default:"-" }}</td>
+                <td>{{ order.receipt_link|default:"-" }}</td>
+                <td><a href="{% url "store:store_sell_list" store_pk %}">{{ order.item.user.profile.nick_name }}</a>
+                    {% if order.status == "reserv" %}
+                    <br>계좌번호 : {{ order.item.user.profile.account_num }}
+                    {% endif %}</td>
+                <td><a href="{% url "trade:order_cancle" order.id %}">주문 취소</a>
+                {% if order.status == 'paid' %}
+                    <br><a href="{% url "store:store_grade_new" store_pk order.item.pk %}">리뷰쓰러가기</a></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+</table>
+
+<hr>
+
+<h4>판매 내역</h4>
+<table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>상품명</th>
+                <th>결제가격</th>
+                <th>처리결과</th>
+                <th>결과일시</th>
+                <th>영수증</th>
+                <th>구매자 정보</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sell in sell_list %}
+            <tr>
+                <td>{{ sell.name }}</td>
+                <td>{{ sell.amount_html }}</td>
+                <td>{{ sell.status_html }}</td>
+                <td>{{ sell.paid_at|default:"-" }}</td>
+                <td>{{ sell.receipt_link|default:"-" }}</td>
+                <td>{{ sell.user.profile.nick_name }}</td>
+                <td><a href="{% url "trade:order_cancle" sell.id %}">주문 취소</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+</table>
+
 <hr>
 
 
