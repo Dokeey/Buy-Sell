@@ -6,6 +6,9 @@ import django.db.models.deletion
 import imagekit.models.fields
 import store.models
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+user_pk = User.objects.get(username='deleteuser').id
 
 class Migration(migrations.Migration):
 
@@ -24,7 +27,7 @@ class Migration(migrations.Migration):
                 ('comment', models.TextField(max_length=1000)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('author', models.ForeignKey(default=4, on_delete=django.db.models.deletion.SET_DEFAULT, to=settings.AUTH_USER_MODEL)),
+                ('author', models.ForeignKey(default=user_pk, on_delete=django.db.models.deletion.SET_DEFAULT, to=settings.AUTH_USER_MODEL)),
                 ('parent', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='replies', to='store.QuestionComment')),
             ],
             options={
@@ -39,7 +42,7 @@ class Migration(migrations.Migration):
                 ('rating', models.PositiveIntegerField(choices=[(0, '☆☆☆☆☆'), (1, '★☆☆☆☆'), (2, '★★☆☆☆'), (3, '★★★☆☆'), (4, '★★★★☆'), (5, '★★★★★')], db_index=True, default=0)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('author', models.ForeignKey(default=4, on_delete=django.db.models.deletion.SET_DEFAULT, to=settings.AUTH_USER_MODEL)),
+                ('author', models.ForeignKey(default=user_pk, on_delete=django.db.models.deletion.SET_DEFAULT, to=settings.AUTH_USER_MODEL)),
                 ('store_item', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='trade.Item')),
             ],
             options={
