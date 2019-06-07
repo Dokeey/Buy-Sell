@@ -47,21 +47,21 @@ class Item(models.Model):
     category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     item_status = models.CharField(
         max_length=3,
-        choices={
+        choices=(
             ('c', 'C급 이하'),
             ('b', 'B급'),
             ('a', 'A급'),
             ('s', 'S급'),
-        },
+        ),
         default='a',
     )
     pay_status = models.CharField(
         max_length=15,
-        choices={
+        choices=(
             ('ready', '재고있음'),
             ('reservation', '예약'),
             ('sale_complete', '판매완료'),
-        },
+        ),
         default='ready',
         db_index=True
     )
@@ -101,13 +101,13 @@ class Order(models.Model):
     amount = models.PositiveIntegerField(verbose_name='결제금액')
     status = models.CharField(
         max_length=9,
-        choices={
+        choices=(
             ('ready', '미결제'),
             ('paid', '결제완료'),
             ('cancelled', '결제취소'),
             ('failed', '결제실패'),
             ('reserv', '결제예약'),
-        },
+        ),
         default='ready',
         db_index=True
     )

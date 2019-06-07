@@ -103,22 +103,23 @@ def store_grade(request, pk):
 @login_required
 def store_grade_new(request, pk, item_id):
     items = get_object_or_404(Item, pk=item_id)
-    grades = StoreGrade.objects.get(store_item_id = items.pk)
-    if grades:
+    try:
+        StoreGrade.objects.get(store_item_id = items.pk)
         messages.error(request, '이미 리뷰를 작성하셨습니다.')
         return redirect("accounts:profile")
-    else :
+    except:
         form_cls = StoreGradeForm
         if request.method == 'POST':
-            form = form_cls(request.POST, instance=grades)
+            form = form_cls(request.POST)
             if form.is_valid():
                 gradeform = form.save(commit=False)
                 gradeform.author = request.user
                 gradeform.store_profile_id = pk
+                gradeform.store_item = items
                 gradeform.save()
             return redirect('store:store_grade', pk)
         else :
-            form = form_cls(instance=grades)
+            form = form_cls()
 
         return render(request, 'store/store_grade_new.html',{
             'form':form,
