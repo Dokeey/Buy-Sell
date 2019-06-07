@@ -7,14 +7,17 @@ import imagekit.models.fields
 import jsonfield.fields
 import uuid
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+user_pk = User.objects.get(username='deleteuser').id
 
 class Migration(migrations.Migration):
 
     initial = True
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('category', '0001_initial'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -44,7 +47,7 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='trade.Item')),
                 ('parent', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='replies', to='trade.ItemComment')),
-                ('user', models.ForeignKey(default=4, on_delete=django.db.models.deletion.SET_DEFAULT, to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(default=user_pk, on_delete=django.db.models.deletion.SET_DEFAULT, to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ('-created_at',),
