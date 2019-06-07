@@ -27,11 +27,13 @@ class StoreProfile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
+user_id = User.objects.get(username='deleteuser').pk
 
 class QuestionComment(models.Model):
     store_profile = models.ForeignKey(StoreProfile, on_delete=models.CASCADE)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_DEFAULT,default=user_id)
     comment = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -43,13 +45,12 @@ class QuestionComment(models.Model):
 
 
 from trade.models import Item
-from django.contrib.auth import get_user_model
-User = get_user_model()
+
 
 class StoreGrade(models.Model):
     store_profile = models.ForeignKey(StoreProfile, on_delete=models.CASCADE)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    store_item = models.ForeignKey(Item, on_delete=models.PROTECT)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_DEFAULT,default=user_id)
+    store_item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True)
     grade_comment = models.TextField()
     rating = models.PositiveIntegerField(
         choices=(
