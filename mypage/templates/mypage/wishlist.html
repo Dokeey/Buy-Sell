@@ -1,0 +1,35 @@
+{% extends "mypage/layout.html" %}
+
+{% block content %}
+<h4>찜목록 (wishlist라고들 하죠 ^^;;)</h4>
+<table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>사진</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>내용</th>
+                <th>상태</th>
+                <th>재고</th>
+                <th>판매자</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for wishlist in wishlist_set %}
+            <tr>
+                <td><img src="{{ wishlist.item.photo.url }}"/></td>
+                <td>{{ wishlist.item.title }}</td>
+                <td>{{ wishlist.item.amount }}</td>
+                <td>{{ wishlist.item.desc }}</td>
+                <td>{{ wishlist.item.get_item_status_display }}</td>
+                <td>{{ wishlist.item.pay_status }}</td>
+                <td>{{ wishlist.item.user.profile.nick_name }}</td>
+                <td><a href="{% url "mypage:wishlist_delete" wishlist.item.id %}">찜 삭제</a><br>
+                    <a href="{% url "trade:order_new" wishlist.item.id %}" class="btn btn-primary">구매하기</a><br>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+</table>
+{% endblock %}

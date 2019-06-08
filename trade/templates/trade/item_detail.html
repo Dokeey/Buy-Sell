@@ -21,6 +21,7 @@
 <br>
 
 <a href="{% url "trade:order_new" item.pk %}" class="btn btn-primary">구매하기</a><br>
+<a href="{% url "mypage:wishlist_new" item.pk %}" class="btn btn-primary">찜하기</a><br>
 {% else %}
 
 판매중이거나 예약중인 상품입니다 ^^7<br>
