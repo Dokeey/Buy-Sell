@@ -1,31 +1,22 @@
-from django import views
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model, login as auth_login
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.tokens import default_token_generator, PasswordResetTokenGenerator
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView, \
     PasswordResetConfirmView
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
-from django.core.mail import send_mail
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.encoding import force_text, force_bytes
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.utils.translation import gettext_lazy
-from django.views.generic import UpdateView, TemplateView
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
 
-from trade.models import Order
 from .models import Profile
-from .forms import SignupForm, AuthProfileForm
+from .forms import SignupForm, AuthProfileForm, CheckUserForm
 
-# Create your views here.
 User = get_user_model()
 
 
@@ -81,17 +72,29 @@ signout = LogoutView.as_view()
 @login_required
 def profile_view(request):
     profile = get_object_or_404(Profile, user=request.user)
-    order_list = request.user.order_set.all()
-    orders = Order.objects.all()
-    sell_list = []
-    for order in orders:
-        if order.item.user == request.user:
-            sell_list.append(order)
     return render(request, 'accounts/profile.html',{
         'profile': profile,
-        'order_list': order_list,
-        'sell_list': sell_list,
     })
+
+
+def check_user(fn):
+    def wrapper(*args, **kwargs):
+        request = args[0]
+        profile = get_object_or_404(Profile, user=request.user)
+        if request.method == "POST":
+            form = CheckUserForm(request.POST)
+            if form.is_valid():
+                if check_password(form.cleaned_data['password'], profile.user.password):
+                    return fn(*args, **kwargs)
+                else:
+                    messages.error(request, '패스워드를 확인해주세요 :(')
+        else:
+            form = CheckUserForm
+
+        return render(request, 'accounts/check_user.html', {
+            'form': form
+        })
+    return wrapper
 
 @login_required
 def profile_edit(request):
@@ -121,10 +124,13 @@ class PasswordChange(PasswordChangeView):
 pw_edit = PasswordChange.as_view()
 
 
+def withdrawal(request):
+    request.user.delete()
+    return redirect('root')
+
 
 # 이메일 인증 활성화 뷰
 def activate(request, uidb64, token):
-    User = get_user_model()
     try:
         uid = force_text(urlsafe_base64_decode(uidb64.encode('utf-8')))
         current_user = User.objects.get(pk=uid)

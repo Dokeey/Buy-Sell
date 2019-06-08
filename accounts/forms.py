@@ -148,3 +148,10 @@ class AuthProfileForm(ProfileForm):
         model = ProfileForm.Meta.model
         fields = ProfileForm.Meta.fields + ['password']
         widgets = ProfileForm.Meta.widgets
+
+class CheckUserForm(forms.Form):
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+    )
+    class Meta:
+        fields = ['password']

@@ -190,5 +190,20 @@ def order_cancle(request, order_id):
     return redirect('accounts:profile')
 
 
+
+@login_required
+def trade_history(request):
+    order_list = request.user.order_set.all()
+    orders = Order.objects.all()
+    sell_list = []
+    for order in orders:
+        if order.item.user == request.user:
+            sell_list.append(order)
+    return render(request, 'trade/trade_history.html',{
+        'order_list': order_list,
+        'sell_list': sell_list,
+    })
+
+
 def test(request):
     return render(request, 'trade/test.html')

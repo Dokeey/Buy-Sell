@@ -1,7 +1,7 @@
 {% extends "mypage/layout.html" %}
 
 {% block content %}
-거래 내역<br>
+<a class="nav-link" href="{% url "trade:trade_history" %}">거래 내역</a><br>
 <a class="nav-link" href="{% url "store:store_profile" %}">내 상점</a><br>
 <a class="nav-link" href="{% url "mypage:wishlist" %}">찜 목록</a><br>
 <a class="nav-link" href="{% url "mypage:follow" %}">팔로우</a><br>
