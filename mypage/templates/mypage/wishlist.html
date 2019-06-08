@@ -23,7 +23,7 @@
                 <td>{{ wishlist.item.amount }}</td>
                 <td>{{ wishlist.item.desc }}</td>
                 <td>{{ wishlist.item.get_item_status_display }}</td>
-                <td>{{ wishlist.item.pay_status }}</td>
+                <td>{{ wishlist.item.get_pay_status_display }}</td>
                 <td>{{ wishlist.item.user.profile.nick_name }}</td>
                 <td><a href="{% url "mypage:wishlist_delete" wishlist.item.id %}">찜 삭제</a><br>
                     <a href="{% url "trade:order_new" wishlist.item.id %}" class="btn btn-primary">구매하기</a><br>

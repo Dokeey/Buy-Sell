@@ -1,15 +1,15 @@
 {% extends "trade/layout.html" %}
-
+{% load store.store_tags %}
 {% block content %}
 {{ block.super }}
 
 {% if item.pay_status == "ready" %}
 <h2>{{ item.title }}</h2>
 
-
+{% store_ident item.user.id as store_pk %}
 
 <br>
-{{ item.user }} <br>
+<a href="{% url "store:store_sell_list" store_pk %}">{{ item.user.profile.nick_name }}</a> <br>
 {{ item.title }} <br>
 {{ item.desc }} <br>
 {{ item.amount }} <br>

@@ -1,0 +1,27 @@
+{% extends "mypage/layout.html" %}
+
+{% block content %}
+<h4>팔로우 (인싸 목록)</h4>
+<table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>사진</th>
+                <th>상점명</th>
+                <th>개설일</th>
+                <th>소개</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for follow in follow_set %}
+            <tr>
+                <td><img src="{{ follow.store.photo.url }}"/></td>
+                <td>{{ follow.store.name }}</td>
+                <td>{{ follow.store.created_at }}</td>
+                <td>{{ follow.store.comment }}</td>
+                <td><a href="{% url "mypage:follow_delete" follow.store.id %}">팔로잉 취소</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+</table>
+{% endblock %}

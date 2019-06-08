@@ -49,7 +49,8 @@
         <tr>
             <td><a href="{% url "store:store_sell_list" stores.pk %}">리스트({{ item_count }})/</a></td>
             <td><a href="{% url "store:store_grade" stores.pk %}">가게 평점({{ grade_count }}) /</a>  </td>
-            <td><a href="{% url "store:store_question" stores.pk %}">가게 문의({{ question_count }})</a></td>
+            <td><a href="{% url "store:store_question" stores.pk %}">가게 문의({{ question_count }}) /</a></td>
+            <td><a href="{% url "mypage:follow_new" stores.pk %}">팔로잉</a></td>
         </tr>
     </table>
     <hr/>

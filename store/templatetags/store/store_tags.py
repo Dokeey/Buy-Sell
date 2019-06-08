@@ -45,8 +45,5 @@ def store_sell_list(pk):
     return order
 
 @register.simple_tag
-def store_ident(pk):
-    items = get_object_or_404(Item, pk=pk)
-    store_pk = StoreProfile.objects.get(user=items.user).pk
-    #grade_pk = StoreGrade.objects.get()
-    return store_pk
+def store_ident(user_id):
+    return StoreProfile.objects.get(user_id=user_id).pk
