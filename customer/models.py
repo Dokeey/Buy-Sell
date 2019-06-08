@@ -1,7 +1,10 @@
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 
 # Create your models here.
+from hitcount.models import HitCountMixin, HitCount
+
 
 class CustomerCategory(models.Model):
     customer_category = models.CharField(max_length=40)
@@ -34,3 +37,9 @@ class CustomerAsk(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+class CustomerNotice(models.Model, HitCountMixin):
+    notice_title = models.CharField(max_length=40)
+    notice_content = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

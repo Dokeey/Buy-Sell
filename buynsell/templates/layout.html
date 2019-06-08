@@ -51,6 +51,10 @@
              <li class="nav-item">
             <a class="nav-link" href="{% url "customer:customer_faq" %}">faq</a>
           </li>
+            </li>
+             <li class="nav-item">
+            <a class="nav-link" href="{% url "customer:customer_notice" %}">공지사항</a>
+          </li>
             <li class="nav-item">
              {% for cate in cates %}
               <a class="nav-link" href="{% url "category:categories" cate.pk %}"> {{ cate.name }}</a>

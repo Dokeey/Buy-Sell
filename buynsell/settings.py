@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'trade',
     'imagekit',
     'customer',
+    'hitcount',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,10 @@
+{% extends "customer/layout.html" %}
+
+{% block content %}
+{% for list in notice_list %}
+
+   <a href="{% url "customer:notice_detail" list.pk %}"> {{ list.notice_title }}</a>
+{% empty %}
+<h1>공지사항이 없습니다.</h1>
+{% endfor %}
+{% endblock %}

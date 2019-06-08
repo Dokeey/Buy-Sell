@@ -3,9 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
+from django.views.generic import ListView, DetailView
+from hitcount.views import HitCountDetailView
 
 from .forms import CustomerAskForm
-from .models import CustomerFAQ, CustomerAsk
+from .models import CustomerFAQ, CustomerAsk, CustomerNotice
 
 
 def customer_faq(request):
@@ -66,3 +68,15 @@ def customer_ask_detail(request, ask_id):
     return render(request, 'customer/customer_ask_detail.html', {
         'ask': ask_post
     })
+
+class CustomerNoticeList(ListView):
+    model = CustomerNotice
+    template_name = 'customer/notice_list.html'
+    context_object_name = 'notice_list'
+customer_notice = CustomerNoticeList.as_view()
+
+class CustomerNoticeDetail(DetailView):
+    model = CustomerNotice
+    template_name = 'customer/notice_detail.html'
+
+notice_detail = CustomerNoticeDetail.as_view()

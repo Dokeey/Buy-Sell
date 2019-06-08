@@ -9,4 +9,6 @@ urlpatterns = [
     path('ask/new/', views.customer_ask_new, name='customer_ask_new'),
     path('ask/edit/<int:ask_id>/', views.customer_ask_edit, name='customer_ask_edit'),
     path('ask/detail/<int:ask_id>/', views.customer_ask_detail, name='customer_ask_detail'),
+    path('notice/',views.CustomerNoticeList.as_view(), name='customer_notice'),
+    path('notice/<int:pk>', views.CustomerNoticeDetail.as_view(), name='notice_detail'),
 ]
