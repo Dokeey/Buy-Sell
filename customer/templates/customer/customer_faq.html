@@ -1,0 +1,16 @@
+{% extends "customer/layout.html" %}
+
+{% block content %}
+<h1>자주 묻는 질문</h1>
+<hr/>
+{% for faq in faqs %}
+
+<h2>{{ faq.faq_title }}</h2>
+{{ faq.faq_content }}
+
+<hr/>
+
+{% endfor %}
+<a href="{% url "customer:customer_ask_new" %}">1:1문의 하기</a>
+<a href="{% url "customer:customer_ask" %}">1:1문의</a>
+{% endblock %}

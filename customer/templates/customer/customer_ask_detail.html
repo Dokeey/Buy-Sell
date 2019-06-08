@@ -1,0 +1,15 @@
+{% extends "customer/layout.html" %}
+
+{% block content %}
+
+제목 : {{ ask.ask_title }}<br>
+작성자 : {{ ask.author }}  질문 날짜 : {{ ask.created_at }}<br>
+질문 내용 : {{ ask.ask_post }}
+<hr/>
+{% if ask.ask_going == 'ok' %}
+답변 : {{ ask.ask_comment }}
+<br/> 답변 날짜 : {{ ask.updated_at }}
+{% endif %}
+<br/>
+<a href="{% url "customer:customer_ask" %}">목록으로</a>
+{% endblock %}
