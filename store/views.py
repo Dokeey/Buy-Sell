@@ -8,12 +8,9 @@ from .models import StoreProfile, QuestionComment, StoreGrade
 from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 
 @login_required
-def store_profile(request):
+def my_store_profile(request):
     stores = get_object_or_404(StoreProfile, user=request.user)
-    return render(request, 'store/layout.html',{
-        'stores': stores,
-    })
-
+    return redirect('store:store_sell_list', stores.pk)
 
 @login_required #로그인시에만 접속할 수 있다.
 def store_profile_edit(request):

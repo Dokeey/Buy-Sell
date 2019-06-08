@@ -39,7 +39,7 @@
         {% if user.is_authenticated and request.user.pk == stores.user.pk %}
 
         <tr>
-           <td> <a href="{% url "store:store_profile_edit" %}">프로필 수정</a> </td>
+           <td> <a href="{% url "store:store_profile_edit" %}">가게 프로필 수정</a> </td>
         </tr>
         {% endif %}
 
@@ -47,10 +47,10 @@
     <hr/>
     <table style="margin:20px">
         <tr>
-            <td><a href="{% url "store:store_sell_list" stores.pk %}">리스트({{ item_count }})/</a></td>
-            <td><a href="{% url "store:store_grade" stores.pk %}">가게 평점({{ grade_count }}) /</a>  </td>
-            <td><a href="{% url "store:store_question" stores.pk %}">가게 문의({{ question_count }}) /</a></td>
-            <td><a href="{% url "mypage:follow_new" stores.pk %}">팔로잉</a></td>
+            <td><a href="{% url "store:store_sell_list" stores.pk %}">물품들({{ item_count }}) / </a></td>
+            <td><a href="{% url "store:store_grade" stores.pk %}">가게 평점({{ grade_count }}) / </a>  </td>
+            <td><a href="{% url "store:store_question" stores.pk %}">가게 문의({{ question_count }}) / </a></td>
+            <td><a href="{% url "mypage:follow_new" stores.pk %}">팔로잉하기</a></td>
         </tr>
     </table>
     <hr/>

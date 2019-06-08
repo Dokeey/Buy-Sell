@@ -8,7 +8,6 @@ urlpatterns = [
     path('', lambda req: redirect('trade:item_list')),
     path('item/new/', views.item_new, name='item_new'),
     path('item/list/', views.item_list, name='item_list'),
-    path('myitem/list/', views.my_item_list, name='my_item_list'),
 
     path('item/detail/<int:pk>/', views.item_detail, name='item_detail'),
     path('item/update/<int:pk>/', views.item_update, name='item_update'),
@@ -22,5 +21,4 @@ urlpatterns = [
     path('order/cancle/<int:order_id>/', views.order_cancle, name='order_cancle'),
 
     path('histroy/', views.trade_history, name='trade_history'),
-    path('test/', views.test),
 ]

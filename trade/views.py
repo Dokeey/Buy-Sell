@@ -20,7 +20,7 @@ def item_new(request):
             item.user = request.user
             item.photo = form.cleaned_data['photo']
             form.save()
-            return redirect('trade:item_list')
+            return redirect('store:my_store_profile')
     else:
         form = ItemForm
     return render(request, 'trade/item_new.html', {
@@ -30,14 +30,6 @@ def item_new(request):
 
 def item_list(request):
     items = Item.objects.all()
-    return render(request, 'trade/item_list.html', {
-        'items': items
-    })
-
-
-@login_required
-def my_item_list(request):
-    items = Item.objects.filter(user=request.user)
     return render(request, 'trade/item_list.html', {
         'items': items
     })
@@ -205,5 +197,3 @@ def trade_history(request):
     })
 
 
-def test(request):
-    return render(request, 'trade/test.html')

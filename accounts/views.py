@@ -85,7 +85,7 @@ def check_user(fn):
             form = CheckUserForm(request.POST)
             if form.is_valid():
                 if check_password(form.cleaned_data['password'], profile.user.password):
-                    return fn(*args, **kwargs)
+                    return True
                 else:
                     messages.error(request, '패스워드를 확인해주세요 :(')
         else:
