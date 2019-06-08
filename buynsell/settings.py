@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'store',
     'trade',
     'imagekit',
+    'mypage',
 ]
 
 MIDDLEWARE = [
