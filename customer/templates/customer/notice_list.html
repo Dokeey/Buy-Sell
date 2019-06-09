@@ -1,9 +1,9 @@
 {% extends "customer/layout.html" %}
-
+{% load hitcount_tags %}
 {% block content %}
 {% for list in notice_list %}
 
-   <a href="{% url "customer:notice_detail" list.pk %}"> {{ list.notice_title }}</a>
+{{ list.pk }}.  제목 : <a href="{% url "customer:notice_detail" list.pk %}"> {{ list.notice_title }}</a> 조회수:{% get_hit_count for list %} <br/>
 {% empty %}
 <h1>공지사항이 없습니다.</h1>
 {% endfor %}

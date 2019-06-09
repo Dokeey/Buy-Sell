@@ -69,7 +69,7 @@ def customer_ask_edit(request, ask_id):
 def customer_ask_detail(request, ask_id):
     ask_post = get_object_or_404(CustomerAsk, pk=ask_id)
     return render(request, 'customer/customer_ask_detail.html', {
-        'ask': ask_post
+        'ask': ask_post,
     })
 
 class CustomerNoticeList(ListView):
@@ -78,8 +78,9 @@ class CustomerNoticeList(ListView):
     context_object_name = 'notice_list'
 customer_notice = CustomerNoticeList.as_view()
 
-class CustomerNoticeDetail(DetailView):
+class CustomerNoticeDetail(HitCountDetailView):
     model = CustomerNotice
     template_name = 'customer/notice_detail.html'
+    count_hit = True
 
 notice_detail = CustomerNoticeDetail.as_view()

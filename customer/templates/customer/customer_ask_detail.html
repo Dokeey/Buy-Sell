@@ -10,6 +10,6 @@
 답변 : {{ ask.ask_comment }}
 <br/> 답변 날짜 : {{ ask.updated_at }}
 {% endif %}
-<br/>
+<br/> {{ hitcount }}
 <a href="{% url "customer:customer_ask" %}">목록으로</a>
 {% endblock %}
