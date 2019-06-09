@@ -10,6 +10,9 @@ from .forms import CustomerAskForm
 from .models import CustomerFAQ, CustomerAsk, CustomerNotice
 
 
+def customer(request):
+    return render(request, 'customer/customer.html')
+
 def customer_faq(request):
     faqs = CustomerFAQ.objects.all()
 

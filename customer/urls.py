@@ -4,6 +4,7 @@ app_name = 'customer'
 
 urlpatterns = [
 
+    path('', views.customer, name='customer'),
     path('faq/', views.customer_faq, name='customer_faq'),
     path('ask/', views.customer_ask, name='customer_ask'),
     path('ask/new/', views.customer_ask_new, name='customer_ask_new'),

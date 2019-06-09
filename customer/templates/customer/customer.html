@@ -1,0 +1,7 @@
+{% extends "customer/layout.html" %}
+
+{% block content %}
+<a class="nav-link" href="{% url "customer:customer_notice" %}">공지사항</a>
+<a class="nav-link" href="{% url "customer:customer_faq" %}">faq</a>
+<a class="nav-link" href="{% url "customer:customer_ask" %}">1:1문의</a>
+{% endblock %}
