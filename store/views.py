@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404, redirect
+from hitcount.models import HitCount
+from hitcount.views import HitCountMixin
 
 from trade.models import Item
 from .models import StoreProfile, QuestionComment, StoreGrade
@@ -149,6 +151,9 @@ def store_grade_del(request, pk, gid):
 def store_sell_list(request, pk):
     stores = get_object_or_404(StoreProfile,pk=pk)
     store_item = Item.objects.filter(user_id = stores.user_id)
+
+    hit_count = HitCount.objects.get_for_object(stores)
+    hit_count_response = HitCountMixin.hit_count(request, hit_count)
 
     return render(request, 'store/store_sell_list.html', {
         'store_item':store_item,

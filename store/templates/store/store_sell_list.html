@@ -1,5 +1,6 @@
 {% extends "store/layout.html" %}
 {% load store.store_tags %}
+{% load hitcount_tags %}
 
 {% block content %}
 {{ block.super }}
@@ -11,17 +12,31 @@
 
 {% for item in store_item %}
 
-{% if item.pay_status == "reservation" %}
-예약중인 상품입니다. ^^7
+{% if item.pay_status == "reservation" and item.user != request.user %}
+<h6>예약중인 상품입니다. ^^7</h6>
+조회수 : {% get_hit_count for item %}<br>
+상품명 : {{ item.title }} <br>
+가격 : {{ item.amount }} <br>
+사진 : <a href="{% url "trade:item_detail" pk=item.pk %}"><img src="{{ item.photo.url }}"/><br></a>
+상태 : {{ item.get_item_status_display }} <br>
+최근 업데이트 : {{ item.updated_at }} <br>
 <br>
 
-{% elif item.pay_status == "sale_complete" %}
-판매완료 상품입니다. ^^7
+{% elif item.pay_status == "sale_complete" and item.user != request.user %}
+<br>
+<h6>판매완료 상품입니다. ^^7</h6>
+조회수 : {% get_hit_count for item %}<br>
+상품명 : {{ item.title }} <br>
+가격 : {{ item.amount }} <br>
+사진 : <a href="{% url "trade:item_detail" pk=item.pk %}"><img src="{{ item.photo.url }}"/><br></a>
+상태 : {{ item.get_item_status_display }} <br>
+최근 업데이트 : {{ item.updated_at }} <br>
 <br>
 
 {% else %}
 
 <br>
+조회수 : {% get_hit_count for item %}<br>
 상품명 : {{ item.title }} <br>
 가격 : {{ item.amount }} <br>
 사진 : <a href="{% url "trade:item_detail" pk=item.pk %}"><img src="{{ item.photo.url }}"/><br></a>
@@ -30,8 +45,7 @@
 <br>
 
 {% endif %}
-    <hr/>
-
+<hr>
 {% endfor %}
 
 {% endblock %}

@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
 from category.models import SubCategory
 from accounts.models import Profile
+from hitcount.models import HitCount
+from hitcount.views import HitCountMixin
 
 from .models import Item, ItemComment, Order
 from .forms import ItemForm, ItemUpdateForm, ItemCommentForm, PayForm, OrderForm
@@ -38,6 +40,8 @@ def item_list(request):
 def item_detail(request, pk):
     item = get_object_or_404(Item, pk=pk)
     comments = ItemComment.objects.filter(item=item, parent=None)
+    hit_count = HitCount.objects.get_for_object(item)
+    hit_count_response = HitCountMixin.hit_count(request, hit_count)
     form = ItemCommentForm
     if request.method == "POST":
         if not request.user.is_authenticated:

@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 {% load store.store_tags %}
+{% load hitcount_tags %}
+
 {% block content %}
+
 {% store_rating stores.pk as end %}
 {% store_item_list stores.pk as item_count %}
 {% store_grade_list stores.pk as grade_count %}
@@ -17,8 +20,6 @@
         <tr>
             <td>가게 소개 : </td><td>{{ stores.comment }}</td>
         </tr>
-
-
         <tr>
             <td>평점 : </td>
             <td>
@@ -29,9 +30,11 @@
                 {% endif %}
             </td>
         </tr>
-
         <tr>
-            <td>판매 횟수</td><td>{{ order }}</td>
+            <td>판매 횟수 : </td><td>{{ order }}</td>
+        </tr>
+        <tr>
+            <td>방문 횟수 : </td><td>{% get_hit_count for stores %}</td>
         </tr>
         <tr>
             <td>개점일 : </td><td> {{ stores.created_at }}</td>

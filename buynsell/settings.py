@@ -147,7 +147,6 @@ LOGIN_REDIRECT_URL = reverse_lazy('accounts:profile')
 LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login')
 
 # Email
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_USE_TLS = True
 EMAIL_USE_SSL = True
@@ -168,11 +167,15 @@ LANGUAGES = [  # Available languages
 ]
 
 # Media
-
 MEDIA_URL = '/files/' # 업로드 할 경로
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-
+# IAMPORT API
 IAMPORT_SHOP_ID = 'iamport' # 가맹점 식별코드
 IAMPORT_API_KEY = 'imp_apikey' # REST API 키
 IAMPORT_API_SECRET = 'ekKoeW8RyKuT0zgaZsUtXXTLQ4AhPFW3ZGseDA6bkA5lamv9OqDMnxyeB9wqOsuO9W3Mx9YSJ4dTqJ3f' # REST API SECRET
+
+# Hit Count
+HITCOUNT_KEEP_HIT_ACTIVE = { 'days': 1 }
+HITCOUNT_HITS_PER_IP_LIMIT = 1
+HITCOUNT_KEEP_HIT_IN_DATABASE = { 'days': 30 }

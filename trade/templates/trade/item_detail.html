@@ -1,5 +1,6 @@
 {% extends "trade/layout.html" %}
 {% load store.store_tags %}
+{% load hitcount_tags %}
 {% block content %}
 {{ block.super }}
 
@@ -18,6 +19,8 @@
 {{ item.get_item_status_display }} <br>
 {{ item.created_at }} <br>
 {{ item.updated_at }} <br>
+{% get_hit_count for item %}
+
 <br>
 
 <a href="{% url "trade:order_new" item.pk %}" class="btn btn-primary">구매하기</a><br>
