@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'mypage',
     'customer',
     'hitcount',
+    'policy',
 ]
 
 MIDDLEWARE = [
