@@ -1,11 +1,11 @@
 {% extends "mypage/layout.html" %}
 
 {% block content %}
-<a class="nav-link" href="{% url "trade:trade_history" %}">거래 내역</a><br>
-<a class="nav-link" href="{% url "trade:item_new" %}">물품 등록</a><br>
-<a class="nav-link" href="{% url "store:my_store_profile" %}">내 가게</a><br>
-<a class="nav-link" href="{% url "mypage:wishlist" %}">찜 목록</a><br>
-<a class="nav-link" href="{% url "mypage:follow" %}">팔로우</a><br>
-<a class="nav-link" href="{% url "accounts:profile" %}">내 정보 관리</a><br>
-<a class="nav-link" href="{% url "customer:customer_ask" %}">1:1문의</a>
+<a href="{% url "trade:trade_history" %}">거래 내역</a><br>
+<a href="{% url "trade:item_new" %}">물품 등록</a><br>
+<a href="{% url "store:my_store_profile" %}">내 가게</a><br>
+<a href="{% url "mypage:wishlist" %}">찜 목록</a><br>
+<a href="{% url "mypage:follow" %}">팔로우</a><br>
+<a href="{% url "accounts:profile" %}">내 정보 관리</a><br>
+<a href="{% url "customer:customer_ask" %}">1:1문의</a>
 {% endblock %}
