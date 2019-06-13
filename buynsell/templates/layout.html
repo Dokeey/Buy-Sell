@@ -7,16 +7,18 @@
 <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="{% static "css/theme.css" %}">
-
+    <title>Buy & Sell</title>
     <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
 
     <style>
         .navbar{
-            height: 70px;
+            height: 100px;
         }
         body {
             padding-bottom: 70px;
+            margin-top: 200px;
+            background: white !important;
         }
         .navbar-nav.navbar-center {
             position: relative;
@@ -25,7 +27,17 @@
             min-height: 40px;
             margin-bottom: 0px;
             border: 1px solid transparent;
+            padding: 15px;
         }
+      .container {
+            background: #666666;
+      }
+      .container-fluid {
+            <!--background: #999999;-->
+      }
+      h1 {
+        margin: 100px 0px;
+      }
     </style>
     {% block head %}
     {% endblock %}
@@ -36,139 +48,143 @@
 {% category_menu as cates %}
 {% subcategory_menu as subcates %}
 
-<nav class="navbar navbar-default navbar-static-top">
-  <div class="container-fluid">
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
 
-          {% if user.is_authenticated %}
+    <div class="container-fluid" name="menu" >
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid" name="menu-layout" style="background: white; border: 1px solid #dddddd;">
 
-            <li><a href="{% url "mypage:root" %}">MY PAGE</a></li>
-            <li><a href="{% url "accounts:logout" %}">LOGOUT</a></li>
+                <div class="container-fluid col-md-4" name="menu-collaps" style="height: 95px; display: table">
+                    <div class="row" style="display: table-cell; vertical-align: bottom; text-align: center;">
+                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="true">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                      </button>
+                        <a class="navbar-brand" style="float: none; color: #0fd9a6" href="{% url "mypage:root" %}">Buy & Sell</a>
+                    </div>
+                </div>
 
-            {% if user.is_staff %}
-                <li><a href="{% url "admin:index" %}">관리자</a></li>
-            {% endif %}
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-          {% else %}
+                  <div class="container-fluid col-md-7" name="menu-layout">
+                      <div class="row" style="margin-bottom: 20px;">
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                      <ul class="nav navbar-nav navbar-right">
 
-            <li><a href="{% url "accounts:login" %}">로그인</a></li>
-            <li><a href="{% url "accounts:signup" %}">회원가입</a></li>
+                          {% if user.is_authenticated %}
 
-          {% endif %}
+                            <li><a href="{% url "mypage:root" %}">MY PAGE</a></li>
+                            <li><a href="{% url "accounts:logout" %}">LOGOUT</a></li>
 
-        <!--<li><a href="#">Link</a></li>-->
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
+                            {% if user.is_staff %}
+                                <li><a href="{% url "admin:index" %}">관리자</a></li>
+                            {% endif %}
 
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <!--<div class="navbar-header">-->
-            <!--<a class="navbar-brand" href="#">Buy & Sell</a>-->
-    <!--</div>-->
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <form class="navbar-form">
-        <div class="form-group">
-            <a class="navbar-brand" href="#">Buy & Sell</a>
-          <input type="text" class="form-control" placeholder="어떤 물품을 찾고계세요?">
-        </div>
-        <button type="submit" class="btn btn-default">검색</button>
-      </form>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
+                          {% else %}
 
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <!--<div class="navbar-header">-->
-            <!--<a class="navbar-brand" href="#">Buy & Sell</a>-->
-    <!--</div>-->
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
-      <ul class="nav navbar-nav navbar-center">
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">전체 카테고리 <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-          </ul>
-        </li>
-        <li><a href="">인기 상점</a></li>
-        <li class="dropdown">
-          <a href="{% url "customer:customer" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">고객센터 <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="{% url "customer:customer_notice" %}">공지사항</a></li>
-            <li><a href="{% url "customer:customer_faq" %}">자주 묻는 질문</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="{% url "customer:customer_ask" %}">1:1 문의</a></li>
-          </ul>
-        </li>
-        <li><a href="{% url "trade:item_new" %}">나도 물건팔기</a></li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
+                            <li><a href="{% url "accounts:login" %}">로그인</a></li>
+                            <li><a href="{% url "accounts:signup" %}">회원가입</a></li>
 
-    {% for msg in messages %}
-        {{ msg }}
-    {% endfor %}
-        <hr>
-    {% block content %}
-    {% endblock %}
-<table border="1">
-        <tr>
-            {% for cate in cates %}
-            <td>
-              <a href="{% url "category:categories" cate.pk %}">  <h2>{{ cate.name }}</h2></a>
-            </td>
-                {% for subcate in subcates %}
-                    <tr>
-                         {% if subcate.category == cate %}
-                        <td>
-                           <a href="{% url "category:subcategories" cate.pk subcate.pk %}">{{ subcate.name }}</a>
-                        </td>
-                         {% endif %}
-                    </tr>
+                          {% endif %}
+
+                      </ul>
+                    </div>
+                      <div class="row">
+          <!-- Brand and toggle get grouped for better mobile display -->
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                      <form class="navbar-form" style="left: 50%; transform: translatex(3%);" >
+                        <div class="form-group">
+                          <input type="search" size="40" class="form-control" placeholder="어떤 물품을 찾고계세요?">
+                        </div>
+                        <button type="submit" class="btn btn-primary">검색</button>
+                      </form>
+
+                    </div>
+                  </div>
+
+                  <div class="container-fluid">
+                      <div class="row">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <!--<div class="navbar-header">-->
+                                <!--<a class="navbar-brand" href="#">Buy & Sell</a>-->
+                        <!--</div>-->
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                      <ul class="nav navbar-nav navbar-center">
+                        <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">전체 카테고리 <span class="caret"></span></a>
+                          <ul class="dropdown-menu">
+                            <li><a href="{% url "trade:item_list" %}">물품 목록</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="">인기 상점</a></li>
+                        <li class="dropdown">
+                          <a href="{% url "customer:customer" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">고객센터 <span class="caret"></span></a>
+                          <ul class="dropdown-menu">
+                            <li><a href="{% url "customer:customer_notice" %}">공지사항</a></li>
+                            <li><a href="{% url "customer:customer_faq" %}">자주 묻는 질문</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url "customer:customer_ask" %}">1:1 문의</a></li>
+                          </ul>
+                        </li>
+                        <li><a href="{% url "trade:item_new" %}">나도 물건팔기</a></li>
+                      </ul>
+                    </div>
+                  </div>
+
+              </div><!-- /.navbar-collapse -->
+          </div>
+        </nav>
+    </div>
+
+    <div class="container-fluid" name="content" style="margin-left: 180px; margin-right: 180px;">
+        <div class="row">
+                {% for msg in messages %}
+                    {{ msg }}
                 {% endfor %}
-            {% endfor %}
 
-        </tr>
+                {% block content %}
+                {% endblock %}
+            <table border="1">
+                    <tr>
+                        {% for cate in cates %}
+                        <td>
+                          <a href="{% url "category:categories" cate.pk %}">  <h2>{{ cate.name }}</h2></a>
+                        </td>
+                            {% for subcate in subcates %}
+                                <tr>
+                                     {% if subcate.category == cate %}
+                                    <td>
+                                       <a href="{% url "category:subcategories" cate.pk subcate.pk %}">{{ subcate.name }}</a>
+                                    </td>
+                                     {% endif %}
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </tr>
+            </table>
+                {% block extra_content %}
+                {% endblock %}
+        </div>
+    </div>
 
-    <tr>
+    <div class="container-fluid" name="footer" style="margin-left: 90px; margin-right: 90px;">
+        <div class="row">
+            <hr/>
+            &copy; 2019. yejin & donghoo
+        </div>
+    </div>
 
-    </tr>
-
-</table>
 
 
-<div class="container">
-<div class="col-sm-12">
 
-    {% block extra_content %}
-    {% endblock %}
 
-    <hr/>
-    </div></div>
-    &copy; 2019. yejin & donghoo
+
 
 </body>
 </html>
