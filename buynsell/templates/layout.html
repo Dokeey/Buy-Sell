@@ -33,6 +33,10 @@
         .navbar-fixed-top {
 
         }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+            margin-top: 0;
+        }
       .container {
             background: #666666;
       }
@@ -118,6 +122,7 @@
     </div>
 
     <div class="container-fluid" name="content" style="padding: 0px;">
+        <nav class="navbar navbar-default navbar-static-top">
           <div class="container-fluid" style="margin-left: 0px; margin-right: 0px; margin-top: 15px; margin-bottom: 10px; border-bottom: 1px solid #dddddd;">
             <div class="row">
                 <!-- Brand and toggle get grouped for better mobile display -->
@@ -134,7 +139,7 @@
                          <div class="row" style="width:600px; padding:10px; padding-left:15px;">
                             {% for cate in cates %}
                                    <ul class="list-unstyled col-md-3" style="height:200px; ">
-                                       <a style="color: #0fd9a6;" href="{% url "category:categories" cate.pk %}"><p>{{ cate.name }}</p></a>
+                                       <a style="color: #0fd9a6; font-weight: bold;" href="{% url "category:categories" cate.pk %}"><p>{{ cate.name }}</p></a>
 
                                 {% for subcate in subcates %}
                                     {% if subcate.category == cate %}
@@ -147,27 +152,37 @@
                       </ul>
                 </li>
 
-                <li><a href="">인기 상점</a></li>
-                <li class="dropdown">
-                  <a href="{% url "customer:customer" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">고객센터 <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="{% url "customer:customer_notice" %}">공지사항</a></li>
-                    <li><a href="{% url "customer:customer_faq" %}">자주 묻는 질문</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="{% url "customer:customer_ask" %}">1:1 문의</a></li>
-                  </ul>
-                </li>
+                <li><a href="">인기 가게</a></li>
               </ul>
                 <ul class="nav navbar-nav navbar-right" style="margin-left: 180px; margin-right: 180px;">
                     <li><a style="color: #0fd9a6;" href="{% url "trade:item_new" %}"><b>나도 물건팔기</b></a></li>
+
+                    <li class="dropdown">
+                      <a href="{% url "customer:customer" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">고객센터 <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="{% url "customer:customer_notice" %}">공지사항</a></li>
+                        <li><a href="{% url "customer:customer_faq" %}">자주 묻는 질문</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{% url "customer:customer_ask" %}">1:1 문의</a></li>
+                      </ul>
+                    </li>
+
                 </ul>
             </div>
           </div>
+        </nav>
 
         <div class="row" style="margin-left: 180px; margin-right: 180px;" >
-                {% for msg in messages %}
-                    {{ msg }}
+
+            {% if messages %}                            <!-- message 프레임워크 -->
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                      {{ message }}
+                    </div>
                 {% endfor %}
+            {% endif %}
+
+
 
                 {% block content %}
                 {% endblock %}

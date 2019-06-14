@@ -183,3 +183,10 @@ IAMPORT_API_SECRET = 'ekKoeW8RyKuT0zgaZsUtXXTLQ4AhPFW3ZGseDA6bkA5lamv9OqDMnxyeB9
 HITCOUNT_KEEP_HIT_ACTIVE = { 'days': 1 }
 HITCOUNT_HITS_PER_IP_LIMIT = 1
 HITCOUNT_KEEP_HIT_IN_DATABASE = { 'days': 30 }
+
+
+# Message custom
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
