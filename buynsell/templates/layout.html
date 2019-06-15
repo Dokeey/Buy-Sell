@@ -134,9 +134,9 @@
           <!-- Brand and toggle get grouped for better mobile display -->
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
-                      <form class="navbar-form" style="left: 50%; transform: translatex(3%); margin-right: 15px;margin-bottom: 20px;" >
+                      <form class="navbar-form" action="{% url "trade:item_list" %}" style="left: 50%; transform: translatex(3%); margin-right: 15px;margin-bottom: 20px;" >
                         <div class="form-group">
-                          <input type="search" size="40" class="form-control" placeholder="어떤 물품을 찾고계세요?">
+                          <input name="query" value="{{ query }}" type="search" size="40" class="form-control" placeholder="어떤 물품을 찾고계세요?">
                         </div>
                         <button type="submit" class="btn btn-primary">검색</button>
                       </form>
@@ -159,7 +159,7 @@
                         <!--<a class="navbar-brand" href="#">Buy & Sell</a>-->
                 <!--</div>-->
                 <!-- Collect the nav links, forms, and other content for toggling -->
-              <ul class="nav navbar-nav navbar-left" style="margin-left: 180px; margin-right: 180px;">
+              <ul class="nav navbar-nav navbar-left" style="backgorund: white; margin-left: 180px; margin-right: 180px;">
 
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">전체 카테고리 <span class="caret"></span></a>
@@ -180,8 +180,10 @@
                 </li>
 
                 <li><a href="">인기 가게</a></li>
+
               </ul>
-                <ul class="nav navbar-nav navbar-right" style="margin-left: 180px; margin-right: 180px;">
+
+                <ul class="nav navbar-nav navbar-right" style="backgorund: white; margin-left: 180px; margin-right: 180px;">
                     <li><a style="color: #0fd9a6;" href="{% url "trade:item_new" %}"><b>나도 물건팔기</b></a></li>
                     <li><a href="{% url "store:my_store_profile" %}">내 가게</a></li>
 

@@ -31,7 +31,11 @@ def item_new(request):
 
 
 def item_list(request):
-    items = Item.objects.all()
+    query = request.GET.get('query', '')
+    if query:
+        items = Item.objects.filter(title__icontains=query)
+    else:
+        items = Item.objects.all()
     return render(request, 'trade/item_list.html', {
         'items': items
     })
