@@ -71,7 +71,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                       </button>
-                        <a class="navbar-brand" style="float: none; color: #0fd9a6" href="{% url "mypage:root" %}">Buy & Sell</a>
+                        <a class="navbar-brand" style="float: none; color: #0fd9a6" href="{% url "trade:item_list" %}">Buy & Sell</a>
                     </div>
                 </div>
 
@@ -84,7 +84,18 @@
 
                           {% if user.is_authenticated %}
 
-                            <li><a href="{% url "mypage:root" %}">MY PAGE</a></li>
+                            <li class="dropdown">
+                              <a href="{% url "mypage:root" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">MY PAGE<span class="caret"></span></a>
+                              <ul class="dropdown-menu">
+                                <li><a href="{% url "trade:trade_history" %}">거래 내역</a></li>
+                                <li><a href="{% url "trade:item_new" %}">물품 등록</a></li>
+                                <li><a href="{% url "mypage:wishlist" %}">찜 목록</a></li>
+                                <li><a href="{% url "mypage:follow" %}">팔로우</a></li>
+                                <li><a href="{% url "accounts:profile" %}">내 정보 관리</a></li>
+                                <li><a href="{% url "customer:customer_ask" %}">문의 내역</a></li>
+                              </ul>
+                            </li>
+
                             <li><a href="{% url "accounts:logout" %}">LOGOUT</a></li>
                             <li><a href="{% url "mypage:wishlist" %}">찜 목록</a></li>
 
@@ -135,7 +146,6 @@
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">전체 카테고리 <span class="caret"></span></a>
                       <ul class="dropdown-menu">
-                          <li><a style="text-align: center; color: #0fd9a6" href="{% url "trade:item_list" %}"><b>물품 전체</b></a></li>
                          <div class="row" style="width:600px; padding:10px; padding-left:15px;">
                             {% for cate in cates %}
                                    <ul class="list-unstyled col-md-3" style="height:200px; ">
@@ -156,6 +166,7 @@
               </ul>
                 <ul class="nav navbar-nav navbar-right" style="margin-left: 180px; margin-right: 180px;">
                     <li><a style="color: #0fd9a6;" href="{% url "trade:item_new" %}"><b>나도 물건팔기</b></a></li>
+                    <li><a href="{% url "store:my_store_profile" %}">내 가게</a></li>
 
                     <li class="dropdown">
                       <a href="{% url "customer:customer" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">고객센터 <span class="caret"></span></a>
@@ -182,13 +193,12 @@
                 {% endfor %}
             {% endif %}
 
+            {% block content %}
+            {% endblock %}
 
+            {% block extra_content %}
+            {% endblock %}
 
-                {% block content %}
-                {% endblock %}
-
-                {% block extra_content %}
-                {% endblock %}
         </div>
     </div>
 

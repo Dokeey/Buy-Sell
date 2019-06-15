@@ -1,1 +1,31 @@
 {% extends "layout.html" %}
+
+{% block head %}
+    <script>
+        $(document).ready(function () {
+            $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid col-md-2">
+    <h2>MY PAGE</h2>
+    <div class="nav-collapse">
+        <ul class="nav nav-pills nav-stacked" ><hr>
+            <li role="presentation"><a href="{% url "trade:trade_history" %}">거래 내역</a></li><hr>
+            <li role="presentation"><a href="{% url "trade:item_new" %}">물품 등록</a></li><hr>
+            <li role="presentation"><a href="{% url "mypage:wishlist" %}">찜 목록</a></li><hr>
+            <li role="presentation"><a href="{% url "mypage:follow" %}">팔로우</a></li><hr>
+            <li role="presentation"><a href="{% url "accounts:profile" %}">내 정보 관리</a></li><hr>
+            <li role="presentation"><a href="{% url "customer:customer_ask" %}">문의 내역</a></li><hr>
+        </ul>
+    </div>
+</div>
+
+<div class="container-fluid col-md-10">
+{% block mypage_content %}
+{% endblock %}
+</div>
+
+{% endblock %}

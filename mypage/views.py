@@ -4,7 +4,7 @@ from .models import WishList, Follow
 # Create your views here.
 
 def mypage_main(request):
-    return render(request, 'mypage/main.html')
+    return render(request, 'mypage/layout.html')
 
 
 def wishlist(request):

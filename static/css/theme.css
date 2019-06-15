@@ -4155,6 +4155,11 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-pills > li + li {
   margin-left: 2px;
 }
+.nav-pills > li > a:hover,
+.nav-pills > li > a:focus {
+  color: #ffffff;
+  background-color: silver;
+}
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {

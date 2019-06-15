@@ -1,6 +1,6 @@
-{% extends "customer/layout.html" %}
+{% extends "mypage/layout.html" %}
 
-{% block content %}
+{% block mypage_content %}
 <a href="{% url "customer:customer_ask_new" %}">1:1문의하기</a><br>
 {% for ask in asks %}
 <a href="{% url "customer:customer_ask_detail" ask.pk %}">제목 : {{ ask.ask_title }}({{ ask.get_ask_going_display }})</a>
