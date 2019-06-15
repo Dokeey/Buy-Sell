@@ -2,11 +2,12 @@ from time import time
 
 from django.conf import settings
 from django.db import models
-from category.models import Category, SubCategory
+from category.models import Category
 
 # Create your models here.
 # from imagekit.generatorlibrary import Thumbnail
 from imagekit.models import ProcessedImageField
+from mptt.fields import TreeForeignKey
 from pilkit.processors import ResizeToFill
 
 from iamport import Iamport
@@ -44,7 +45,7 @@ class Item(models.Model):
             format = 'PNG',					# 최종 저장 포맷
             options = {'quality': 60}
         )
-    category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
+    category = TreeForeignKey(Category, on_delete=models.CASCADE)
     item_status = models.CharField(
         max_length=3,
         choices=(
@@ -70,6 +71,10 @@ class Item(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ["-created_at"]
+
 
 
 from django.contrib.auth import get_user_model

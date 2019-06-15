@@ -1,32 +1,25 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Category, SubCategory
+from operator import attrgetter
 
-# def print_category(request):
-#     cates = Category.objects.all()
-#     subcates = SubCategory.objects.all()
-#
-#     return render(request, 'category/print_category.html', {
-#         'cates' : cates,
-#         'subcates': subcates,
-#     })
+from django.shortcuts import render, get_object_or_404
+from .models import Category
 
 
 def categories(request, pk):
     category = get_object_or_404(Category, pk=pk)
-    subcategory = SubCategory.objects.filter(category = pk)
+    parent_category = category.get_ancestors()
+    categories_items = []
+
+    for item in category.item_set.all():
+        categories_items.append(item)
+
+    for children in category.get_children():
+        for item in children.item_set.all():
+            categories_items.append(item)
+
+    categories_items = sorted(categories_items, key=attrgetter('created_at'))
+
     return render(request, 'category/categories.html', {
-        'cate': category,
-        'subcategory': subcategory
+        'category': category,
+        'parent_category': parent_category,
+        'categories_items': categories_items,
     })
-
-def subcategories(request, cate_pk, pk):
-    category = get_object_or_404(Category, pk=cate_pk)
-    subcategory = get_object_or_404(SubCategory, pk=pk)
-
-    return render(request, 'category/subcategories.html',{
-        'cate' : category,
-        'sub': subcategory
-    })
-
-def test(request):
-    return render(request, 'category/test.html',{})

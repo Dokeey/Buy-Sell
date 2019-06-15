@@ -2,40 +2,42 @@ import json
 
 from django import forms
 
-from category.models import Category, SubCategory
+from category.models import Category
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_text
 from django.utils.safestring import mark_safe
+from django.utils.six import unichr
+from mptt.forms import TreeNodeChoiceField
 
 from .models import Item, ItemComment, Order
 from accounts.forms import ProfileForm
 
 
 class ItemForm(forms.ModelForm):
-    CHOICES = []
-    for cate in Category.objects.all():
-        category = []
-        category.append(cate)
-        sub_category_group = []
-        for subcate in SubCategory.objects.filter(category=cate):
-            sub_category = []
-            sub_category.append(subcate.id)
-            sub_category.append(subcate)
-            sub_category_group.append(sub_category)
+    # CHOICES = []
+    # for cate in Category.objects.all():
+    #     category = []
+    #     category.append(cate)
+    #     sub_category_group = []
+    #     for subcate in SubCategory.objects.filter(category=cate):
+    #         sub_category = []
+    #         sub_category.append(subcate.id)
+    #         sub_category.append(subcate)
+    #         sub_category_group.append(sub_category)
+    #
+    #     category.append(sub_category_group)
+    #     CHOICES.append(category)
 
-        category.append(sub_category_group)
-        CHOICES.append(category)
-
-    category_tmp = forms.ChoiceField(choices=CHOICES)
+    category = TreeNodeChoiceField(queryset=Category.objects.all(), level_indicator=unichr(0x00A0) * 4)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['category_tmp'].label = '카테고리'
+        self.fields['category'].label = '카테고리'
 
     class Meta:
         model = Item
-        fields = ['title','desc','amount','photo','category_tmp', 'item_status']
+        fields = ['title','desc','amount','photo','category', 'item_status']
 
 
 class ItemUpdateForm(ItemForm):

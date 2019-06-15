@@ -41,11 +41,13 @@ INSTALLED_APPS = [
     'category',
     'store',
     'trade',
-    'imagekit',
+    'imagekit', # image
     'mypage',
     'customer',
-    'hitcount',
+    'hitcount', # 조회수
     'policy',
+
+    'mptt', # category
 ]
 
 MIDDLEWARE = [
@@ -123,13 +125,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ko-kr'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+# USE_TZ = True
+USE_TZ = False
 
 
 
@@ -164,7 +167,6 @@ DEFAULT_FROM_MAIL = 'BuynSell' # ex) bum752
 
 from django.utils.translation import ugettext_lazy as _
 
-USE_I18N = True  # Enable Internationalization
 LANGUAGES = [  # Available languages
     ('en', _("English")),
     ('ko_kr', _("한국어")),

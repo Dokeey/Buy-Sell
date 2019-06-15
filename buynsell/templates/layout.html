@@ -1,5 +1,7 @@
 {% load staticfiles %}
 {% load category_tags %}
+{% load mptt_tags %}
+
 
 <!DOCTYPE html>
 
@@ -63,8 +65,7 @@
 </head>
 <body>
 
-{% category_menu as cates %}
-{% subcategory_menu as subcates %}
+{% category_menu as categories %}
 
 
     <div class="container-fluid" name="menu" >
@@ -164,17 +165,16 @@
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">전체 카테고리 <span class="caret"></span></a>
                       <ul class="dropdown-menu">
                          <div class="row" style="width:600px; padding:10px; padding-left:15px;">
-                            {% for cate in cates %}
-                                   <ul class="list-unstyled col-md-3" style="height:200px; ">
-                                       <a style="color: #0fd9a6; font-weight: bold;" href="{% url "category:categories" cate.pk %}"><p>{{ cate.name }}</p></a>
-
-                                {% for subcate in subcates %}
-                                    {% if subcate.category == cate %}
-                                       <li><a href="{% url "category:subcategories" cate.pk subcate.pk %}">{{ subcate.name }}</a></li>
-                                     {% endif %}
-                                {% endfor %}
+                            {% recursetree categories %}
+                                   <ul class="list-unstyled col-md-3" style="height:200px;">
+                                       <a style="color: #0fd9a6; font-weight: bold;" href="{% url "category:categories" node.id%}"><p>{{ node.name }}</p></a>
+                                {% if not node.is_leaf_node %}
+                                    {% for chil in node.get_children %}
+                                       <li><a href="{% url "category:categories" chil.id%}">{{ chil }}</a></li>
+                                    {% endfor %}
+                                {% endif %}
                                    </ul>
-                            {% endfor %}
+                            {% endrecursetree %}
                          </div>
                       </ul>
                 </li>

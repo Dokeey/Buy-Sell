@@ -1,18 +1,13 @@
 from django.contrib import admin
-from .models import Category, SubCategory
+from mptt.admin import DraggableMPTTAdmin
+
+from .models import Category
 
 # Register your models here.
 
-@admin.register(Category)
-class ProfileAdmin(admin.ModelAdmin):
-	list_display=['id','name']
+class CategoryAdmin(DraggableMPTTAdmin):
+    # specify pixel amount for this ModelAdmin only:
+    mptt_level_indent = 20
 
+admin.site.register(Category, CategoryAdmin)
 
-@admin.register(SubCategory)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display=('id','get_category','name')
-
-    def get_category(self,obj):
-        return obj.category.name
-
-    get_category.short_description = '상위 카테고리'

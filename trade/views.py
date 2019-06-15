@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
-from category.models import SubCategory
+from category.models import Category
 from accounts.models import Profile
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
@@ -18,7 +18,7 @@ def item_new(request):
         form = ItemForm(request.POST, request.FILES)
         if form.is_valid():
             item = form.save(commit=False)
-            item.category = get_object_or_404(SubCategory, id=form.cleaned_data['category_tmp'])
+            # item.category = get_object_or_404(Category, id=form.cleaned_data['category_tmp'])
             item.user = request.user
             item.photo = form.cleaned_data['photo']
             form.save()
@@ -79,7 +79,7 @@ def item_update(request, pk):
             if item.order_set.filter(status='reserv'):
                 messages.error(request, '예약중인 상품은 변경할 수 없습니다.')
             else:
-                item.category = get_object_or_404(SubCategory, id=form.cleaned_data['category_tmp'])
+                # item.category = get_object_or_404(Category, id=form.cleaned_data['category_tmp'])
                 item.user = request.user
                 item.photo = form.cleaned_data['photo']
                 form.save()
