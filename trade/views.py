@@ -183,7 +183,7 @@ def order_cancle(request, order_id):
     except:
         messages.error(request, '유효하지 않은 상품입니다.')
 
-    return redirect('accounts:profile')
+    return redirect('trade:trade_history')
 
 
 

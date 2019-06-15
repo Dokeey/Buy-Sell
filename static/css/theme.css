@@ -4157,8 +4157,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .nav-pills > li > a:hover,
 .nav-pills > li > a:focus {
-  color: #ffffff;
-  background-color: silver;
+  color: #0fd9a6;
+  background-color: white;
 }
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,

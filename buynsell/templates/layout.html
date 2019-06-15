@@ -10,6 +10,11 @@
     <title>Buy & Sell</title>
     <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static "css/all.css" %}">
+    <script src="{% static 'js/all.js' %}"></script>
+
+
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
 
     <style>
@@ -36,6 +41,9 @@
         .dropdown:hover .dropdown-menu {
             display: block;
             margin-top: 0;
+        }
+        .fa-stack {
+             margin: -10px;
         }
       .container {
             background: #666666;
@@ -97,7 +105,16 @@
                             </li>
 
                             <li><a href="{% url "accounts:logout" %}">LOGOUT</a></li>
-                            <li><a href="{% url "mypage:wishlist" %}">찜 목록</a></li>
+                            <li><a href="{% url "mypage:wishlist" %}">찜 목록
+                                <span class="fa-stack">
+                                    <!-- The icon that will wrap the number -->
+                                    <span class="fa fa-circle fa-stack-1x text-primary" ></span>
+                                    <!-- a strong element with the custom content, in this case a number -->
+                                    <strong class="fa-stack-1x" style="font-size:60%; color: white;">
+                                        {{ user.wishlist_set.all.count }}
+                                    </strong>
+                                </span>
+                                </a></li>
 
                             {% if user.is_staff %}
                                 <li><a href="{% url "admin:index" %}">관리자</a></li>
