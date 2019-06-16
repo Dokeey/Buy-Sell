@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'policy',
 
     'mptt', # category
+    'django_extensions', # models relation graph
+
 ]
 
 MIDDLEWARE = [
@@ -192,3 +194,10 @@ from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
+
+# Model graph
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}
+
