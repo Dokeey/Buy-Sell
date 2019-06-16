@@ -20,12 +20,30 @@
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
 
     <style>
-        .navbar{
-            height: 100px;
+        @media (max-width: 768px) {
+
+            .collaps-block>li{
+              float: left !important;
+            }
+
+            .collaps-block {
+              float: right!important;
+            }
         }
+        @media (min-width: 768px) {
+          .container {
+            width: 700px;
+          }
+        }
+        @media (min-width: 992px) {
+          .container {
+            width: 1100px;
+          }
+        }
+
         body {
             padding-bottom: 70px;
-            margin-top: 100px;
+            padding-top: 0px;
             background: white !important;
         }
         .navbar-nav.navbar-center {
@@ -37,18 +55,23 @@
             border: 1px solid transparent;
             padding: 15px;
         }
-        .navbar-fixed-top {
-
-        }
         .dropdown:hover .dropdown-menu {
             display: block;
             margin-top: 0;
         }
-        .fa-stack {
-             margin: -10px;
+
+
+
+        .header {
+          padding: 10px;
         }
+
+        .navbar-fixed-top + .content {
+          padding-top: 70px;
+        }
+
       .container {
-            background: #666666;
+            <!--background: #666666;-->
       }
       .container-fluid {
             <!--background: #999999;-->
@@ -68,141 +91,154 @@
 {% category_menu as categories %}
 
 
-    <div class="container-fluid" name="menu" >
-        <nav class="navbar navbar-default navbar-fixed-top">
-            <div class="container-fluid" name="menu-layout" style="background: white; border-bottom: 1px solid #dddddd;">
+        <div class="container-fluid" name="menu" style="padding-left: 0px; padding-right: 0px;">
+            <nav class="navbar navbar-default top-container" style="padding-right: 40px;">
 
-                <div class="container-fluid col-md-4" name="menu-collaps" style="height: 95px; display: table">
-                    <div class="row" style="display: table-cell; vertical-align: bottom; text-align: center;">
-                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="true">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                      </button>
-                        <a class="navbar-brand" style="float: none; color: #0fd9a6" href="{% url "trade:item_list" %}">Buy & Sell</a>
+                      <div class="container-fluid col-md-12 ">
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                          <div class="row">
+                              <ul class="nav navbar-nav navbar-right collaps-block">
+                                  {% if user.is_authenticated %}
+
+                                    <li class="dropdown">
+                                      <a href="{% url "mypage:root" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">MY PAGE<span class="caret"></span></a>
+                                      <ul class="dropdown-menu">
+                                        <li><a href="{% url "trade:trade_history" %}">거래 내역</a></li>
+                                        <li><a href="{% url "trade:item_new" %}">물품 등록</a></li>
+                                        <li><a href="{% url "mypage:wishlist" %}">찜 목록</a></li>
+                                        <li><a href="{% url "mypage:follow" %}">팔로우</a></li>
+                                        <li><a href="{% url "accounts:profile" %}">내 정보 관리</a></li>
+                                        <li><a href="{% url "customer:customer_ask" %}">문의 내역</a></li>
+                                      </ul>
+                                    </li>
+
+                                    <li><a href="{% url "accounts:logout" %}">LOGOUT</a></li>
+                                    <li><a href="{% url "mypage:wishlist" %}">찜 목록
+                                        <span class="fa-stack" style="margin: -10px;">
+                                            <!-- The icon that will wrap the number -->
+                                            <span class="fa fa-circle fa-stack-1x text-primary" ></span>
+                                            <!-- a strong element with the custom content, in this case a number -->
+                                            <strong class="fa-stack-1x" style="font-size:60%; color: white;">
+                                                {{ user.wishlist_set.all.count }}
+                                            </strong>
+                                        </span>
+                                        </a></li>
+
+                                    {% if user.is_staff %}
+                                        <li><a href="{% url "admin:index" %}">관리자</a></li>
+                                    {% endif %}
+
+                                  {% else %}
+
+                                    <li><a href="{% url "accounts:login" %}">로그인</a></li>
+                                    <li><a href="{% url "accounts:signup" %}">회원가입</a></li>
+
+                                  {% endif %}
+
+                              </ul>
+
+
+                              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-2" aria-expanded="false" style="float: left; margin-left: 30px; margin-top: 10px;">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                              </button>
+                          </div>
+                      </div>
+            </nav>
+
+            <nav class="navbar navbar-default header" id="myHeader" style="padding-left: 30px; border-bottom: 1px solid #dddddd;">
+                <div class="container-fluid">
+                    <div class="container-fluid col-md-4" name="menu-collaps" style="height: 30px;">
+                        <div class="row" style="display: table-cell; vertical-align: bottom; ">
+                            <a class="navbar-brand" style="color: #0fd9a6" href="{% url "trade:item_list" %}">Buy & Sell</a>
+                        </div>
                     </div>
+
+
+                      <div class="container-fluid col-md-4" name="menu-layout">
+
+                          <div class="row">
+              <!-- Brand and toggle get grouped for better mobile display -->
+
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                          <form class="navbar-form" action="{% url "trade:item_list" %}" style="left: 50%; transform: translatex(3%); padding-right: 15px;padding-bottom: 1px;" >
+                            <div class="input-group">
+                              <input name="query" value="{{ query }}" type="search" size="40" class="form-control" placeholder="어떤 물품을 찾고계세요?">
+                              <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                              </span>
+                            </div>
+                          </form>
+
+                        </div>
+                      </div>
                 </div>
+            </nav>
 
-              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <nav class="content" style="border-bottom: 1px solid #dddddd; padding-left: 30px; padding-right: 30px;">
+                <div class="container-fluid " style="margin-left: 0px; margin-right: 0px;">
+                      <div class="collapse navbar-collapse" id="navbar-collapse-2">
 
-                  <div class="container-fluid col-md-7" name="menu-layout">
-                      <div class="row" style="margin-bottom: 20px;">
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                      <ul class="nav navbar-nav navbar-right">
-
-                          {% if user.is_authenticated %}
+                        <div class="row ">
+                            <!-- Brand and toggle get grouped for better mobile display -->
+                            <!--<div class="navbar-header">-->
+                                    <!--<a class="navbar-brand" href="#">Buy & Sell</a>-->
+                            <!--</div>-->
+                            <!-- Collect the nav links, forms, and other content for toggling -->
+                          <ul class="nav navbar-nav navbar-left" style="backgorund: white;">
 
                             <li class="dropdown">
-                              <a href="{% url "mypage:root" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">MY PAGE<span class="caret"></span></a>
-                              <ul class="dropdown-menu">
-                                <li><a href="{% url "trade:trade_history" %}">거래 내역</a></li>
-                                <li><a href="{% url "trade:item_new" %}">물품 등록</a></li>
-                                <li><a href="{% url "mypage:wishlist" %}">찜 목록</a></li>
-                                <li><a href="{% url "mypage:follow" %}">팔로우</a></li>
-                                <li><a href="{% url "accounts:profile" %}">내 정보 관리</a></li>
-                                <li><a href="{% url "customer:customer_ask" %}">문의 내역</a></li>
-                              </ul>
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">전체 카테고리 <span class="caret"></span></a>
+                                  <ul class="dropdown-menu">
+                                     <div class="row" style="width:600px; padding:10px; padding-left:15px;">
+                                        {% recursetree categories %}
+                                               <ul class="list-unstyled col-md-3 col-sm-3 col-xs-6" style="height:200px;">
+                                                   <a style="color: #0fd9a6; font-weight: bold;" href="{% url "category:categories" node.id%}"><p>{{ node.name }}</p></a>
+                                            {% if not node.is_leaf_node %}
+                                                {% for chil in node.get_children %}
+                                                   <li><a href="{% url "category:categories" chil.id%}">{{ chil }}</a></li>
+                                                {% endfor %}
+                                            {% endif %}
+                                               </ul>
+                                        {% endrecursetree %}
+                                     </div>
+                                  </ul>
                             </li>
 
-                            <li><a href="{% url "accounts:logout" %}">LOGOUT</a></li>
-                            <li><a href="{% url "mypage:wishlist" %}">찜 목록
-                                <span class="fa-stack">
-                                    <!-- The icon that will wrap the number -->
-                                    <span class="fa fa-circle fa-stack-1x text-primary" ></span>
-                                    <!-- a strong element with the custom content, in this case a number -->
-                                    <strong class="fa-stack-1x" style="font-size:60%; color: white;">
-                                        {{ user.wishlist_set.all.count }}
-                                    </strong>
-                                </span>
-                                </a></li>
+                            <li><a href="">인기 가게</a></li>
 
-                            {% if user.is_staff %}
-                                <li><a href="{% url "admin:index" %}">관리자</a></li>
-                            {% endif %}
+                          </ul>
 
-                          {% else %}
+                            <ul class="nav navbar-nav navbar-right" style="backgorund: white;">
+                                <li><a style="color: #0fd9a6;" href="{% url "trade:item_new" %}"><b>나도 물건팔기</b></a></li>
+                                <li><a href="{% url "store:my_store_profile" %}">내 가게</a></li>
 
-                            <li><a href="{% url "accounts:login" %}">로그인</a></li>
-                            <li><a href="{% url "accounts:signup" %}">회원가입</a></li>
+                                <li class="dropdown">
+                                  <a href="{% url "customer:customer" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">고객센터 <span class="caret"></span></a>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="{% url "customer:customer_notice" %}">공지사항</a></li>
+                                    <li><a href="{% url "customer:customer_faq" %}">자주 묻는 질문</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{% url "customer:customer_ask" %}">1:1 문의</a></li>
+                                  </ul>
+                                </li>
 
-                          {% endif %}
-
-                      </ul>
-                    </div>
-                      <div class="row">
-          <!-- Brand and toggle get grouped for better mobile display -->
-
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                      <form class="navbar-form" action="{% url "trade:item_list" %}" style="left: 50%; transform: translatex(3%); margin-right: 15px;margin-bottom: 20px;" >
-                        <div class="form-group">
-                          <input name="query" value="{{ query }}" type="search" size="40" class="form-control" placeholder="어떤 물품을 찾고계세요?">
+                            </ul>
                         </div>
-                        <button type="submit" class="btn btn-primary">검색</button>
-                      </form>
-
-                    </div>
                   </div>
 
-
               </div><!-- /.navbar-collapse -->
-          </div>
-        </nav>
-    </div>
+            </nav>
+        </div>
 
-    <div class="container-fluid" name="content" style="padding: 0px;">
-        <nav class="navbar navbar-default navbar-static-top">
-          <div class="container-fluid" style="margin-left: 0px; margin-right: 0px; margin-top: 15px; margin-bottom: 10px; border-bottom: 1px solid #dddddd;">
-            <div class="row">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <!--<div class="navbar-header">-->
-                        <!--<a class="navbar-brand" href="#">Buy & Sell</a>-->
-                <!--</div>-->
-                <!-- Collect the nav links, forms, and other content for toggling -->
-              <ul class="nav navbar-nav navbar-left" style="backgorund: white; margin-left: 180px; margin-right: 180px;">
+    <div class="container">
+    <div class="container-fluid" name="content" style="padding: 30px;">
 
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">전체 카테고리 <span class="caret"></span></a>
-                      <ul class="dropdown-menu">
-                         <div class="row" style="width:600px; padding:10px; padding-left:15px;">
-                            {% recursetree categories %}
-                                   <ul class="list-unstyled col-md-3" style="height:200px;">
-                                       <a style="color: #0fd9a6; font-weight: bold;" href="{% url "category:categories" node.id%}"><p>{{ node.name }}</p></a>
-                                {% if not node.is_leaf_node %}
-                                    {% for chil in node.get_children %}
-                                       <li><a href="{% url "category:categories" chil.id%}">{{ chil }}</a></li>
-                                    {% endfor %}
-                                {% endif %}
-                                   </ul>
-                            {% endrecursetree %}
-                         </div>
-                      </ul>
-                </li>
-
-                <li><a href="">인기 가게</a></li>
-
-              </ul>
-
-                <ul class="nav navbar-nav navbar-right" style="backgorund: white; margin-left: 180px; margin-right: 180px;">
-                    <li><a style="color: #0fd9a6;" href="{% url "trade:item_new" %}"><b>나도 물건팔기</b></a></li>
-                    <li><a href="{% url "store:my_store_profile" %}">내 가게</a></li>
-
-                    <li class="dropdown">
-                      <a href="{% url "customer:customer" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">고객센터 <span class="caret"></span></a>
-                      <ul class="dropdown-menu">
-                        <li><a href="{% url "customer:customer_notice" %}">공지사항</a></li>
-                        <li><a href="{% url "customer:customer_faq" %}">자주 묻는 질문</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="{% url "customer:customer_ask" %}">1:1 문의</a></li>
-                      </ul>
-                    </li>
-
-                </ul>
-            </div>
-          </div>
-        </nav>
-
-        <div class="row" style="margin-left: 180px; margin-right: 180px;" >
+        <div class="row">
 
             {% if messages %}                            <!-- message 프레임워크 -->
                 {% for message in messages %}
@@ -220,13 +256,31 @@
 
         </div>
     </div>
+    </div>
 
-    <div class="container-fluid" name="footer" style="margin-left: 90px; margin-right: 90px;">
-        <div class="row">
-            <hr/>
-            &copy; 2019. yejin & donghoo
+    <div class="container">
+        <div class="container-fluid" name="footer">
+            <div class="row">
+                <hr/>
+                &copy; 2019. yejin & donghoo
+            </div>
         </div>
     </div>
+
+    <script>
+    window.onscroll = function() {myFunction()};
+
+    var header = document.getElementById("myHeader");
+    var sticky = header.offsetTop;
+
+    function myFunction() {
+      if (window.pageYOffset > sticky) {
+        header.classList.add("navbar-fixed-top");
+      } else {
+        header.classList.remove("navbar-fixed-top");
+      }
+    }
+    </script>
 
 </body>
 </html>
