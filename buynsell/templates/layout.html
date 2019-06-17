@@ -8,6 +8,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static "css/theme.css" %}">
     <title>Buy & Sell</title>
     <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
@@ -29,11 +30,28 @@
             .collaps-block {
               float: right!important;
             }
+            .navbar-fixed-top + .content {
+              padding-top: 43px;
+            }
         }
         @media (min-width: 768px) {
           .container {
             width: 700px;
           }
+            .dropdown:hover .dropdown-menu {
+                display: block;
+                margin-top: 0;
+            }
+            .header {
+                padding: 15px;
+                padding-left: 60px;
+            }
+            .content {
+                border-bottom: 1px solid #dddddd;
+            }
+            .navbar-fixed-top + .content {
+              padding-top: 74px;
+            }
         }
         @media (min-width: 992px) {
           .container {
@@ -55,29 +73,19 @@
             border: 1px solid transparent;
             padding: 15px;
         }
-        .dropdown:hover .dropdown-menu {
-            display: block;
-            margin-top: 0;
-        }
 
 
 
-        .header {
-          padding: 10px;
-        }
 
-        .navbar-fixed-top + .content {
-          padding-top: 70px;
-        }
+
+
+
 
       .container {
             <!--background: #666666;-->
       }
       .container-fluid {
             <!--background: #999999;-->
-      }
-      h1 {
-        margin: 100px 0px;
       }
     </style>
 
@@ -94,7 +102,7 @@
         <div class="container-fluid" name="menu" style="padding-left: 0px; padding-right: 0px;">
             <nav class="navbar navbar-default top-container" style="padding-right: 40px;">
 
-                      <div class="container-fluid col-md-12 ">
+                      <div class="container-fluid col-sm-12" >
                         <!-- Collect the nav links, forms, and other content for toggling -->
                           <div class="row">
                               <ul class="nav navbar-nav navbar-right collaps-block">
@@ -138,7 +146,7 @@
                               </ul>
 
 
-                              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-2" aria-expanded="false" style="float: left; margin-left: 30px; margin-top: 10px;">
+                              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-2" aria-expanded="false" style="float: left; margin-left: 30px; margin-top: 5px;">
                                 <span class="sr-only">Toggle navigation</span>
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
@@ -148,24 +156,22 @@
                       </div>
             </nav>
 
-            <nav class="navbar navbar-default header" id="myHeader" style="padding-left: 30px; border-bottom: 1px solid #dddddd;">
+            <nav class="navbar navbar-default header" id="myHeader" style="border-bottom: 1px solid #dddddd; ">
                 <div class="container-fluid">
-                    <div class="container-fluid col-md-4" name="menu-collaps" style="height: 30px;">
-                        <div class="row" style="display: table-cell; vertical-align: bottom; ">
+                    <div class="container-fluid col-sm-3 col-xs-5" name="menu-collaps" >
+                        <div class="row"  style=" " >
                             <a class="navbar-brand" style="color: #0fd9a6" href="{% url "trade:item_list" %}">Buy & Sell</a>
                         </div>
                     </div>
 
 
-                      <div class="container-fluid col-md-4" name="menu-layout">
+                      <div class="container-fluid col-sm-6 col-xs-7"style="" name="menu-layout">
 
-                          <div class="row">
-              <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="row"  >
 
-                        <!-- Collect the nav links, forms, and other content for toggling -->
-                          <form class="navbar-form" action="{% url "trade:item_list" %}" style="left: 50%; transform: translatex(3%); padding-right: 15px;padding-bottom: 1px;" >
+                          <form class="navbar-form" action="{% url "trade:item_list" %}" style="left: 50%; transform: translatex(3%); padding-right: 30px;padding-bottom: 1px; padding-top: 1px; border:0" >
                             <div class="input-group">
-                              <input name="query" value="{{ query }}" type="search" size="40" class="form-control" placeholder="어떤 물품을 찾고계세요?">
+                              <input name="query" value="{{ query }}" type="search" size="60" class="form-control" placeholder="어떤 물품을 찾고계세요?">
                               <span class="input-group-btn">
                                 <button class="btn btn-primary" type="submit">
                                     <i class="fa fa-search"></i>
@@ -179,7 +185,7 @@
                 </div>
             </nav>
 
-            <nav class="content" style="border-bottom: 1px solid #dddddd; padding-left: 30px; padding-right: 30px;">
+            <nav class="content" style="padding-left: 30px; padding-right: 30px;">
                 <div class="container-fluid " style="margin-left: 0px; margin-right: 0px;">
                       <div class="collapse navbar-collapse" id="navbar-collapse-2">
 
@@ -192,11 +198,11 @@
                           <ul class="nav navbar-nav navbar-left" style="backgorund: white;">
 
                             <li class="dropdown">
-                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">전체 카테고리 <span class="caret"></span></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-bars"></i> 전체 카테고리</a>
                                   <ul class="dropdown-menu">
                                      <div class="row" style="width:600px; padding:10px; padding-left:15px;">
                                         {% recursetree categories %}
-                                               <ul class="list-unstyled col-md-3 col-sm-3 col-xs-6" style="height:200px;">
+                                               <ul class="list-unstyled col-sm-3 col-xs-6" style="height:200px;">
                                                    <a style="color: #0fd9a6; font-weight: bold;" href="{% url "category:categories" node.id%}"><p>{{ node.name }}</p></a>
                                             {% if not node.is_leaf_node %}
                                                 {% for chil in node.get_children %}
