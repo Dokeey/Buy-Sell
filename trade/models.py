@@ -1,11 +1,13 @@
 from time import time
 
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from category.models import Category
 
 # Create your models here.
 # from imagekit.generatorlibrary import Thumbnail
+from hitcount.models import HitCountMixin, HitCount
 from imagekit.models import ProcessedImageField
 from mptt.fields import TreeForeignKey
 from pilkit.processors import ResizeToFill
@@ -34,7 +36,7 @@ def timestamp_to_datetime(timestamp):
     return None
 
 
-class Item(models.Model):
+class Item(models.Model, HitCountMixin):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=20)
     desc = models.TextField(blank=True)
@@ -68,6 +70,8 @@ class Item(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
 
     def __str__(self):
         return self.title
