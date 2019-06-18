@@ -1,13 +1,8 @@
 {% extends "store/layout.html" %}
-{% load store.store_tags %}
 
-{% block content %}
+
+{% block store_content %}
     {{ block.super }}
-
-{% store_rating stores.pk as end %}
-{% store_item_list stores.pk as item_count %}
-{% store_grade_list stores.pk as grade_count %}
-{% store_question_list stores.pk as question_count %}
 
 <form action="" method="POST">
      {% csrf_token %}
@@ -70,4 +65,4 @@
 {% empty %}
 <h4>There are no comments yet.</h4>
 {% endfor %}
-{% endblock content %}
+{% endblock %}

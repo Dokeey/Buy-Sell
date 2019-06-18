@@ -24,7 +24,7 @@ def store_profile_edit(request):
             sprofile = form.save(commit=False)
             sprofile.name = form.instance.name
             sprofile.save()
-        return redirect('store:store_profile')
+        return redirect('store:store_sell_list', profile.pk)
     else :
 
         form = form_cls(instance=profile)

@@ -5,9 +5,6 @@
 {% block content %}
 
 {% store_rating stores.pk as end %}
-{% store_item_list stores.pk as item_count %}
-{% store_grade_list stores.pk as grade_count %}
-{% store_question_list stores.pk as question_count %}
 {% store_sell_list stores.pk as order %}
 
     <h2 style="margin:20px">{{ stores.name }}</h2>
@@ -23,7 +20,7 @@
         <tr>
             <td>평점 : </td>
             <td>
-                {% if grade_count == 0 %}
+                {% if stores.storegrade_set.all.count == 0 %}
                     평점이 없습니다.
                 {% else %}
                     {{ end }} /5
@@ -31,7 +28,10 @@
             </td>
         </tr>
         <tr>
-            <td>판매 횟수 : </td><td>{{ order }}</td>
+            <td>판매 횟수 : </td>
+
+            <td>{{ order }}</td>
+
         </tr>
         <tr>
             <td>방문 횟수 : </td><td>{% get_hit_count for stores %}</td>
@@ -50,13 +50,15 @@
     <hr/>
     <table style="margin:20px">
         <tr>
-            <td><a href="{% url "store:store_sell_list" stores.pk %}">물품들({{ item_count }}) / </a></td>
-            <td><a href="{% url "store:store_grade" stores.pk %}">가게 평점({{ grade_count }}) / </a>  </td>
-            <td><a href="{% url "store:store_question" stores.pk %}">가게 문의({{ question_count }}) / </a></td>
+            <td><a href="{% url "store:store_sell_list" stores.pk %}">물품들({{ stores.user.item_set.all.count }}) / </a></td>
+            <td><a href="{% url "store:store_grade" stores.pk %}">가게 평점({{ stores.storegrade_set.all.count }}) / </a>  </td>
+            <td><a href="{% url "store:store_question" stores.pk %}">가게 문의({{ stores.questioncomment_set.all.count }}) / </a></td>
             <td><a href="{% url "mypage:follow_new" stores.pk %}">팔로잉하기</a></td>
         </tr>
     </table>
     <hr/>
+{% block store_content %}
+{% endblock %}
 {% endblock %}
 
 

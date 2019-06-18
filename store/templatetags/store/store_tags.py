@@ -20,25 +20,6 @@ def store_rating(pk):
     return end
 
 @register.simple_tag
-def store_item_list(pk):
-    stores = get_object_or_404(StoreProfile, pk=pk)
-    item_count = Item.objects.filter(user_id=stores.user_id).count()
-    return item_count
-
-
-@register.simple_tag
-def store_grade_list(pk):
-    stores = get_object_or_404(StoreProfile, pk=pk)
-    grade_count = StoreGrade.objects.filter(store_profile_id=stores.pk).count()
-    return grade_count
-
-@register.simple_tag
-def store_question_list(pk):
-    stores = get_object_or_404(StoreProfile, pk=pk)
-    question_count = QuestionComment.objects.filter(store_profile_id=stores.pk).count()
-    return question_count
-
-@register.simple_tag
 def store_sell_list(pk):
     stores = get_object_or_404(StoreProfile, pk=pk)
     order = Item.objects.filter(user=stores.user, pay_status='sale_complete').count()
