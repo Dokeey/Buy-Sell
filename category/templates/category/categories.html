@@ -17,8 +17,7 @@
 
 {% for item in categories_items %}
 
-    {% url "trade:item_detail" pk=item.pk as next_link %}
-    {% item_block item next_link %}
+    {% item_block item %}
 
 <hr>
 

@@ -8,8 +8,7 @@
 
 {% for item in items %}
 
-    {% url "trade:item_detail" pk=item.pk as next_link %}
-    {% item_block item next_link %}
+    {% item_block item %}
 
 <hr>
 
