@@ -1,12 +1,14 @@
 from django.urls import path
 
 from . import views
+# from .views import MyStoreProfileView
 
 app_name = 'store'
 
 urlpatterns = [
 
     path('profile/', views.my_store_profile, name='my_store_profile'),
+    # path('profile/', MyStoreProfileView.as_view, name='my_store_profile'),
     path('profile/edit/', views.store_profile_edit, name='store_profile_edit'),
 
     path('question/<int:pk>/', views.store_question, name='store_question'),

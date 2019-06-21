@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import RedirectView
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 
@@ -13,6 +14,10 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 def my_store_profile(request):
     stores = get_object_or_404(StoreProfile, user=request.user)
     return redirect('store:store_sell_list', stores.pk)
+
+# class MyStoreProfileView(RedirectView):
+#     url = '/store/store_sell_list.html/'
+#     parameter =
 
 @login_required #로그인시에만 접속할 수 있다.
 def store_profile_edit(request):

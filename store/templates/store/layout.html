@@ -1,9 +1,10 @@
 {% extends "layout.html" %}
+
 {% load store.store_tags %}
 {% load hitcount_tags %}
 
-{% block content %}
 
+{% block content %}
 {% store_rating stores.pk as end %}
 {% store_sell_list stores.pk as order %}
 
@@ -57,8 +58,8 @@
         </tr>
     </table>
     <hr/>
-{% block store_content %}
-{% endblock %}
-{% endblock %}
 
+    {% block store_content %}
+    {% endblock %}
 
+{% endblock %}
