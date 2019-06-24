@@ -21,7 +21,7 @@
     </tr>
         {% if request.user.pk == comm.author.pk %}
     <tr>
-        <td><a href="{% url "store:store_question_edit" pk=stores.pk cid=comm.pk  %}">수정</a> </td>
+        <td><a href="{% url "store:store_question_edit" pk=1 cid=5  %}">수정</a> </td>
         <td><a href="{% url "store:store_question_del" pk=stores.pk cid=comm.pk  %}">삭제</a> </td>
     </tr>
     {% endif %}

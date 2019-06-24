@@ -1,8 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import RedirectView
+from django.http import Http404
+from django.shortcuts import render, get_object_or_404, redirect, render_to_response
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import RedirectView, ListView, TemplateView, DetailView, DeleteView, UpdateView
+from django.views.generic.edit import BaseUpdateView
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 
@@ -10,34 +14,55 @@ from trade.models import Item
 from .models import StoreProfile, QuestionComment, StoreGrade
 from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 
-@login_required
-def my_store_profile(request):
-    stores = get_object_or_404(StoreProfile, user=request.user)
-    return redirect('store:store_sell_list', stores.pk)
 
-# class MyStoreProfileView(RedirectView):
-#     url = '/store/store_sell_list.html/'
-#     parameter =
+# def store_sell_list(request, pk):
+#     stores = get_object_or_404(StoreProfile, pk=pk)
+#
+#     return render(request, 'store/store_sell_list.html', {
+#         'stores': stores
+#     })
 
-@login_required #로그인시에만 접속할 수 있다.
-def store_profile_edit(request):
-    form_cls = StoreProfileForm
-    profile = get_object_or_404(StoreProfile, user=request.user)
-    if request.method == 'POST' :
-        form = form_cls(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            sprofile = form.save(commit=False)
-            sprofile.name = form.instance.name
-            sprofile.save()
-        return redirect('store:store_sell_list', profile.pk)
-    else :
+class StoreSellListView(TemplateView):
+    model = StoreProfile
+    template_name = 'store/store_sell_list.html'
+    # context_object_name = 'stores'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['stores'] = StoreProfile.objects.get(pk=self.kwargs['pk'])
+        return context
+store_sell_list = StoreSellListView.as_view()
 
-        form = form_cls(instance=profile)
 
-    return render(request,'store/store_profile_edit.html',{
-        'form': form,
-    })
+# @login_required #로그인시에만 접속할 수 있다.
+# def store_profile_edit(request):
+#     form_cls = StoreProfileForm
+#     profile = get_object_or_404(StoreProfile, user=request.user)
+#     if request.method == 'POST' :
+#         form = form_cls(request.POST, request.FILES, instance=profile)
+#         if form.is_valid():
+#             sprofile = form.save(commit=False)
+#             sprofile.name = form.instance.name
+#             sprofile.save()
+#         return redirect('store:store_sell_list', profile.pk)
+#     else :
+#
+#         form = form_cls(instance=profile)
+#
+#     return render(request,'store/store_profile_edit.html',{
+#         'form': form,
+#     })
 
+class StoreProfileEditView(UpdateView):
+    form_class = StoreProfileForm
+    model = StoreProfile
+    template_name = 'store/store_profile_edit.html'
+
+    def get_object(self, queryset=None):
+        print(self.request.user.storeprofile)
+        return self.request.user.storeprofile
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy("store:store_sell_list", kwargs={'pk': self.request.user.storeprofile.pk})
 
 @login_required
 def store_question(request, pk):
@@ -73,20 +98,35 @@ def store_question(request, pk):
         'stores': stores,
     })
 
-@login_required
-def store_question_edit(request, pk, cid):
-    form_cls = StoreQuestionForm
-    comment = get_object_or_404(QuestionComment, pk=cid)
-    if request.method == "POST":
-        forms = form_cls(request.POST, instance=comment)
-        if forms.is_valid():
-            forms.save()
-        return redirect('store:store_question', pk)
-    else:
-        forms = form_cls(instance=comment)
-    return render(request, 'store/store_question_edit.html',{
-        'forms':forms
-    })
+# @login_required
+# def store_question_edit(request, pk, cid):
+#     form_cls = StoreQuestionForm
+#     comment = get_object_or_404(QuestionComment, pk=cid)
+#     if request.method == "POST":
+#         forms = form_cls(request.POST, instance=comment)
+#         if forms.is_valid():
+#             forms.save()
+#         return redirect('store:store_question', pk)
+#     else:
+#         forms = form_cls(instance=comment)
+#         print(comment)
+#     return render(request, 'store/store_question_edit.html',{
+#         'forms':forms
+#     })
+
+class StoreQuestionEditView(UpdateView):
+    form_class = StoreQuestionForm
+    model = QuestionComment
+    template_name = 'store/store_question_edit.html'
+
+    def get_object(self, **kwargs):
+        print(self.kwargs['cid'])
+        print(QuestionComment.objects.get(pk=self.kwargs['cid']))
+        return QuestionComment.objects.get(pk=self.kwargs['cid'])
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy("store:store_sell_list", kwargs={'pk': self.kwargs['pk']})
+
 
 @login_required
 def store_question_del(request,pk, cid):
@@ -153,14 +193,7 @@ def store_grade_del(request, pk, gid):
     grade.delete()
     return redirect('store:store_grade',pk)
 
-def store_sell_list(request, pk):
-    stores = get_object_or_404(StoreProfile,pk=pk)
-    store_item = Item.objects.filter(user_id = stores.user_id)
+# class StoreGradeDelView(DeleteView):
+#     model = StoreGrade
+#     success_url = reverse_lazy('root')
 
-    hit_count = HitCount.objects.get_for_object(stores)
-    hit_count_response = HitCountMixin.hit_count(request, hit_count)
-
-    return render(request, 'store/store_sell_list.html', {
-        'store_item':store_item,
-        'stores':stores
-    })

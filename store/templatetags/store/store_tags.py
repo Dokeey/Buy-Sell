@@ -9,7 +9,7 @@ register = template.Library()
 
 @register.simple_tag
 def store_rating(pk):
-    stores = get_object_or_404(StoreProfile, pk=pk)
+    stores = get_object_or_404(StoreProfile, pk=1)
     grades = StoreGrade.objects.filter(store_profile_id=stores.pk)
     rates = grades.count()
     if rates:
@@ -21,7 +21,7 @@ def store_rating(pk):
 
 @register.simple_tag
 def store_sell_list(pk):
-    stores = get_object_or_404(StoreProfile, pk=pk)
+    stores = get_object_or_404(StoreProfile, pk=1)
     # order = Item.objects.filter(user=stores.user, pay_status='sale_complete').count()
     orders = Item.objects.filter(user=stores.user)
     items = []
