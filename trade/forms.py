@@ -41,10 +41,6 @@ class ItemForm(forms.ModelForm):
 
 
 class ItemUpdateForm(ItemForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['category_tmp'].initial = self.instance.category.id
-
     class Meta:
         model = ItemForm.Meta.model
         fields = ItemForm.Meta.fields + ['pay_status']

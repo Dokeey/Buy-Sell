@@ -5,6 +5,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
 from category.models import Category
 from accounts.models import Profile
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic.detail import SingleObjectMixin
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 
@@ -12,114 +15,204 @@ from .models import Item, ItemComment, Order
 from .forms import ItemForm, ItemUpdateForm, ItemCommentForm, PayForm, OrderForm
 
 
-@login_required
-def item_new(request):
-    if request.method == "POST":
-        form = ItemForm(request.POST, request.FILES)
-        if form.is_valid():
-            item = form.save(commit=False)
-            # item.category = get_object_or_404(Category, id=form.cleaned_data['category_tmp'])
-            item.user = request.user
-            item.photo = form.cleaned_data['photo']
-            form.save()
-            return redirect('store:my_store_profile')
-    else:
-        form = ItemForm
-    return render(request, 'trade/item_new.html', {
-        'form': form
-    })
+# @login_required
+# def item_new(request):
+#     if request.method == "POST":
+#         form = ItemForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             item = form.save(commit=False)
+#             item.user = request.user
+#             item.photo = form.cleaned_data['photo']
+#             form.save()
+#             return redirect('store:my_store_profile')
+#     else:
+#         form = ItemForm
+#     return render(request, 'trade/item_new.html', {
+#         'form': form
+#     })
+
+class ItemNew(CreateView):
+    model = Item
+    form_class = ItemForm
+    template_name = 'trade/item_new.html'
+    success_url = reverse_lazy('store:my_store_profile')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.photo = form.cleaned_data['photo']
+        return super().form_valid(form)
 
 
-def item_list(request):
-    query = request.GET.get('query', '')
-    if query:
-        items = Item.objects.filter(title__icontains=query)
-    else:
-        items = Item.objects.all()
-    return render(request, 'trade/item_list.html', {
-        'items': items
-    })
+# def item_list(request):
+#     query = request.GET.get('query', '')
+#     if query:
+#         items = Item.objects.filter(title__icontains=query)
+#     else:
+#         items = Item.objects.all()
+#     return render(request, 'trade/item_list.html', {
+#         'items': items
+#     })
+
+class ItemList(ListView):
+    model = Item
+    template_name = 'trade/item_list.html'
+    context_object_name = 'items'
+
+    def get_queryset(self):
+        self.query = self.request.GET.get('query','')
+        qs = super().get_queryset()
+
+        if self.query:
+            qs = qs.filter(title__icontains=self.query)
+        return qs
 
 
-def item_detail(request, pk):
-    item = get_object_or_404(Item, pk=pk)
-    comments = ItemComment.objects.filter(item=item, parent=None)
-    hit_count = HitCount.objects.get_for_object(item)
-    hit_count_response = HitCountMixin.hit_count(request, hit_count)
-    form = ItemCommentForm
-    if request.method == "POST":
-        if not request.user.is_authenticated:
-            return redirect('accounts:login')
-        form = ItemCommentForm(request.POST)
-        if form.is_valid():
-            parent_obj = None
-            try:
-                parent_id = int(request.POST.get('parent_id'))
-            except:
-                parent_id = None
-            if parent_id:
-                parent_obj = ItemComment.objects.get(id=parent_id)
-                if parent_obj:
-                    replay_comment = form.save(commit=False)
-                    replay_comment.parent = parent_obj
-            new_comment = form.save(commit=False)
-            new_comment.user = request.user
-            new_comment.item = item
-            new_comment.save()
-        return redirect('trade:item_detail', pk)
-    return render(request, 'trade/item_detail.html', {
-        'item': item,
-        'comments': comments,
-        'form': form,
-    })
+# def item_detail(request, pk):
+#     item = get_object_or_404(Item, pk=pk)
+#     comments = ItemComment.objects.filter(item=item, parent=None)
+#     hit_count = HitCount.objects.get_for_object(item)
+#     hit_count_response = HitCountMixin.hit_count(request, hit_count)
+#     form = ItemCommentForm
+#     if request.method == "POST":
+#         if not request.user.is_authenticated:
+#             return redirect('accounts:login')
+#         form = ItemCommentForm(request.POST)
+#         if form.is_valid():
+#             parent_obj = None
+#             try:
+#                 parent_id = int(request.POST.get('parent_id'))
+#             except:
+#                 parent_id = None
+#             if parent_id:
+#                 parent_obj = ItemComment.objects.get(id=parent_id)
+#                 if parent_obj:
+#                     replay_comment = form.save(commit=False)
+#                     replay_comment.parent = parent_obj
+#             new_comment = form.save(commit=False)
+#             new_comment.user = request.user
+#             new_comment.item = item
+#             new_comment.save()
+#         return redirect('trade:item_detail', pk)
+#     return render(request, 'trade/item_detail.html', {
+#         'item': item,
+#         'comments': comments,
+#         'form': form,
+#     })
+
+class ItemDetail(CreateView):
+    model = ItemComment
+    template_name = 'trade/item_detail.html'
+    form_class = ItemCommentForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        self.pk = self.kwargs.get('pk')
+        context['item'] = get_object_or_404(Item, pk=self.pk)
+        context['comments'] = self.model.objects.filter(item=context['item'], parent=None)
+
+        hit_count = HitCount.objects.get_for_object(context['item'])
+        context['hit_count_response'] = HitCountMixin.hit_count(self.request, hit_count)
+        return context
+
+    def form_valid(self, form):
+        try:
+            parent_id = int(self.request.POST.get('parent_id'))
+        except:
+            parent_id = None
+        if parent_id:
+            parent_obj = ItemComment.objects.get(id=parent_id)
+            if parent_obj:
+                form.instance.parent = parent_obj
+        form.instance.user = self.request.user
+        form.instance.item = self.get_context_data()['item']
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('trade:item_detail', kwargs={'pk': self.pk})
 
 
-def item_update(request, pk):
-    item = get_object_or_404(Item, pk=pk)
-    if request.method == "POST":
-        form = ItemUpdateForm(request.POST, request.FILES, instance=item)
-        if form.is_valid():
-            item = form.save(commit=False)
-            if item.order_set.filter(status='reserv'):
-                messages.error(request, '예약중인 상품은 변경할 수 없습니다.')
-            else:
-                # item.category = get_object_or_404(Category, id=form.cleaned_data['category_tmp'])
-                item.user = request.user
-                item.photo = form.cleaned_data['photo']
-                form.save()
-        return redirect('trade:item_detail', pk)
-    else:
-        form = ItemUpdateForm(instance=item)
-    return render(request, 'trade/item_new.html',{
-        'form': form
-    })
+# def item_update(request, pk):
+#     item = get_object_or_404(Item, pk=pk)
+#     if request.method == "POST":
+#         form = ItemUpdateForm(request.POST, request.FILES, instance=item)
+#         if form.is_valid():
+#             item = form.save(commit=False)
+#             if item.order_set.filter(status='reserv'):
+#                 messages.error(request, '예약중인 상품은 변경할 수 없습니다.')
+#             else:
+#                 # item.category = get_object_or_404(Category, id=form.cleaned_data['category_tmp'])
+#                 item.user = request.user
+#                 item.photo = form.cleaned_data['photo']
+#                 form.save()
+#         return redirect('trade:item_detail', pk)
+#     else:
+#         form = ItemUpdateForm(instance=item)
+#     return render(request, 'trade/item_new.html',{
+#         'form': form
+#     })
+
+class ItemUpdate(UpdateView):
+    model = Item
+    form_class = ItemUpdateForm
+    template_name = 'trade/item_new.html'
+
+    def form_valid(self, form):
+        item = form.save(commit=False)
+        if item.order_set.filter(status='reserv'):
+            messages.error(self.request, '예약중인 상품은 변경할 수 없습니다.')
+            return redirect('trade:item_detail', self.kwargs.get('pk'))
+
+        form.instance.photo = form.cleaned_data['photo']
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('trade:item_detail', kwargs={'pk': self.kwargs.get('pk')})
 
 
-def item_delete(request, pk):
-    item = get_object_or_404(Item, pk=pk)
-    item.delete()
-    return redirect('trade:item_list')
+# def item_delete(request, pk):
+#     item = get_object_or_404(Item, pk=pk)
+#     item.delete()
+#     return redirect('trade:item_list')
 
+class ItemDelete(DeleteView):
+    model = Item
+    template_name = 'trade/item_delete.html'
+    success_url = reverse_lazy('trade:item_list')
 
-def comment_update(request, pk, cid):
-    comment = get_object_or_404(ItemComment, pk=cid)
-    if request.method == "POST":
-        form = ItemCommentForm(request.POST, instance=comment)
-        if form.is_valid():
-            form.save()
-        return redirect('trade:item_detail', pk)
-    else:
-        form = ItemCommentForm(instance=comment)
-    return render(request, 'trade/comment_update.html',{
-        'form':form
-    })
+# def comment_update(request, pk, cid):
+#     comment = get_object_or_404(ItemComment, pk=cid)
+#     if request.method == "POST":
+#         form = ItemCommentForm(request.POST, instance=comment)
+#         if form.is_valid():
+#             form.save()
+#         return redirect('trade:item_detail', pk)
+#     else:
+#         form = ItemCommentForm(instance=comment)
+#     return render(request, 'trade/comment_update.html',{
+#         'form':form
+#     })
 
+class CommentUpdate(UpdateView):
+    model = ItemComment
+    form_class = ItemCommentForm
+    pk_url_kwarg = 'cid'
+    template_name = 'trade/comment_update.html'
 
-def comment_delete(reuqest, pk, cid):
-    comment = get_object_or_404(ItemComment, pk=cid)
-    comment.delete()
-    return redirect('trade:item_detail', pk)
+    def get_success_url(self):
+        return reverse_lazy('trade:item_detail', kwargs={'pk': self.kwargs.get('pk')})
 
+# def comment_delete(reuqest, pk, cid):
+#     comment = get_object_or_404(ItemComment, pk=cid)
+#     comment.delete()
+#     return redirect('trade:item_detail', pk)
+
+class CommentDelete(DeleteView):
+    model = ItemComment
+    template_name = 'trade/item_delete.html'
+    pk_url_kwarg = 'cid'
+
+    def get_success_url(self):
+        return reverse_lazy('trade:item_detail', kwargs={'pk': self.kwargs.get('pk')})
 
 def order_new(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
