@@ -6,7 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from category.models import Category
 from accounts.models import Profile
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, RedirectView, \
+    TemplateView
 from django.views.generic.detail import SingleObjectMixin
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
@@ -214,87 +215,203 @@ class CommentDelete(DeleteView):
     def get_success_url(self):
         return reverse_lazy('trade:item_detail', kwargs={'pk': self.kwargs.get('pk')})
 
-def order_new(request, item_id):
-    item = get_object_or_404(Item, pk=item_id)
-    form = None
-    if item.pay_status == 'ready':
-        buyer = get_object_or_404(Profile, user=request.user)
-        if request.method == "POST":
-            form = OrderForm(request.POST, instance=buyer)
-            if form.is_valid():
-                order = Order.objects.create(user=request.user, item=item, name=item.title, amount=item.amount,
-                    buyer_email=form.cleaned_data['email'],
-                    buyer_name=form.cleaned_data['nick_name'],
-                    buyer_tel=form.cleaned_data['phone'],
-                    buyer_postcode=form.cleaned_data['post_code'],
-                    buyer_addr=form.cleaned_data['address'] + form.cleaned_data['detail_address'],
-                )
-                if form.cleaned_data['pay_choice'] == 'import':
-                    return redirect('trade:order_pay', item_id, str(order.merchant_uid))
-                elif form.cleaned_data['pay_choice'] == 'bank_trans':
-                    Order.objects.filter(user=request.user,
-                                         merchant_uid=order.merchant_uid,
-                                         status='ready'
-                                         ).update(status='reserv')
-                    reserv_order = Order.objects.get(user=request.user, merchant_uid=order.merchant_uid, status='reserv')
-                    reserv_order.update()
-
-                    return render(request, 'trade/seller_info.html', {
-                        'seller': item.user
-                    })
-
-            else:
-                messages.error(request, '유효하지 않은 상품입니다.')
-        else:
-            form = OrderForm(instance=buyer)
-    else:
-        messages.error(request, '이미 예약이 되었거나 판매완료 상품입니다.')
-    return render(request, 'trade/order_form.html',{
-        'item':item,
-        'form':form,
-    })
-
-
-def order_pay(request, item_id, merchant_uid):
-    order = get_object_or_404(Order, user=request.user, merchant_uid=merchant_uid, status='ready')
-
-    if request.method == 'POST':
-        form = PayForm(request.POST, instance=order)
-        if form.is_valid():
-            form.save()
-            return redirect('accounts:profile')
-    else:
-        form = PayForm(instance=order)
-    return render(request, 'trade/pay_form.html', {
-        'form': form,
-    })
+# def order_new(request, item_id):
+#     item = get_object_or_404(Item, pk=item_id)
+#     form = None
+#     if item.pay_status == 'ready':
+#         buyer = get_object_or_404(Profile, user=request.user)
+#         if request.method == "POST":
+#             form = OrderForm(request.POST, instance=buyer)
+#             if form.is_valid():
+#                 order = Order.objects.create(user=request.user, item=item, name=item.title, amount=item.amount,
+#                     buyer_email=form.cleaned_data['email'],
+#                     buyer_name=form.cleaned_data['nick_name'],
+#                     buyer_tel=form.cleaned_data['phone'],
+#                     buyer_postcode=form.cleaned_data['post_code'],
+#                     buyer_addr=form.cleaned_data['address'] + form.cleaned_data['detail_address'],
+#                 )
+#                 if form.cleaned_data['pay_choice'] == 'import':
+#                     return redirect('trade:order_pay', item_id, str(order.merchant_uid))
+#                 elif form.cleaned_data['pay_choice'] == 'bank_trans':
+#                     Order.objects.filter(user=request.user,
+#                                          merchant_uid=order.merchant_uid,
+#                                          status='ready'
+#                                          ).update(status='reserv')
+#                     reserv_order = Order.objects.get(user=request.user, merchant_uid=order.merchant_uid, status='reserv')
+#                     reserv_order.update()
+#
+#                     return render(request, 'trade/seller_info.html', {
+#                         'seller': item.user
+#                     })
+#
+#             else:
+#                 messages.error(request, '유효하지 않은 상품입니다.')
+#         else:
+#             form = OrderForm(instance=buyer)
+#     else:
+#         messages.error(request, '이미 예약이 되었거나 판매완료 상품입니다.')
+#     return render(request, 'trade/order_form.html',{
+#         'item':item,
+#         'form':form,
+#     })
 
 
-def order_cancle(request, order_id):
-    '선택된 주문에 대해 결제취소요청을 합니다.'
-
-    try:
-        queryset = Order.objects.get(id=order_id)
-        queryset.cancel()
-        messages.info(request, '주문을 취소하셨습니다.')
-    except:
-        messages.error(request, '유효하지 않은 상품입니다.')
-
-    return redirect('trade:trade_history')
+class OrderNew(FormView):
+    form_class = OrderForm
+    template_name = 'trade/order_form.html'
 
 
-
-@login_required
-def trade_history(request):
-    order_list = request.user.order_set.all()
-    orders = Order.objects.all()
-    sell_list = []
-    for order in orders:
-        if order.item.user == request.user:
-            sell_list.append(order)
-    return render(request, 'trade/trade_history.html',{
-        'order_list': order_list,
-        'sell_list': sell_list,
-    })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['item'] = get_object_or_404(Item, pk=self.kwargs.get('item_id'))
+        return context
 
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({
+            'instance': get_object_or_404(Profile, user=self.request.user),
+        })
+        return kwargs
+
+
+    def form_valid(self, form):
+        item = self.get_context_data()['item']
+        order = Order.objects.create(user=self.request.user,
+                                     item=item,
+                                     name=item.title,
+                                     amount=item.amount,
+                                     buyer_email=form.cleaned_data['email'],
+                                     buyer_name=form.cleaned_data['nick_name'],
+                                     buyer_tel=form.cleaned_data['phone'],
+                                     buyer_postcode=form.cleaned_data['post_code'],
+                                     buyer_addr=form.cleaned_data['address'] + form.cleaned_data['detail_address'],
+                                     )
+
+        if form.cleaned_data['pay_choice'] == 'import':
+            return redirect('trade:order_pay', self.kwargs.get('item_id'), str(order.merchant_uid))
+        elif form.cleaned_data['pay_choice'] == 'bank_trans':
+            Order.objects.filter(user=self.request.user,
+                                 merchant_uid=order.merchant_uid,
+                                 status='ready'
+                                 ).update(status='reserv')
+            reserv_order = Order.objects.get(user=self.request.user, merchant_uid=order.merchant_uid, status='reserv')
+            reserv_order.update()
+
+            return render(self.request, 'trade/seller_info.html', {
+                'seller': item.user
+            })
+
+
+    def form_invalid(self, form):
+        messages.error(self.request, '유효하지 않은 상품입니다.')
+        return self.get_success_url()
+
+
+    def render_to_response(self, context, **response_kwargs):
+        if context['item'].pay_status != "ready":
+            messages.error(self.request, '이미 예약이 되었거나 판매완료 상품입니다.')
+            return self.get_success_url()
+
+        return super().render_to_response(context, **response_kwargs)
+
+
+    def get_success_url(self):
+        next_url = self.request.GET.get('next') or 'trade:item_list'  # next get인자가 있으면 넣고 없으면 'profile' 넣기
+        return redirect(next_url)
+
+
+
+# def order_pay(request, item_id, merchant_uid):
+#     order = get_object_or_404(Order, user=request.user, merchant_uid=merchant_uid, status='ready')
+#
+#     if request.method == 'POST':
+#         form = PayForm(request.POST, instance=order)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('accounts:profile')
+#     else:
+#         form = PayForm(instance=order)
+#     return render(request, 'trade/pay_form.html', {
+#         'form': form,
+#     })
+
+
+class OrderPay(CreateView):
+    model = Order
+    form_class = PayForm
+    template_name = 'trade/pay_form.html'
+    success_url = reverse_lazy('trade:trade_history')
+
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({
+            'instance': get_object_or_404(Order, user=self.request.user, merchant_uid=self.kwargs.get('merchant_uid'), status='ready'),
+        })
+        return kwargs
+
+
+
+# def order_cancle(request, order_id):
+#     '선택된 주문에 대해 결제취소요청을 합니다.'
+#
+#     try:
+#         queryset = Order.objects.get(id=order_id)
+#         queryset.cancel()
+#         messages.info(request, '주문을 취소하셨습니다.')
+#     except:
+#         messages.error(request, '유효하지 않은 상품입니다.')
+#
+#     return redirect('trade:trade_history')
+
+
+class OrderCancle(RedirectView):
+    url = 'trade:trade_history'
+
+
+    def get(self, request, *args, **kwargs):
+        try:
+            queryset = Order.objects.get(id=self.kwargs.get('order_id'))
+            if queryset.status == "cancelled":
+                messages.error(request, '이미 주문을 취소하셨습니다.')
+                return redirect(self.url)
+            queryset.cancel()
+            messages.info(request, '주문을 취소하셨습니다.')
+        except:
+            messages.error(request, '유효하지 않은 상품입니다.')
+
+        return redirect(self.url)
+
+
+# @login_required
+# def trade_history(request):
+#     order_list = request.user.order_set.all()
+#     orders = Order.objects.all()
+#     sell_list = []
+#     for order in orders:
+#         if order.item.user == request.user:
+#             sell_list.append(order)
+#     return render(request, 'trade/trade_history.html',{
+#         'order_list': order_list,
+#         'sell_list': sell_list,
+#     })
+
+
+class TradeHistory(TemplateView):
+    template_name = 'trade/trade_history.html'
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order_list'] = self.request.user.order_set.all()
+
+        orders = Order.objects.all()
+        sell_list = []
+        for order in orders:
+            if order.item.user == self.request.user:
+                sell_list.append(order)
+
+        context['sell_list'] = sell_list
+
+        return context
