@@ -58,6 +58,7 @@ class ItemList(ListView):
     model = Item
     template_name = 'trade/item_list.html'
     context_object_name = 'items'
+    ordering = '-created_at'
 
     def get_queryset(self):
         self.query = self.request.GET.get('query','')
@@ -66,6 +67,18 @@ class ItemList(ListView):
         if self.query:
             qs = qs.filter(title__icontains=self.query)
         return qs
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('sort','-created_at')
+
+        if ordering == 'looks':
+            ordering = 'hit_count_generic'
+        elif ordering == 'hprice':
+            ordering = '-amount'
+        elif ordering == 'lprice':
+            ordering = 'amount'
+
+        return ordering
 
 
 # def item_detail(request, pk):

@@ -6,6 +6,14 @@
 
 <h2>아이템 목록</h2>
 
+<h4>
+    <a href="{% url "trade:item_list" %}">최신순</a>
+    <a href="{% url "trade:item_list" %}?sort=looks">조회순</a>
+    <a href="{% url "trade:item_list" %}?sort=hprice">높은가격순</a>
+    <a href="{% url "trade:item_list" %}?sort=lprice">낮은가격순</a>
+</h4>
+<hr>
+
 {% for item in items %}
 
     {% item_block item %}
