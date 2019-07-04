@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% load store.store_tags %}
-
+{% load hitcount_tags %}
 
 {% block content %}
 {% store_rating stores.pk as end %}
@@ -34,7 +34,7 @@
 
         </tr>
         <tr>
-            <td>방문 횟수 : </td><td></td>
+            <td>방문 횟수 : </td><td>{% get_hit_count for stores %}</td>
         </tr>
         <tr>
             <td>개점일 : </td><td> {{ stores.created_at }}</td>

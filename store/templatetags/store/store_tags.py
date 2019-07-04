@@ -21,14 +21,14 @@ def store_rating(pk):
 
 @register.simple_tag
 def store_sell_list(pk):
-    stores = get_object_or_404(StoreProfile, pk=1)
+    stores = get_object_or_404(StoreProfile, pk=pk)
     # order = Item.objects.filter(user=stores.user, pay_status='sale_complete').count()
     orders = Item.objects.filter(user=stores.user)
     items = []
     for order in orders:
-        item = order.order_set.filter(status='paid')
-        items.append(item)
-
+        item = len(order.order_set.filter(status='paid'))
+        if item == 1:
+            items.append(item)
     order = len(items)
 
     return order

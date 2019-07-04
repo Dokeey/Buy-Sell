@@ -22,7 +22,7 @@ def item_new(request):
             item.user = request.user
             item.photo = form.cleaned_data['photo']
             form.save()
-            return redirect('store:my_store_profile')
+            return redirect('store:store_sell_list', pk=request.user.storeprofile.pk)
     else:
         form = ItemForm
     return render(request, 'trade/item_new.html', {
