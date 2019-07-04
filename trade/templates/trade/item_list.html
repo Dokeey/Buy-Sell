@@ -4,27 +4,34 @@
 
 {% block content %}
 
-<h2>아이템 목록</h2>
+<div class="container text-center">
 
-<h4>
-    <a href="{% url "trade:item_list" %}?query={{ query }}">최신순</a>
-    <a href="{% url "trade:item_list" %}?query={{ query }}&sort=looks">조회순</a>
-    <a href="{% url "trade:item_list" %}?query={{ query }}&sort=hprice">높은가격순</a>
-    <a href="{% url "trade:item_list" %}?query={{ query }}&sort=lprice">낮은가격순</a>
-</h4>
-<hr>
+    <h2>아이템 목록</h2>
 
-{% for item in items %}
+    <h4>
+        <a href="{% url "trade:item_list" %}?query={{ query }}">최신순</a>
+        <a href="{% url "trade:item_list" %}?query={{ query }}&sort=looks">조회순</a>
+        <a href="{% url "trade:item_list" %}?query={{ query }}&sort=hprice">높은가격순</a>
+        <a href="{% url "trade:item_list" %}?query={{ query }}&sort=lprice">낮은가격순</a>
+    </h4>
+    <hr>
+</div>
 
-    {% item_block item %}
+<div class="container text-center">
+    <div class="row">
+    {% for item in items %}
+        <div class="col-xs-12 col-sm-6 col-md-3"  >
+            {% item_block item %}
+        </div>
+    {% empty %}
+        <h4>물품을 찾을 수 없습니다..</h4>
 
-<hr>
+    {% endfor %}
 
-{% empty %}
-<h4>물품을 찾을 수 없습니다..</h4>
+    </div>
+</div>
 
-{% endfor %}
-
+<div class="container text-center">
 {% if is_paginated %}
   <nav>
     <ul class="pagination">
@@ -64,5 +71,6 @@
     </ul>
   </nav>
 {% endif %}
+</div>
 
 {% endblock %}
