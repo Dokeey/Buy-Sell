@@ -1,21 +1,32 @@
 {% extends "store/layout.html" %}
 
 {% block store_content %}
+<div align="right">
 
-    {% for grade in grades %}
-    <table>
-        <tr>
-            <td><h3>{{ grade.get_rating_display }}</h3></td><td>{{ grade.author }}</td>
-        </tr>
-        <tr>
-            <td><h5>{{ grade.grade_comment }}</h5></td>
-        </tr>
+    <a href="{% url 'store:store_grade' stores.pk %}?sort=recent">최신순</a>·
+    <a href="{% url 'store:store_grade' stores.pk %}?sort=past">과거순</a>·
+    <a href="{% url 'store:store_grade' stores.pk %}?sort=highgrade">평점 높은순</a>·
+    <a href="{% url 'store:store_grade' stores.pk %}?sort=rowgrade">평점 낮은순</a>
+
+</div>
+
+<hr/>
+
+{% for grade in grades %}
+ <div class="well">
+
+     <h4><a href="{% url 'store:store_sell_list' grade.author.storeprofile.pk %}">{{ grade.author }}</a></h4>
+
+        {{ grade.get_rating_display }}&nbsp;&nbsp; {{ grade.created_at | date:"M d" }} <br/>
+        {{ grade.grade_comment }} <br/>
+
         {% if request.user.pk == grade.author.pk %}
-        <tr>
-            <td><a href="{% url "store:store_grade_edit" stores.pk grade.pk %}">수정</a> </td><td><a href="{% url "store:store_grade_del" stores.pk grade.pk %}">삭제</a> </td>
-        </tr>
+
+            <a href="{% url "store:store_grade_edit" stores.pk grade.pk %}">수정</a> /<a href="{% url "store:store_grade_del" stores.pk grade.pk %}">삭제</a>
+
         {% endif %}
-    </table>
+
+ </div>
     {% empty %}
     <h4>가게 평점이 없습니다.</h4>
 

@@ -44,7 +44,7 @@ class QuestionComment(models.Model):
     parent = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ('created_at',)
+        ordering = ('-created_at',)
 
 
 from trade.models import Item
@@ -54,7 +54,7 @@ class StoreGrade(models.Model):
     store_profile = models.ForeignKey(StoreProfile, on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_DEFAULT,default=user_id)
     store_item = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True)
-    grade_comment = models.TextField()
+    grade_comment = models.TextField(max_length=250)
     rating = models.PositiveIntegerField(
         choices=(
             (0, '☆☆☆☆☆'),
@@ -71,4 +71,4 @@ class StoreGrade(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ('created_at',)
+        ordering = ('-created_at',)

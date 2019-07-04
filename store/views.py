@@ -105,7 +105,19 @@ class StoreGradeListView(ListView):
     model = StoreGrade
     template_name = 'store/store_grade.html'
     context_object_name = 'grades'
+    ordering = '-created_at'
+    def get_ordering(self):
+        sort = self.request.GET.get('sort','')
 
+        if sort == 'recent':
+            sort = '-created_at'
+        elif sort == 'past':
+            sort = 'created_at'
+        elif sort == 'highgrade':
+            sort = '-rating'
+        elif sort == 'rowgrade':
+            sort = 'rating'
+        return sort
     def get_context_data(self, **kwargs):
         context1 = super().get_context_data(**kwargs)
         context1['stores'] = StoreProfile.objects.get(pk=self.kwargs['pk'])

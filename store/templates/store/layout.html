@@ -50,10 +50,10 @@
     <hr/>
     <table style="margin:20px">
         <tr>
-            <td><a href="{% url "store:store_sell_list" stores.pk %}">물품들({{ stores.user.item_set.all.count }}) / </a></td>
-            <td><a href="{% url "store:store_grade" stores.pk %}">가게 평점({{ stores.storegrade_set.all.count }}) / </a>  </td>
-            <td><a href="{% url "store:store_question" stores.pk %}">가게 문의({{ stores.questioncomment_set.all.count }}) / </a></td>
-            <td><a href="{% url "mypage:follow_new" stores.pk %}">팔로잉하기</a></td>
+            <td><a href="{% url "store:store_sell_list" stores.pk %}">물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span>/ </a></td>
+            <td><a href="{% url "store:store_grade" stores.pk %}">가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span> / </a>  </td>
+            <td><a href="{% url "store:store_question" stores.pk %}">가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span> </a></td>
+            <td><a href="{% url "mypage:follow_new" stores.pk %}">+팔로잉하기</a></td>
         </tr>
     </table>
     <hr/>
