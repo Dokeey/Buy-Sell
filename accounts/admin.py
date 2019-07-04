@@ -9,15 +9,22 @@ from .models import UserSession, Profile
 
 @admin.register(get_user_model())
 class AdminUser(AuthUserAdmin):
-    # list_display = ('username', 'email', 'nick_name', 'phone', 'address', 'account_num', 'is_staff')
+    # list_display = ('username', 'email', 'nick_name', 'phone', 'address', 'account_num', 'is_active')
+    list_display = ('id','username', 'email', 'is_active')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'date_joined')
     search_fields = ('username', 'first_name', 'last_name', 'email')
-    actions = ['마케팅_이메일보내기']
+    actions = ['유저_활성화하기','유저_스토어프로필_만들기']
 
-    def 마케팅_이메일보내기(self, request, queryset):
+    def 유저_활성화하기(self, request, queryset):
         for user in queryset:
-            pass
-        self.message_user(request, 'hello world')
+            user.is_active = True
+            user.save()
+        # self.message_user(request, 'hello world')
+
+    def 유저_스토어프로필_만들기(self, request, queryset):
+        from store.models import StoreProfile
+        for user in queryset:
+            StoreProfile.objects.create(user=user, name=user.profile.nick_name + '의 가게')
 
 
 @admin.register(UserSession)

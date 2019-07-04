@@ -38,13 +38,14 @@ def timestamp_to_datetime(timestamp):
 
 class Item(models.Model, HitCountMixin):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    title = models.CharField(max_length=20)
+    title = models.CharField(max_length=100)
     desc = models.TextField(blank=True)
     amount = models.PositiveIntegerField()
     photo = ProcessedImageField(
-            upload_to = 'blog/post',
+            blank=True,
+            upload_to = 'item_img/{0}'.format(datetime.now().strftime("%Y-%m-%d")),
             processors = [ResizeToFill(100, 100)], # 처리할 작업 목룍
-            format = 'PNG',					# 최종 저장 포맷
+            format='PNG',
             options = {'quality': 60}
         )
     category = TreeForeignKey(Category, on_delete=models.CASCADE)

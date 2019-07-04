@@ -7,10 +7,10 @@
 <h2>아이템 목록</h2>
 
 <h4>
-    <a href="{% url "trade:item_list" %}">최신순</a>
-    <a href="{% url "trade:item_list" %}?sort=looks">조회순</a>
-    <a href="{% url "trade:item_list" %}?sort=hprice">높은가격순</a>
-    <a href="{% url "trade:item_list" %}?sort=lprice">낮은가격순</a>
+    <a href="{% url "trade:item_list" %}?query={{ query }}">최신순</a>
+    <a href="{% url "trade:item_list" %}?query={{ query }}&sort=looks">조회순</a>
+    <a href="{% url "trade:item_list" %}?query={{ query }}&sort=hprice">높은가격순</a>
+    <a href="{% url "trade:item_list" %}?query={{ query }}&sort=lprice">낮은가격순</a>
 </h4>
 <hr>
 
@@ -25,5 +25,44 @@
 
 {% endfor %}
 
+{% if is_paginated %}
+  <nav>
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">
+            <span>Prev</span>
+          </a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href="#">
+            <span>Previous</span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% for page in page_range %}
+        <li {% if page == page_obj.number %}class="active"{% endif %}>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page }}">{{ page }}</a>
+        </li>
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">
+            <span>Next</span>
+          </a>
+        </li>
+      {% else %}
+        <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+          <a href="#">
+            <span>Next</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}
 
 {% endblock %}
