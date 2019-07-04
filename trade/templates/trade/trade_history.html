@@ -28,10 +28,17 @@
                     {% if order.status == "reserv" %}
                     <br>계좌번호 : {{ order.item.user.profile.account_num }}
                     {% endif %}</td>
-                <td><a href="{% url "trade:order_cancle" order.id %}">주문 취소</a>
-                {% if order.status == 'paid' %}
-                    <br><a href="{% url "store:store_grade_new" store_pk order.item.pk %}">리뷰쓰러가기</a></td>
+                <td>
+                {% if order.status == 'paid' or order.status == 'reserv' %}
+                    <a href="{% url "trade:order_confirm" order.id %}">구매 확정</a><br>
                 {% endif %}
+                {% if order.status != 'success' %}
+                    <a href="{% url "trade:order_cancle" order.id %}">주문 취소</a>
+                    {% endif %}
+                {% if order.status == 'success' %}
+                    <a href="{% url "store:store_grade_new" store_pk order.item.pk %}">리뷰쓰러가기</a>
+                {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>

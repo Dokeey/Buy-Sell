@@ -120,7 +120,8 @@ class Order(models.Model):
             ('paid', '결제완료'),
             ('cancelled', '결제취소'),
             ('failed', '결제실패'),
-            ('reserv', '결제예약'),
+            ('reserv', '구매예약'),
+            ('success', '구매완료'),
         ),
         default='ready',
         db_index=True
@@ -135,6 +136,7 @@ class Order(models.Model):
     is_cancelled = property(lambda self: self.status == 'cancelled')
     is_failed = property(lambda self: self.status == 'failed')
     is_reserv = property(lambda self: self.status == 'reserv')
+    is_success = property(lambda self: self.status == 'success')
 
     receipt_url = named_property('영수증')(lambda self: self.meta.get('receipt_url'))
     cancel_reason = named_property('취소이유')(lambda self: self.meta.get('cancel_reason'))
@@ -178,7 +180,7 @@ class Order(models.Model):
         if self.is_ready:
             cls, text_color = 'fa fa-shopping-cart', '#ccc'
         elif self.is_paid_ok:
-            cls, text_color = 'fa fa-check-circle', 'green'
+            cls, text_color = 'fas fa-dollar-sign', 'green'
         elif self.is_cancelled:
             cls, text_color = 'fa fa-times', 'gray'
             help_text = self.cancel_reason
@@ -186,7 +188,9 @@ class Order(models.Model):
             cls, text_color = 'fa fa-ban', 'red'
             help_text = self.fail_reason
         elif self.is_reserv:
-            cls, text_color = 'fa fa-check-circle', 'blue'
+            cls, text_color = 'fas fa-dollar-sign', 'blue'
+        elif self.is_success:
+            cls, text_color = 'fa fa-check-circle', '#0fd9a6'
         html = '''
              <span style="color: {text_color};" title="this is title">
              <i class="{class_names}"></i>
@@ -217,9 +221,7 @@ class Order(models.Model):
             #     pass
             self.status = self.meta['status']
 
-        if self.status == 'paid':
-            self.item.pay_status = 'sale_complete'
-        elif self.status == 'reserv':
+        if self.status in ('reserv','paid'):
             self.item.pay_status = 'reservation'
             self.meta['paid_at'] = int(time())
         else:

@@ -15,6 +15,7 @@ from hitcount.views import HitCountMixin
 from .models import Item, ItemComment, Order
 from .forms import ItemForm, ItemUpdateForm, ItemCommentForm, PayForm, OrderForm
 
+from time import time
 
 # @login_required
 # def item_new(request):
@@ -311,6 +312,11 @@ class OrderNew(FormView):
 
     def form_valid(self, form):
         item = self.get_context_data()['item']
+
+        if item.user == self.request.user:
+            messages.error(self.request, '자신의 물품은 구매할수 없습니다.')
+            return self.get_success_url()
+
         order = Order.objects.create(user=self.request.user,
                                      item=item,
                                      name=item.title,
@@ -412,6 +418,31 @@ class OrderCancle(RedirectView):
                 return redirect(self.url)
             queryset.cancel()
             messages.info(request, '주문을 취소하셨습니다.')
+        except:
+            messages.error(request, '유효하지 않은 상품입니다.')
+
+        return redirect(self.url)
+
+
+
+class OrderConfirm(RedirectView):
+    url = 'trade:trade_history'
+
+
+    def get(self, request, *args, **kwargs):
+        try:
+            queryset = Order.objects.get(id=self.kwargs.get('order_id'))
+            if queryset.status == "success":
+                messages.error(request, '이미 구매확정 하셨습니다.')
+                return redirect(self.url)
+            elif queryset.status in ('reserv','paid'):
+                queryset.status = 'success'
+                queryset.meta['paid_at'] = int(time())
+                queryset.item.pay_status = 'sale_complete'
+                queryset.item.save()
+                queryset.save()
+
+                messages.info(request, '구매를 축하드립니다!!')
         except:
             messages.error(request, '유효하지 않은 상품입니다.')
 
