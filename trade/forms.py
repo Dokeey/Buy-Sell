@@ -15,25 +15,37 @@ from accounts.forms import ProfileForm
 
 
 class ItemForm(forms.ModelForm):
-    # CHOICES = []
-    # for cate in Category.objects.all():
-    #     category = []
-    #     category.append(cate)
-    #     sub_category_group = []
-    #     for subcate in SubCategory.objects.filter(category=cate):
-    #         sub_category = []
-    #         sub_category.append(subcate.id)
-    #         sub_category.append(subcate)
-    #         sub_category_group.append(sub_category)
-    #
-    #     category.append(sub_category_group)
-    #     CHOICES.append(category)
-
     category = TreeNodeChoiceField(queryset=Category.objects.all(), level_indicator=unichr(0x00A0) * 4)
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['category'].label = '카테고리'
+        super(ItemForm, self).__init__(*args, **kwargs)
+        self.fields['title'].label = 'Title'
+        self.fields['title'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '물품명이 무엇인가요?'
+        })
+        self.fields['desc'].label = 'Desc'
+        self.fields['desc'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '물품에 대해 설명해주세요'
+        })
+        self.fields['amount'].label = 'Amount'
+        self.fields['amount'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '가격이 얼마에요?'
+        })
+        self.fields['photo'].label = 'Photo'
+        self.fields['photo'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+        })
+        self.fields['category'].label = 'Category'
+        self.fields['category'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+        })
+        self.fields['item_status'].label = 'Status'
+        self.fields['item_status'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+        })
 
     class Meta:
         model = Item

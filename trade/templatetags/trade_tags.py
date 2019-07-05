@@ -1,6 +1,7 @@
 from django import template
 from django.shortcuts import resolve_url
 from django.utils.safestring import mark_safe
+from django.contrib.humanize.templatetags.humanize import intcomma
 
 from ..models import Item
 
@@ -21,7 +22,7 @@ def item_block(item):
     user_link = resolve_url('store:store_sell_list', item.user.storeprofile.id)
     hit_count = item.hit_count.hits
     title = item.title
-    amount = item.amount
+    amount = intcomma(item.amount)
     photo_url = item.photo.url
     item_status = item.get_item_status_display()
     pay_status = item.get_pay_status_display()
