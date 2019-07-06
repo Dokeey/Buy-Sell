@@ -104,7 +104,6 @@ class StoreQuestionDelView(DeleteView):
 class StoreGradeListView(ListView):
     model = StoreGrade
     template_name = 'store/store_grade.html'
-    context_object_name = 'grades'
     ordering = '-created_at'
     def get_ordering(self):
         sort = self.request.GET.get('sort','')
@@ -119,9 +118,10 @@ class StoreGradeListView(ListView):
             sort = 'rating'
         return sort
     def get_context_data(self, **kwargs):
-        context1 = super().get_context_data(**kwargs)
-        context1['stores'] = StoreProfile.objects.get(pk=self.kwargs['pk'])
-        return context1
+        context = super().get_context_data(**kwargs)
+        context['grades'] = self.model.objects.filter(pk=self.kwargs['pk'])
+        context['stores'] = StoreProfile.objects.get(pk=self.kwargs['pk'])
+        return context
 
 class StoreGradeCreateView(CreateView):
     model = StoreGrade

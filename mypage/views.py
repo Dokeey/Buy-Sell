@@ -36,7 +36,7 @@ def follow_new(request, store_id):
     if not request.user.follow_set.filter(store_id=store_id):
         if request.user.storeprofile.id == store_id:
             messages.error(request, '본인은 팔로우할 수 없어요 ^^')
-            return redirect('store:my_store_profile')
+            return redirect('store:store_sell_list', pk=store_id)
         else:
             Follow.objects.create(user=request.user, store_id=store_id)
     return redirect('mypage:follow')

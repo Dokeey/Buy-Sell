@@ -12,7 +12,7 @@
 
     <table style="margin:20px">
         <tr>
-            <td>사진 : </td><td><img src="{{ stores.photo.url }}"/> </td>
+            <td><span class="glyphicon glyphicon-camera" aria-hidden="true"></span> 사진 : </td><td><img src="{{ stores.photo.url }}"/> </td>
         </tr>
         <tr>
             <td>가게 소개 : </td><td>{{ stores.comment }}</td>
@@ -28,35 +28,26 @@
             </td>
         </tr>
         <tr>
-            <td>판매 횟수 : </td>
+            <td><span class="glyphicon glyphicon-gift" aria-hidden="true"></span> 판매 횟수 : </td>
 
             <td>{{ order }}</td>
 
         </tr>
         <tr>
-            <td>방문 횟수 : </td><td>{% get_hit_count for stores %}</td>
+            <td><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> 방문 횟수 : </td><td>{% get_hit_count for stores %}</td>
         </tr>
         <tr>
-            <td>개점일 : </td><td> {{ stores.created_at }}</td>
+            <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 개점일 : </td><td> {{ stores.created_at }}</td>
         </tr>
         {% if user.is_authenticated and request.user.pk == stores.user.pk %}
 
         <tr>
-           <td> <a href="{% url "store:store_profile_edit" %}">가게 프로필 수정</a> </td>
+           <td> <a href="{% url "store:store_profile_edit" %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>가게 프로필 수정</a> </td>
         </tr>
         {% endif %}
 
     </table>
-    <hr/>
-    <table style="margin:20px">
-        <tr>
-            <td><a href="{% url "store:store_sell_list" stores.pk %}">물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span>/ </a></td>
-            <td><a href="{% url "store:store_grade" stores.pk %}">가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span> / </a>  </td>
-            <td><a href="{% url "store:store_question" stores.pk %}">가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span> </a></td>
-            <td><a href="{% url "mypage:follow_new" stores.pk %}">+팔로잉하기</a></td>
-        </tr>
-    </table>
-    <hr/>
+
 
     {% block store_content %}
     {% endblock %}
