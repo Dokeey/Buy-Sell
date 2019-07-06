@@ -1,32 +1,44 @@
-
 {% extends "store/layout.html" %}
-{% load store.store_tags %}
 
-{% block content %}
-{{ block.super }}
+{% block store_content %}
+<div>
 
-{% store_rating stores.pk as end %}
-{% store_item_list stores.pk as item_count %}
-{% store_grade_list stores.pk as grade_count %}
-{% store_question_list stores.pk as question_count %}
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" ><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
+    <li role="presentation" class="active"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>
+    <li role="presentation"><a href="{% url "store:store_question" stores.pk %}" aria-controls="messages" role="tab" >가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span></a></li>
+    <li role="presentation"><a href="{% url "mypage:follow_new" stores.pk %}" aria-controls="settings" role="tab" ><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>팔로잉하기</a></li>
+  </ul>
 
+</div>
+<br/>
+<div align="right">
 
+    <a href="{% url 'store:store_grade' stores.pk %}?sort=recent">최신순</a>·
+    <a href="{% url 'store:store_grade' stores.pk %}?sort=past">과거순</a>·
+    <a href="{% url 'store:store_grade' stores.pk %}?sort=highgrade">평점 높은순</a>·
+    <a href="{% url 'store:store_grade' stores.pk %}?sort=rowgrade">평점 낮은순</a>
+
+</div>
+<br/>
 {% for grade in grades %}
-<table>
-    <tr>
-        <td><h3>{{ grade.get_rating_display }}</h3></td><td>{{ grade.author }}</td>
-    </tr>
-    <tr>
-        <td><h5>{{ grade.grade_comment }}</h5></td>
-    </tr>
-    {% if request.user.pk == grade.author.pk %}
-    <tr>
-        <td><a href="{% url "store:store_grade_edit" stores.pk grade.pk %}">수정</a> </td><td><a href="{% url "store:store_grade_del" stores.pk grade.pk %}">삭제</a> </td>
-    </tr>
-    {% endif %}
-</table>
-{% empty %}
-<h4>가게 평점이 없습니다.</h4>
+ <div class="well">
 
-{% endfor %}
+     <h4><a href="{% url 'store:store_sell_list' grade.author.storeprofile.pk %}">{{ grade.author }}</a></h4><div align="right" style="display: inline;float: right;" >
+        {% if request.user.pk == grade.author.pk %}
+          <a href="{% url "store:store_question_edit" stores.pk grade.pk  %}">수정</a> /
+          <a href="{% url "store:store_question_del" stores.pk grade.pk  %}">삭제</a>
+          {% endif %}
+        </div>
+
+        {{ grade.get_rating_display }}&nbsp;&nbsp;<span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ grade.created_at | date:"M d일, y년" }} <br/>
+     <h5>{{ grade.grade_comment }} </h5>
+
+ </div>
+    {% empty %}
+    <h4>가게 평점이 없습니다.</h4>
+
+    {% endfor %}
+
 {% endblock %}

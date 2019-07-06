@@ -9,7 +9,7 @@ register = template.Library()
 
 @register.simple_tag
 def store_rating(pk):
-    stores = get_object_or_404(StoreProfile, pk=pk)
+    stores = get_object_or_404(StoreProfile, pk=1)
     grades = StoreGrade.objects.filter(store_profile_id=stores.pk)
     rates = grades.count()
     if rates:
@@ -20,30 +20,15 @@ def store_rating(pk):
     return end
 
 @register.simple_tag
-def store_item_list(pk):
-    stores = get_object_or_404(StoreProfile, pk=pk)
-    item_count = Item.objects.filter(user_id=stores.user_id).count()
-    return item_count
-
-
-@register.simple_tag
-def store_grade_list(pk):
-    stores = get_object_or_404(StoreProfile, pk=pk)
-    grade_count = StoreGrade.objects.filter(store_profile_id=stores.pk).count()
-    return grade_count
-
-@register.simple_tag
-def store_question_list(pk):
-    stores = get_object_or_404(StoreProfile, pk=pk)
-    question_count = QuestionComment.objects.filter(store_profile_id=stores.pk).count()
-    return question_count
-
-@register.simple_tag
 def store_sell_list(pk):
     stores = get_object_or_404(StoreProfile, pk=pk)
-    order = Item.objects.filter(user=stores.user, pay_status='sale_complete').count()
-    return order
+    # order = Item.objects.filter(user=stores.user, pay_status='sale_complete').count()
+    orders = Item.objects.filter(user=stores.user)
+    items = []
+    for order in orders:
+        item = len(order.order_set.filter(status='paid'))
+        if item == 1:
+            items.append(item)
+    order = len(items)
 
-@register.simple_tag
-def store_ident(user_id):
-    return StoreProfile.objects.get(user_id=user_id).pk
+    return order

@@ -1,30 +1,34 @@
 {% extends "store/layout.html" %}
-{% load store.store_tags %}
-{% load hitcount_tags %}
 {% load trade_tags %}
 
-{% block content %}
-{{ block.super }}
+{% block store_content %}
+<div>
 
-{% store_rating stores.pk as end %}
-{% store_item_list stores.pk as item_count %}
-{% store_grade_list stores.pk as grade_count %}
-{% store_question_list stores.pk as question_count %}
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
+    <li role="presentation"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>
+    <li role="presentation"><a href="{% url "store:store_question" stores.pk %}" aria-controls="messages" role="tab" >가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span></a></li>
+    <li role="presentation"><a href="{% url "mypage:follow_new" stores.pk %}" aria-controls="settings" role="tab" ><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>팔로잉하기</a></li>
+  </ul>
 
-{% for item in store_item %}
+</div>
 
-    {% if item.user == request.user %}
-        <a href="{% url "trade:item_update" item.pk %}">수정하기</a>
-        <a href="{% url "trade:item_delete" item.pk %}">삭제하기</a>
-    {% endif %}
+    {% for item in stores.user.item_set.all %}
 
-    {% item_block item %}
+        {% if item.user == request.user %}
+            <a href="{% url "trade:item_update" item.pk %}">수정하기</a>
+            <a href="{% url "trade:item_delete" item.pk %}">삭제하기</a>
+        {% endif %}
 
-<hr>
+        {% item_block item %}
 
-{% empty %}
-<h4>물품을 찾을 수 없습니다..</h4>
+    <hr>
 
-{% endfor %}
+    {% empty %}
+    <h4>물품을 찾을 수 없습니다..</h4>
 
+    {% endfor %}
 {% endblock %}
+
+
