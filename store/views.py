@@ -119,7 +119,7 @@ class StoreGradeListView(ListView):
         return sort
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['grades'] = self.model.objects.filter(pk=self.kwargs['pk'])
+        context['grades'] = self.model.objects.filter(store_profile=self.kwargs['pk'])
         context['stores'] = StoreProfile.objects.get(pk=self.kwargs['pk'])
         return context
 

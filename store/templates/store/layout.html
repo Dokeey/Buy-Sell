@@ -1,55 +1,111 @@
 {% extends "layout.html" %}
-
 {% load store.store_tags %}
 {% load hitcount_tags %}
+
+
+{% block head %}
+    <style>
+
+        .imggrid {
+            position: relative;
+            -webkit-filter:blur(3px);
+            -moz-filter:blur(3px);
+            -o-filter:blur(3px);
+            -ms-filter:blur(3px);
+            filter:blur(3px);
+            height:300px;
+            width: 100%;
+            background-image:url("{{ stores.photo.url }}");
+            text-align: center;
+        }
+         img {
+            height: 150px;
+            width: 150px;
+        }
+
+    </style>
+{% endblock %}
+
 
 {% block content %}
 {% store_rating stores.pk as end %}
 {% store_sell_list stores.pk as order %}
 
-    <h2 style="margin:20px">{{ stores.name }}</h2>
-    <hr/>
 
-    <table style="margin:20px">
-        <tr>
-            <td><span class="glyphicon glyphicon-camera" aria-hidden="true"></span> 사진 : </td><td><img src="{{ stores.photo.url }}"/> </td>
-        </tr>
-        <tr>
-            <td>가게 소개 : </td><td>{{ stores.comment }}</td>
-        </tr>
-        <tr>
-            <td>평점 : </td>
-            <td>
-                {% if stores.storegrade_set.all.count == 0 %}
-                    평점이 없습니다.
-                {% else %}
-                    {{ end }} /5
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <td><span class="glyphicon glyphicon-gift" aria-hidden="true"></span> 판매 횟수 : </td>
+    <div class="row">
 
-            <td>{{ order }}</td>
+        <div class="col-md-4 col-xs-4"  >
+           <div class="imggrid">
+           <img src="{{ stores.photo.url }}" class="img-responsive img-thumbnail" alt="가게 프로필 사진" />
+           </div>
+        </div>
 
-        </tr>
-        <tr>
-            <td><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> 방문 횟수 : </td><td>{% get_hit_count for stores %}</td>
-        </tr>
-        <tr>
-            <td><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> 개점일 : </td><td> {{ stores.created_at }}</td>
-        </tr>
-        {% if user.is_authenticated and request.user.pk == stores.user.pk %}
+        <div class="col-md-8 col-xs-8">
 
-        <tr>
-           <td> <a href="{% url "store:store_profile_edit" %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>가게 프로필 수정</a> </td>
-        </tr>
-        {% endif %}
+            <div class="row">
+                <div class="col-md-10 col-xs-4">
+                <h3> <i class="fas fa-store" style="color:red"></i>{{ stores.name }} </h3>
+                </div>
+                <div class="col-md-2 col-xs-2">
+                    <div align="right">
+                    <button type="button" class="btn btn-primary btn-sm" style="margin:15px" onclick = "location.href = '{% url "mypage:follow_new" stores.pk %}' ">
+                        <i class="fas fa-user-plus" style="color:white"></i> 팔로잉
+                    </button>
+                    </div>
+                </div>
+            </div>
+            <hr/>
 
-    </table>
+            <div class="row">
+                <div class="col-md-2 col-xs-10">
+                    <i class="fas fa-shopping-basket" style="color:orange;"></i> 판매 횟수 : {{ order }}
+                </div>
 
+                <div class="col-md-2 col-xs-10">
+                    <i class="far fa-eye" style="color:purple"></i> 방문 횟수 : {% get_hit_count for stores %}
+                </div>
+
+                <div class="col-md-3 col-xs-10">
+                    <span class="far fa-calendar-alt" aria-hidden="true" style="color:red"></span> 개점일 :  {{ stores.created_at | date:"y년 M d일" }}
+                </div>
+
+                <div class="col-md-2 col-xs-10">
+                    <i class="fas fa-user-friends" style="color:#368AFF"></i> 팔로워 :  {{ stores.follow_set.all.count }}명
+                </div>
+                <div class="col-md-1">
+                </div>
+            </div> <hr/>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <i class="fas fa-pencil-alt" style="color:#993800"></i> 가게 소개 :
+                </div>
+                <div class="col-md-10 col-xs-10" style="overflow:scroll; height:100px;">
+                    <p >{{ stores.comment | linebreaks }}</p>
+                </div>
+            </div> <hr/>
+
+
+
+            {% if user.is_authenticated and request.user.pk == stores.user.pk %}
+                 <a href="{% url "store:store_profile_edit" %}"><i class="fas fa-user-edit" ></i>가게 프로필 수정</a>
+            {% endif %}
+        <i class="far fa-handshake" style="color:green" ></i>평점 :
+
+                        {% if stores.storegrade_set.all.count == 0 %}
+                            평점이 없습니다.
+                        {% else %}
+                            {{ end }} /5
+                        {% endif %}
+        </div>
+    </div>
+    <br/>
+
+<div class="row">
 
     {% block store_content %}
     {% endblock %}
+
+</div>
 
 {% endblock %}
