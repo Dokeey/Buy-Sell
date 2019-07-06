@@ -33,7 +33,7 @@
         </div>
 
         {{ grade.get_rating_display }}&nbsp;&nbsp;<span class="glyphicon glyphicon-time" aria-hidden="true"></span> {{ grade.created_at | date:"M d일, y년" }} <br/>
-     <h5>{{ grade.grade_comment }} </h5>
+     <h5>{{ grade.grade_comment|linebreaks }} </h5>
 
  </div>
     {% empty %}

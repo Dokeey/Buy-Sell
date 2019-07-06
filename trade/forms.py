@@ -19,30 +19,30 @@ class ItemForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ItemForm, self).__init__(*args, **kwargs)
-        self.fields['title'].label = 'Title'
+        self.fields['title'].label = '물품명'
         self.fields['title'].widget.attrs.update({
             'class': 'form-control col-sm-10',
             'placeholder': '무엇을 파세요?'
         })
-        self.fields['desc'].label = 'Desc'
+        self.fields['desc'].label = '설명'
         self.fields['desc'].widget.attrs.update({
             'class': 'form-control col-sm-10',
             'placeholder': '물품에 대해 설명해주세요',
         })
-        self.fields['amount'].label = 'Amount'
+        self.fields['amount'].label = '가격'
         self.fields['amount'].widget.attrs.update({
             'class': 'form-control col-sm-10',
             'placeholder': '얼마에요?'
         })
-        self.fields['photo'].label = 'Photo'
+        self.fields['photo'].label = '사진'
         self.fields['photo'].widget.attrs.update({
             'class': 'form-control col-sm-10',
         })
-        self.fields['category'].label = 'Category'
+        self.fields['category'].label = '종류'
         self.fields['category'].widget.attrs.update({
             'class': 'form-control col-sm-10',
         })
-        self.fields['item_status'].label = 'Status'
+        self.fields['item_status'].label = '상태'
         self.fields['item_status'].widget.attrs.update({
             'class': 'form-control col-sm-10',
         })
@@ -56,7 +56,7 @@ class ItemUpdateForm(ItemForm):
 
     def __init__(self, *args, **kwargs):
         super(ItemUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['pay_status'].label = 'Stock'
+        self.fields['pay_status'].label = '재고상태'
         self.fields['pay_status'].widget.attrs.update({
             'class': 'form-control col-sm-10',
         })
@@ -72,6 +72,13 @@ class ItemCommentForm(forms.ModelForm):
         model = ItemComment
         fields = ['message']
 
+    def __init__(self, *args, **kwargs):
+        super(ItemCommentForm, self).__init__(*args, **kwargs)
+        self.fields['message'].label = '문의'
+        self.fields['message'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '어떤게 궁금하세요?'
+        })
 
 class PayForm(forms.ModelForm):
     class Meta:

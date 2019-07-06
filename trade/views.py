@@ -37,13 +37,15 @@ class ItemNew(CreateView):
     model = Item
     form_class = ItemForm
     template_name = 'trade/item_new.html'
-    success_url = reverse_lazy('store:my_store_profile')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         form.instance.photo = form.cleaned_data['photo']
         return super().form_valid(form)
 
+    def get_success_url(self):
+        self.success_url = reverse_lazy('store:store_sell_list', kwargs={'pk': self.kwargs.get(self.pk_url_kwarg)})
+        return super().get_success_url()
 
 # def item_list(request):
 #     query = request.GET.get('query', '')
@@ -150,6 +152,17 @@ class ItemDetail(CreateView):
         context['hit_count_response'] = HitCountMixin.hit_count(self.request, hit_count)
 
         context['wish_ctn'] = WishList.objects.filter(item=context['item']).count()
+        context['follow_ctn'] = Follow.objects.filter(store=context['item'].user.storeprofile).count()
+
+        items = context['item'].user.item_set.filter(pay_status='ready')
+        item_list = []
+        for item in items:
+            if item == context['item']: continue
+            if len(item_list) == 3: break
+            item_list.append(item)
+
+        context['items'] = item_list
+        context['items_ctn'] = items.count()
         return context
 
     def form_valid(self, form):
@@ -238,6 +251,13 @@ class CommentUpdate(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('trade:item_detail', kwargs={'pk': self.kwargs.get('pk')})
+
+    def form_valid(self, form):
+        comment = get_object_or_404(ItemComment, pk=self.kwargs.get(self.pk_url_kwarg))
+        if self.request.user != comment.user:
+            messages.error(self.request, '잘못된 접근 입니다.')
+            return self.form_invalid(form)
+        return super().form_valid(form)
 
 # def comment_delete(reuqest, pk, cid):
 #     comment = get_object_or_404(ItemComment, pk=cid)

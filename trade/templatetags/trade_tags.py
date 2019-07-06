@@ -30,7 +30,7 @@ def item_block(item):
     created_at = item.created_at.strftime("%Y년 %m월 %d일 %H:%M")
 
     html = """
-        <div class="card" style="height: 400px; width: 20rem;">
+        <div class="card" style="height: 350px; width: 20rem;">
           <a href="{next_link}"><img class="card-img-top" src="{photo_url}" alt="Card image cap">
           <div class="card-body">
             <h5 >{title}</h5>

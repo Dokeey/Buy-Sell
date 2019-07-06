@@ -1,5 +1,5 @@
 {% extends "trade/layout.html" %}
-
+{% load humanize %}
 {% load hitcount_tags %}
 {% block content %}
 {{ block.super }}
@@ -17,14 +17,15 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-6" style="background:#666666">
-            <img src="{{ item.photo.url }}"/><br>
-        </div>
-        <div class="col-sm-6">
+        <div class="col-sm-6 text-center vcenter" style="background:#666666;">
+            <div style="width:100%">
+                <img src="{{ item.photo.url }}"/>
+            </div>
+        </div><div class="col-sm-6 vcenter">
                 {% if item.pay_status == "ready" %}
             <div class="row" style="padding-left:30px">
                 <h2>{{ item.title }}</h2>
-                <h1>{{ item.amount }}원</h1>
+                <h1>{{ item.amount|intcomma }}<small> 원</small></h1>
             </div>
             <hr/>
 
@@ -73,77 +74,217 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-8">
-            <h2>상세 정보</h2>
-            <hr>
-            <table class="table table-hover table-borderless">
-                <tr>
-                    <td>{{ item.user.profile.nick_name }}님의 말</td> <td>{{ item.desc }}</td>
-                </tr>
-                <tr>
-                    <td>상태</td> <td>{{ item.get_item_status_display }}</td>
-                </tr>
-                <tr>
-                    <td>거래 지역</td> <td>{{ item.user.profile.address }}</td>
-                </tr>
-                <tr class="danger">
-                    <td>우려의 한마디</td> <td>사기당하지 않도록 조심해주세요!</td>
-                </tr>
-            </table>
+        <div class="col-md-8">
+            <div class="row">
+                <h2>상세 정보</h2>
+                <hr>
+                <table class="table table-hover table-borderless">
+                    <tr>
+                        <td style="min-width:120px">{{ item.user.profile.nick_name }}님의 말</td> <td>{{ item.desc|default:"-"|linebreaks }}</td>
+                    </tr>
+                    <tr>
+                        <td>상태</td> <td>{{ item.get_item_status_display }}</td>
+                    </tr>
+                    <tr>
+                        <td>거래 지역</td> <td>{{ item.user.profile.address }}</td>
+                    </tr>
+                    <tr class="danger">
+                        <td>우려의 한마디</td> <td>사기당하지 않도록 조심해주세요!</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="row">
+            <!-- Comments Form -->
+                <h2>물품 문의 <b style="color:red;">{{ item.itemcomment_set.all.count }}</b></h2>
+                <hr>
+
+                <!-- Comment with nested comments -->
+
+                <form class="form-horizontal" action="" method="POST">
+                    {% csrf_token %}
+                      <div class="form-group">
+                          <div class=" col-xs-12">
+                            {{ form.message }}
+                          </div>
+                      </div>
+
+                    <div class="form-group">
+                        <div class="text-right col-xs-12">
+                            <button type="submit" class="btn btn-default"><i class="fas fa-comments"></i> 문의하기</button>
+                        </div>
+                    </div>
+                </form>
+
+                {% for comment in comments %}
+                <div class="row">
+                    <div class="col-xs-2 profile-img vcenter">
+                        <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
+                            <img class="img-rounded img-thumbnail" src="{{ comment.user.storeprofile.photo.url }}"/>
+                        </a>
+                    </div><div class="col-xs-10 clearfix vcenter" style="padding:10px;">
+                        <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
+                            <div class="pull-left" ><b class="info">{{ comment.user.profile.nick_name }}</b></div>
+                        </a>
+                        <div class="pull-right">{{ comment.updated_at }}</div>
+                        <br><div style="padding-top:10px">{{ comment.message|linebreaks }}</div>
+                        {% if comment.user == request.user %}
+                            <div class="text-right">
+                                <a href="{% url "trade:comment_update" pk=item.pk cid=comment.pk %}">
+                                    <i class="fas fa-edit" style="margin-right:10px"></i></a>
+                                <a href="{% url "trade:comment_delete" pk=item.pk cid=comment.pk %}">
+                                    <i class="fas fa-trash-alt" style="margin-right:10px"></i></a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-offset-2 col-xs-10">
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="row col-xs-offset-2">
+                    {% for replay in comment.replies.all|dictsort:"created_at" %}
+                    <div class="col-xs-2 profile-img vcenter">
+                        <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
+                            <img class="img-rounded img-thumbnail" src="{{ replay.user.storeprofile.photo.url }}"/>
+                        </a>
+                    </div><div class="col-xs-10 clearfix vcenter" style="padding:10px;">
+                        <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
+                            <div class="pull-left"><b class="info">{{ replay.user.profile.nick_name }}</b></div>
+                        </a>
+                        <div class="pull-right">{{ replay.updated_at }}</div>
+                        <br><div style="padding-top:10px;">{{ replay.message }}</div>
+                        {% if replay.user == request.user %}
+                            <div class="text-right">
+                                <a href="{% url "trade:comment_update" pk=item.pk cid=replay.pk %}">
+                                    <i class="fas fa-edit" style="margin-right:10px"></i></a>
+                                <a href="{% url "trade:comment_delete" pk=item.pk cid=replay.pk %}">
+                                    <i class="fas fa-trash-alt" style="margin-right:10px"></i></a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-offset-2 col-xs-10">
+                        <hr>
+                    </div>
+                {% endfor %}
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" action="" method="POST">
+                            {% csrf_token %}
+                              <div class="form-group">
+                                  <div class=" col-xs-12">
+                                    {{ form.message }}
+                                  </div>
+                              </div>
+
+                            <div class="form-group">
+                                <div class="text-right col-xs-12">
+                                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                    <button type="submit" class="btn btn-default"><i class="fas fa-comment-dots"></i> 댓글달기</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {% empty %}
+                <h2 class="text-center"><small>문의가 없습니다</small></h2>
+                {% endfor %}
+
+            </div>
         </div>
-        <div class="col-sm-4">
+
+        <div class="col-md-4">
             <h2>가게 정보</h2>
             <hr>
 
-            <table>
-                <tr>
+            <div class="row" style="padding:10px;">
+                <div class="col-xs-4 vcenter profile-img">
+                    <a href="{% url "store:store_sell_list" item.user.storeprofile.id %}">
+                        <img class="img-rounded img-thumbnail" src="{{ item.user.storeprofile.photo.url }}"/>
+                    </a>
+                </div><div class="col-xs-8 vcenter" style="padding:10px;">
+                    <a href="{% url "store:store_sell_list" item.user.storeprofile.id %}">{{ item.user.profile.nick_name }}</a> <br><br>
+                    물품 {{ item.user.item_set.count }} <small style="padding:8px;"> | </small> 팔로워 {{ follow_ctn }}
+                </div>
+            </div>
+            <hr>
 
+            <div class="row">
+                <div class=" col-xs-12">
+                    <button class="btn btn-warning col-xs-12" onclick="location.href='{% url "mypage:follow_new" item.user.storeprofile.id %}'">
+                        <i class="fas fa-user-plus"></i> 팔로우
+                    </button>
+                </div>
+            </div>
+
+            <table class="table text-center table-borderless" style="margin-top:10px">
+                <tr>
+                {% for it in items %}
+                    <td style="max-height: 200px;">
+                        <a href="{% url "trade:item_detail" it.id %}">
+                            <img class="img-rounded img-thumbnail" style="height:100%; width:auto;" src="{{ it.photo.url }}"/><br>
+                            <h6>{{ it.amount|intcomma }} <small>원</small></h6>
+                        </a>
+                {% empty %}
+                    <td style="max-height: 200px;">
+                        <h6>등록한 물품이 없습니다</h6>
+                        <hr>
+                {% endfor %}
+                    </td>
                 </tr>
             </table>
-            <a href="{% url "store:store_sell_list" item.user.storeprofile.id %}">{{ item.user.profile.nick_name }}</a> <br>
-            가게 팔로워<br>
-            가게 평점 + 후기글 (후기글 더보기)<br>
-            가게 물품 리스트 (물품 더보기)<br>
+
+            {% if items_ctn > 4 %}
+                <div class="row text-center" style="margin-bottom:50px">
+                    <a class="col-xs-12" style="height:40px;" href="{% url "store:store_sell_list" item.user.storeprofile.id %}">
+                        남은 <b style="color:red;">{{ items_ctn|add:"-4" }}개</b> 물품 보러가기
+                        <hr>
+                    </a>
+                </div>
+            {% endif %}
+
+            {% if item.user.storeprofile.storegrade_set.all.count > 0 %}
+                <h4 class="text-center">가게 후기 <b style="color:red;">{{ item.user.storeprofile.storegrade_set.all.count }}개</b></h4>
+                <div class="row" style="margin-top:30px">
+                    {% for grade in item.user.storeprofile.storegrade_set.all|slice:":2" %}
+                        <div class="col-xs-4 profile-img vcenter">
+                            <a href="{% url "store:store_sell_list" grade.author.storeprofile.id %}">
+                                <img class="img-rounded img-thumbnail" src="{{ grade.author.storeprofile.photo.url }}"/>
+                            </a>
+                        </div><div class="col-xs-8 vcenter">
+                            <a href="{% url "store:store_grade" item.user.storeprofile.id %}">
+                                <div class="clearfix">
+                                    <div class="pull-left"><b>{{ grade.author.profile.nick_name }}</b></div>
+                                    <div class="pull-right">{{ grade.updated_at }}</div>
+                                    <br>
+                                    {{ grade.get_rating_display }}<br>
+                                    {{ grade.grade_comment }}
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-xs-offset-4 col-xs-8">
+                            <hr>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center" style="max-height: 200px;">
+                    <h6>작성된 후기가 없습니다</h6>
+                    <hr>
+                </div>
+            {% endif %}
+
+            {% if item.user.storeprofile.storegrade_set.all.count > 2 %}
+                <div class="row text-center">
+                    <a class="col-xs-12" style="height:40px;" href="{% url "store:store_grade" item.user.storeprofile.id %}">
+                        가게 후기 더보기
+                        <hr>
+                    </a>
+                </div>
+            {% endif %}
+
         </div>
     </div>
-    <hr>
 </div>
 
-<div class="container-fluid">
-    <!-- Comments Form -->
-    <h4>댓글을 달아보세요 !</h4>
-    <form action="" method="post">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary" >댓글 달기</button>
-    </form>
-
-    <!-- Comment with nested comments -->
-    {% for comment in comments %}
-        <div class="comment" style="background-color: powderblue">
-            <p class="info">{{ comment.user.profile.nick_name }} | {{ comment.created_at }}
-                <a href="{% url "trade:comment_update" pk=item.pk cid=comment.pk %}">수정</a>
-                <a href="{% url "trade:comment_delete" pk=item.pk cid=comment.pk %}">삭제</a></p>
-                {{ comment.message|linebreaks }}
-
-            {% for replay in comment.replies.all %}
-                <p class="info">{{ replay.user.profile.nick_name }} | {{ replay.created_at }}
-                <a href="{% url "trade:comment_update" pk=item.pk cid=replay.pk %}">수정</a>
-                <a href="{% url "trade:comment_delete" pk=item.pk cid=replay.pk %}">삭제</a></p>
-                <li>{{ replay.message }}</li>
-            {% endfor %}
-
-            <h5>Replay</h5>
-            <form action="." method="post">
-                {{ form.as_p }}
-                {% csrf_token %}
-                <!-- Hidden input for parent comment.id -->
-                <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                <input class="btn btn-primary" type="submit" value="답글 달기">
-            </form>
-        </div>
-    {% empty %}
-    <h4>댓글이 없습니다</h4>
-    {% endfor %}
-</div>
 {% endblock %}

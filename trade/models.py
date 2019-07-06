@@ -44,7 +44,7 @@ class Item(models.Model, HitCountMixin):
     photo = ProcessedImageField(
             blank=True,
             upload_to = 'item_img/{0}'.format(datetime.now().strftime("%Y-%m-%d")),
-            processors = [ResizeToFill(100, 100)], # 처리할 작업 목룍
+            processors = [ResizeToFill(100, 100)],
             format='PNG',
             options = {'quality': 60}
         )
