@@ -32,7 +32,7 @@
                     <a href="{% url "trade:order_confirm" order.id %}">구매 확정</a><br>
                 {% endif %}
                 {% if order.status == 'success' %}
-                    <a href="{% url "store:store_grade_new" store_pk order.item.pk %}">리뷰쓰러가기</a>
+                    <a href="{% url "store:store_grade_new" order.item.user.storeprofile.pk order.item.pk %}">리뷰쓰러가기</a>
                 {% else %}
                     <a href="{% url "trade:order_cancle" order.id %}">주문 취소</a>
                 {% endif %}
