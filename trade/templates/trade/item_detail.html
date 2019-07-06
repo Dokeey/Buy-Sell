@@ -4,73 +4,146 @@
 {% block content %}
 {{ block.super }}
 
-{% if item.pay_status == "ready" %}
-<h2>{{ item.title }}</h2>
 
-{% store_ident item.user.id as store_pk %}
+<ol class="breadcrumb">
 
-<br>
-<a href="{% url "store:store_sell_list" store_pk %}">{{ item.user.profile.nick_name }}</a> <br>
-{{ item.title }} <br>
-{{ item.desc }} <br>
-{{ item.amount }} <br>
-<img src="{{ item.photo.url }}"/><br>
-{{ item.category }} <br>
-{{ item.get_item_status_display }} <br>
-{{ item.created_at }} <br>
-{{ item.updated_at }} <br>
-{% get_hit_count for item %}
+    {% for parent in item.category.get_ancestors %}
+      <li><a href="{% url "category:categories" parent.id %}">{{ parent }}</a></li>
+    {% endfor %}
 
-<br>
-
-<a href="{% url "trade:order_new" item.pk %}?next={{ request.path }}" class="btn btn-primary">구매하기</a><br>
-<a href="{% url "mypage:wishlist_new" item.pk %}" class="btn btn-primary">찜하기</a><br>
-{% else %}
-
-판매중이거나 예약중인 상품입니다 ^^7<br>
-
-{% endif %}
-
-{% if item.user == request.user %}
-    <a href="{% url "trade:item_update" item.pk %}">수정하기</a>
-    <a href="{% url "trade:item_delete" item.pk %}">삭제하기</a>
-{% endif %}
+  <li class="active">{{ item.category }}</li>
+</ol>
 
 
-<!-- Comments Form -->
-<h4>댓글을 달아보세요 !</h4>
-<form action="." method="post">
-    {{ form.as_p }}
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary" >댓글 달기</button>
-</form>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6" style="background:#666666">
+            <img src="{{ item.photo.url }}"/><br>
+        </div>
+        <div class="col-sm-6">
+                {% if item.pay_status == "ready" %}
+            <div class="row" style="padding-left:30px">
+                <h2>{{ item.title }}</h2>
+                <h1>{{ item.amount }}원</h1>
+            </div>
+            <hr/>
 
-<!-- Comment with nested comments -->
-{% for comment in comments %}
-    <div class="comment" style="background-color: powderblue">
-        <p class="info">{{ comment.user.profile.nick_name }} | {{ comment.created_at }}
-            <a href="{% url "trade:comment_update" pk=item.pk cid=comment.pk %}">수정</a>
-            <a href="{% url "trade:comment_delete" pk=item.pk cid=comment.pk %}">삭제</a></p>
-            {{ comment.message|linebreaks }}
+            <table class="table table-borderless">
+                <tr>
+                    <td class="text-center"><i class="fas fa-eye"></i></td><td>{% get_hit_count for item %}</td>
+                </tr>
+                <tr>
+                    <td class="text-center"><i class="far fa-thumbs-up"></i></td><td>{{ item.get_item_status_display }}</td>
+                </tr>
+                <tr>
+                    <td class="text-center"><i class="fas fa-map-marker-alt"></i></td><td>{{ item.user.profile.address }}</td>
+                </tr>
+                <tr>
+                    <td class="text-center"><i class="far fa-clock"></i></td><td>{{ item.updated_at }}</td>
+                </tr>
+            </table>
 
-        {% for replay in comment.replies.all %}
-            <p class="info">{{ replay.user.profile.nick_name }} | {{ replay.created_at }}
-            <a href="{% url "trade:comment_update" pk=item.pk cid=replay.pk %}">수정</a>
-            <a href="{% url "trade:comment_delete" pk=item.pk cid=replay.pk %}">삭제</a></p>
-            <li>{{ replay.message }}</li>
-        {% endfor %}
+            <div class="row" style="padding: 5px;">
+                <div class="col-md-4">
+                    <button class="btn btn-primary col-md-12 col-xs-12" style="margin-bottom:10px;" onclick="location.href='{% url "trade:order_new" item.pk %}?next={{ request.path }}'">
+                        <i class="fa fa-check-circle"></i> 구매하기
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-danger col-md-12 col-xs-12" style="margin-bottom:10px" onclick="location.href='{% url "mypage:wishlist_new" item.pk %}'">
+                        <i class="fab fa-gratipay"></i> 찜 {{ wish_ctn }}
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="location.href='{% url "mypage:wishlist_new" item.pk %}'">
+                        <i class="fas fa-share-alt-square"></i> 공유하기
+                    </button>
+                </div><br>
 
-        <h5>Replay</h5>
-        <form action="." method="post">
-            {{ form.as_p }}
-            {% csrf_token %}
-            <!-- Hidden input for parent comment.id -->
-            <input type="hidden" name="parent_id" value="{{ comment.id }}">
-            <input class="btn btn-primary" type="submit" value="답글 달기">
-        </form>
+                {% else %}
+
+                판매중이거나 예약중인 상품입니다 ^^7<br>
+
+                {% endif %}
+            </div>
+        </div>
     </div>
-{% empty %}
-<h4>There are no comments yet.</h4>
-{% endfor %}
+    <hr>
+</div>
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-8">
+            <h2>상세 정보</h2>
+            <hr>
+            <table class="table table-hover table-borderless">
+                <tr>
+                    <td>{{ item.user.profile.nick_name }}님의 말</td> <td>{{ item.desc }}</td>
+                </tr>
+                <tr>
+                    <td>상태</td> <td>{{ item.get_item_status_display }}</td>
+                </tr>
+                <tr>
+                    <td>거래 지역</td> <td>{{ item.user.profile.address }}</td>
+                </tr>
+                <tr class="danger">
+                    <td>우려의 한마디</td> <td>사기당하지 않도록 조심해주세요!</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-sm-4">
+            <h2>가게 정보</h2>
+            <hr>
+
+            <table>
+                <tr>
+
+                </tr>
+            </table>
+            <a href="{% url "store:store_sell_list" item.user.storeprofile.id %}">{{ item.user.profile.nick_name }}</a> <br>
+            가게 팔로워<br>
+            가게 평점 + 후기글 (후기글 더보기)<br>
+            가게 물품 리스트 (물품 더보기)<br>
+        </div>
+    </div>
+    <hr>
+</div>
+
+<div class="container-fluid">
+    <!-- Comments Form -->
+    <h4>댓글을 달아보세요 !</h4>
+    <form action="" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary" >댓글 달기</button>
+    </form>
+
+    <!-- Comment with nested comments -->
+    {% for comment in comments %}
+        <div class="comment" style="background-color: powderblue">
+            <p class="info">{{ comment.user.profile.nick_name }} | {{ comment.created_at }}
+                <a href="{% url "trade:comment_update" pk=item.pk cid=comment.pk %}">수정</a>
+                <a href="{% url "trade:comment_delete" pk=item.pk cid=comment.pk %}">삭제</a></p>
+                {{ comment.message|linebreaks }}
+
+            {% for replay in comment.replies.all %}
+                <p class="info">{{ replay.user.profile.nick_name }} | {{ replay.created_at }}
+                <a href="{% url "trade:comment_update" pk=item.pk cid=replay.pk %}">수정</a>
+                <a href="{% url "trade:comment_delete" pk=item.pk cid=replay.pk %}">삭제</a></p>
+                <li>{{ replay.message }}</li>
+            {% endfor %}
+
+            <h5>Replay</h5>
+            <form action="." method="post">
+                {{ form.as_p }}
+                {% csrf_token %}
+                <!-- Hidden input for parent comment.id -->
+                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                <input class="btn btn-primary" type="submit" value="답글 달기">
+            </form>
+        </div>
+    {% empty %}
+    <h4>댓글이 없습니다</h4>
+    {% endfor %}
+</div>
 {% endblock %}

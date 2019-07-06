@@ -1,6 +1,7 @@
 appnope==0.1.0
 attrs==19.1.0
 backcall==0.1.0
+beautifulsoup4==4.7.1
 bleach==3.1.0
 certifi==2019.3.9
 chardet==3.0.4
@@ -50,6 +51,7 @@ pyzmq==18.0.1
 requests==2.22.0
 Send2Trash==1.5.0
 six==1.12.0
+soupsieve==1.9.2
 terminado==0.8.2
 testpath==0.4.2
 tornado==6.0.2

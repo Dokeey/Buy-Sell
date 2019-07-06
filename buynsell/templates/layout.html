@@ -9,17 +9,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="{% static "css/theme.css" %}">
-    <title>Buy & Sell</title>
     <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
 
     <link rel="stylesheet" href="{% static "css/all.css" %}">
     <script src="{% static 'js/all.js' %}"></script>
-
-
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
 
+    <title>Buy & Sell</title>
     <style>
         @media (max-width: 768px) {
 
@@ -72,6 +71,20 @@
             margin-bottom: 0px;
             border: 1px solid transparent;
             padding: 15px;
+        }
+        .btn {
+            border:none;
+        }
+        .btn:hover {
+            border:none;
+        }
+        .table-borderless > tbody > tr > td,
+        .table-borderless > tbody > tr > th,
+        .table-borderless > tfoot > tr > td,
+        .table-borderless > tfoot > tr > th,
+        .table-borderless > thead > tr > td,
+        .table-borderless > thead > tr > th {
+            border: none;
         }
       .container {
             <!--background: #666666;-->
@@ -234,11 +247,9 @@
         </div>
 
     <div class="container">
-    <div class="container-fluid" name="content" style="padding: 30px;">
+        <div class="container-fluid" name="content" style="padding: 15px;">
 
-        <div class="row">
-
-            {% if messages %}                            <!-- message 프레임워크 -->
+            {% if messages %}                            <!-- message -->
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
                       {{ message }}
@@ -254,14 +265,11 @@
 
         </div>
     </div>
-    </div>
 
+    <hr/>
     <div class="container">
-        <div class="container-fluid" name="footer">
-            <div class="row">
-                <hr/>
-                &copy; 2019. yejin & donghoo
-            </div>
+        <div class="container-fluid" name="footer" style="padding:15px;">
+            &copy; 2019. yejin & donghoo
         </div>
     </div>
 

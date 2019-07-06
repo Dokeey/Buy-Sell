@@ -30,10 +30,10 @@ def item_block(item):
     created_at = item.created_at.strftime("%Y년 %m월 %d일 %H:%M")
 
     html = """
-        <div class="card" style="height: 450px; width: 20rem;">
+        <div class="card" style="height: 400px; width: 20rem;">
           <a href="{next_link}"><img class="card-img-top" src="{photo_url}" alt="Card image cap">
           <div class="card-body">
-            <h5 class="card-title">{title}</h5>
+            <h5 >{title}</h5>
           </div>
           </a>
           <ul class="list-group list-group-flush">
@@ -42,10 +42,6 @@ def item_block(item):
             <a href={user_link}><li class="list-group-item">{user}</li></a>
             <li class="list-group-item">{updated_at}</li>
           </ul>
-          <div class="card-body">
-            <a href="{wishlist_link}" class="card-link">찜하기</a>
-            <a href="#" class="card-link">공유하기</a>
-          </div>
         </div>
     """.format(hit_count=hit_count,
                title=title,

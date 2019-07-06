@@ -8,12 +8,12 @@
 
     <h2>아이템 목록</h2>
 
-    <h4>
-        <a href="{% url "trade:item_list" %}?query={{ query }}">최신순</a>
-        <a href="{% url "trade:item_list" %}?query={{ query }}&sort=looks">조회순</a>
-        <a href="{% url "trade:item_list" %}?query={{ query }}&sort=hprice">높은가격순</a>
+    <h6 class="text-right">
+        <a href="{% url "trade:item_list" %}?query={{ query }}">최신순</a><small style="padding:8px;"> | </small>
+        <a href="{% url "trade:item_list" %}?query={{ query }}&sort=looks">조회순</a><small style="padding:8px;"> | </small>
+        <a href="{% url "trade:item_list" %}?query={{ query }}&sort=hprice">높은가격순</a><small style="padding:8px;"> | </small>
         <a href="{% url "trade:item_list" %}?query={{ query }}&sort=lprice">낮은가격순</a>
-    </h4>
+    </h6>
     <hr>
 </div>
 

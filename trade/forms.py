@@ -22,17 +22,17 @@ class ItemForm(forms.ModelForm):
         self.fields['title'].label = 'Title'
         self.fields['title'].widget.attrs.update({
             'class': 'form-control col-sm-10',
-            'placeholder': '물품명이 무엇인가요?'
+            'placeholder': '무엇을 파세요?'
         })
         self.fields['desc'].label = 'Desc'
         self.fields['desc'].widget.attrs.update({
             'class': 'form-control col-sm-10',
-            'placeholder': '물품에 대해 설명해주세요'
+            'placeholder': '물품에 대해 설명해주세요',
         })
         self.fields['amount'].label = 'Amount'
         self.fields['amount'].widget.attrs.update({
             'class': 'form-control col-sm-10',
-            'placeholder': '가격이 얼마에요?'
+            'placeholder': '얼마에요?'
         })
         self.fields['photo'].label = 'Photo'
         self.fields['photo'].widget.attrs.update({
@@ -53,6 +53,14 @@ class ItemForm(forms.ModelForm):
 
 
 class ItemUpdateForm(ItemForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ItemUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['pay_status'].label = 'Stock'
+        self.fields['pay_status'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+        })
+
     class Meta:
         model = ItemForm.Meta.model
         fields = ItemForm.Meta.fields + ['pay_status']

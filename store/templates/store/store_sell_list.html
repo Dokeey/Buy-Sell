@@ -13,6 +13,11 @@
 
 {% for item in store_item %}
 
+    {% if item.user == request.user %}
+        <a href="{% url "trade:item_update" item.pk %}">수정하기</a>
+        <a href="{% url "trade:item_delete" item.pk %}">삭제하기</a>
+    {% endif %}
+
     {% item_block item %}
 
 <hr>

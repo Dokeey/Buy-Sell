@@ -2,9 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
-# Create your views here.
-from category.models import Category
-from accounts.models import Profile
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, RedirectView, \
     TemplateView
@@ -12,6 +9,9 @@ from django.views.generic.detail import SingleObjectMixin
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 
+from category.models import Category
+from accounts.models import Profile
+from mypage.models import WishList, Follow
 from .models import Item, ItemComment, Order
 from .forms import ItemForm, ItemUpdateForm, ItemCommentForm, PayForm, OrderForm
 
@@ -148,6 +148,8 @@ class ItemDetail(CreateView):
 
         hit_count = HitCount.objects.get_for_object(context['item'])
         context['hit_count_response'] = HitCountMixin.hit_count(self.request, hit_count)
+
+        context['wish_ctn'] = WishList.objects.filter(item=context['item']).count()
         return context
 
     def form_valid(self, form):
