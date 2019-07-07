@@ -55,10 +55,10 @@
 <ol class="breadcrumb">
 
     {% for parent in item.category.get_ancestors %}
-      <li><a href="{% url "category:categories" parent.id %}">{{ parent }}</a></li>
+      <li><a href="{% url "category:category_item" parent.id %}">{{ parent }}</a></li>
     {% endfor %}
 
-  <li class="active">{{ item.category }}</li>
+  <li class="active"><a style="color:#0fd9a6" href="{% url "category:category_item" item.category.id %}">{{ item.category }}</a></li>
 </ol>
 
 
@@ -113,7 +113,7 @@
                 </div>
                 <div class="col-md-3">
                     <button class="btn col-md-12 col-xs-12" style="background:#e3d91b; color:white;margin-bottom:10px" onclick="javascript:sendLink()">
-                        <i style="color:gray" class="fas fa-comment"></i> 공유하기
+                        <i style="color:#444444" class="fas fa-comment"></i> 공유하기
                     </button>
                 </div>
 
@@ -142,7 +142,7 @@
                 </div>
                 <div class="col-md-3">
                     <button class="btn disabled col-md-12 col-xs-12" style="background:#e3d91b; color:white;margin-bottom:10px">
-                        <i style="color:gray" class="fas fa-comment"></i> 공유하기
+                        <i style="color:#444444" class="fas fa-comment"></i> 공유하기
                     </button>
                 </div>
 

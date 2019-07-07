@@ -49,63 +49,6 @@ class ItemNew(CreateView):
         self.success_url = reverse_lazy('store:store_sell_list', kwargs={'pk': self.kwargs.get(self.pk_url_kwarg)})
         return super().get_success_url()
 
-# def item_list(request):
-#     query = request.GET.get('query', '')
-#     if query:
-#         items = Item.objects.filter(title__icontains=query)
-#     else:
-#         items = Item.objects.all()
-#     return render(request, 'trade/item_list.html', {
-#         'items': items
-#     })
-
-class ItemList(ListView):
-    model = Item
-    template_name = 'trade/item_list.html'
-    context_object_name = 'items'
-    ordering = '-created_at'
-    paginate_by = 20
-
-    def get_queryset(self):
-        self.query = self.request.GET.get('query','')
-        qs = super().get_queryset()
-
-        if self.query:
-            qs = qs.filter(title__icontains=self.query)
-        return qs
-
-    def get_ordering(self):
-        ordering = self.request.GET.get('sort','-created_at')
-
-        if ordering == 'looks':
-            ordering = 'hit_count_generic'
-        elif ordering == 'hprice':
-            ordering = '-amount'
-        elif ordering == 'lprice':
-            ordering = 'amount'
-
-        return ordering
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        paginator = context['paginator']
-        page_numbers_range = 5  # Display only 5 page numbers
-        max_index = len(paginator.page_range)
-
-        page = self.request.GET.get('page')
-        current_page = int(page) if page else 1
-
-        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
-        end_index = start_index + page_numbers_range
-        if end_index >= max_index:
-            end_index = max_index
-
-        page_range = paginator.page_range[start_index:end_index]
-        context['page_range'] = page_range
-        context['sort'] = self.request.GET.get('sort','-created_at')
-        context['query'] = self.query
-        return context
-
 
 # def item_detail(request, pk):
 #     item = get_object_or_404(Item, pk=pk)
@@ -230,7 +173,7 @@ class ItemUpdate(UpdateView):
 class ItemDelete(DeleteView):
     model = Item
     template_name = 'trade/item_delete.html'
-    success_url = reverse_lazy('trade:item_list')
+    success_url = reverse_lazy('mypage:main')
 
 # def comment_update(request, pk, cid):
 #     comment = get_object_or_404(ItemComment, pk=cid)
@@ -381,7 +324,7 @@ class OrderNew(FormView):
 
 
     def get_success_url(self):
-        next_url = self.request.GET.get('next') or 'trade:item_list'  # next get인자가 있으면 넣고 없으면 'profile' 넣기
+        next_url = self.request.GET.get('next') or 'mypage:main'  # next get인자가 있으면 넣고 없으면 'profile' 넣기
         return redirect(next_url)
 
 

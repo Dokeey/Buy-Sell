@@ -1,0 +1,24 @@
+{% extends "category/layout.html" %}
+{% load hitcount_tags %}
+{% load trade_tags %}
+
+{% block cate_content %}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-sm-6 col-xs-12 vcenter">
+            <h2><span style="color:red">{{ query }}</span> 검색결과 <small>{{ item_ctn }}개</small></h2>
+        </div><div class="col-sm-6 col-xs-12 vcenter" style="vertical-align: bottom;">
+            <h6 class="text-right" >
+                <a href="{% url "category:search_item" %}?query={{ query }}">최신순</a><small style="padding:8px;"> | </small>
+                <a href="{% url "category:search_item" %}?query={{ query }}&sort=looks">조회순</a><small style="padding:8px;"> | </small>
+                <a href="{% url "category:search_item" %}?query={{ query }}&sort=hprice">높은가격순</a><small style="padding:8px;"> | </small>
+                <a href="{% url "category:search_item" %}?query={{ query }}&sort=lprice">낮은가격순</a>
+            </h6>
+        </div>
+    </div>
+    <hr>
+</div>
+
+{% endblock %}

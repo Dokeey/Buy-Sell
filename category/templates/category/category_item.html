@@ -1,0 +1,34 @@
+{% extends "category/layout.html" %}
+{% load mptt_tags %}
+{% load hitcount_tags %}
+{% load trade_tags %}
+
+
+{% block cate_content %}
+
+<ol class="breadcrumb">
+
+    {% for parent in parent_category %}
+      <li><a href="{% url "category:category_item" parent.id %}">{{ parent }}</a></li>
+    {% endfor %}
+
+  <li class="active"><a style="color:#0fd9a6" href="{% url "category:category_item" category.id %}">{{ category }}</a></li>
+</ol>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6 col-xs-12 vcenter">
+            <h2>{{ category }} <small>{{ item_ctn }}개</small></h2>
+        </div><div class="col-sm-6 col-xs-12 vcenter" style="vertical-align: bottom;">
+            <h6 class="text-right" >
+                <a href="{% url "category:category_item" category.id %}">최신순</a><small style="padding:8px;"> | </small>
+                <a href="{% url "category:category_item" category.id %}?&sort=looks">조회순</a><small style="padding:8px;"> | </small>
+                <a href="{% url "category:category_item" category.id %}?&sort=hprice">높은가격순</a><small style="padding:8px;"> | </small>
+                <a href="{% url "category:category_item" category.id %}?&sort=lprice">낮은가격순</a>
+            </h6>
+        </div>
+    </div>
+    <hr>
+</div>
+
+{% endblock %}

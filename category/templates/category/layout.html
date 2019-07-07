@@ -1,24 +1,16 @@
-{% extends "trade/layout.html" %}
+{% extends "layout.html" %}
+{% load mptt_tags %}
 {% load hitcount_tags %}
 {% load trade_tags %}
 
+
 {% block content %}
 
+{% block cate_content %}
+{% endblock %}
+
 <div class="container-fluid text-center">
-
-    <h2>아이템 목록</h2>
-
-    <h6 class="text-right">
-        <a href="{% url "trade:item_list" %}?query={{ query }}">최신순</a><small style="padding:8px;"> | </small>
-        <a href="{% url "trade:item_list" %}?query={{ query }}&sort=looks">조회순</a><small style="padding:8px;"> | </small>
-        <a href="{% url "trade:item_list" %}?query={{ query }}&sort=hprice">높은가격순</a><small style="padding:8px;"> | </small>
-        <a href="{% url "trade:item_list" %}?query={{ query }}&sort=lprice">낮은가격순</a>
-    </h6>
-    <hr>
-</div>
-
-<div class="container-fluid ">
-    <div class="row text-center">
+    <div class="row">
     {% for item in items %}
         <div class="col-sm-6 col-md-3">
             {% item_block item %}

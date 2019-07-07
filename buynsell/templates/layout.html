@@ -33,7 +33,7 @@
               padding-top: 43px;
             }
               .category {
-                width: 300px;
+                width: 350px;
                 height: auto;
               }
               .navbar-brand {
@@ -87,6 +87,7 @@
         }
         .btn:hover {
             border:none;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
         }
         .table-borderless > tbody > tr > td,
         .table-borderless > tbody > tr > th,
@@ -103,10 +104,23 @@
         }
         .profile-img { max-width: 150px; max-height: 150px;}
         .profile-img > img {max-height: 100%; width:auto;}
-        .card {
-                margin: 0 auto; /* Added */
-                float: none; /* Added */
-        }
+        .thumbnail {
+           box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+           transition: 0.3s;
+           min-width: 40%;
+           border-radius: 5px;
+         }
+         .thumbnail-description {
+           min-height: 100px;
+         }
+         .thumbnail:hover {
+           cursor: pointer;
+           box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 1);
+         }
+         .pagination {
+           box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+         }
+
       .container {
             <!--background: #666666;-->
       }
@@ -186,7 +200,7 @@
                 <div class="container-fluid">
                     <div class="container-fluid col-sm-3 col-xs-5" name="menu-collaps" >
                         <div class="row"  style=" " >
-                            <a class="navbar-brand" style="color: #0fd9a6" href="{% url "trade:item_list" %}">Buy & Sell</a>
+                            <a class="navbar-brand" style="color: #0fd9a6" href="{% url "category:search_item" %}">Buy & Sell</a>
                         </div>
                     </div>
 
@@ -195,11 +209,11 @@
 
                         <div class="row"  >
 
-                          <form class="navbar-form" action="{% url "trade:item_list" %}" style="left: 50%; transform: translatex(3%); padding-right: 30px;padding-bottom: 1px; padding-top: 1px; border:none" >
+                          <form class="navbar-form" action="{% url "category:search_item" %}" style="left: 50%; transform: translatex(3%); padding-right: 30px;padding-bottom: 1px; padding-top: 1px; border:none" >
                             <div class="input-group">
-                              <input name="query" value="{{ query }}" type="search" size="60" class="form-control" placeholder="어떤 물품을 찾고계세요?">
+                              <input name="query" value="{{ query }}" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);" type="search" size="60" class="form-control" placeholder="어떤 물품을 찾고계세요?">
                               <span class="input-group-btn">
-                                <button class="btn btn-primary" type="submit" style="border:1px solid #0fd9a6;">
+                                <button class="btn btn-primary" type="submit" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);border:1px solid #0fd9a6;">
                                     <i class="fa fa-search"></i>
                                 </button>
                               </span>
@@ -230,10 +244,10 @@
                                         {% recursetree categories %}
                                                <ul class="list-unstyled col-sm-3 col-xs-6" style="height:220px;">
                                                    <hr>
-                                                   <a style="color: #0fd9a6; font-weight: bold;" href="{% url "category:categories" node.id%}"><p>{{ node.name }}</p></a>
+                                                   <a style="color: #0fd9a6; font-weight: bold;" href="{% url "category:category_item" node.id%}"><p>{{ node.name }}</p></a>
                                             {% if not node.is_leaf_node %}
                                                 {% for chil in node.get_children %}
-                                                   <li><a href="{% url "category:categories" chil.id%}">{{ chil }}</a></li>
+                                                   <li><a href="{% url "category:category_item" chil.id%}">{{ chil }}</a></li>
                                                 {% endfor %}
                                             {% endif %}
                                                </ul>
@@ -276,7 +290,7 @@
 
             {% if messages %}                            <!-- message -->
                 {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                    <div class="text-center alert alert-{{ message.tags }} alert-dismissible" role="alert">
                       {{ message }}
                     </div>
                 {% endfor %}
