@@ -291,6 +291,11 @@
         </div>
     </div>
 
+
+    <div style="position:fixed; bottom:30px; right:30px;">
+        <a class="top" href="#"><i class="fas fa-angle-double-up fa-5x" style="color:skyblue"></i></a>
+    </div>
+
     <hr style="border-top: 1px solid #bbbbbb;"/>
     <div class="container">
         <div class="container-fluid" name="footer" style="padding:15px;">
@@ -311,6 +316,31 @@
         header.classList.remove("navbar-fixed-top");
       }
     }
+    </script>
+
+
+    <style>
+      a.top {
+        position: fixed;
+        right: 5%;
+        bottom: 80px;
+        display: none;
+      }
+    </style>
+    <script>
+      $( document ).ready( function() {
+        $( window ).scroll( function() {
+          if ( $( this ).scrollTop() > 200 ) {
+            $( '.top' ).fadeIn();
+          } else {
+            $( '.top' ).fadeOut();
+          }
+        } );
+        $( '.top' ).click( function() {
+          $( 'html, body' ).animate( { scrollTop : 0 }, 400 );
+          return false;
+        } );
+      } );
     </script>
 
 </body>
