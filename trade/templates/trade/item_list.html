@@ -73,4 +73,34 @@
 {% endif %}
 </div>
 
+<div style="position:fixed; bottom:30px; right:30px;">
+    <a class="top" href="#"><i class="fas fa-angle-double-up fa-5x" style="color:skyblue"></i></a>
+</div>
+
+{% endblock %}
+
+{% block extra_content %}
+    <style>
+      a.top {
+        position: fixed;
+        right: 10%;
+        bottom: 150px;
+        display: none;
+      }
+    </style>
+    <script>
+      $( document ).ready( function() {
+        $( window ).scroll( function() {
+          if ( $( this ).scrollTop() > 200 ) {
+            $( '.top' ).fadeIn();
+          } else {
+            $( '.top' ).fadeOut();
+          }
+        } );
+        $( '.top' ).click( function() {
+          $( 'html, body' ).animate( { scrollTop : 0 }, 400 );
+          return false;
+        } );
+      } );
+    </script>
 {% endblock %}
