@@ -1,10 +1,57 @@
 {% extends "trade/layout.html" %}
 {% load humanize %}
 {% load hitcount_tags %}
+
+{% block head %}
+    <meta property="fb:app_id"        content="642307389514788"/>
+    <meta property="og:type"          content="website"/>
+    <meta property="og:url"           content="http://14.36.187.98{{ request.path }}" />
+    <meta property="og:title"         content="{{ item.title }} {{ item.amount|intcomma }}원" />
+    <meta property="og:description"   content="{{ item.desc|default:'-'|linebreaks }}" />
+    <meta property="og:image"         content="http://14.36.187.98{{ item.photo.url }}" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
+
+	<script>
+	function sharefacebook(url) {
+		window.open("http://www.facebook.com/sharer/sharer.php?u=" + url);
+	}
+	</script>
+
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script>
+        Kakao.init('43b0c47e22303f599cf49a0f42e75f86');
+        function sendLink() {
+            Kakao.Link.sendDefault({
+              objectType: 'feed',
+              content: {
+                title: '{{ item.title }} {{ item.amount|intcomma }}원',
+                description: 'Buy & Sell에서 싸게 사자!',
+                imageUrl: 'http://14.36.187.98{{ item.photo.url }}',
+                link: {
+                  webUrl: 'http://14.36.187.98{{ request.path }}',
+                  mobileWebUrl: 'http://14.36.187.98{{ request.path }}'
+                }
+              },
+            social: {
+              viewCount: {% get_hit_count for item %},
+              commentCount: {{ item.itemcomment_set.all.count }},
+              sharedCount: {{ wish_ctn }}
+            },
+              buttons: [
+                {
+                  title: '빨리 사러가자!',
+                  link: {
+                    mobileWebUrl: 'http://14.36.187.98{{ request.path }}',
+                    webUrl: 'http://14.36.187.98{{ request.path }}'
+                  }
+                }
+              ]
+            });
+         }
+    </script>
+{% endblock %}
+
 {% block content %}
-{{ block.super }}
-
-
 <ol class="breadcrumb">
 
     {% for parent in item.category.get_ancestors %}
@@ -17,19 +64,18 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-6 text-center vcenter" style="background:#666666;">
-            <div style="width:100%">
-                <img src="{{ item.photo.url }}"/>
+        <div class="col-sm-6 text-center vcenter" >
+            <div style="background:#999999;">
+                <img style="padding:10px; width:auto;" src="{{ item.photo.url }}"/>
             </div>
         </div><div class="col-sm-6 vcenter">
-                {% if item.pay_status == "ready" %}
             <div class="row" style="padding-left:30px">
                 <h2>{{ item.title }}</h2>
                 <h1>{{ item.amount|intcomma }}<small> 원</small></h1>
             </div>
             <hr/>
 
-            <table class="table table-borderless">
+            <table class="table table-hover table-borderless">
                 <tr>
                     <td class="text-center"><i class="fas fa-eye"></i></td><td>{% get_hit_count for item %}</td>
                 </tr>
@@ -42,28 +88,63 @@
                 <tr>
                     <td class="text-center"><i class="far fa-clock"></i></td><td>{{ item.updated_at }}</td>
                 </tr>
+                {% if item.pay_status == "ready" %}
+                <tr>
+                    <td class="text-center"><i class="far fa-handshake"></i></td>
+                    <td><b style="color:blue;">{{ item.get_pay_status_display }}</b></td>
+                </tr>
             </table>
 
-            <div class="row" style="padding: 5px;">
-                <div class="col-md-4">
+            <div class="row" style="padding: 2px;">
+                <div class="col-md-3">
                     <button class="btn btn-primary col-md-12 col-xs-12" style="margin-bottom:10px;" onclick="location.href='{% url "trade:order_new" item.pk %}?next={{ request.path }}'">
                         <i class="fa fa-check-circle"></i> 구매하기
                     </button>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <button class="btn btn-danger col-md-12 col-xs-12" style="margin-bottom:10px" onclick="location.href='{% url "mypage:wishlist_new" item.pk %}'">
                         <i class="fab fa-gratipay"></i> 찜 {{ wish_ctn }}
                     </button>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="location.href='{% url "mypage:wishlist_new" item.pk %}'">
-                        <i class="fas fa-share-alt-square"></i> 공유하기
+                <div class="col-md-3">
+                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="javascript:sharefacebook('http://14.36.187.98{{ request.path }}')">
+                        <i class="fab fa-facebook-square"></i> 공유하기
                     </button>
-                </div><br>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn col-md-12 col-xs-12" style="background:#e3d91b; color:white;margin-bottom:10px" onclick="javascript:sendLink()">
+                        <i style="color:gray" class="fas fa-comment"></i> 공유하기
+                    </button>
+                </div>
 
                 {% else %}
+                <tr>
+                    <td class="text-center"><i class="far fa-handshake"></i></td>
+                    <td><b style="color:red;">{{ item.get_pay_status_display }}</b></td>
+                </tr>
+            </table>
 
-                판매중이거나 예약중인 상품입니다 ^^7<br>
+            <div class="row" style="padding: 2px;">
+                <div class="col-md-3">
+                    <button class="btn btn-primary disabled col-md-12 col-xs-12" style="margin-bottom:10px;">
+                        <i class="fa fa-check-circle"></i> 구매하기
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-danger disabled col-md-12 col-xs-12" style="margin-bottom:10px">
+                        <i class="fab fa-gratipay"></i> 찜 {{ wish_ctn }}
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-info disabled col-md-12 col-xs-12" style="margin-bottom:10px">
+                        <i class="fab fa-facebook-square"></i> 공유하기
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn disabled col-md-12 col-xs-12" style="background:#e3d91b; color:white;margin-bottom:10px">
+                        <i style="color:gray" class="fas fa-comment"></i> 공유하기
+                    </button>
+                </div>
 
                 {% endif %}
             </div>

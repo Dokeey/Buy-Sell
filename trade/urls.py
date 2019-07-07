@@ -22,4 +22,5 @@ urlpatterns = [
     path('order/confirm/<int:order_id>/', views.OrderConfirm.as_view(), name='order_confirm'),
 
     path('histroy/', views.TradeHistory.as_view(), name='trade_history'),
+    path('test/', views.test, name='test'),
 ]

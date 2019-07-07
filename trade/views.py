@@ -17,6 +17,8 @@ from .forms import ItemForm, ItemUpdateForm, ItemCommentForm, PayForm, OrderForm
 
 from time import time
 
+def test(request):
+    return render(request, 'trade/test.html')
 # @login_required
 # def item_new(request):
 #     if request.method == "POST":

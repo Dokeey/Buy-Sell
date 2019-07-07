@@ -1,41 +1,32 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 
-<html>
-<head>
-  <title>Untitled</title>
-
-  <script>
-
-    function checkmajor(form) {
-      alert("changed");
-    }
-
-    function setMajor(form) {
-
-      var frm = form;
-
-      frm.major.options[0] = new Option(' - 선 택 - ','','','');
-      frm.major.options[1] = new Option('내과','AA005','','');
-      frm.major.options[2] = new Option(' -Internal Medicine(일반내과)','AA010','','');
-      frm.major.options[3] = new Option(' -Allergy(알러지)','AA020','','');
-      frm.major.options[4] = new Option(' -Cardiology(순환기)','AA030','','');
-      frm.major.options[5] = new Option(' -Endocrinology(내분비)','AA040','','');
-    }
-
-  </script>
-</head>
-
-
-<body>
-
-  <form name=form>
-
-    <input type="radio" name="domajor" value="submajor" onClick="setMajor(this.form)">
-
-    <select name="major" onChange="checkmajor(this.form);">
-      <option value="">-선택-</option>
-    </select>
-  </form>
-
-</body>
-</html>
+    <script>
+        Kakao.init('43b0c47e22303f599cf49a0f42e75f86');
+        function sendLink() {
+            Kakao.Link.sendDefault({
+              objectType: 'feed',
+              content: {
+                title: '{{ item.title }} {{ item.amount|intcomma }}원',
+                description: 'Buy & Sell에서 싸게 사자!',
+                imageUrl: 'http://14.36.187.98{{ item.photo.url }}',
+                link: {
+                  webUrl: 'http://14.36.187.98{{ request.path }}',
+                  mobileWebUrl: 'http://14.36.187.98{{ request.path }}'
+                }
+              },
+            social: {
+              likeCount: {% get_hit_count for item %},
+              commentCount: {{ item.itemcomment_set.all.count }},
+              sharedCount: {{ wish_ctn }}
+            },
+              buttons: [
+                {
+                  title: 'Open',
+                  link: {
+                    mobileWebUrl: 'http://14.36.187.98{{ request.path }}',
+                    webUrl: 'http://14.36.187.98{{ request.path }}'
+                  }
+                }
+              ]
+            });
+         }
+    </script>
