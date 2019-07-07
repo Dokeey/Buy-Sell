@@ -64,11 +64,11 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-6 text-center vcenter" >
-            <div style="background:#999999;">
-                <img style="padding:10px; width:auto;" src="{{ item.photo.url }}"/>
+        <div class="col-sm-6 col-xs-12 text-center vcenter">
+            <div class="col-xs-12">
+                <img style="padding:10px; height:100%; background:#999999;" src="{{ item.photo.url }}"/>
             </div>
-        </div><div class="col-sm-6 vcenter">
+        </div><div class="col-sm-6 col-xs-12 vcenter">
             <div class="row" style="padding-left:30px">
                 <h2>{{ item.title }}</h2>
                 <h1>{{ item.amount|intcomma }}<small> 원</small></h1>
@@ -150,133 +150,137 @@
             </div>
         </div>
     </div>
-    <hr>
+    <hr style="border-top: 1px solid #bbbbbb;">
 </div>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
-            <div class="row">
-                <h2>상세 정보</h2>
-                <hr>
-                <table class="table table-hover table-borderless">
-                    <tr>
-                        <td style="min-width:120px">{{ item.user.profile.nick_name }}님의 말</td> <td>{{ item.desc|default:"-"|linebreaks }}</td>
-                    </tr>
-                    <tr>
-                        <td>상태</td> <td>{{ item.get_item_status_display }}</td>
-                    </tr>
-                    <tr>
-                        <td>거래 지역</td> <td>{{ item.user.profile.address }}</td>
-                    </tr>
-                    <tr class="danger">
-                        <td>우려의 한마디</td> <td>사기당하지 않도록 조심해주세요!</td>
-                    </tr>
-                </table>
+        <div class="col-md-8 col-xs-12">
+            <div class="col-xs-12">
+                <div class="row" >
+                    <h2>상세 정보</h2>
+                    <hr style="border-top: 1px solid #bbbbbb;">
+                    <table class="table table-hover table-borderless">
+                        <tr>
+                            <td style="min-width:120px">{{ item.user.profile.nick_name }}님의 말</td> <td>{{ item.desc|default:"-"|linebreaks }}</td>
+                        </tr>
+                        <tr>
+                            <td>상태</td> <td>{{ item.get_item_status_display }}</td>
+                        </tr>
+                        <tr>
+                            <td>거래 지역</td> <td>{{ item.user.profile.address }}</td>
+                        </tr>
+                        <tr class="danger">
+                            <td>우려의 한마디</td> <td>사기당하지 않도록 조심해주세요!</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
 
-            <div class="row">
-            <!-- Comments Form -->
-                <h2>물품 문의 <b style="color:red;">{{ item.itemcomment_set.all.count }}</b></h2>
-                <hr>
+            <div class=" col-xs-12">
+                <div class="row">
+                <!-- Comments Form -->
+                    <h2>물품 문의 <b style="color:red;">{{ item.itemcomment_set.all.count }}</b></h2>
+                    <hr style="border-top: 1px solid #bbbbbb;">
 
-                <!-- Comment with nested comments -->
+                    <!-- Comment with nested comments -->
 
-                <form class="form-horizontal" action="" method="POST">
-                    {% csrf_token %}
-                      <div class="form-group">
-                          <div class=" col-xs-12">
-                            {{ form.message }}
+                    <form class="form-horizontal" action="" method="POST">
+                        {% csrf_token %}
+                          <div class="form-group">
+                              <div class=" col-xs-12">
+                                {{ form.message }}
+                              </div>
                           </div>
-                      </div>
 
-                    <div class="form-group">
-                        <div class="text-right col-xs-12">
-                            <button type="submit" class="btn btn-default"><i class="fas fa-comments"></i> 문의하기</button>
+                        <div class="form-group">
+                            <div class="text-right col-xs-12">
+                                <button type="submit" class="btn btn-default"><i class="fas fa-comments"></i> 문의하기</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    {% for comment in comments %}
+                    <div class="row">
+                        <div class="col-xs-2 profile-img vcenter">
+                            <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
+                                <img class="img-rounded img-thumbnail" src="{{ comment.user.storeprofile.photo.url }}"/>
+                            </a>
+                        </div><div class="col-xs-10 clearfix vcenter" style="padding:10px;">
+                            <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
+                                <div class="pull-left" ><b class="info">{{ comment.user.profile.nick_name }}</b></div>
+                            </a>
+                            <div class="pull-right">{{ comment.updated_at }}</div>
+                            <br><div style="padding-top:10px">{{ comment.message|linebreaks }}</div>
+                            {% if comment.user == request.user %}
+                                <div class="text-right">
+                                    <a href="{% url "trade:comment_update" pk=item.pk cid=comment.pk %}">
+                                        <i class="fas fa-edit" style="margin-right:10px"></i></a>
+                                    <a href="{% url "trade:comment_delete" pk=item.pk cid=comment.pk %}">
+                                        <i class="fas fa-trash-alt" style="margin-right:10px"></i></a>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-offset-2 col-xs-10">
+                            <hr>
                         </div>
                     </div>
-                </form>
 
-                {% for comment in comments %}
-                <div class="row">
-                    <div class="col-xs-2 profile-img vcenter">
-                        <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
-                            <img class="img-rounded img-thumbnail" src="{{ comment.user.storeprofile.photo.url }}"/>
-                        </a>
-                    </div><div class="col-xs-10 clearfix vcenter" style="padding:10px;">
-                        <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
-                            <div class="pull-left" ><b class="info">{{ comment.user.profile.nick_name }}</b></div>
-                        </a>
-                        <div class="pull-right">{{ comment.updated_at }}</div>
-                        <br><div style="padding-top:10px">{{ comment.message|linebreaks }}</div>
-                        {% if comment.user == request.user %}
-                            <div class="text-right">
-                                <a href="{% url "trade:comment_update" pk=item.pk cid=comment.pk %}">
-                                    <i class="fas fa-edit" style="margin-right:10px"></i></a>
-                                <a href="{% url "trade:comment_delete" pk=item.pk cid=comment.pk %}">
-                                    <i class="fas fa-trash-alt" style="margin-right:10px"></i></a>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="col-xs-offset-2 col-xs-10">
-                        <hr>
-                    </div>
-                </div>
-
-                <div class="row col-xs-offset-2">
-                    {% for replay in comment.replies.all|dictsort:"created_at" %}
-                    <div class="col-xs-2 profile-img vcenter">
-                        <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
-                            <img class="img-rounded img-thumbnail" src="{{ replay.user.storeprofile.photo.url }}"/>
-                        </a>
-                    </div><div class="col-xs-10 clearfix vcenter" style="padding:10px;">
-                        <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
-                            <div class="pull-left"><b class="info">{{ replay.user.profile.nick_name }}</b></div>
-                        </a>
-                        <div class="pull-right">{{ replay.updated_at }}</div>
-                        <br><div style="padding-top:10px;">{{ replay.message }}</div>
-                        {% if replay.user == request.user %}
-                            <div class="text-right">
-                                <a href="{% url "trade:comment_update" pk=item.pk cid=replay.pk %}">
-                                    <i class="fas fa-edit" style="margin-right:10px"></i></a>
-                                <a href="{% url "trade:comment_delete" pk=item.pk cid=replay.pk %}">
-                                    <i class="fas fa-trash-alt" style="margin-right:10px"></i></a>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <div class="col-xs-offset-2 col-xs-10">
-                        <hr>
-                    </div>
-                {% endfor %}
-                    <div class="col-xs-12">
-                        <form class="form-horizontal" action="" method="POST">
-                            {% csrf_token %}
-                              <div class="form-group">
-                                  <div class=" col-xs-12">
-                                    {{ form.message }}
-                                  </div>
-                              </div>
-
-                            <div class="form-group">
-                                <div class="text-right col-xs-12">
-                                    <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                                    <button type="submit" class="btn btn-default"><i class="fas fa-comment-dots"></i> 댓글달기</button>
+                    <div class="row col-xs-offset-2">
+                        {% for replay in comment.replies.all|dictsort:"created_at" %}
+                        <div class="col-xs-2 profile-img vcenter">
+                            <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
+                                <img class="img-rounded img-thumbnail" src="{{ replay.user.storeprofile.photo.url }}"/>
+                            </a>
+                        </div><div class="col-xs-10 clearfix vcenter" style="padding:10px;">
+                            <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
+                                <div class="pull-left"><b class="info">{{ replay.user.profile.nick_name }}</b></div>
+                            </a>
+                            <div class="pull-right">{{ replay.updated_at }}</div>
+                            <br><div style="padding-top:10px;">{{ replay.message }}</div>
+                            {% if replay.user == request.user %}
+                                <div class="text-right">
+                                    <a href="{% url "trade:comment_update" pk=item.pk cid=replay.pk %}">
+                                        <i class="fas fa-edit" style="margin-right:10px"></i></a>
+                                    <a href="{% url "trade:comment_delete" pk=item.pk cid=replay.pk %}">
+                                        <i class="fas fa-trash-alt" style="margin-right:10px"></i></a>
                                 </div>
-                            </div>
-                        </form>
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-offset-2 col-xs-10">
+                            <hr>
+                        </div>
+                    {% endfor %}
+                        <div class="col-xs-12">
+                            <form class="form-horizontal" action="" method="POST">
+                                {% csrf_token %}
+                                  <div class="form-group">
+                                      <div class=" col-xs-12">
+                                        {{ form.message }}
+                                      </div>
+                                  </div>
+
+                                <div class="form-group">
+                                    <div class="text-right col-xs-12">
+                                        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                        <button type="submit" class="btn btn-default"><i class="fas fa-comment-dots"></i> 댓글달기</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
+                    {% empty %}
+                    <h2 class="text-center"><small>문의가 없습니다</small></h2>
+                    {% endfor %}
+
                 </div>
-
-                {% empty %}
-                <h2 class="text-center"><small>문의가 없습니다</small></h2>
-                {% endfor %}
-
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 col-xs-12">
             <h2>가게 정보</h2>
-            <hr>
+            <hr style="border-top: 1px solid #bbbbbb;">
 
             <div class="row" style="padding:10px;">
                 <div class="col-xs-4 vcenter profile-img">

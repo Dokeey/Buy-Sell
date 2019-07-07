@@ -32,6 +32,13 @@
             .navbar-fixed-top + .content {
               padding-top: 43px;
             }
+              .category {
+                width: 300px;
+                height: auto;
+              }
+              .navbar-brand {
+                font-size: 20px;
+              }
         }
         @media (min-width: 768px) {
           .container {
@@ -51,6 +58,9 @@
             .navbar-fixed-top + .content {
               padding-top: 74px;
             }
+          .category {
+            width: 600px;
+          }
         }
         @media (min-width: 992px) {
           .container {
@@ -93,7 +103,10 @@
         }
         .profile-img { max-width: 150px; max-height: 150px;}
         .profile-img > img {max-height: 100%; width:auto;}
-
+        .card {
+                margin: 0 auto; /* Added */
+                float: none; /* Added */
+        }
       .container {
             <!--background: #666666;-->
       }
@@ -169,7 +182,7 @@
                       </div>
             </nav>
 
-            <nav class="navbar navbar-default header" id="myHeader" style="border-bottom: 1px solid #dddddd; ">
+            <nav class="navbar navbar-default header" id="myHeader" style="border-bottom: 1px solid #bbbbbb; ">
                 <div class="container-fluid">
                     <div class="container-fluid col-sm-3 col-xs-5" name="menu-collaps" >
                         <div class="row"  style=" " >
@@ -182,11 +195,11 @@
 
                         <div class="row"  >
 
-                          <form class="navbar-form" action="{% url "trade:item_list" %}" style="left: 50%; transform: translatex(3%); padding-right: 30px;padding-bottom: 1px; padding-top: 1px; border:0" >
+                          <form class="navbar-form" action="{% url "trade:item_list" %}" style="left: 50%; transform: translatex(3%); padding-right: 30px;padding-bottom: 1px; padding-top: 1px; border:none" >
                             <div class="input-group">
                               <input name="query" value="{{ query }}" type="search" size="60" class="form-control" placeholder="어떤 물품을 찾고계세요?">
                               <span class="input-group-btn">
-                                <button class="btn btn-primary" type="submit">
+                                <button class="btn btn-primary" type="submit" style="border:1px solid #0fd9a6;">
                                     <i class="fa fa-search"></i>
                                 </button>
                               </span>
@@ -198,7 +211,7 @@
                 </div>
             </nav>
 
-            <nav class="nav navbar-default content" style="padding-left: 30px; padding-right: 30px;">
+            <nav class="nav navbar-default content" style="padding-left: 30px; padding-right: 30px; border-bottom:1px solid #bbbbbb;">
                 <div class="container-fluid " style="margin-left: 0px; margin-right: 0px;">
                       <div class="collapse navbar-collapse" id="navbar-collapse-2">
 
@@ -213,9 +226,10 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-bars"></i> 전체 카테고리</a>
                                   <ul class="dropdown-menu">
-                                     <div class="row" style="width:600px; padding:10px; padding-left:15px;">
+                                     <div class="row category" style="padding:10px; padding-left:15px;">
                                         {% recursetree categories %}
-                                               <ul class="list-unstyled col-sm-3 col-xs-6" style="height:200px;">
+                                               <ul class="list-unstyled col-sm-3 col-xs-6" style="height:220px;">
+                                                   <hr>
                                                    <a style="color: #0fd9a6; font-weight: bold;" href="{% url "category:categories" node.id%}"><p>{{ node.name }}</p></a>
                                             {% if not node.is_leaf_node %}
                                                 {% for chil in node.get_children %}
@@ -234,9 +248,11 @@
 
                             <ul class="nav navbar-nav navbar-right" style="backgorund: white;">
                                 <li><a style="color: #0fd9a6;" href="{% url "trade:item_new" %}"><b>나도 물건팔기</b></a></li>
+
                                 {% if user.is_authenticated %}
                                 <li><a href="{% url "store:store_sell_list" pk=request.user.storeprofile.pk %}">내 가게</a></li>
                                 {% endif %}
+
                                 <li class="dropdown">
                                   <a href="{% url "customer:customer" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">고객센터 <span class="caret"></span></a>
                                   <ul class="dropdown-menu">
@@ -275,7 +291,7 @@
         </div>
     </div>
 
-    <hr/>
+    <hr style="border-top: 1px solid #bbbbbb;"/>
     <div class="container">
         <div class="container-fluid" name="footer" style="padding:15px;">
             &copy; 2019. yejin & donghoo
