@@ -20,7 +20,7 @@ class StoreProfile(models.Model, HitCountMixin):
         null=True,
         default=get_random,
         upload_to='profile/storephoto',
-
+        processors=[ResizeToFill(200, 200)],
         format='PNG',
         options={'quality': 60}
 
@@ -57,7 +57,6 @@ class StoreGrade(models.Model):
     grade_comment = models.TextField(max_length=250)
     rating = models.PositiveIntegerField(
         choices=(
-            (0, '☆☆☆☆☆'),
             (1, '★☆☆☆☆'),
             (2, '★★☆☆☆'),
             (3, '★★★☆☆'),

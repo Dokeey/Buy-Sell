@@ -1,78 +1,164 @@
 {% extends "store/layout.html" %}
 
+{% block store_head %}
+<style>
+.bubble
+{
+position: relative;
+width: 100%;
+height: 120px;
+padding: 5px;
+background: #FFFFFF;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+border: #FFFFFF solid 2px;
+}
+
+.bubble:after
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 16px 17px 16px 0;
+border-color: transparent #FFFFFF;
+display: block;
+width: 0;
+z-index: 1;
+left: -17px;
+top: 33px;
+
+}
+
+.imggrid{
+    max-height: 200px;
+    max-width: 200px;
+}
+img{
+    max-height: 100px;
+    max-width: 100px;
+}
+ .block {
+  display: block;
+  width: 50%;
+  height: 120px;
+  border: none;
+  background-color: #4CAF50;
+  padding: 30px 30px;
+
+  cursor: pointer;
+  text-align: center;
+}
+</style>
+
+{% endblock %}
+
+he
+
 {% block store_content %}
 
 <div>
-  <ul class="nav nav-tabs" role="tablist">
+  <ul class="nav nav-tabs nav-justified" role="tablist">
     <li role="presentation" ><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
     <li role="presentation"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>
     <li role="presentation" class="active"><a href="{% url "store:store_question" stores.pk %}" aria-controls="messages" role="tab" >가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span></a></li>
-
-
   </ul>
-
 </div><br/>
 
 {% if request.user.pk != stores.user.pk %}
-<form action="" method="POST">
-     {% csrf_token %}
+    <form action="" method="POST">
+         {% csrf_token %}
+<div class="well">
+    <div class="row">
+        <div class="col-md-3 col-xs-10 imggrid" align="center">
+            <img src="{{ request.user.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
+        </div>
+        <div class="col-md-6 col-xs-10" >
+            {{ form.comment }}
+        </div>
+        <div class="col-md-3 col-xs-2" >
+            <input type="submit" class="btn btn-default block" value="등록">
+        </div>
+    </div>
+</div>
 
-     {{ form.comment }}
-    <input type="submit" value="등록">
+    </form>
 {% endif %}
 
-</form>
+ <hr/>
 
 {% for comm in comms %}
+    <div class="well">
+    <div class="row">
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            {{ comm.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{{ comm.created_at | date:"M d일, y년" }}
-            <div align="right" style="display: inline;float: right;" >
-            {% if request.user.pk == comm.author.pk %}
-              <a href="{% url "store:store_question_edit" pk=stores.pk cid=comm.pk  %}">수정</a> /
-              <a href="{% url "store:store_question_del" pk=stores.pk cid=comm.pk  %}">삭제</a>
-              {% endif %}
+        <div class="col-md-2 col-xs-10 imggrid" align="center">
+             <img src="{{ comm.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
+        </div>
+
+        <div class="col-md-8 col-xs-10">
+            <div class="bubble" >
+                {{ comm.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{{ comm.created_at | date:"M d일, y년" }}
+                <div align="right" style="display: inline;float: right;" >
+                {% if request.user.pk == comm.author.pk %}
+                  <a href="{% url "store:store_question_edit" pk=stores.pk cid=comm.pk  %}">수정</a> /
+                  <a href="{% url "store:store_question_del" pk=stores.pk cid=comm.pk  %}">삭제</a>
+                  {% endif %}
+                </div>
+                <hr/>
+                <div style=" overflow:scroll; height:70px;" > {{ comm.comment | linebreaks }}</div>
+
             </div>
         </div>
-      <div class="panel-body">
-        {{ comm.comment | linebreaks }}
-          <br/>
-
-      </div>
+    </div>
 
     {% for replay in comm.replies.all %}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            {{ replay.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{{ replay.created_at | date:"M d일, y년" }}
-            <div align="right" style="display: inline;float: right;" >
-            {% if request.user.pk == replay.author.pk %}
-              <a href="{% url "store:store_question_edit" pk=stores.pk cid=replay.pk  %}">수정</a> /
-              <a href="{% url "store:store_question_del" pk=stores.pk cid=replay.pk  %}">삭제</a>
-              {% endif %}
+        <br/>
+        <div class="row">
+            <div class="col-md-1 col-xs-1" align="right"><i class="fas fa-reply fa-rotate-180"></i></i></div>
+            <div class="col-md-2 com-xs-10 imggrid" align="center">
+                <img src="{{ replay.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
+            </div>
+
+            <div class="col-md-8 com-xs-10">
+                <div class="bubble" >
+                    {{ replay.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{{ replay.created_at | date:"M d일, y년" }}
+                    <div align="right" style="display: inline;float: right;" >
+                     {% if request.user.pk == replay.author.pk %}
+                      <a href="{% url "store:store_question_edit" pk=stores.pk cid=replay.pk  %}">수정</a> /
+                      <a href="{% url "store:store_question_del" pk=stores.pk cid=replay.pk  %}">삭제</a>
+                      {% endif %}
+                    </div>
+                    <hr/>
+                    <div style=" overflow:scroll; height:70px;" >{{ replay.comment | linebreaks }}</div>
+                </div>
             </div>
         </div>
-      <div class="panel-body">
-        {{ replay.comment | linebreaks }}
-          <br/>
-
-      </div>
-    </div>
     {% endfor %}
-    {% if request.user.pk == stores.user.pk %}
-        <h5>Replay</h5>
 
-        <form action="." method="post">
-            {% csrf_token %}
-            {{ form.as_table }}
-            <input type="hidden" name="parent_id" value="{{ comm.id }}">
-            <input type="submit" value="등록하기">
+    {% if request.user.pk == stores.user.pk %}
+        <br/>
+        <form action="" method="POST">
+             {% csrf_token %}
+            <div class="row">
+                <div class="col-md-1 col-xs-2" align="right"><i class="fas fa-reply fa-rotate-180"></i></div>
+                <div class="col-md-2 col-xs-10 imggrid" align="center">
+                    <img src="{{ request.user.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
+                </div>
+                <div class="col-md-6 col-xs-10">
+                    {{ form.comment }}
+
+                    <input type="hidden" name="parent_id" value="{{ comm.id }}">
+                </div>
+                <div class="col-md-3 col-xs-2">
+                    <input type="submit" class="btn btn-default block" value="등록">
+                </div>
+            </div>
         </form>
 
     {% endif %}
     </div>
-
     {% empty %}
     <h4>There are no comments yet.</h4>
 {% endfor %}
+
 {% endblock %}

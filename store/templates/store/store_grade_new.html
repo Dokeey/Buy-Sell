@@ -1,21 +1,23 @@
 {% extends "layout.html" %}
 
 {% block content %}
-
+<center>
 <h2>구매 정보</h2>
-{{ grades.pk }}
-{{ items.title}}<br>
-{{ items.amount }}<br>
-<img src="{{ items.photo.url }}"/>
+판매자: {{ object.store_profile.name }}<br/>
+상품명: {{ object.store_item.title }}<br>
+
+<img src="{{ object.store_item.photo.url }}"/><br>
+</center>
 
 <hr/>
 <form action="" method="POST" enctype="multipart/form-data">
+     <div class="well">
      {% csrf_token %}
-    <table>
-        {{ form.as_table }}
+         <h3>상품 {{ object.store_item.title }}의 거래는 어떠셨나요? {{ form.rating }}</h3>
+        {{ form.grade_comment }}
 
-    </table>
     <input type="submit" value="등록하기">
+     </div>
 </form>
 
 {% endblock content %}

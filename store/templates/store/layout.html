@@ -4,26 +4,9 @@
 
 
 {% block head %}
-    <style>
 
-        .imggrid {
-            position: relative;
-            -webkit-filter:blur(3px);
-            -moz-filter:blur(3px);
-            -o-filter:blur(3px);
-            -ms-filter:blur(3px);
-            filter:blur(3px);
-            height:300px;
-            width: 100%;
-            background-image:url("{{ stores.photo.url }}");
-            text-align: center;
-        }
-         img {
-            height: 150px;
-            width: 150px;
-        }
-
-    </style>
+{% block store_head %}
+{% endblock %}
 {% endblock %}
 
 
@@ -34,21 +17,21 @@
 
     <div class="row">
 
-        <div class="col-md-4 col-xs-4"  >
-           <div class="imggrid">
-           <img src="{{ stores.photo.url }}" class="img-responsive img-thumbnail" alt="가게 프로필 사진" />
-           </div>
+        <div class="col-md-4 col-xs-12"  >
+
+           <img src="{{ stores.photo.url }}" width="200px" height="200px"  class="img-responsive img-thumbnail" alt="가게 프로필 사진" />
+
         </div>
 
-        <div class="col-md-8 col-xs-8">
+        <div class="col-md-8 col-xs-12">
 
             <div class="row">
-                <div class="col-md-10 col-xs-4">
+                <div class="col-md-10 col-xs-12">
                 <h3> <i class="fas fa-store" style="color:red"></i>{{ stores.name }} </h3>
                 </div>
-                <div class="col-md-2 col-xs-2">
+                <div class="col-md-2 col-xs-12">
                     <div align="right">
-                    <button type="button" class="btn btn-primary btn-sm" style="margin:15px" onclick = "location.href = '{% url "mypage:follow_new" stores.pk %}' ">
+                    <button type="button" class="btn btn-warning btn-sm" style="margin:15px" onclick = "location.href = '{% url "mypage:follow_new" stores.pk %}' ">
                         <i class="fas fa-user-plus" style="color:white"></i> 팔로잉
                     </button>
                     </div>
@@ -90,22 +73,43 @@
             {% if user.is_authenticated and request.user.pk == stores.user.pk %}
                  <a href="{% url "store:store_profile_edit" %}"><i class="fas fa-user-edit" ></i>가게 프로필 수정</a>
             {% endif %}
-        <i class="far fa-handshake" style="color:green" ></i>평점 :
+
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-xs-4">
+                    <i class="far fa-handshake" style="color:green" ></i>평점 :
 
                         {% if stores.storegrade_set.all.count == 0 %}
                             평점이 없습니다.
                         {% else %}
-                            {{ end }} /5
-                        {% endif %}
+                            {{ end }}
+                            {% if end == 0 %}
+                            <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                            {% elif end < 1.5 %}
+                            <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                            {% elif end < 2.0 %}
+                            <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                            {% elif end < 2.5 %}
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                            {% elif end < 3.0 %}
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                            {% elif end < 3.5 %}
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                            {% elif end < 4.0 %}
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+                            {% elif end < 4.5 %}
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                            {% elif end < 5.0 %}
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            {% elif end == 5.0 %}
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            {% endif %}
+                            {% endif %}
         </div>
     </div>
-    <br/>
-
-<div class="row">
-
     {% block store_content %}
     {% endblock %}
-
-</div>
 
 {% endblock %}

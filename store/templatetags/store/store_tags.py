@@ -9,7 +9,7 @@ register = template.Library()
 
 @register.simple_tag
 def store_rating(pk):
-    stores = get_object_or_404(StoreProfile, pk=1)
+    stores = get_object_or_404(StoreProfile, pk=pk)
     grades = StoreGrade.objects.filter(store_profile_id=stores.pk)
     rates = grades.count()
     if rates:
@@ -32,3 +32,15 @@ def store_sell_list(pk):
     order = len(items)
 
     return order
+
+@register.simple_tag
+def store_rating_percent(pk,ra):
+    #그평점/전체
+    grades = StoreGrade.objects.filter(store_profile_id=pk)
+    rates = grades.count()
+    part_rates = grades.filter(rating=ra).count()
+    if part_rates:
+        rate= round(((part_rates/rates)*100),1)
+    else:
+        rate = 0
+    return rate
