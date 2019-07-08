@@ -37,6 +37,8 @@ class ItemForm(forms.ModelForm):
         self.fields['photo'].label = '사진'
         self.fields['photo'].widget.attrs.update({
             'class': 'form-control col-sm-10',
+            'multiple': 'multiple',
+            'style' : 'display: none;'
         })
         self.fields['category'].label = '종류'
         self.fields['category'].widget.attrs.update({

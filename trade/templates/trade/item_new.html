@@ -1,8 +1,25 @@
 {% extends "mypage/layout.html" %}
 
 {% block mypage_content %}
-
-<form class="form-horizontal" name="forms" action="" method="POST" enctype="multipart/form-data">
+<style>
+    .img-upload {
+      display: inline-block;
+      padding: .5em .75em;
+      color: #fff;
+      font-size: inherit;
+      line-height: normal;
+      vertical-align: middle;
+      background-color: gray;
+      cursor: pointer;
+      border: none;
+      border-bottom-color: #e2e2e2;
+      border-radius: .25em;
+    }
+    .img-upload:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+    }
+</style>
+<form class="form-horizontal" id="uploadForm" name="forms" action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
         <div class="form-group">
@@ -12,30 +29,39 @@
         </div>
     </div>
       <div class="form-group">
+        <label class="col-sm-1 control-label">{{ form.photo.label }}</label>
+          <div class=" col-sm-11 crearfix">
+              <small class="img-help text-right"></small>
+              <div id="dropZone" class="well text-muted text-center col-xs-12" style="padding-top: 4rem; padding-bottom: 4rem; background:#dddddd;">
+                  <div class="fileList"></div>
+                  <div id="upload_help">
+                      <i class="fas fa-upload fa-5x"></i>
+                      <h3>Drop The 사진!</h3>
+                  </div>
+              </div>
+              <div class="pull-right">
+                  <label for="{{ form.photo.id_for_label }}" class="img-upload control-label">
+                      <i class="fas fa-upload"></i> 버튼으로 첨부
+                  </label>
+              </div>
+              <div>
+                <p class="help-block">사진을 빼려면 사진을 클릭하세요 :)</p>
+              </div>
+            {{ form.photo }}
+          </div>
+      </div>
+      <div class="form-group">
         <label for="{{ form.title.id_for_label }}" class="col-sm-1 control-label">{{ form.title.label }}</label>
           <div class=" col-sm-11">
             {{ form.title }}
           </div>
       </div>
         <div class="form-group">
-            <label for="{{ form.desc.id_for_label }}" class="col-sm-1 control-label">{{ form.desc.label }}</label>
-          <div class=" col-sm-11">
-            {{ form.desc }}
-          </div>
-        </div>
-        <div class="form-group">
             <label for="{{ form.amount.id_for_label }}" class="col-sm-1 control-label">{{ form.amount.label }}</label>
           <div class=" col-sm-11">
             {{ form.amount }}
           </div>
         </div>
-      <div class="form-group">
-        <label for="{{ form.photo.id_for_label }}" class="col-sm-1 control-label">{{ form.photo.label }}</label>
-          <div class=" col-sm-11">
-            {{ form.photo }}
-            <p class="help-block">유용한 정보일수록 거래가 수월할 수 있습니다 :)</p>
-          </div>
-      </div>
       <div class="form-group">
           <label for="{{ form.category.id_for_label }}" class="col-sm-1 control-label">{{ form.category.label }}</label>
           <div class=" col-sm-11">
@@ -48,6 +74,12 @@
               {{ form.item_status }}
           </div>
       </div>
+        <div class="form-group">
+            <label for="{{ form.desc.id_for_label }}" class="col-sm-1 control-label">{{ form.desc.label }}</label>
+          <div class=" col-sm-11">
+            {{ form.desc }}
+          </div>
+        </div>
       <div class="form-group">
           <label for="{{ form.pay_status.id_for_label }}" class="col-sm-1 control-label">{{ form.pay_status.label }}</label>
           <div class=" col-sm-11">
@@ -56,8 +88,239 @@
       </div>
         <div class="form-group">
             <div class="col-sm-11 col-sm-offset-1">
-                <input type="submit" class="btn btn-primary" value="등록하기">
+                <button class="btn btn-primary" onclick="uploadFile(); return false;">등록하기</button>
             </div>
         </div>
 </form>
+{% endblock %}
+
+{% block extra_content %}
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+
+    // 파일 리스트 번호
+    var fileIndex = 0;
+    // 등록할 전체 파일 사이즈
+    var totalFileSize = 0;
+    // 파일 리스트
+    var fileList = new Array();
+    // 파일 사이즈 리스트
+    var fileSizeList = new Array();
+    // 등록 가능한 파일 사이즈 MB
+    var uploadSize = 1;
+    // 등록 가능한 총 파일 사이즈 MB
+    var maxUploadSize = 5;
+    // 등록 가능한 총 파일 개수
+    var maxUploadLength = 5;
+
+    $(function (){
+        // 파일 드롭 다운
+        fileDropDown();
+    });
+
+    // 파일 드롭 다운
+    function fileDropDown(){
+        var dropZone = $("#dropZone");
+        //Drag기능
+        dropZone.on('dragenter',function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            // 드롭다운 영역 css
+            dropZone.css('background-color','#E3F2FC');
+        });
+        dropZone.on('dragleave',function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            // 드롭다운 영역 css
+            dropZone.css('background-color','#FFFFFF');
+        });
+        dropZone.on('dragover',function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            // 드롭다운 영역 css
+            dropZone.css('background-color','#E3F2FC');
+        });
+        dropZone.on('drop',function(e){
+            e.preventDefault();
+            // 드롭다운 영역 css
+            dropZone.css('background-color','#FFFFFF');
+
+            var files = e.originalEvent.dataTransfer.files;
+            if(files != null){
+                if(files.length < 1){
+                    alert("폴더 업로드 불가");
+                    return;
+                }
+                selectFile(files)
+            }else{
+                alert("ERROR");
+            }
+        });
+    }
+
+    $('#{{ form.photo.id_for_label }}').change(function(){
+        const target = document.getElementsByName('{{ form.photo.name }}');
+        selectFile(target[0].files)
+    });
+
+    // 파일 선택시
+    function selectFile(fileObject){
+        var files = null;
+
+        if(fileObject != null){
+            // 파일 Drag 이용하여 등록시
+            files = fileObject;
+        }else{
+            // 직접 파일 등록시
+            files = $('#{{ form.photo.id_for_label }}' + fileIndex)[0].files;
+        }
+
+        // 다중파일 등록
+        if(files != null){
+            for(var i = 0; i < files.length; i++){
+                // 파일 이름
+                var fileName = files[i].name;
+                var fileNameArr = fileName.split("\.");
+                // 확장자
+                var ext = fileNameArr[fileNameArr.length - 1];
+                // 파일 사이즈(단위 :MB)
+                var fileSize = files[i].size / 1024 / 1024;
+
+                if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
+                    // 확장자 체크
+                    alert("등록 불가 확장자");
+                    break;
+                }else if(fileSize > uploadSize){
+                    // 파일 사이즈 체크
+                    alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
+                    break;
+                }else{
+                    // 전체 파일 사이즈
+                    totalFileSize += fileSize;
+
+                    // 파일 배열에 넣기
+                    fileList[fileIndex] = files[i];
+
+                    // 파일 사이즈 배열에 넣기
+                    fileSizeList[fileIndex] = fileSize;
+
+                    // 업로드 파일 목록 생성
+                    addFileList(fileIndex, fileName, fileSize, files[i]);
+
+                    // 파일 번호 증가
+                    fileIndex++;
+                }
+            }
+        }else{
+            alert("ERROR");
+        }
+
+
+        var html = "";
+        html += '개수: <b>' + Object.keys(fileList).length + '</b> / ' + maxUploadLength + ' &nbsp&nbsp';
+        html += '용량: <b>' + totalFileSize.toFixed(2) + '</b> / ' + maxUploadSize + ' MB';
+
+        $('.img-help').html(html);
+    }
+
+    // 업로드 파일 목록 생성
+    function addFileList(fIndex, fileName, fileSize, file){
+        var html = "";
+        html += '<div id="fileTr_' + fIndex + '" class="file col-xs-2" style="padding-bottom:10px">';
+        html += '<img class="img-rounded" style="cursor: pointer;border: 1px solid #dddddd" onclick="deleteFile(' + fIndex + '); return false;" width="70px" height="70px" src="'+URL.createObjectURL(file)+'">'
+        html += '</div>';
+
+        $('.fileList').prepend(html);
+        $("#upload_help").empty();
+    }
+
+    // 업로드 파일 삭제
+    function deleteFile(fIndex){
+        // 전체 파일 사이즈 수정
+        totalFileSize -= fileSizeList[fIndex];
+
+        // 파일 배열에서 삭제
+        delete fileList[fIndex];
+
+        // 파일 사이즈 배열 삭제
+        delete fileSizeList[fIndex];
+
+        // 업로드 파일 테이블 목록에서 삭제
+        $("#fileTr_" + fIndex).remove();
+
+        var html = "";
+        html += '개수: <b>' + Object.keys(fileList).length + '</b> / ' + maxUploadLength + ' &nbsp&nbsp';
+        html += '용량: <b>' + totalFileSize.toFixed(2) + '</b> / ' + maxUploadSize + ' MB';
+
+        $('.img-help').html(html);
+
+        // 아무 파일이 없을시 생기는 html태그
+        var uploadFileList = Object.keys(fileList);
+        if(uploadFileList.length == 0){
+            var html = "";
+            html += '<i class="fas fa-upload fa-5x"></i>';
+            html += '<h3>Drop The 사진!</h3>';
+
+            $('#upload_help').html(html);
+            $('.img-help').empty();
+
+        }
+
+    }
+
+    // 파일 등록
+    function uploadFile(){
+        // 등록할 파일 리스트
+        var uploadFileList = Object.keys(fileList);
+
+        // 파일이 있는지 체크
+        if(uploadFileList.length == 0){
+            // 파일등록 경고창
+            alert("파일이 없습니다.");
+            return;
+        }
+
+        // 용량을 500MB를 넘을 경우 업로드 불가
+        if(totalFileSize > maxUploadSize){
+            // 파일 사이즈 초과 경고창
+            alert("사진 용량 초과\n총 업로드 가능 용량 : " + maxUploadSize + " MB");
+            return;
+        }
+
+        if(uploadFileList.length > maxUploadLength){
+            // 파일 사이즈 초과 경고창
+            alert("사진 개수 초과\n총 업로드 가능 개수 : " + maxUploadLength + " 개");
+            return;
+        }
+
+        if(confirm("등록 하시겠습니까?")){
+            // 등록할 파일 리스트를 formData로 데이터 입력
+            var form = $('#uploadForm');
+            var formData = new FormData(form);
+            for(var i = 0; i < uploadFileList.length; i++){
+                formData.append('files', fileList[uploadFileList[i]]);
+            }
+
+            $.ajax({
+                url:"{{ request.path }}",
+                data:formData,
+                type:'POST',
+                enctype:'multipart/form-data',
+                processData:false,
+                contentType:false,
+                dataType:'json',
+                cache:false,
+                success:function(result){
+                    if(result.data.length > 0){
+                        alert("성공");
+                        location.reload();
+                    }else{
+                        alert("실패");
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+</script>
 {% endblock %}
