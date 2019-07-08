@@ -46,7 +46,7 @@ class ItemNew(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        self.success_url = reverse_lazy('store:store_sell_list', kwargs={'pk': self.kwargs.get(self.pk_url_kwarg)})
+        self.success_url = reverse_lazy('store:store_sell_list', kwargs={'pk': self.request.user.storeprofile.id})
         return super().get_success_url()
 
 
