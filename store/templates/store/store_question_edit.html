@@ -1,14 +1,61 @@
 {% extends "layout.html" %}
 
+{% block head %}
+
+<style>
+.bubble
+{
+position: relative;
+width: 100%;
+height: 120px;
+padding: 5px;
+background: #FFFFFF;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+border: #FFFFFF solid 2px;
+}
+
+.bubble:after
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 16px 17px 16px 0;
+border-color: transparent #FFFFFF;
+display: block;
+width: 0;
+z-index: 1;
+left: -17px;
+top: 33px;
+
+}.block {
+  display: block;
+  width: 50%;
+  height: 120px;
+  border: none;
+  background-color: #4CAF50;
+  padding: 30px 30px;
+
+  cursor: pointer;
+  text-align: center;
+}
+</style>
+{% endblock %}
 {% block content %}
 
 <form action="" method="POST">
      {% csrf_token %}
-
-          {{ form.as_table }}
-    <input type="submit" value="등록">
-
-
+     <div class="well">
+    <div class="row">
+        <div class="col-md-8 col-xs-10" >
+            {{ form.comment }}
+        </div>
+        <div class="col-md-3 col-xs-2" >
+            <input type="submit" class="btn btn-default block" value="등록">
+        </div>
+    </div>
+</div>
 </form>
 
 {% endblock %}
