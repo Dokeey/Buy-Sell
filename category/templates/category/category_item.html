@@ -20,8 +20,8 @@
         <div class="col-sm-6 col-xs-12 vcenter">
             <h2>{{ category }} <small>{{ item_ctn }}개</small></h2>
         </div><div class="col-sm-6 col-xs-12 vcenter" style="vertical-align: bottom;">
-            <h6 class="text-right" >
-                <a href="{% url "category:category_item" category.id %}">최신순</a><small style="padding:8px;"> | </small>
+            <h6 class="sort text-right" >
+                <a class="active" href="{% url "category:category_item" category.id %}">최신순</a><small style="padding:8px;"> | </small>
                 <a href="{% url "category:category_item" category.id %}?&sort=looks">조회순</a><small style="padding:8px;"> | </small>
                 <a href="{% url "category:category_item" category.id %}?&sort=hprice">높은가격순</a><small style="padding:8px;"> | </small>
                 <a href="{% url "category:category_item" category.id %}?&sort=lprice">낮은가격순</a>
@@ -30,5 +30,16 @@
     </div>
     <hr>
 </div>
+{% endblock %}
 
+{% block extra_content %}
+    <script>
+        $(document).ready(function() {
+          $('a.active').removeClass('active');
+          if ('{{ sort }}' == '-created_at'){
+              $('a[href="' + location.pathname + '"]').addClass('active');
+          }
+          $('a[href="' + location.pathname + '?&sort={{ sort }}"]').addClass('active');
+        });
+    </script>
 {% endblock %}

@@ -35,13 +35,13 @@
               <div id="dropZone" class="well text-muted text-center col-xs-12" style="padding-top: 4rem; padding-bottom: 4rem; background:#dddddd;">
                   <div class="fileList"></div>
                   <div id="upload_help">
-                      <i class="fas fa-upload fa-5x"></i>
+                      <i class="fas fa-arrow-alt-circle-down fa-5x"></i>
                       <h3>Drop The 사진!</h3>
                   </div>
               </div>
               <div class="pull-right">
                   <label for="{{ form.photo.id_for_label }}" class="img-upload control-label">
-                      <i class="fas fa-upload"></i> 버튼으로 첨부
+                      <i class="fas fa-arrow-alt-circle-down"></i> 버튼으로 첨부
                   </label>
               </div>
               <div>
@@ -258,7 +258,7 @@
         var uploadFileList = Object.keys(fileList);
         if(uploadFileList.length == 0){
             var html = "";
-            html += '<i class="fas fa-upload fa-5x"></i>';
+            html += '<i class="fas fa-arrow-alt-circle-down fa-5x"></i>';
             html += '<h3>Drop The 사진!</h3>';
 
             $('#upload_help').html(html);

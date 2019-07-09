@@ -10,7 +10,7 @@
         <div class="col-sm-6 col-xs-12 vcenter">
             <h2><span style="color:red">{{ query }}</span> 검색결과 <small>{{ item_ctn }}개</small></h2>
         </div><div class="col-sm-6 col-xs-12 vcenter" style="vertical-align: bottom;">
-            <h6 class="text-right" >
+            <h6 class="sort text-right" >
                 <a href="{% url "category:search_item" %}?query={{ query }}">최신순</a><small style="padding:8px;"> | </small>
                 <a href="{% url "category:search_item" %}?query={{ query }}&sort=looks">조회순</a><small style="padding:8px;"> | </small>
                 <a href="{% url "category:search_item" %}?query={{ query }}&sort=hprice">높은가격순</a><small style="padding:8px;"> | </small>
@@ -21,4 +21,16 @@
     <hr>
 </div>
 
+{% endblock %}
+
+{% block extra_content %}
+    <script>
+        $(document).ready(function() {
+          $('a.active').removeClass('active');
+          if ('{{ sort }}' == '-created_at'){
+              $('a[href="' + location.pathname + '?query={{ query }}"]').addClass('active');
+          }
+          $('a[href="' + location.pathname + '?query={{ query }}&sort={{ sort }}"]').addClass('active');
+        });
+    </script>
 {% endblock %}
