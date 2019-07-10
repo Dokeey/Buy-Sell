@@ -66,7 +66,9 @@
     <div class="row">
         <div class="col-sm-6 col-xs-12 text-center vcenter">
             <div class="col-xs-12">
-                <img style="padding:10px; height:100%; background:#999999;" src="{{ item.photo.url }}"/>
+                <a href="{{ item.photo.url }}">
+                    <img class="img-thumbnail img-responsive img-rounded" style="padding:10px; width:auto;" src="{{ item.photo.url }}"/>
+                </a>
             </div>
         </div><div class="col-sm-6 col-xs-12 vcenter">
             <div class="row" style="padding-left:30px">
@@ -204,7 +206,7 @@
                     <div class="row">
                         <div class="col-sm-2 col-xs-3 profile-img vcenter">
                             <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
-                                <img class="img-rounded img-thumbnail" src="{{ comment.user.storeprofile.photo.url }}"/>
+                                <img class="img-rounded img-thumbnail img-responsive" src="{{ comment.user.storeprofile.photo.url }}"/>
                             </a>
                         </div><div class="col-sm-10 col-xs-9 clearfix vcenter" style="padding:10px;">
                             <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
@@ -230,7 +232,7 @@
                         {% for replay in comment.replies.all|dictsort:"created_at" %}
                         <div class="col-sm-2 col-xs-3 profile-img vcenter">
                             <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
-                                <img class="img-rounded img-thumbnail" src="{{ replay.user.storeprofile.photo.url }}"/>
+                                <img class="img-rounded img-thumbnail img-responsive" src="{{ replay.user.storeprofile.photo.url }}"/>
                             </a>
                         </div><div class="col-sm-10 col-xs-9 clearfix vcenter" style="padding:10px;">
                             <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
@@ -285,7 +287,7 @@
             <div class="row" style="padding:10px;">
                 <div class="col-xs-4 vcenter profile-img">
                     <a href="{% url "store:store_sell_list" item.user.storeprofile.id %}">
-                        <img class="img-rounded img-thumbnail" src="{{ item.user.storeprofile.photo.url }}"/>
+                        <img class="img-rounded img-thumbnail img-responsive" src="{{ item.user.storeprofile.photo.url }}"/>
                     </a>
                 </div><div class="col-xs-8 vcenter" style="padding:10px;">
                     <a href="{% url "store:store_sell_list" item.user.storeprofile.id %}">{{ item.user.profile.nick_name }}</a> <br><br>
@@ -307,7 +309,7 @@
                 {% for it in items %}
                     <td style="max-height: 200px;">
                         <a href="{% url "trade:item_detail" it.id %}">
-                            <img class="img-rounded img-thumbnail" style="height:100%; width:auto;" src="{{ it.photo.url }}"/><br>
+                            <img class=" img-thumbnail img-responsive" style="" src="{{ it.photo.url }}"/><br>
                             <h6>{{ it.amount|intcomma }} <small>원</small></h6>
                         </a>
                 {% empty %}
@@ -334,7 +336,7 @@
                     {% for grade in item.user.storeprofile.storegrade_set.all|slice:":2" %}
                         <div class="col-xs-4 profile-img vcenter">
                             <a href="{% url "store:store_sell_list" grade.author.storeprofile.id %}">
-                                <img class="img-rounded img-thumbnail" src="{{ grade.author.storeprofile.photo.url }}"/>
+                                <img class="img-rounded img-thumbnail img-responsive" src="{{ grade.author.storeprofile.photo.url }}"/>
                             </a>
                         </div><div class="col-xs-8 vcenter">
                             <a href="{% url "store:store_grade" item.user.storeprofile.id %}">

@@ -64,7 +64,7 @@ def item_block(item):
         <div class="thumbnail">
           <div class="caption text-center" onclick="location.href='{next_link}'">
             <div class="position-relative">
-              <img class="img-rounded img-thumbnail" src="{photo_url}" style="width:100px;height:100px;" />
+              <img class="img-rounded img-thumbnail" src="{photo_url}" style="width:200px;height:200px;" />
             </div>
             <h5 id="thumbnail-label"><i class="fas fa-won-sign"></i>&nbsp;{amount}</h4>            
             <div class="thumbnail-description smaller text-center">

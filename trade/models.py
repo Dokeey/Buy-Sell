@@ -44,9 +44,9 @@ class Item(models.Model, HitCountMixin):
     photo = ProcessedImageField(
             blank=True,
             upload_to = 'item_img/{0}'.format(datetime.now().strftime("%Y-%m-%d")),
-            processors = [ResizeToFill(100, 100)],
+            processors = [ResizeToFill(640, 640)],
             format='PNG',
-            options = {'quality': 60}
+            options = {'quality': 100}
         )
     category = TreeForeignKey(Category, on_delete=models.CASCADE)
     item_status = models.CharField(

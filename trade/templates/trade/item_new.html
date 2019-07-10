@@ -18,8 +18,11 @@
     .img-upload:hover {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
     }
+    #dropZone {
+        cursor: pointer;
+    }
 </style>
-<form class="form-horizontal" id="uploadForm" name="forms" action="" method="POST" enctype="multipart/form-data">
+<form class="form-horizontal" id="uploadForm" action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="form-group">
         <div class="form-group">
@@ -30,20 +33,15 @@
     </div>
       <div class="form-group">
         <label class="col-sm-1 control-label">{{ form.photo.label }}</label>
-          <div class=" col-sm-11 crearfix">
+          <div class=" col-sm-11">
               <small class="img-help text-right"></small>
-              <div id="dropZone" class="well text-muted text-center col-xs-12" style="padding-top: 4rem; padding-bottom: 4rem; background:#dddddd;">
+              <label for="{{ form.photo.id_for_label }}" id="dropZone" class="well text-muted text-center col-xs-12" style="padding-top: 4rem; padding-bottom: 4rem; background:#dddddd;">
                   <div class="fileList"></div>
                   <div id="upload_help">
                       <i class="fas fa-arrow-alt-circle-down fa-5x"></i>
-                      <h3>Drop The 사진!</h3>
+                      <h4>이미지를 드래그 하거나 파일을 불러오세요</h4>
                   </div>
-              </div>
-              <div class="pull-right">
-                  <label for="{{ form.photo.id_for_label }}" class="img-upload control-label">
-                      <i class="fas fa-arrow-alt-circle-down"></i> 버튼으로 첨부
-                  </label>
-              </div>
+              </label>
               <div>
                 <p class="help-block">사진을 빼려면 사진을 클릭하세요 :)</p>
               </div>
@@ -88,7 +86,7 @@
       </div>
         <div class="form-group">
             <div class="col-sm-11 col-sm-offset-1">
-                <button class="btn btn-primary" onclick="uploadFile(); return false;">등록하기</button>
+                <button type="button" class="btn btn-primary" onclick="uploadFile(); return false;">등록하기</button>
             </div>
         </div>
 </form>
@@ -259,12 +257,20 @@
         if(uploadFileList.length == 0){
             var html = "";
             html += '<i class="fas fa-arrow-alt-circle-down fa-5x"></i>';
-            html += '<h3>Drop The 사진!</h3>';
+            html += '<h4>이미지를 드래그 하거나 파일을 불러오세요</h4>';
 
             $('#upload_help').html(html);
             $('.img-help').empty();
 
         }
+        const target = document.getElementsByName('{{ form.photo.name }}')
+
+
+        var form = $('#uploadForm')[0];
+
+        console.log(fileList);
+        console.log(form.files);
+
 
     }
 
@@ -295,10 +301,10 @@
 
         if(confirm("등록 하시겠습니까?")){
             // 등록할 파일 리스트를 formData로 데이터 입력
-            var form = $('#uploadForm');
+            var form = $('#uploadForm')[0];
             var formData = new FormData(form);
             for(var i = 0; i < uploadFileList.length; i++){
-                formData.append('files', fileList[uploadFileList[i]]);
+                formData.append('photo', fileList[uploadFileList[i]]);
             }
 
             $.ajax({
