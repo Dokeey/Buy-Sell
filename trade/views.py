@@ -163,7 +163,7 @@ class ItemDetail(CreateView):
 class ItemUpdate(UpdateView):
     model = Item
     form_class = ItemUpdateForm
-    template_name = 'trade/item_new.html'
+    template_name = 'trade/item_update.html'
 
     def form_valid(self, form):
         item = form.save(commit=False)
@@ -171,7 +171,6 @@ class ItemUpdate(UpdateView):
             messages.error(self.request, '예약중인 상품은 변경할 수 없습니다.')
             return redirect('trade:item_detail', self.kwargs.get('pk'))
 
-        form.instance.photo = form.cleaned_data['photo']
         return super().form_valid(form)
 
     def get_success_url(self):

@@ -55,8 +55,7 @@ class ItemForm(forms.ModelForm):
         fields = ['title','desc','amount','photo','category', 'item_status']
 
 
-class ItemUpdateForm(ItemForm):
-
+class ItemUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ItemUpdateForm, self).__init__(*args, **kwargs)
         self.fields['pay_status'].label = '재고'
@@ -65,8 +64,8 @@ class ItemUpdateForm(ItemForm):
         })
 
     class Meta:
-        model = ItemForm.Meta.model
-        fields = ItemForm.Meta.fields + ['pay_status']
+        model = Item
+        fields = ['pay_status']
 
 
 class ItemCommentForm(forms.ModelForm):
