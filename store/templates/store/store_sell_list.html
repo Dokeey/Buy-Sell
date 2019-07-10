@@ -13,21 +13,32 @@
 
 </div>
 
+<div class="container-fluid text-center">
+    <div class="row">
     {% for item in stores.user.item_set.all %}
-
-        {% if item.user == request.user %}
-            <a href="{% url "trade:item_update" item.pk %}">수정하기</a>
-            <a href="{% url "trade:item_delete" item.pk %}">삭제하기</a>
-        {% endif %}
-
-        {% item_block item %}
-
-    <hr>
-
+        <div class="col-sm-6 col-md-3 col-xs-12" style="padding:10px">
+            {% item_block item %}
+            {% if request.user == stores.user %}
+                <div class="col-xs-6 text-center" >
+                    <a href="{% url "trade:item_update" item.pk %}">
+                        <button class="btn btn-primary col-xs-12">수정</button>
+                    </a>
+                </div>
+                <div class="col-xs-6 text-center">
+                    <a href="{% url "trade:item_delete" item.pk %}">
+                        <button class="btn col-xs-12" style="background:red; color:white;">삭제</button>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
     {% empty %}
-    <h4>물품을 찾을 수 없습니다..</h4>
+        <h4 class="text-center">물품이 없습니다</h4>
 
     {% endfor %}
+
+    </div>
+</div>
+
 {% endblock %}
 
 
