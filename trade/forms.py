@@ -15,6 +15,7 @@ from accounts.forms import ProfileForm
 
 
 class ItemForm(forms.ModelForm):
+    photo = forms.ImageField()
     category = TreeNodeChoiceField(queryset=Category.objects.all(), level_indicator=unichr(0x00A0) * 4)
 
     def __init__(self, *args, **kwargs):
@@ -22,7 +23,7 @@ class ItemForm(forms.ModelForm):
         self.fields['title'].label = '물품명'
         self.fields['title'].widget.attrs.update({
             'class': 'form-control col-sm-10',
-            'placeholder': '무엇을 파세요?'
+            'placeholder': '무엇을 파세요?',
         })
         self.fields['desc'].label = '설명'
         self.fields['desc'].widget.attrs.update({
@@ -38,7 +39,7 @@ class ItemForm(forms.ModelForm):
         self.fields['photo'].widget.attrs.update({
             'class': 'form-control col-sm-10',
             'multiple': 'multiple',
-            'style' : 'display: none;'
+            'style' : 'display: none;',
         })
         self.fields['category'].label = '종류'
         self.fields['category'].widget.attrs.update({
@@ -58,7 +59,7 @@ class ItemUpdateForm(ItemForm):
 
     def __init__(self, *args, **kwargs):
         super(ItemUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['pay_status'].label = '재고상태'
+        self.fields['pay_status'].label = '재고'
         self.fields['pay_status'].widget.attrs.update({
             'class': 'form-control col-sm-10',
         })

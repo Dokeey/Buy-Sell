@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from django.urls import reverse_lazy
@@ -12,7 +13,7 @@ from hitcount.views import HitCountMixin
 from category.models import Category
 from accounts.models import Profile
 from mypage.models import WishList, Follow
-from .models import Item, ItemComment, Order
+from .models import Item, ItemImage, ItemComment, Order
 from .forms import ItemForm, ItemUpdateForm, ItemCommentForm, PayForm, OrderForm
 
 from time import time
@@ -42,8 +43,20 @@ class ItemNew(CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        form.instance.photo = form.cleaned_data['photo']
-        return super().form_valid(form)
+        self.object = form.save()
+
+        for field in self.request.FILES.keys():
+            for image in self.request.FILES.getlist(field):
+                img = ItemImage(item=self.object, photo=image)
+                img.save()
+
+        data = {'is_valid': True}
+        return JsonResponse(data)
+
+    def form_invalid(self, form):
+        error = form.errors
+        data = {'is_valid': False, 'error':error}
+        return JsonResponse(data)
 
     def get_success_url(self):
         self.success_url = reverse_lazy('store:store_sell_list', kwargs={'pk': self.request.user.storeprofile.id})

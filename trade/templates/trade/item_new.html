@@ -46,30 +46,35 @@
                 <p class="help-block">사진을 빼려면 사진을 클릭하세요 :)</p>
               </div>
             {{ form.photo }}
+          <div id="error_photo" class="col-sm-12"></div>
           </div>
       </div>
       <div class="form-group">
         <label for="{{ form.title.id_for_label }}" class="col-sm-1 control-label">{{ form.title.label }}</label>
           <div class=" col-sm-11">
             {{ form.title }}
+          <div id="error_title" class="col-sm-12" style="margin-top:10px"></div>
           </div>
       </div>
         <div class="form-group">
             <label for="{{ form.amount.id_for_label }}" class="col-sm-1 control-label">{{ form.amount.label }}</label>
           <div class=" col-sm-11">
             {{ form.amount }}
+          <div id="error_amount" class="col-sm-12" style="margin-top:10px"></div>
           </div>
         </div>
       <div class="form-group">
           <label for="{{ form.category.id_for_label }}" class="col-sm-1 control-label">{{ form.category.label }}</label>
           <div class=" col-sm-11">
               {{ form.category }}
+          <div id="error_category" class="col-sm-12" style="margin-top:10px"></div>
           </div>
       </div>
       <div class="form-group">
           <label for="{{ form.item_status.id_for_label }}" class="col-sm-1 control-label">{{ form.item_status.label }}</label>
           <div class=" col-sm-11">
               {{ form.item_status }}
+          <div id="error_item_status" class="col-sm-12" style="margin-top:10px"></div>
           </div>
       </div>
         <div class="form-group">
@@ -82,6 +87,7 @@
           <label for="{{ form.pay_status.id_for_label }}" class="col-sm-1 control-label">{{ form.pay_status.label }}</label>
           <div class=" col-sm-11">
               {{ form.pay_status }}
+          <div id="error_pay_status" class="col-sm-12" style="margin-top:10px"></div>
           </div>
       </div>
         <div class="form-group">
@@ -146,12 +152,12 @@
             var files = e.originalEvent.dataTransfer.files;
             if(files != null){
                 if(files.length < 1){
-                    alert("폴더 업로드 불가");
+                    $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">폴더는 업로드가 불가능합니다.</div>');
                     return;
                 }
                 selectFile(files)
             }else{
-                alert("ERROR");
+                $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">오류가 발생했습니다. 관리자에게 문의해주세요.</div>');
             }
         });
     }
@@ -186,11 +192,11 @@
 
                 if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
                     // 확장자 체크
-                    alert("등록 불가 확장자");
+                    $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">image 파일만 올려주세요.</div>');
                     break;
                 }else if(fileSize > uploadSize){
                     // 파일 사이즈 체크
-                    alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
+                    $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">파일당 업로드 가능 용량 '+ uploadSize +' MB를 초과하였습니다.</div>');
                     break;
                 }else{
                     // 전체 파일 사이즈
@@ -210,7 +216,7 @@
                 }
             }
         }else{
-            alert("ERROR");
+            $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">오류가 발생했습니다. 관리자에게 문의해주세요.</div>');
         }
 
 
@@ -263,15 +269,6 @@
             $('.img-help').empty();
 
         }
-        const target = document.getElementsByName('{{ form.photo.name }}')
-
-
-        var form = $('#uploadForm')[0];
-
-        console.log(fileList);
-        console.log(form.files);
-
-
     }
 
     // 파일 등록
@@ -282,51 +279,50 @@
         // 파일이 있는지 체크
         if(uploadFileList.length == 0){
             // 파일등록 경고창
-            alert("파일이 없습니다.");
+            $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">최소 하나 이상의 이미지를 업로드해야 합니다</div>');
             return;
         }
 
-        // 용량을 500MB를 넘을 경우 업로드 불가
+        // 용량을 넘을 경우 업로드 불가
         if(totalFileSize > maxUploadSize){
             // 파일 사이즈 초과 경고창
-            alert("사진 용량 초과\n총 업로드 가능 용량 : " + maxUploadSize + " MB");
+            $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">총 업로드 가능 용량 '+ maxUploadSize +' MB를 초과하였습니다.</div>');
             return;
         }
 
         if(uploadFileList.length > maxUploadLength){
             // 파일 사이즈 초과 경고창
-            alert("사진 개수 초과\n총 업로드 가능 개수 : " + maxUploadLength + " 개");
+            $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">총 업로드 가능 개수 '+ maxUploadLength +' 개를 초과하였습니다.</div>');
             return;
         }
 
-        if(confirm("등록 하시겠습니까?")){
-            // 등록할 파일 리스트를 formData로 데이터 입력
-            var form = $('#uploadForm')[0];
-            var formData = new FormData(form);
-            for(var i = 0; i < uploadFileList.length; i++){
-                formData.append('photo', fileList[uploadFileList[i]]);
-            }
+        // 등록할 파일 리스트를 formData로 데이터 입력
+        var form = $('#uploadForm')[0];
+        var formData = new FormData(form);
+        formData.delete('{{ form.photo.name }}');
+        for(var i = 0; i < uploadFileList.length; i++){
+            formData.append('{{ form.photo.name }}', fileList[uploadFileList[i]]);
+        }
 
-            $.ajax({
-                url:"{{ request.path }}",
-                data:formData,
-                type:'POST',
-                enctype:'multipart/form-data',
-                processData:false,
-                contentType:false,
-                dataType:'json',
-                cache:false,
-                success:function(result){
-                    if(result.data.length > 0){
-                        alert("성공");
-                        location.reload();
-                    }else{
-                        alert("실패");
-                        location.reload();
+        $.ajax({
+            url:"{{ request.path }}",
+            data:formData,
+            type:'POST',
+            enctype:'multipart/form-data',
+            processData:false,
+            contentType:false,
+            dataType:'json',
+            cache:false,
+            success:function(result){
+                if(result.is_valid){
+                    window.location.href = '{% url "store:store_sell_list" request.user.storeprofile.id %}';
+                }else{
+                    for (var key in result.error){
+                        $('#error_'+key).html('<div class="text-center alert alert-warning alert-dismissible" role="alert">' + result.error[key][0] + '</div>');
                     }
                 }
-            });
-        }
+            }
+        });
     }
 </script>
 {% endblock %}

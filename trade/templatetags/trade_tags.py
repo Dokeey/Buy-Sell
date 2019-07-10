@@ -52,7 +52,7 @@ def item_block(item):
     hit_count = item.hit_count.hits
     title = item.title
     amount = intcomma(item.amount)
-    photo_url = item.photo.url
+    photo_url = item.itemimage_set.first().photo.url
     item_status = item.get_item_status_display()
     pay_status = status_check(item.get_pay_status_display())
     updated_at = item.updated_at.strftime("%Y년 %m월 %d일")
@@ -70,14 +70,14 @@ def item_block(item):
             <div class="thumbnail-description smaller text-center">
                 <p><b>{title}</b></p>
                 <hr>
-                {pay_status}
+                <i class="far fa-clock"></i>&nbsp;{updated_str}
             </div>
           </div>
           <div class="caption card-footer text-center">
             <ul class="list-inline">
               <li><a href="{user_link}"><i class="fas fa-user light-red lighter bigger-120"></i>&nbsp;{user}</a></li>
               <li></li>
-              <li><i class="far fa-clock"></i>&nbsp;{updated_str}</li>
+              <li>{pay_status}</li>
             </ul>
           </div>
         </div>

@@ -38,16 +38,9 @@ def timestamp_to_datetime(timestamp):
 
 class Item(models.Model, HitCountMixin):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=50)
     desc = models.TextField(blank=True)
     amount = models.PositiveIntegerField()
-    photo = ProcessedImageField(
-            blank=True,
-            upload_to = 'item_img/{0}'.format(datetime.now().strftime("%Y-%m-%d")),
-            processors = [ResizeToFill(640, 640)],
-            format='PNG',
-            options = {'quality': 100}
-        )
     category = TreeForeignKey(Category, on_delete=models.CASCADE)
     item_status = models.CharField(
         max_length=3,
@@ -80,6 +73,15 @@ class Item(models.Model, HitCountMixin):
     class Meta:
         ordering = ["-created_at"]
 
+
+class ItemImage(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    photo = ProcessedImageField(
+            upload_to = 'item_img/{0}'.format(datetime.now().strftime("%Y-%m-%d")),
+            processors = [ResizeToFill(640, 640)],
+            format='PNG',
+            options = {'quality': 100}
+        )
 
 
 from django.contrib.auth import get_user_model

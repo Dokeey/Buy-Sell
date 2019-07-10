@@ -1,11 +1,16 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Item, ItemComment, Order
+from .models import Item, ItemImage, ItemComment, Order
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ['pk','user','title','desc','amount','photo','category', 'item_status','pay_status','created_at','updated_at']
+    list_display = ['pk','user','title','desc','amount', 'category', 'item_status','pay_status','created_at','updated_at']
+
+
+@admin.register(ItemImage)
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ['id', 'item', 'photo']
 
 
 @admin.register(ItemComment)

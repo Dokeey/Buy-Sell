@@ -10,7 +10,7 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 
-from trade.models import Item
+from trade.models import Item, ItemImage
 
 from django.contrib.auth import get_user_model
 from django.db.models.aggregates import Count
@@ -37,7 +37,7 @@ def main(query):
     for item_tag in soup.select('#_search_list ._itemSection'):
         user = userlist[randint(0, count - 1)]  # Index of User
         status = item_status[randint(0, 3)] # item_status
-        name = trim(item_tag.select('a.tit')[0].text)  # title
+        name = trim(item_tag.select('a.tit')[0].text)[0:50]  # title
         price = trim(item_tag.select('.price .num')[0].text).replace(',', '').replace('$','').replace('.','')  # amount
         img_url = item_tag.select('img[data-original]')[0]['data-original']
 
@@ -55,8 +55,10 @@ def main(query):
         print('')
 
         item = Item(user=user, title=name, amount=price, desc=detest, category=query, item_status=status)
-        item.photo.save(img_name, ContentFile(res.content))
         item.save()
+        item_image = ItemImage(item=item)
+        item_image.photo.save(img_name, ContentFile(res.content))
+        item_image.save()
 
         ctn += 1
         if ctn > 10:

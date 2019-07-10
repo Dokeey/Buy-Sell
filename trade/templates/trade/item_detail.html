@@ -5,10 +5,10 @@
 {% block head %}
     <meta property="fb:app_id"        content="642307389514788"/>
     <meta property="og:type"          content="website"/>
-    <meta property="og:url"           content="http://14.36.187.98{{ request.path }}" />
+    <meta property="og:url"           content="{{ request.META.HTTP_HOST }}{{ request.path }}" />
     <meta property="og:title"         content="{{ item.title }} {{ item.amount|intcomma }}원" />
     <meta property="og:description"   content="{{ item.desc|default:'-'|linebreaks }}" />
-    <meta property="og:image"         content="http://14.36.187.98{{ item.photo.url }}" />
+    <meta property="og:image"         content="{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
 
 	<script>
@@ -26,10 +26,10 @@
               content: {
                 title: '{{ item.title }} {{ item.amount|intcomma }}원',
                 description: 'Buy & Sell에서 싸게 사자!',
-                imageUrl: 'http://14.36.187.98{{ item.photo.url }}',
+                imageUrl: '{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}',
                 link: {
-                  webUrl: 'http://14.36.187.98{{ request.path }}',
-                  mobileWebUrl: 'http://14.36.187.98{{ request.path }}'
+                  webUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}',
+                  mobileWebUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}'
                 }
               },
             social: {
@@ -41,8 +41,8 @@
                 {
                   title: '빨리 사러가자!',
                   link: {
-                    mobileWebUrl: 'http://14.36.187.98{{ request.path }}',
-                    webUrl: 'http://14.36.187.98{{ request.path }}'
+                    mobileWebUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}',
+                    webUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}'
                   }
                 }
               ]
@@ -66,9 +66,36 @@
     <div class="row">
         <div class="col-sm-6 col-xs-12 text-center vcenter">
             <div class="col-xs-12">
-                <a href="{{ item.photo.url }}">
-                    <img class="img-thumbnail img-responsive img-rounded" style="padding:10px; width:auto;" src="{{ item.photo.url }}"/>
-                </a>
+
+                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+                            <!--페이지-->
+                            <ol class="carousel-indicators">
+                        {% for item_image in item.itemimage_set.all %}
+                                <li data-target="#myCarousel" data-slide-to="{{ forloop.counter|add:"-1" }}"></li>
+                        {% endfor %}
+                            </ol>
+                            <!--페이지-->
+
+                            <div class="carousel-inner">
+                        {% for item_image in item.itemimage_set.all %}
+                            {% if forloop.counter == 1 %}
+                                <div class="item active">
+                            {% else %}
+                                <div class="item">
+                            {% endif %}
+                                    <a href="{{ item_image.photo.url }}">
+                                        <img class="img-thumbnail img-responsive img-rounded" style="padding:10px; width:auto;" src="{{ item_image.photo.url }}"/>
+                                    </a>
+                                </div>
+                        {% endfor %}
+                            </div>
+
+                            <!--이전, 다음 버튼-->
+                            <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon-chevron-left fas fa-angle-left"></span></a>
+                            <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon-chevron-left fas fa-angle-right"></span></a>
+                        </div>
+
             </div>
         </div><div class="col-sm-6 col-xs-12 vcenter">
             <div class="row" style="padding-left:30px">
@@ -109,7 +136,7 @@
                     </button>
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="javascript:sharefacebook('http://14.36.187.98{{ request.path }}')">
+                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="javascript:sharefacebook('{{ request.META.HTTP_HOST }}{{ request.path }}')">
                         <i class="fab fa-facebook-square"></i> 공유하기
                     </button>
                 </div>
@@ -309,7 +336,7 @@
                 {% for it in items %}
                     <td style="max-height: 200px;">
                         <a href="{% url "trade:item_detail" it.id %}">
-                            <img class=" img-thumbnail img-responsive" style="" src="{{ it.photo.url }}"/><br>
+                            <img class=" img-thumbnail img-responsive" style="" src="{{ it.itemimage_set.first.photo.url }}"/><br>
                             <h6>{{ it.amount|intcomma }} <small>원</small></h6>
                         </a>
                 {% empty %}
