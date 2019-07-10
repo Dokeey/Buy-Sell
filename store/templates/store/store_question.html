@@ -34,18 +34,12 @@ top: 33px;
     max-height: 200px;
     max-width: 200px;
 }
-img{
-    max-height: 100px;
-    max-width: 100px;
-}
  .block {
   display: block;
-  width: 50%;
+  width: 60%;
   height: 120px;
   border: none;
   background-color: #4CAF50;
-  padding: 30px 30px;
-
   cursor: pointer;
   text-align: center;
 }
@@ -70,13 +64,10 @@ he
          {% csrf_token %}
 <div class="well">
     <div class="row">
-        <div class="col-md-3 col-xs-10 imggrid" align="center">
-            <img src="{{ request.user.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
-        </div>
-        <div class="col-md-6 col-xs-10" >
+        <div class="col-md-9 col-xs-8" >
             {{ form.comment }}
         </div>
-        <div class="col-md-3 col-xs-2" >
+        <div class="col-md-3 col-xs-4" >
             <input type="submit" class="btn btn-default block" value="등록">
         </div>
     </div>
@@ -91,11 +82,11 @@ he
     <div class="well">
     <div class="row">
 
-        <div class="col-md-2 col-xs-10 imggrid" align="center">
+        <div class="col-md-3 col-xs-3 imggrid" align="center">
              <img src="{{ comm.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
         </div>
 
-        <div class="col-md-8 col-xs-10">
+        <div class="col-md-8 col-xs-8">
             <div class="bubble" >
                 {{ comm.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{{ comm.created_at | date:"M d일, y년" }}
                 <div align="right" style="display: inline;float: right;" >
@@ -115,11 +106,11 @@ he
         <br/>
         <div class="row">
             <div class="col-md-1 col-xs-1" align="right"><i class="fas fa-reply fa-rotate-180"></i></i></div>
-            <div class="col-md-2 com-xs-10 imggrid" align="center">
+            <div class="col-md-3 col-xs-3 imggrid" align="center">
                 <img src="{{ replay.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
             </div>
 
-            <div class="col-md-8 com-xs-10">
+            <div class="col-md-8 col-xs-8">
                 <div class="bubble" >
                     {{ replay.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{{ replay.created_at | date:"M d일, y년" }}
                     <div align="right" style="display: inline;float: right;" >
@@ -140,16 +131,13 @@ he
         <form action="" method="POST">
              {% csrf_token %}
             <div class="row">
-                <div class="col-md-1 col-xs-2" align="right"><i class="fas fa-reply fa-rotate-180"></i></div>
-                <div class="col-md-2 col-xs-10 imggrid" align="center">
-                    <img src="{{ request.user.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
-                </div>
-                <div class="col-md-6 col-xs-10">
+                <div class="col-md-1 col-xs-1" align="right"><i class="fas fa-reply fa-rotate-180"></i></div>
+                <div class="col-md-8 col-xs-8">
                     {{ form.comment }}
 
                     <input type="hidden" name="parent_id" value="{{ comm.id }}">
                 </div>
-                <div class="col-md-3 col-xs-2">
+                <div class="col-md-3 col-xs-3">
                     <input type="submit" class="btn btn-default block" value="등록">
                 </div>
             </div>
