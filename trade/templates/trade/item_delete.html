@@ -1,16 +1,18 @@
-{% extends "mypage/layout.html" %}
-
-{% block mypage_content %}
-
-<h2>정말 삭제하시겠습니까 ?</h2>
-<form action="" method="POST">
-    {% csrf_token %}
-    <table>
-        <th>
-            {{ form.as_table }}
-        </th>
-    </table>
-    <input type="submit" value="삭제하기">
-</form>
-
-{% endblock %}
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">댓글 삭제</h4>
+      </div>
+        <form class="del-form" id="del-form" action="" method="post">
+          <div class="modal-body col-xs-12">
+                {{ form.as_p }}
+                {% csrf_token %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+            <button type="button" onclick="javascript:delSubmit()" data-dismiss="modal" class="btn btn-warning" >삭제하기</button>
+          </div>
+        </form>
+    </div>
+  </div>

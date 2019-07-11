@@ -64,6 +64,7 @@ class Item(models.Model, HitCountMixin):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # is_active = models.BooleanField(default=1)
 
     hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
 

@@ -1,13 +1,18 @@
-{% extends "trade/layout.html" %}
-
-{% block content %}
-
-<!-- Comments Form -->
-<h4>댓글을 수정하기</h4>
-<form action="." method="post">
-    {{ form.as_p }}
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary" >수정하기</button>
-</form>
-
-{% endblock %}
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">댓글 수정</h4>
+      </div>
+        <form class="edit-form" id="edit-form" action="" method="post">
+          <div class="modal-body col-xs-12">
+                {{ form.as_p }}
+                {% csrf_token %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+            <button type="button" onclick="javascript:editSubmit()" data-dismiss="modal" class="btn btn-primary" >수정하기</button>
+          </div>
+        </form>
+    </div>
+  </div>

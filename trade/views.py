@@ -1,9 +1,11 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, RedirectView, \
     TemplateView
 from django.views.generic.detail import SingleObjectMixin
@@ -36,6 +38,7 @@ def test(request):
 #         'form': form
 #     })
 
+@method_decorator(login_required, name='dispatch')
 class ItemNew(CreateView):
     model = Item
     form_class = ItemForm
@@ -124,14 +127,19 @@ class ItemDetail(CreateView):
         return context
 
     def form_valid(self, form):
+        if not self.request.user.is_authenticated:
+            return redirect(settings.LOGIN_REDIRECT_URL)
+
         try:
             parent_id = int(self.request.POST.get('parent_id'))
         except:
             parent_id = None
+
         if parent_id:
             parent_obj = ItemComment.objects.get(id=parent_id)
             if parent_obj:
                 form.instance.parent = parent_obj
+
         form.instance.user = self.request.user
         form.instance.item = self.get_context_data()['item']
         return super().form_valid(form)
@@ -160,10 +168,18 @@ class ItemDetail(CreateView):
 #         'form': form
 #     })
 
+@method_decorator(login_required, name='dispatch')
 class ItemUpdate(UpdateView):
     model = Item
     form_class = ItemUpdateForm
     template_name = 'trade/item_update.html'
+
+    def get(self, request, *args, **kwargs):
+        item = get_object_or_404(Item, pk=self.kwargs.get('pk'))
+        if item.user != self.request.user:
+            messages.error(self.request, '잘못된 접근 입니다.')
+            return redirect('root')
+        return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
         item = form.save(commit=False)
@@ -182,10 +198,19 @@ class ItemUpdate(UpdateView):
 #     item.delete()
 #     return redirect('trade:item_list')
 
+@method_decorator(login_required, name='dispatch')
 class ItemDelete(DeleteView):
     model = Item
     template_name = 'trade/item_delete.html'
     success_url = reverse_lazy('mypage:main')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user != self.object.user:
+            messages.error(self.request, '잘못된 접근 입니다.')
+            return redirect('root')
+        return super().get(request, *args, **kwargs)
+
 
 # def comment_update(request, pk, cid):
 #     comment = get_object_or_404(ItemComment, pk=cid)
@@ -200,34 +225,52 @@ class ItemDelete(DeleteView):
 #         'form':form
 #     })
 
+@method_decorator(login_required, name='dispatch')
 class CommentUpdate(UpdateView):
     model = ItemComment
     form_class = ItemCommentForm
     pk_url_kwarg = 'cid'
     template_name = 'trade/comment_update.html'
 
-    def get_success_url(self):
-        return reverse_lazy('trade:item_detail', kwargs={'pk': self.kwargs.get('pk')})
-
-    def form_valid(self, form):
+    def get(self, request, *args, **kwargs):
         comment = get_object_or_404(ItemComment, pk=self.kwargs.get(self.pk_url_kwarg))
         if self.request.user != comment.user:
             messages.error(self.request, '잘못된 접근 입니다.')
-            return self.form_invalid(form)
-        return super().form_valid(form)
+            return redirect('trade:item_detail', self.kwargs.get('pk'))
+        return super().get(request, *args, **kwargs)
+
+
+    def form_valid(self, form):
+        comment = get_object_or_404(ItemComment, pk=self.kwargs.get(self.pk_url_kwarg))
+        self.object = form.save()
+
+        data = {'id':comment.id, 'msg':form.cleaned_data['message']}
+        return JsonResponse(data)
 
 # def comment_delete(reuqest, pk, cid):
 #     comment = get_object_or_404(ItemComment, pk=cid)
 #     comment.delete()
 #     return redirect('trade:item_detail', pk)
 
+@method_decorator(login_required, name='dispatch')
 class CommentDelete(DeleteView):
     model = ItemComment
     template_name = 'trade/item_delete.html'
     pk_url_kwarg = 'cid'
 
-    def get_success_url(self):
-        return reverse_lazy('trade:item_detail', kwargs={'pk': self.kwargs.get('pk')})
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.request.user != self.object.user:
+            messages.error(self.request, '잘못된 접근 입니다.')
+            return redirect('trade:item_detail', self.kwargs.get('pk'))
+        return super().get(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        data = {'id':self.object.id}
+
+        self.object.delete()
+        return JsonResponse(data)
 
 # def order_new(request, item_id):
 #     item = get_object_or_404(Item, pk=item_id)
@@ -270,6 +313,7 @@ class CommentDelete(DeleteView):
 #     })
 
 
+@method_decorator(login_required, name='dispatch')
 class OrderNew(FormView):
     form_class = OrderForm
     template_name = 'trade/order_form.html'
@@ -313,7 +357,7 @@ class OrderNew(FormView):
             Order.objects.filter(user=self.request.user,
                                  merchant_uid=order.merchant_uid,
                                  status='ready'
-                                 ).update(status='reserv')
+                                 ).update(status='reserv', is_active=0)
             reserv_order = Order.objects.get(user=self.request.user, merchant_uid=order.merchant_uid, status='reserv')
             reserv_order.update()
 
@@ -356,6 +400,7 @@ class OrderNew(FormView):
 #     })
 
 
+@method_decorator(login_required, name='dispatch')
 class OrderPay(CreateView):
     model = Order
     form_class = PayForm
@@ -385,6 +430,7 @@ class OrderPay(CreateView):
 #     return redirect('trade:trade_history')
 
 
+@method_decorator(login_required, name='dispatch')
 class OrderCancle(RedirectView):
     url = 'trade:trade_history'
 
@@ -403,7 +449,7 @@ class OrderCancle(RedirectView):
         return redirect(self.url)
 
 
-
+@method_decorator(login_required, name='dispatch')
 class OrderConfirm(RedirectView):
     url = 'trade:trade_history'
 
@@ -442,6 +488,7 @@ class OrderConfirm(RedirectView):
 #     })
 
 
+@method_decorator(login_required, name='dispatch')
 class TradeHistory(TemplateView):
     template_name = 'trade/trade_history.html'
 
