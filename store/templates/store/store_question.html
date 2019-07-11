@@ -43,6 +43,15 @@ top: 33px;
   cursor: pointer;
   text-align: center;
 }
+.scrollblind{
+	height:50px;
+	overflow-y:auto;
+	overflow-x: none;
+	-ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+}
 </style>
 
 {% endblock %}
@@ -96,7 +105,7 @@ he
                   {% endif %}
                 </div>
                 <hr/>
-                <div style=" overflow:scroll; height:70px;" > {{ comm.comment | linebreaks }}</div>
+                <div class="scrollblind" > {{ comm.comment | linebreaks }}</div>
 
             </div>
         </div>
@@ -120,7 +129,7 @@ he
                       {% endif %}
                     </div>
                     <hr/>
-                    <div style=" overflow:scroll; height:70px;" >{{ replay.comment | linebreaks }}</div>
+                    <div class="scrollblind" >{{ replay.comment | linebreaks }}</div>
                 </div>
             </div>
         </div>

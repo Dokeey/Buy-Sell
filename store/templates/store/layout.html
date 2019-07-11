@@ -255,12 +255,13 @@ background-color: blue;
     margin-bottom: 17px;
 }
 
-.hidescroll{
-overflow-y: hidden;
-  overflow-x: auto;
- -ms-overflow-style: none; // IE에서 스크롤바 감춤
+.scrollBlind{
+	height:100px;
+	overflow-y:auto;
+	overflow-x: none;
+	-ms-overflow-style: none;
   &::-webkit-scrollbar {
-    display: none !important; // 윈도우 크롬 등
+    display: none !important;
   }
 }
 </style>
@@ -366,7 +367,7 @@ overflow-y: hidden;
                 <div class="col-md-2">
                     <i class="fas fa-pencil-alt" style="color:#993800"></i> 가게 소개
                 </div>
-                <div class="col-md-10 col-xs-12 hidescroll" style="overflow:scroll; height:100px;">
+                <div class="col-md-10 col-xs-12 scrollBlind">
                    {{ stores.comment | linebreaks }}
                 </div>
             </div> <hr/>
