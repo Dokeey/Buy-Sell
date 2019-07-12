@@ -20,7 +20,7 @@ class ItemCommentAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['imp_uid', 'user', 'name', 'amount_html', 'status_html', 'paid_at', 'receipt_link']
+    list_display = ['id', 'imp_uid', 'user', 'name', 'amount_html', 'status_html', 'paid_at', 'receipt_link', 'is_active']
     actions = ['do_update', 'do_cancel']
 
     def do_update(self, request, queryset):

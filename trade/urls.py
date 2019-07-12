@@ -19,6 +19,7 @@ urlpatterns = [
     path('order/<int:item_id>/pay/<merchant_uid>/', views.OrderPay.as_view(), name='order_pay'),
     path('order/cancle/<int:order_id>/', views.OrderCancle.as_view(), name='order_cancle'),
     path('order/confirm/<int:order_id>/', views.OrderConfirm.as_view(), name='order_confirm'),
+    path('seller/confirm/<int:order_id>/', views.SellerConfirm.as_view(), name='seller_confirm'),
 
     path('histroy/', views.TradeHistory.as_view(), name='trade_history'),
     path('test/', views.test, name='test'),

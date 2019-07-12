@@ -64,7 +64,6 @@ class Item(models.Model, HitCountMixin):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # is_active = models.BooleanField(default=1)
 
     hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
 
@@ -132,6 +131,7 @@ class Order(models.Model):
     meta = JSONField(blank=True, default={})
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
 
     is_ready = property(lambda self: self.status == 'ready')
     is_paid = property(lambda self: self.status == 'paid')

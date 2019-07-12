@@ -357,7 +357,7 @@ class OrderNew(FormView):
             Order.objects.filter(user=self.request.user,
                                  merchant_uid=order.merchant_uid,
                                  status='ready'
-                                 ).update(status='reserv', is_active=0)
+                                 ).update(status='reserv', is_active=False)
             reserv_order = Order.objects.get(user=self.request.user, merchant_uid=order.merchant_uid, status='reserv')
             reserv_order.update()
 
@@ -438,9 +438,18 @@ class OrderCancle(RedirectView):
     def get(self, request, *args, **kwargs):
         try:
             queryset = Order.objects.get(id=self.kwargs.get('order_id'))
+
+            if not self.request.user in (queryset.user, queryset.item.user):
+                messages.error(request, '잘못된 접근입니다.')
+                return redirect(self.url)
+
             if queryset.status == "cancelled":
                 messages.error(request, '이미 주문을 취소하셨습니다.')
                 return redirect(self.url)
+            elif queryset.status == "success":
+                messages.error(request, '거래가 완료된 상태입니다.')
+                return redirect(self.url)
+
             queryset.cancel()
             messages.info(request, '주문을 취소하셨습니다.')
         except:
@@ -457,9 +466,18 @@ class OrderConfirm(RedirectView):
     def get(self, request, *args, **kwargs):
         try:
             queryset = Order.objects.get(id=self.kwargs.get('order_id'))
+
+            if self.request.user != queryset.user or not queryset.is_active:
+                messages.error(request, '잘못된 접근입니다.')
+                return redirect(self.url)
+
             if queryset.status == "success":
                 messages.error(request, '이미 구매확정 하셨습니다.')
                 return redirect(self.url)
+            elif queryset.status == "cancelled":
+                messages.error(request, '거래가 취소된 상품입니다.')
+                return redirect(self.url)
+
             elif queryset.status in ('reserv','paid'):
                 queryset.status = 'success'
                 queryset.meta['paid_at'] = int(time())
@@ -474,6 +492,34 @@ class OrderConfirm(RedirectView):
         return redirect(self.url)
 
 
+@method_decorator(login_required, name='dispatch')
+class SellerConfirm(RedirectView):
+    url = 'trade:trade_history'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            queryset = Order.objects.get(id=self.kwargs.get('order_id'))
+
+            if self.request.user != queryset.item.user:
+                messages.error(request, '잘못된 접근입니다.')
+                return redirect(self.url)
+
+            if queryset.status == "success":
+                messages.error(request, '이미 구매확정 하셨습니다.')
+                return redirect(self.url)
+            elif queryset.status == "cancelled":
+                messages.error(request, '거래가 취소된 상품입니다.')
+                return redirect(self.url)
+
+            if not queryset.is_active:
+                queryset.is_active = True
+                queryset.save()
+                messages.info(request, '입금을 확인하셨습니다.')
+
+        except:
+            messages.error(request, '유효하지 않은 상품입니다.')
+
+        return redirect(self.url)
 # @login_required
 # def trade_history(request):
 #     order_list = request.user.order_set.all()

@@ -152,7 +152,7 @@
                                   {% if user.is_authenticated %}
 
                                     <li class="dropdown">
-                                      <a href="{% url "mypage:root" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">MY PAGE<span class="caret"></span></a>
+                                      <a href="{% url "mypage:root" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ request.user.profile.nick_name }} PAGE<span class="caret"></span></a>
                                       <ul class="dropdown-menu">
                                         <li><a href="{% url "trade:trade_history" %}">거래 내역</a></li>
                                         <li><a href="{% url "trade:item_new" %}">물품 등록</a></li>
