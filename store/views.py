@@ -131,7 +131,7 @@ class StoreGradeCreateView(CreateView):
         try:
             StoreGrade.objects.get(store_item_id = kwargs['item_id'])
             messages.error(request, '이미 리뷰를 작성하셨습니다.')
-            return redirect("trade:trade_history")
+            return redirect("trade:order_history")
         except:
             items = get_object_or_404(Item, pk=self.kwargs['item_id'])
             return render(request, self.template_name,{'form':self.form_class, 'items': items})

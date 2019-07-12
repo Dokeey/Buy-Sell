@@ -71,6 +71,7 @@ class SearchItemList(ListView):
 
         page_range = paginator.page_range[start_index:end_index]
         context['page_range'] = page_range
+
         context['sort'] = self.request.GET.get('sort','-created_at')
         context['item_ctn'] = self.get_queryset().count()
         if self.query:

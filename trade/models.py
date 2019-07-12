@@ -127,8 +127,8 @@ class Order(models.Model):
             ('paid', '결제완료'),
             ('cancelled', '결제취소'),
             ('failed', '결제실패'),
-            ('reserv', '구매예약'),
-            ('success', '구매완료'),
+            ('reserv', '거래예약'),
+            ('success', '거래완료'),
         ),
         default='ready',
         db_index=True
@@ -178,7 +178,7 @@ class Order(models.Model):
 
     @named_property('결제금액')
     def amount_html(self):
-        return mark_safe('<div style="float: center;">{0}</div>'.format(intcomma(self.amount)))
+        return mark_safe('<div style="float: center;">{0} 원</div>'.format(intcomma(self.amount)))
 
     @named_property('처리결과')
     def status_html(self):

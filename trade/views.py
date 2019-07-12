@@ -403,7 +403,7 @@ class OrderPay(CreateView):
     model = Order
     form_class = PayForm
     template_name = 'trade/pay_form.html'
-    success_url = reverse_lazy('trade:trade_history')
+    success_url = reverse_lazy('trade:order_history')
 
 
     def get_form_kwargs(self):
@@ -430,7 +430,7 @@ class OrderPay(CreateView):
 
 @method_decorator(login_required, name='dispatch')
 class OrderCancle(RedirectView):
-    url = 'trade:trade_history'
+    url = 'trade:order_history'
 
 
     def get(self, request, *args, **kwargs):
@@ -458,7 +458,7 @@ class OrderCancle(RedirectView):
 
 @method_decorator(login_required, name='dispatch')
 class OrderConfirm(RedirectView):
-    url = 'trade:trade_history'
+    url = 'trade:order_history'
 
 
     def get(self, request, *args, **kwargs):
@@ -492,7 +492,7 @@ class OrderConfirm(RedirectView):
 
 @method_decorator(login_required, name='dispatch')
 class SellerConfirm(RedirectView):
-    url = 'trade:trade_history'
+    url = 'trade:seller_history'
 
     def get(self, request, *args, **kwargs):
         try:
@@ -532,21 +532,52 @@ class SellerConfirm(RedirectView):
 #     })
 
 
-@method_decorator(login_required, name='dispatch')
-class TradeHistory(TemplateView):
-    template_name = 'trade/trade_history.html'
-
+class BaseHistory(ListView):
+    model = Order
+    template_name = 'trade/order_history.html'
+    ordering = '-created_at'
+    paginate_by = 4
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['order_list'] = self.request.user.order_set.all()
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
 
-        orders = Order.objects.all()
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class OrderHistory(BaseHistory):
+    context_object_name = 'order_list'
+
+    def get_queryset(self):
+        self.queryset = self.request.user.order_set.all()
+        return super().get_queryset()
+
+
+@method_decorator(login_required, name='dispatch')
+class SellerHistory(BaseHistory):
+    template_name = 'trade/seller_history.html'
+    context_object_name = 'sell_list'
+
+    def get_queryset(self):
+        orders = self.model.objects.all()
         sell_list = []
         for order in orders:
             if order.item.user == self.request.user:
-                sell_list.append(order)
+                sell_list.append(order.id)
 
-        context['sell_list'] = sell_list
-
-        return context
+        self.queryset = self.model.objects.filter(id__in=sell_list)
+        return super().get_queryset()

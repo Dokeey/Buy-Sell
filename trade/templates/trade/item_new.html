@@ -26,7 +26,7 @@
     {% csrf_token %}
     <div class="form-group">
         <div class="form-group">
-            <div class="col-sm-11 col-sm-offset-1">
+            <div class="col-sm-11 col-sm-offset-1 text-center">
                 <h2>물품 등록<br><small>물품을 등록하시면 내 가게에 물품이 진열되고, 해당 카테고리에 광고가 됩니다.</small></h2>
             </div>
         </div>
@@ -35,7 +35,7 @@
         <label class="col-sm-1 control-label">{{ form.photo.label }}</label>
           <div class=" col-sm-11">
               <small class="img-help text-right"></small>
-              <label for="{{ form.photo.id_for_label }}" id="dropZone" class="well text-muted text-center col-xs-12" style="padding-top: 4rem; padding-bottom: 4rem; background:#dddddd;">
+              <label for="{{ form.photo.id_for_label }}" id="dropZone" class="thumbnail well text-muted text-center col-xs-12" style="padding-top: 4rem; padding-bottom: 4rem; background:#dddddd;">
                   <div class="fileList"></div>
                   <div id="upload_help">
                       <i class="fas fa-arrow-alt-circle-down fa-5x"></i>
@@ -129,7 +129,7 @@
             e.stopPropagation();
             e.preventDefault();
             // 드롭다운 영역 css
-            dropZone.css('background-color','#FFFFFF');
+            dropZone.css('background-color','#dddddd');
         });
         dropZone.on('dragover',function(e){
             e.stopPropagation();
@@ -140,7 +140,7 @@
         dropZone.on('drop',function(e){
             e.preventDefault();
             // 드롭다운 영역 css
-            dropZone.css('background-color','#FFFFFF');
+            dropZone.css('background-color','#dddddd');
 
             var files = e.originalEvent.dataTransfer.files;
             if(files != null){

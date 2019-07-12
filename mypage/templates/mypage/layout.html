@@ -13,7 +13,8 @@
     <h2>MY PAGE</h2>
     <div class="nav-collapse">
         <ul class="nav nav-pills nav-stacked" ><hr>
-            <li role="presentation"><a href="{% url "trade:trade_history" %}">거래 내역</a></li><hr>
+            <li role="presentation"><a href="{% url "trade:order_history" %}">구매 내역</a></li><hr>
+            <li role="presentation"><a href="{% url "trade:seller_history" %}">판매 내역</a></li><hr>
             <li role="presentation"><a href="{% url "trade:item_new" %}">물품 등록</a></li><hr>
             <li role="presentation"><a href="{% url "mypage:wishlist" %}">찜 목록</a></li><hr>
             <li role="presentation"><a href="{% url "mypage:follow" %}">팔로우</a></li><hr>

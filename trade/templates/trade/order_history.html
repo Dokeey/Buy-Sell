@@ -1,0 +1,115 @@
+{% extends "mypage/layout.html" %}
+
+{% block mypage_content %}
+<style>
+    .thumbnail:hover {
+        cursor:auto;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row text-center">
+        <h2>구매 내역</h2>
+    </div>
+    {% for order in order_list %}
+    <div class="row thumbnail" style="padding: 10px; margin:5px;">
+        <div class="col-sm-9" style="padding:0px;">
+            <div class="col-xs-3">
+                <div id="iteminfo" class="carousel slide" data-ride="carousel">
+                    <!--페이지-->
+                    <div class="carousel-inner">
+                        {% for item_image in order.item.itemimage_set.all %}
+                            {% if forloop.counter == 1 %}
+                                <div class="item active">
+                            {% else %}
+                                <div class="item">
+                            {% endif %}
+                                    <a href="{% url "trade:item_detail" order.item.id %}">
+                                        <img class="img-thumbnail img-responsive" style="width:auto;" src="{{ item_image.photo.url }}"/>
+                                    </a>
+                                </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-9" style="padding:5px;">
+                <div class="col-xs-12" style="padding:0px;">
+                    <b class="col-xs-9" style="padding:0px;">{{ order.name }}</b><b class="col-xs-3 text-right pull-right" style="color:orange;padding:0px;">{{ order.amount_html }}</b>
+                </div>
+                <div class="col-xs-12" style="padding:0px;">
+                    <br>{{ order.status_html }}
+                    <small class="pull-right"><i class="far fa-clock"></i> {{ order.updated_at }}</small>
+                <hr>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 text-center" style="padding:5px;">
+            <div class="row" style="margin:5px">{{ order.receipt_link|default:"-" }}</div>
+            <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.item.user.storeprofile.pk %}">
+                <i class="fas fa-user"></i> {{ order.item.user.profile.nick_name }}</a>
+            </div>
+            {% if order.status == 'paid' or order.status == 'reserv' and order.is_active %}
+            <div class="row" style="margin:5px">
+                <a href="{% url "trade:order_confirm" order.id %}"><i class="fa fa-check-circle"></i> 구매 확정</a><br>
+            </div>
+            {% endif %}
+            {% if order.status == 'success' %}
+            <div class="row" style="margin:5px">
+                <a href="{% url "store:store_grade_new" order.item.user.storeprofile.pk order.item.pk %}"><i class="fas fa-pencil-alt"></i> 리뷰쓰러가기</a>
+            </div>
+            {% endif %}
+            {% if order.status == 'paid' or order.status == 'reserv' %}
+            <div class="row" style="margin:5px">
+                <a href="{% url "trade:order_cancle" order.id %}"><i class="fa fa-times"></i> 주문 취소</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+        <h2 class="text-center"><small><i class="far fa-meh"></i> 구매 내역이 없습니다</small></h2>
+    {% endfor %}
+</div>
+
+
+<div class="container-fluid text-center">
+{% if is_paginated %}
+  <nav>
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">
+            <span>Prev</span>
+          </a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href="#">
+            <span>Previous</span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% for page in page_range %}
+        <li {% if page == page_obj.number %}class="active"{% endif %}>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page }}">{{ page }}</a>
+        </li>
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">
+            <span>Next</span>
+          </a>
+        </li>
+      {% else %}
+        <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+          <a href="#">
+            <span>Next</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}
+</div>
+
+{% endblock %}
