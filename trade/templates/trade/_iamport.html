@@ -4,8 +4,8 @@ $(function() {
     IMP.init("{{ iamport_shop_id }}");
     IMP.request_pay(params, function(response_data){
         if ( ! response_data.success ) {
-            alert(response_data.error_msg + "(" + response_data.error_code + ")");
-            location.href = '{% url "root" %}';
+            <!--alert(response_data.error_msg + "(" + response_data.error_code + ")");-->
+            location.href = '{% url "trade:trade_history" %}';
         }
         var $form = $("#iamport-script").closest("form");
 

@@ -35,21 +35,24 @@ def main(query):
         return ' '.join(s.split())
 
     for item_tag in soup.select('#_search_list ._itemSection'):
-        user = userlist[randint(0, count - 1)]  # Index of User
-        status = item_status[randint(0, 3)] # item_status
-        name = trim(item_tag.select('a.tit')[0].text)[0:50]  # title
-        price = trim(item_tag.select('.price .num')[0].text).replace(',', '').replace('$','').replace('.','')  # amount
-        img_url = item_tag.select('img[data-original]')[0]['data-original']
+        try:
+            user = userlist[randint(0, count - 1)]  # Index of User
+            status = item_status[randint(0, 3)] # item_status
+            name = trim(item_tag.select('a.tit')[0].text)[0:50]  # title
+            price = trim(item_tag.select('.price .num')[0].text).replace(',', '').replace('$','').replace('.','')  # amount
+            img_url = item_tag.select('img[data-original]')[0]['data-original']
+            res = requests.get(img_url, stream=True)
+            img_name = os.path.basename(img_url.split('?', 1)[0])
+        except:
+            continue
 
         try:
             detest = item_tag.select('.detail')[0].text
         except:
             detest = ''
 
-        res = requests.get(img_url, stream=True)
-        img_name = os.path.basename(img_url.split('?', 1)[0])
 
-        print(name, price, detest, img_name, img_url)
+        print(name, price, detest, img_name,img_url)
         print('')
         print(user, status)
         print('')

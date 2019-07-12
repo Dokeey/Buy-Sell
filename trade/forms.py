@@ -14,6 +14,7 @@ from .models import Item, ItemComment, Order
 from accounts.forms import ProfileForm
 
 
+
 class ItemForm(forms.ModelForm):
     photo = forms.ImageField()
     category = TreeNodeChoiceField(queryset=Category.objects.all(), level_indicator=unichr(0x00A0) * 4)
@@ -55,6 +56,7 @@ class ItemForm(forms.ModelForm):
         fields = ['title','desc','amount','photo','category', 'item_status']
 
 
+
 class ItemUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ItemUpdateForm, self).__init__(*args, **kwargs)
@@ -66,6 +68,7 @@ class ItemUpdateForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = ['pay_status']
+
 
 
 class ItemCommentForm(forms.ModelForm):
@@ -81,6 +84,8 @@ class ItemCommentForm(forms.ModelForm):
             'class': 'form-control col-sm-10',
             'placeholder': '어떤게 궁금하세요?'
         })
+
+
 
 class PayForm(forms.ModelForm):
     class Meta:
@@ -98,11 +103,11 @@ class PayForm(forms.ModelForm):
             'merchant_uid': str(self.instance.merchant_uid),
             'name': self.instance.name,
             'amount': self.instance.amount,
-            'buyer_email': self.instance.buyer_email,
-            'buyer_name': self.instance.buyer_name,
-            'buyer_tel': self.instance.buyer_tel,
-            'buyer_addr': self.instance.buyer_addr,
-            'buyer_postcode': self.instance.buyer_postcode,
+            'buyer_email': self.instance.email,
+            'buyer_name': self.instance.username,
+            'buyer_tel': self.instance.phone,
+            'buyer_postcode': self.instance.post_code,
+            'buyer_addr': self.instance.address + self.instance.detail_address,
         }
         return hidden_fields + render_to_string('trade/_iamport.html', {
             'json_fields': mark_safe(json.dumps(fields, ensure_ascii=False)),
@@ -116,13 +121,63 @@ class PayForm(forms.ModelForm):
         order.update()
         return order
 
-class OrderForm(ProfileForm):
+
+
+class OrderForm(forms.ModelForm):
     CHOICE = (
         ('import', '이니페이 카드결제'),
         ('bank_trans', '계좌이체'),
     )
     pay_choice = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICE)
+
+    def __init__(self, *args, **kwargs):
+        super(OrderForm, self).__init__(*args, **kwargs)
+        self.fields['pay_choice'].label = '거래방식'
+        self.fields['pay_choice'].widget.attrs.update({
+            'class': 'col-sm-10',
+        })
+        self.fields['username'].label = '수령인'
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '실명을 입력해주세요',
+        })
+        self.fields['email'].label = '이메일'
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': 'ex) buynsell@naver.com',
+        })
+        self.fields['phone'].label = '연락처'
+        self.fields['phone'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': "'-'를 제외한 숫자로 입력해주세요",
+        })
+        self.fields['post_code'].label = '우편번호'
+        self.fields['post_code'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '우편 번호',
+            'onclick': 'Postcode()',
+        })
+        self.fields['address'].label = '주소'
+        self.fields['address'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '주소',
+            'onclick': 'Postcode()',
+            'rows': 1,
+            'cols': 80,
+        })
+        self.fields['detail_address'].label = '상세주소'
+        self.fields['detail_address'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '상세 주소',
+        })
+        self.fields['requirement'].label = '배송시 요청사항'
+        self.fields['requirement'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '요청사항을 기입하세요',
+            'rows': 2,
+            'cols': 80,
+        })
+
     class Meta:
-        model = ProfileForm.Meta.model
-        fields = ProfileForm.Meta.fields + ['pay_choice']
-        widgets = ProfileForm.Meta.widgets
+        model = Order
+        fields = ['pay_choice', 'email', 'username', 'phone', 'post_code', 'address', 'detail_address', 'requirement']

@@ -6,6 +6,7 @@ from django.db import models
 from django.utils.crypto import get_random_string
 
 # Create your models here.
+from accounts.validators import phone_validate
 
 
 class UserManager(AuthUserManager):
@@ -29,12 +30,6 @@ class UserManager(AuthUserManager):
 
         return user
 
-
-phone_validate = RegexValidator(
-    regex=r'^0\d{8,10}$',
-    message='정확한 연락처를 적어주세요.',
-    code='invalid_phone'
-)
 
 class User(AbstractUser):
     object = UserManager()

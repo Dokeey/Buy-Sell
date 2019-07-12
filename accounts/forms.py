@@ -22,23 +22,9 @@ class SignupForm(UserCreationForm):
 
     phone = forms.CharField()
     nick_name = forms.CharField()
-    post_code = forms.CharField(widget=forms.TextInput(attrs={
-                'readonly': 'readonly',
-                'onclick': 'Postcode()',
-                'placeholder': '우편 번호',
-            }),
-    )
-    address = forms.CharField(widget=forms.Textarea(attrs={
-                'readonly':'readonly',
-                'onclick': 'Postcode()',
-                'placeholder': '주소',
-                'rows': 1,
-                'cols': 80,
-            }),
-    )
-    detail_address = forms.CharField(widget=forms.TextInput(attrs={
-                'placeholder': '상세 주소',
-            }),)
+    post_code = forms.CharField()
+    address = forms.CharField()
+    detail_address = forms.CharField()
     account_num = forms.CharField()
     email = forms.EmailField()
 
@@ -51,25 +37,63 @@ class SignupForm(UserCreationForm):
     '''
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields['email'].help_text = '이메일을 써야해요'
-        self.fields['email'].label = '이메일'
-
+        super(SignupForm, self).__init__(*args, **kwargs)
         self.fields['username'].label = 'ID'
-
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': 'ID를 정해주세요',
+        })
+        self.fields['password1'].label = '비밀번호'
+        self.fields['password1'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '비밀번호를 입력해주세요',
+        })
+        self.fields['password2'].label = '비밀번호 확인'
+        self.fields['password2'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '비밀번호를 확인하겠습니다',
+        })
         self.fields['nick_name'].label = '닉네임'
-        # self.fields['nick_name'].validators = [id_validate]
-
-        self.fields['address'].label = '주소'
-
-        self.fields['phone'].validators = [validate_integer, phone_validate]
-        self.fields['phone'].help_text = "'-'를 제외한 숫자만 입력해주세요"
+        self.fields['nick_name'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '닉네임을 정해주세요',
+        })
+        self.fields['email'].label = '이메일'
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': 'ex) buynsell@naver.com',
+        })
         self.fields['phone'].label = '연락처'
-
-        self.fields['account_num'].validators = [validate_integer, MaxLengthValidator(20)]
-        self.fields['account_num'].help_text = "'-'를 제외한 숫자만 입력해주세요"
+        self.fields['phone'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': "'-'를 제외한 숫자로 입력해주세요",
+        })
+        self.fields['post_code'].label = '우편번호'
+        self.fields['post_code'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '우편 번호',
+            'readonly': 'readonly',
+            'onclick': 'Postcode()',
+        })
+        self.fields['address'].label = '주소'
+        self.fields['address'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '주소',
+            'readonly':'readonly',
+            'onclick': 'Postcode()',
+            'rows': 1,
+            'cols': 80,
+        })
+        self.fields['detail_address'].label = '상세주소'
+        self.fields['detail_address'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '상세 주소',
+        })
         self.fields['account_num'].label = '계좌번호'
+        self.fields['account_num'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': "'-'를 제외한 숫자로 입력해주세요",
+        })
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -116,27 +140,51 @@ class SignupForm(UserCreationForm):
 
 
 class ProfileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.fields['nick_name'].label = '닉네임'
+        self.fields['nick_name'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '닉네임을 정해주세요',
+        })
+        self.fields['email'].label = '이메일'
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': 'ex) buynsell@naver.com',
+        })
+        self.fields['phone'].label = '연락처'
+        self.fields['phone'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': "'-'를 제외한 숫자로 입력해주세요",
+        })
+        self.fields['post_code'].label = '우편번호'
+        self.fields['post_code'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '우편 번호',
+            'onclick': 'Postcode()',
+        })
+        self.fields['address'].label = '주소'
+        self.fields['address'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '주소',
+            'onclick': 'Postcode()',
+            'rows': 1,
+            'cols': 80,
+        })
+        self.fields['detail_address'].label = '상세주소'
+        self.fields['detail_address'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '상세 주소',
+        })
+        self.fields['account_num'].label = '계좌번호'
+        self.fields['account_num'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': "'-'를 제외한 숫자로 입력해주세요",
+        })
+
     class Meta:
         model = Profile
         fields = ['nick_name', 'email', 'phone', 'post_code', 'address', 'detail_address','account_num']
-        widgets = {
-            'address': forms.Textarea(attrs={
-                'readonly':'readonly',
-                'onclick': 'Postcode()',
-                'placeholder': '주소',
-                'rows': 1,
-                'cols': 80,
-            }),
-            'detail_address': forms.TextInput(attrs={
-                'placeholder': '상세 주소',
-            }),
-            'post_code': forms.TextInput(attrs={
-                'readonly': 'readonly',
-                'onclick': 'Postcode()',
-                'placeholder': '우편 번호',
-            }),
-
-        }
 
 
 class AuthProfileForm(ProfileForm):
@@ -147,7 +195,6 @@ class AuthProfileForm(ProfileForm):
     class Meta:
         model = ProfileForm.Meta.model
         fields = ProfileForm.Meta.fields + ['password']
-        widgets = ProfileForm.Meta.widgets
 
 class CheckUserForm(forms.Form):
     password = forms.CharField(

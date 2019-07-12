@@ -344,7 +344,22 @@
                 {% for it in items %}
                     <td style="max-height: 200px;">
                         <a href="{% url "trade:item_detail" it.id %}">
-                            <img class=" img-thumbnail img-responsive" style="" src="{{ it.itemimage_set.first.photo.url }}"/><br>
+                            <div id="iteminfo" class="carousel slide" data-ride="carousel">
+                                <!--페이지-->
+                                <div class="carousel-inner">
+                            {% for item_image in it.itemimage_set.all %}
+                                {% if forloop.counter == 1 %}
+                                    <div class="item active">
+                                {% else %}
+                                    <div class="item">
+                                {% endif %}
+                                        <a href="{% url "trade:item_detail" item.id %}">
+                                            <img class="img-thumbnail img-responsive" style="width:auto;" src="{{ item_image.photo.url }}"/>
+                                        </a>
+                                    </div>
+                            {% endfor %}
+                                </div>
+                            </div>
                             <h6>{{ it.amount|intcomma }} <small>원</small></h6>
                         </a>
                 {% empty %}

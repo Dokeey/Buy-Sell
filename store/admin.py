@@ -5,7 +5,7 @@ from .models import StoreProfile, QuestionComment, StoreGrade
 
 @admin.register(StoreProfile)
 class StoreProfileAdmin(admin.ModelAdmin):
-	list_display=['user','name']
+	list_display=['id', 'user','name']
 
 @admin.register(QuestionComment)
 class CommentAdmin(admin.ModelAdmin):

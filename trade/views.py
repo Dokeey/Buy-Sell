@@ -318,6 +318,19 @@ class OrderNew(FormView):
     form_class = OrderForm
     template_name = 'trade/order_form.html'
 
+    def get(self, request, *args, **kwargs):
+        item = get_object_or_404(Item, pk=self.kwargs.get('item_id'))
+
+        if item.user == self.request.user:
+            messages.error(self.request, '자신의 물품은 구매할수 없습니다.')
+            return self.get_success_url()
+
+        if item.pay_status != "ready":
+            messages.error(self.request, '이미 예약이 되었거나 판매완료 상품입니다.')
+            return self.get_success_url()
+
+        return super().get(request, *args, **kwargs)
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -336,19 +349,17 @@ class OrderNew(FormView):
     def form_valid(self, form):
         item = self.get_context_data()['item']
 
-        if item.user == self.request.user:
-            messages.error(self.request, '자신의 물품은 구매할수 없습니다.')
-            return self.get_success_url()
-
         order = Order.objects.create(user=self.request.user,
                                      item=item,
                                      name=item.title,
                                      amount=item.amount,
-                                     buyer_email=form.cleaned_data['email'],
-                                     buyer_name=form.cleaned_data['nick_name'],
-                                     buyer_tel=form.cleaned_data['phone'],
-                                     buyer_postcode=form.cleaned_data['post_code'],
-                                     buyer_addr=form.cleaned_data['address'] + form.cleaned_data['detail_address'],
+                                     email=form.cleaned_data['email'],
+                                     username=form.cleaned_data['username'],
+                                     phone=form.cleaned_data['phone'],
+                                     post_code=form.cleaned_data['post_code'],
+                                     address=form.cleaned_data['address'],
+                                     detail_address = form.cleaned_data['detail_address'],
+                                     requirement = form.cleaned_data['requirement'],
                                      )
 
         if form.cleaned_data['pay_choice'] == 'import':
@@ -364,19 +375,6 @@ class OrderNew(FormView):
             return render(self.request, 'trade/seller_info.html', {
                 'seller': item.user
             })
-
-
-    def form_invalid(self, form):
-        messages.error(self.request, '유효하지 않은 상품입니다.')
-        return self.get_success_url()
-
-
-    def render_to_response(self, context, **response_kwargs):
-        if context['item'].pay_status != "ready":
-            messages.error(self.request, '이미 예약이 되었거나 판매완료 상품입니다.')
-            return self.get_success_url()
-
-        return super().render_to_response(context, **response_kwargs)
 
 
     def get_success_url(self):

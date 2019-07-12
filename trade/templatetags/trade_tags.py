@@ -35,6 +35,30 @@ def status_check(status):
         html = """<i class="far fa-handshake"></i> <span style="color:red;"><b>{}</b></span>""".format(status)
     return html
 
+def photos(item):
+
+    html = """
+            <div id="iteminfo" class="carousel slide" data-ride="carousel">
+                <!--페이지-->
+                <div class="carousel-inner">
+                {}
+                </div>
+            </div> 
+        """
+    ht = ''
+    for i, item_image in enumerate(item.itemimage_set.all()):
+        if i == 0:
+            ht += '<div class="item active">'
+        else:
+            ht += '<div class="item">'
+        ht += """
+                <a href="{0}">
+                    <img class="img-thumbnail img-responsive" style="width:auto;" src="{1}"/>
+                </a>
+            </div>
+        """.format(resolve_url('trade:item_detail', item.id), item_image.photo.url)
+
+    return html.format(ht)
 
 @register.simple_tag
 def item_block(item):
@@ -59,18 +83,19 @@ def item_block(item):
     created_at = item.created_at.strftime("%Y년 %m월 %d일 %H:%M")
 
     updated_str = simple_time(item.updated_at)
+    created_str = simple_time(item.created_at)
 
     html = """
         <div class="thumbnail">
           <div class="caption text-center" onclick="location.href='{next_link}'">
             <div class="position-relative">
-              <img class="img-rounded img-thumbnail" src="{photo_url}" style="width:200px;height:200px;" />
+              {photos}
             </div>
             <h5 id="thumbnail-label"><i class="fas fa-won-sign"></i>&nbsp;{amount}</h4>            
             <div class="thumbnail-description smaller text-center">
                 <p><b>{title}</b></p>
                 <hr>
-                <i class="far fa-clock"></i>&nbsp;{updated_str}
+                <i class="far fa-clock"></i>&nbsp;{time}
             </div>
           </div>
           <div class="caption card-footer text-center">
@@ -86,8 +111,10 @@ def item_block(item):
                amount=amount,
                next_link=next_link,
                photo_url=photo_url,
+               photos=photos(item),
                item_status=item_status,
                pay_status=pay_status,
+               time=created_str,
                updated_at=updated_at,
                created_at=created_at,
                updated_str=updated_str,

@@ -102,14 +102,19 @@ class ItemComment(models.Model):
         ordering = ('-created_at',)
 
 
+from accounts.validators import phone_validate
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    buyer_email = models.EmailField()
-    buyer_name = models.CharField(max_length=10)
-    buyer_tel = models.CharField(max_length=11)
-    buyer_addr = models.CharField(max_length=100)
-    buyer_postcode = models.CharField(max_length=10)
+
+    email = models.EmailField(blank=True)
+    username = models.CharField(max_length=10)
+    phone = models.CharField(max_length=11, validators=[phone_validate])
+    post_code = models.CharField(max_length=10)
+    address = models.CharField(max_length=100)
+    detail_address = models.CharField(max_length=20)
+    requirement = models.TextField(max_length=30, blank=True)
+
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     merchant_uid = models.UUIDField(default=uuid4, editable=False)
     imp_uid = models.CharField(max_length=100, blank=True)

@@ -6,6 +6,7 @@
       </div>
         <form class="del-form" id="del-form" action="" method="post">
           <div class="modal-body col-xs-12">
+              <h3 class="text-center">댓글을 삭제하시겠습니까?</h3>
                 {{ form.as_p }}
                 {% csrf_token %}
           </div>
