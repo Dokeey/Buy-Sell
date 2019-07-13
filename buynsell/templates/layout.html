@@ -108,10 +108,11 @@
            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
            transition: 0.3s;
            min-width: 40%;
+           height: auto;
            border-radius: 5px;
          }
          .thumbnail-description {
-           min-height: 130px;
+           <!--min-height: 130px;-->
          }
          .thumbnail:hover {
            cursor: auto;
@@ -122,6 +123,13 @@
          }
          .navbar-fixed-top {
            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+         }
+         .thumbnail b {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            max-width: 100%;
          }
 
       .container {

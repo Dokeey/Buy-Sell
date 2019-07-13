@@ -31,9 +31,9 @@ def simple_time(time):
 
 def status_check(status):
     if status == '재고있음':
-        html = """<i class="far fa-handshake"></i> <span style="color:blue;"><b>{}</b></span>""".format(status)
+        html = """<i class="far fa-handshake"></i> <span style="color:#368AFF;">{}</span>""".format(status)
     else:
-        html = """<i class="far fa-handshake"></i> <span style="color:red;"><b>{}</b></span>""".format(status)
+        html = """<i class="far fa-handshake"></i> <span style="color:red;">{}</span>""".format(status)
     return html
 
 def photos(item):
@@ -89,22 +89,24 @@ def item_block(item):
     html = """
         <div class="thumbnail">
           <div class="caption text-center">
-            <div class="position-relative">
-              {photos}
+            <div class="">
+                <div class="position-relative">
+                  {photos}
+                </div>
             </div>
-            <h5 id="thumbnail-label"><i class="fas fa-won-sign"></i>&nbsp;{amount}</h5>            
-            <div class="thumbnail-description smaller text-center">
-                <p><b>{title}</b></p>
-                <hr>
-                <i class="far fa-clock"></i>&nbsp;{time}
+            <div class="">
+                <h4 id="thumbnail-label"><i class="fas fa-won-sign" style="color:green"></i>&nbsp;{amount}</h4><hr style="margin:5px">
+                <div class="thumbnail-description smaller text-center">
+                    <b>{title}</b>
+                    <hr style="margin:5px">
+                    <i class="far fa-clock"></i>&nbsp;{time}<hr style="margin:5px">
+                    <ul class="list-inline">
+                      <li><a href="{user_link}"><i class="fas fa-user light-red lighter bigger-120"></i>&nbsp;{user}</a></li>
+                      <li></li>
+                      <li class="pay-status">{pay_status}</li>
+                    </ul>
+                </div>
             </div>
-          </div>
-          <div class="caption card-footer text-center">
-            <ul class="list-inline">
-              <li><a href="{user_link}"><i class="fas fa-user light-red lighter bigger-120"></i>&nbsp;{user}</a></li>
-              <li></li>
-              <li class="pay-status">{pay_status}</li>
-            </ul>
           </div>
         </div>
     """.format(hit_count=hit_count,

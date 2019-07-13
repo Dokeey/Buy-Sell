@@ -65,7 +65,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-6 col-xs-12 text-center vcenter">
+        <div class="col-md-6 col-xs-12 text-center vcenter">
             <div class="col-xs-12">
 
                 <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -82,7 +82,7 @@
                     {% for item_image in item.itemimage_set.all %}
                             <div class="item {% if forloop.counter == 1 %}active{% endif %}">
                                 <a href="{{ item_image.photo.url }}">
-                                    <img class="img-thumbnail img-responsive img-rounded" style="padding:10px; width:auto;" src="{{ item_image.photo.url }}"/>
+                                    <img class="img-responsive" style="padding:0px; width:auto;" src="{{ item_image.photo.url }}"/>
                                 </a>
                             </div>
                     {% endfor %}
@@ -94,7 +94,7 @@
                     </div>
 
                 </div>
-        </div><div class="col-sm-6 col-xs-12 vcenter">
+        </div><div class="col-md-6 col-xs-12 vcenter">
             <div class="row" style="padding-left:30px">
                 <h2>{{ item.title }}</h2>
                 <h1>{{ item.amount|intcomma }}<small> 원</small></h1>
@@ -128,7 +128,7 @@
                     </button>
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-danger col-md-12 col-xs-12" style="margin-bottom:10px" onclick="location.href='{% url "mypage:wishlist_new" item.pk %}'">
+                    <button class="btn btn-danger col-md-12 col-xs-12" style="margin-bottom:10px" onclick="location.href='{% url "mypage:wishlist_new" item.pk %}?next={{ request.path }}'">
                         <i class="fab fa-gratipay"></i> 찜 {{ wish_ctn }}
                     </button>
                 </div>
