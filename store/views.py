@@ -1,6 +1,8 @@
+import operator
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.urls import reverse_lazy
@@ -18,6 +20,23 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 # def my_store_profile(request):
 #     stores = get_object_or_404(StoreProfile, user=request.user)
 #     return render(request, 'store/layout.html',{'stores': stores})
+
+
+class StarStoreListView(TemplateView):
+    template_name = 'store/star_store.html'
+    model = StoreProfile
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['grades'] = StoreGrade.objects.values_list('store_profile', flat=True).annotate(rating_sum=Sum('rating')/Count('rating')).order_by('-rating_sum')
+        print(context['grades'])
+        store_list = []
+        for i in range(0, context['grades'].count()):
+            store_list.append(StoreProfile.objects.get(pk=(context['grades'][i])))
+        context['stores'] = store_list
+        print(context['stores'])
+        return context
+
 
 class StoreSellListView(TemplateView):
     model = StoreProfile
