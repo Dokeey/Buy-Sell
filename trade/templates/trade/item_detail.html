@@ -6,10 +6,10 @@
 {% block head %}
     <meta property="fb:app_id"        content="642307389514788"/>
     <meta property="og:type"          content="website"/>
-    <meta property="og:url"           content="{{ request.META.HTTP_HOST }}{{ request.path }}" />
+    <meta property="og:url"           content="http://{{ request.META.HTTP_HOST }}{{ request.path }}" />
     <meta property="og:title"         content="{{ item.title }} {{ item.amount|intcomma }}원" />
     <meta property="og:description"   content="{{ item.desc|default:'-'|linebreaks }}" />
-    <meta property="og:image"         content="{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}" />
+    <meta property="og:image"         content="http://{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
 
 	<script>
@@ -27,10 +27,10 @@
               content: {
                 title: '{{ item.title }} {{ item.amount|intcomma }}원',
                 description: 'Buy & Sell에서 싸게 사자!',
-                imageUrl: '{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}',
+                imageUrl: 'http://{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}',
                 link: {
-                  webUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}',
-                  mobileWebUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}'
+                  webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                  mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
                 }
               },
             social: {
@@ -42,8 +42,8 @@
                 {
                   title: '빨리 사러가자!',
                   link: {
-                    mobileWebUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}',
-                    webUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}'
+                    mobileWebUrl: 'http://http://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                    webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
                   }
                 }
               ]
@@ -133,7 +133,7 @@
                     </button>
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="javascript:sharefacebook('{{ request.META.HTTP_HOST }}{{ request.path }}')">
+                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
                         <i class="fab fa-facebook-square"></i> 공유하기
                     </button>
                 </div>
