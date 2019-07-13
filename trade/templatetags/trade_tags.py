@@ -87,11 +87,11 @@ def item_block(item):
 
     html = """
         <div class="thumbnail">
-          <div class="caption text-center" onclick="location.href='{next_link}'">
+          <div class="caption text-center">
             <div class="position-relative">
               {photos}
             </div>
-            <h5 id="thumbnail-label"><i class="fas fa-won-sign"></i>&nbsp;{amount}</h4>            
+            <h5 id="thumbnail-label"><i class="fas fa-won-sign"></i>&nbsp;{amount}</h5>            
             <div class="thumbnail-description smaller text-center">
                 <p><b>{title}</b></p>
                 <hr>
@@ -102,7 +102,7 @@ def item_block(item):
             <ul class="list-inline">
               <li><a href="{user_link}"><i class="fas fa-user light-red lighter bigger-120"></i>&nbsp;{user}</a></li>
               <li></li>
-              <li>{pay_status}</li>
+              <li class="pay-status">{pay_status}</li>
             </ul>
           </div>
         </div>

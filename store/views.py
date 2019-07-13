@@ -19,17 +19,40 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 #     stores = get_object_or_404(StoreProfile, user=request.user)
 #     return render(request, 'store/layout.html',{'stores': stores})
 
-class StoreSellListView(TemplateView):
-    model = StoreProfile
+class StoreSellListView(ListView):
+    model = Item
     template_name = 'store/store_sell_list.html'
+    paginate_by = 20
+    context_object_name = 'items'
 
     # context_object_name = 'stores'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['stores'] = StoreProfile.objects.get(pk=self.kwargs['pk'])
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        context['stores'] = self.store
         hit_count = HitCount.objects.get_for_object(context['stores'])
         context['hit_count_response'] = HitCountMixin.hit_count(self.request, hit_count)
         return context
+
+    def get_queryset(self):
+        self.store = StoreProfile.objects.get(pk=self.kwargs['pk'])
+        self.queryset = self.store.user.item_set.all()
+        return super().get_queryset()
+
 
 class StoreProfileEditView(UpdateView):
     form_class = StoreProfileForm

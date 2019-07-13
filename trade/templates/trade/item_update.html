@@ -1,31 +1,52 @@
-{% extends "mypage/layout.html" %}
-
-{% block mypage_content %}
-<form class="form-horizontal" id="uploadForm" action="" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="form-group">
-        <div class="form-group">
-            <div class="col-sm-11 col-sm-offset-1">
-                <h2>물품 재고상태 수정</h2>
-            </div>
-        </div>
-    </div>
-      <div class="form-group">
-          <label for="{{ form.pay_status.id_for_label }}" class="col-sm-1 control-label">{{ form.pay_status.label }}</label>
-          <div class=" col-sm-11">
-              {{ form.pay_status }}
-          <div id="error_pay_status" class="col-sm-12" style="margin-top:10px"></div>
-          </div>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><i class="fas fa-edit" style="margin-right:10px"></i> 무엇을 하시겠습니까?</h4>
       </div>
-        <div class="form-group">
-            <div class="col-xs-3 col-sm-3 col-sm-offset-1" >
-                <button class="btn btn-primary col-xs-12">수정하기</button>
-            </div>
-            <div class="col-xs-3">
-                <a href="{% url "trade:item_delete" item.pk %}">
-                    <button type="button" class="btn col-xs-12" style="background:red; color:white;">삭제하기</button>
-                </a>
-            </div>
-        </div>
-</form>
-{% endblock %}
+        <form class="edit-form" id="edit-form" action="" method="post">
+          <div class="modal-body col-xs-12">
+              <div class="row" style="margin:5px">
+              <h4>재고가 변경되었나요?</h4><br>
+                {{ form.pay_status }}
+                {% csrf_token %}
+              </div>
+              <div class="row" style="margin:5px">
+                <button type="button" onclick="javascript:editSubmit()" data-dismiss="modal" class="btn col-xs-12 btn-primary" >재고 수정</button>
+              </div>
+              <hr>
+              <h4>등록하신 물품을 판매하고 있습니다</h4><br>
+              <div class="row" style="margin:5px">
+                    <a href="{% url "trade:item_detail" item.id %}"><button type="button" class="btn btn-info col-xs-12" >물품 보러가기</button></a>
+              </div>
+              <hr>
+              <h4>판매를 취소하시겠습니까?</h4><br>
+              <div class="row" style="margin:5px">
+                    <a class="del" href="#" data-form="{% url "trade:item_delete" item.id %}" title="Del">
+                        <button class="btn btn-danger col-xs-12">판매 취소</button>
+                    </a>
+              </div>
+              <hr>
+          </div>
+          <div class="modal-footer" style="margin:5px">
+              <div>
+            <button type="button" class="btn btn-default col-xs-12" data-dismiss="modal">취소</button>
+              </div>
+          </div>
+        </form>
+    </div>
+  </div>
+
+
+<script>
+    var del_url = '';
+
+    $(".del").click(function(ev) { // for each edit contact url
+        ev.preventDefault(); // prevent navigation
+        del_url = $(this).data("form"); // get the contact form url
+        $("#modal").load(del_url, function() { // load the url into the modal
+            $(this).modal("show"); // display the modal on url load
+        });
+        return false; // prevent the click propagation
+    });
+</script>

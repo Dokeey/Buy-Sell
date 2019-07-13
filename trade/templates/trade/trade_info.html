@@ -12,7 +12,6 @@
     }
 </style>
 <div class="container-fluid" style="padding:0px">
-    <h2> 아래 해당하는 정보를 참고하시고 거래를 마쳐주세요. </h2>
     <div class="row thumbnail" style="padding: 10px; margin:5px;">
         <div class="col-sm-9" style="padding:0px;">
             <div class="col-xs-3">
@@ -63,6 +62,9 @@
                 <a href="{% url "trade:order_cancle" order.id %}"<button class="btn btn-danger col-xs-12"><i class="fa fa-times"></i> 주문 취소</button></a>
             </div>
             {% endif %}
+        </div>
+        <div class="row col-xs-12 text-center">
+                <h4>결제일 <b style="color:red">{{ order.created_at }}</b> 로부터 <b style="color:red">2일</b> 전까지 입금이 <b style="color:#368AFF">확인</b> 되어야합니다.</h4>
         </div>
     </div>
 </div>

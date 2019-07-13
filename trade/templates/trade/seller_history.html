@@ -9,9 +9,6 @@
     }
 </style>
 <div class="container-fluid">
-    <div class="row text-center">
-        <h2>판매 내역 <span style="color:red">{{ sell_ctn }}개</span></h2>
-    </div>
     {% for order in sell_list %}
     {% order_time_check order %}
     <div class="row thumbnail" style="padding: 10px; margin:5px;">

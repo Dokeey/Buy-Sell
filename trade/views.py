@@ -187,7 +187,11 @@ class ItemUpdate(UpdateView):
             messages.error(self.request, '예약중인 상품은 변경할 수 없습니다.')
             return redirect('trade:item_detail', self.kwargs.get('pk'))
 
-        return super().form_valid(form)
+        self.object = form.save()
+
+        data = {'id':item.id, 'pay_status':item.get_pay_status_display()}
+        return JsonResponse(data)
+
 
     def get_success_url(self):
         return reverse_lazy('trade:item_detail', kwargs={'pk': self.kwargs.get('pk')})
@@ -202,7 +206,6 @@ class ItemUpdate(UpdateView):
 class ItemDelete(DeleteView):
     model = Item
     template_name = 'trade/item_delete.html'
-    success_url = reverse_lazy('mypage:main')
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -211,6 +214,10 @@ class ItemDelete(DeleteView):
             return redirect('root')
         return super().get(request, *args, **kwargs)
 
+
+    def get_success_url(self):
+        self.success_url = reverse_lazy('store:store_sell_list', kwargs={'pk': self.request.user.storeprofile.id})
+        return super().get_success_url()
 
 # def comment_update(request, pk, cid):
 #     comment = get_object_or_404(ItemComment, pk=cid)
@@ -255,7 +262,7 @@ class CommentUpdate(UpdateView):
 @method_decorator(login_required, name='dispatch')
 class CommentDelete(DeleteView):
     model = ItemComment
-    template_name = 'trade/item_delete.html'
+    template_name = 'trade/comment_delete.html'
     pk_url_kwarg = 'cid'
 
     def get(self, request, *args, **kwargs):
