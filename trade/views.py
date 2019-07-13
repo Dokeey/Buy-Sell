@@ -566,6 +566,12 @@ class OrderHistory(BaseHistory):
         self.queryset = self.request.user.order_set.all()
         return super().get_queryset()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order_ctn'] = self.queryset.count()
+        return context
+
+
 
 @method_decorator(login_required, name='dispatch')
 class SellerHistory(BaseHistory):
@@ -581,3 +587,8 @@ class SellerHistory(BaseHistory):
 
         self.queryset = self.model.objects.filter(id__in=sell_list)
         return super().get_queryset()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sell_ctn'] = self.queryset.count()
+        return context

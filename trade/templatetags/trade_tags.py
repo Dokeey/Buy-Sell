@@ -124,3 +124,16 @@ def item_block(item):
                )
 
     return mark_safe(html)
+
+
+
+@register.simple_tag
+def order_time_check(order):
+    if order.status == 'reserv':
+        time = datetime.now() - order.created_at
+        time = time.total_seconds()
+        if time > 172800:
+            order.status = 'ready'
+            order.update()
+
+    return ''

@@ -9,7 +9,7 @@
 </style>
 <div class="container-fluid">
     <div class="row text-center">
-        <h2>판매 내역</h2>
+        <h2>판매 내역 <span style="color:red">{{ sell_ctn }}개</span></h2>
     </div>
     {% for order in sell_list %}
     <div class="row thumbnail" style="padding: 10px; margin:5px;">
@@ -46,7 +46,7 @@
         <div class="col-sm-3 text-center" style="padding:5px;">
             <div class="row" style="margin:5px">{{ order.receipt_link|default:"-" }}</div>
             <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.user.storeprofile.pk %}">
-                <i class="fas fa-user"></i> {{ order.user.profile.nick_name }}</a>
+                <i class="fas fa-user"></i> {{ order.user.profile.nick_name }}</a><hr>
             </div>
             {% if not order.is_active and order.status == 'reserv' %}
             <div class="row" style="margin:5px">

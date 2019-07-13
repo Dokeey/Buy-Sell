@@ -203,3 +203,6 @@ GRAPH_MODELS = {
   'group_models': True,
 }
 
+# Session Time Out
+SESSION_COOKIE_AGE = 3600   # 1시간
+SESSION_SAVE_EVERY_REQUEST = True   # 리퀘스트시 세션 정보 갱신 허용

@@ -1,4 +1,5 @@
 {% extends "mypage/layout.html" %}
+{% load trade_tags %}
 
 {% block mypage_content %}
 <style>
@@ -8,9 +9,10 @@
 </style>
 <div class="container-fluid">
     <div class="row text-center">
-        <h2>구매 내역</h2>
+        <h2>구매 내역 <span style="color:red">{{ order_ctn }}개</span></h2>
     </div>
     {% for order in order_list %}
+    {% order_time_check order %}
     <div class="row thumbnail" style="padding: 10px; margin:5px;">
         <div class="col-sm-9" style="padding:0px;">
             <div class="col-xs-3">
@@ -45,7 +47,7 @@
         <div class="col-sm-3 text-center" style="padding:5px;">
             <div class="row" style="margin:5px">{{ order.receipt_link|default:"-" }}</div>
             <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.item.user.storeprofile.pk %}">
-                <i class="fas fa-user"></i> {{ order.item.user.profile.nick_name }}</a>
+                <i class="fas fa-user"></i> {{ order.item.user.profile.nick_name }}</a><hr>
             </div>
             {% if order.status == 'paid' or order.status == 'reserv' and order.is_active %}
             <div class="row" style="margin:5px">
