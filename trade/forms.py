@@ -134,7 +134,7 @@ class OrderForm(forms.ModelForm):
         super(OrderForm, self).__init__(*args, **kwargs)
         self.fields['pay_choice'].label = '거래방식'
         self.fields['pay_choice'].widget.attrs.update({
-            'class': 'col-sm-10',
+            # 'class': 'col-sm-10',
         })
         self.fields['username'].label = '수령인'
         self.fields['username'].widget.attrs.update({

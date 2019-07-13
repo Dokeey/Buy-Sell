@@ -12,16 +12,12 @@
     {% order_time_check order %}
     <div class="row thumbnail" style="padding: 10px; margin:5px;">
         <div class="col-sm-9" style="padding:0px;">
-            <div class="col-xs-3">
+            <div class="col-sm-3">
                 <div id="iteminfo" class="carousel slide" data-ride="carousel">
                     <!--페이지-->
                     <div class="carousel-inner">
                         {% for item_image in order.item.itemimage_set.all %}
-                            {% if forloop.counter == 1 %}
-                                <div class="item active">
-                            {% else %}
-                                <div class="item">
-                            {% endif %}
+                                <div class="item {% if forloop.counter == 1 %}active{% endif %}">
                                     <a href="{% url "trade:item_detail" order.item.id %}">
                                         <img class="img-thumbnail img-responsive" style="width:auto;" src="{{ item_image.photo.url }}"/>
                                     </a>
@@ -30,9 +26,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-9" style="padding:5px;">
+            <div class="col-sm-9" style="padding:5px;">
                 <div class="col-xs-12" style="padding:0px;">
-                    <b class="col-xs-9" style="padding:0px;">{{ order.name }}</b><b class="col-xs-3 text-right pull-right" style="color:orange;padding:0px;">{{ order.amount_html }}</b>
+                    <b class="col-xs-8" style="padding:0px;">{{ order.name }}</b><b class="col-xs-4 text-right pull-right" style="color:orange;padding:0px;">{{ order.amount_html }}</b>
                 </div>
                 <div class="col-xs-12" style="padding:0px;">
                     <br>{{ order.status_html }}
@@ -85,16 +81,21 @@
 {% if is_paginated %}
   <nav>
     <ul class="pagination">
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page=1">
+            <span><i class="fas fa-angle-double-left"></i></span>
+          </a>
+        </li>
       {% if page_obj.has_previous %}
         <li>
-          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">
-            <span>Prev</span>
+          <a href="?query={{ query }}&sort={{ sort }}&page={% if prev >= 1 %}{{ prev }}{% else %}1{% endif %}">
+            <span><i class="fas fa-angle-left"></i></span>
           </a>
         </li>
       {% else %}
         <li class="disabled">
           <a href="#">
-            <span>Previous</span>
+            <span><i class="fas fa-angle-left"></i></span>
           </a>
         </li>
       {% endif %}
@@ -107,17 +108,22 @@
 
       {% if page_obj.has_next %}
         <li>
-          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">
-            <span>Next</span>
+          <a href="?query={{ query }}&sort={{ sort }}&page={% if last_page >= next %}{{ next }}{% else %}{{ last_page }}{% endif %}">
+            <span><i class="fas fa-angle-right"></i></span>
           </a>
         </li>
       {% else %}
         <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
           <a href="#">
-            <span>Next</span>
+            <span><i class="fas fa-angle-right"></i></span>
           </a>
         </li>
       {% endif %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ last_page }}">
+            <span><i class="fas fa-angle-double-right"></i></span>
+          </a>
+        </li>
     </ul>
   </nav>
 {% endif %}

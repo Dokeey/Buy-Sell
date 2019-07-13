@@ -33,16 +33,21 @@
 {% if is_paginated %}
   <nav>
     <ul class="pagination">
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page=1">
+            <span><i class="fas fa-angle-double-left"></i></span>
+          </a>
+        </li>
       {% if page_obj.has_previous %}
         <li>
-          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">
-            <span>Prev</span>
+          <a href="?query={{ query }}&sort={{ sort }}&page={% if prev >= 1 %}{{ prev }}{% else %}1{% endif %}">
+            <span><i class="fas fa-angle-left"></i></span>
           </a>
         </li>
       {% else %}
         <li class="disabled">
           <a href="#">
-            <span>Previous</span>
+            <span><i class="fas fa-angle-left"></i></span>
           </a>
         </li>
       {% endif %}
@@ -55,17 +60,22 @@
 
       {% if page_obj.has_next %}
         <li>
-          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">
-            <span>Next</span>
+          <a href="?query={{ query }}&sort={{ sort }}&page={% if last_page >= next %}{{ next }}{% else %}{{ last_page }}{% endif %}">
+            <span><i class="fas fa-angle-right"></i></span>
           </a>
         </li>
       {% else %}
         <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
           <a href="#">
-            <span>Next</span>
+            <span><i class="fas fa-angle-right"></i></span>
           </a>
         </li>
       {% endif %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ last_page }}">
+            <span><i class="fas fa-angle-double-right"></i></span>
+          </a>
+        </li>
     </ul>
   </nav>
 {% endif %}

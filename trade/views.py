@@ -274,9 +274,12 @@ class CommentDelete(DeleteView):
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        data = {'id':self.object.id}
-
+        id = self.object.id
+        item = self.object.item
         self.object.delete()
+
+        cmt_ctn = item.itemcomment_set.all().count()
+        data = {'id':id,'cmt_ctn':cmt_ctn}
         return JsonResponse(data)
 
 # def order_new(request, item_id):
@@ -558,6 +561,9 @@ class BaseHistory(ListView):
             end_index = max_index
 
         page_range = paginator.page_range[start_index:end_index]
+        context['prev'] = start_index - 4
+        context['next'] = end_index + 1
+        context['last_page'] = max_index
         context['page_range'] = page_range
 
         return context

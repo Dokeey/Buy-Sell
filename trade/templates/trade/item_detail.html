@@ -1,6 +1,7 @@
 {% extends "trade/layout.html" %}
 {% load humanize %}
 {% load hitcount_tags %}
+{% load trade_tags %}
 
 {% block head %}
     <meta property="fb:app_id"        content="642307389514788"/>
@@ -79,11 +80,7 @@
 
                         <div class="carousel-inner">
                     {% for item_image in item.itemimage_set.all %}
-                        {% if forloop.counter == 1 %}
-                            <div class="item active">
-                        {% else %}
-                            <div class="item">
-                        {% endif %}
+                            <div class="item {% if forloop.counter == 1 %}active{% endif %}">
                                 <a href="{{ item_image.photo.url }}">
                                     <img class="img-thumbnail img-responsive img-rounded" style="padding:10px; width:auto;" src="{{ item_image.photo.url }}"/>
                                 </a>
@@ -240,7 +237,7 @@
                                 <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
                                     <div class="pull-left" ><b class="info">{{ comment.user.profile.nick_name }}</b></div>
                                 </a>
-                                <div class="pull-right">{{ comment.updated_at }}</div>
+                                <div class="pull-right">{% simple_time comment.updated_at %}</div>
                                 <br><div id="cmt-{{ comment.id }}" style="padding-top:10px">{{ comment.message|linebreaks }}</div>
                                 {% if comment.user == request.user %}
                                     <div class="text-right">
@@ -267,7 +264,7 @@
                                     <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
                                         <div class="pull-left"><b class="info">{{ replay.user.profile.nick_name }}</b></div>
                                     </a>
-                                    <div class="pull-right">{{ replay.updated_at }}</div>
+                                    <div class="pull-right">{% simple_time replay.updated_at %}</div>
                                     <br><div id="cmt-{{ replay.id }}" style="padding-top:10px;">{{ replay.message }}</div>
                                     {% if replay.user == request.user %}
                                         <div class="text-right">
@@ -348,12 +345,8 @@
                                 <!--페이지-->
                                 <div class="carousel-inner">
                             {% for item_image in it.itemimage_set.all %}
-                                {% if forloop.counter == 1 %}
-                                    <div class="item active">
-                                {% else %}
-                                    <div class="item">
-                                {% endif %}
-                                        <a href="{% url "trade:item_detail" item.id %}">
+                                    <div class="item {% if forloop.counter == 1 %}active{% endif %}">
+                                        <a href="{% url "trade:item_detail" it.id %}">
                                             <img class="img-thumbnail img-responsive" style="width:auto;" src="{{ item_image.photo.url }}"/>
                                         </a>
                                     </div>
@@ -392,7 +385,7 @@
                             <a href="{% url "store:store_grade" item.user.storeprofile.id %}">
                                 <div class="clearfix">
                                     <div class="pull-left"><b>{{ grade.author.profile.nick_name }}</b></div>
-                                    <div class="pull-right">{{ grade.updated_at }}</div>
+                                    <div class="pull-right">{% simple_time grade.updated_at %}</div>
                                     <br>
                                     {{ grade.get_rating_display }}<br>
                                     {{ grade.grade_comment }}
@@ -458,8 +451,6 @@
             data: params,
             success: function(data) {
                 $('#cmt-'+data.id).html('<pre>'+data.msg+'</pre>');
-                $('#comment-ctn').html({{ item.itemcomment_set.all.count }});
-
             }
         });
         return false;
@@ -482,7 +473,7 @@
             data: params,
             success: function(data) {
                 $('#block-'+data.id).remove();
-                $('#comment-ctn').html({{ item.itemcomment_set.all.count }});
+                $('#comment-ctn').html(data.cmt_ctn);
             }
         });
         return false;

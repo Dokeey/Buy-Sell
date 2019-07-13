@@ -70,6 +70,9 @@ class SearchItemList(ListView):
             end_index = max_index
 
         page_range = paginator.page_range[start_index:end_index]
+        context['prev'] = start_index - 4
+        context['next'] = end_index + 1
+        context['last_page'] = max_index
         context['page_range'] = page_range
 
         context['sort'] = self.request.GET.get('sort','-created_at')
