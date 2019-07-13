@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+{% load store.store_tags %}
+{% block head %}
+
+<style>
+
+.fa-star {color: #FFF612}
+.fa-star-half-alt {color: #FFF612}
+
+.relative {
+  position: relative;
+  width: 250px;
+  height: 250px;
+}
+.album_img {
+    position: absolute;
+    top:0; left: 15%;
+    z-index:-1;
+}
+.rank_music {
+    position: absolute;
+    top:0; left: 15%;
+    height: 250px;
+    width: 250px;
+    padding: 30px;
+    background: url(//cdnimg.melon.co.kr/resource/image/web/chart/rank_bg_album.png) repeat;
+    z-index: 0;
+
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+        조회수 1등 인싸
+    </div>
+    <div class="col-md-4">
+        판매 1등 판매왕
+    </div>
+
+
+    <div class="col-md-4 col-xs-12">
+        <div class="relative"></div>
+            <div class="album_img">
+                <img src="{{ stores.0.photo.url }}" width="250", height="250", class="img-responsive img-thumbnail " />
+            </div>
+
+            <div class="rank_music">
+                <h4 style="color:white"><i class="fas fa-medal" style="color:#FFD700;"></i> 1위</h4>
+                <div class="row">
+                    <div class="col-xs-5">
+                         <img src="{{ stores.0.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
+                    </div>
+                    <div class="col-xs-7" style="font-weight:bold;color:white;">
+                         {{ stores.0.name }}
+                    </div>
+                </div>
+                <hr/>
+                    {% store_rating stores.0.pk as end %}
+                    <div style="font-size:20px;text-align:center">
+                        {% if stores.0.storegrade_set.all.count == 0 %}
+                            <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                            {% else %}
+                                {% if end == 0 %}
+                                <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 1.5 %}
+                                <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 2.0 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 2.5 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 3.0 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 3.5 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 4.0 %}
+                                <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+                                {% elif end < 4.5 %}
+                                <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 5.0 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                {% elif end == 5.0 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                {% endif %}
+                            {% endif %}
+
+                    </div><br/>
+                    <div align="right">
+                    <a href="{% url 'store:store_sell_list' stores.0.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
+                    </div>
+            </div>
+        <hr/>
+                {% for store in stores %}
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <img src="{{ store.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
+                        </div>
+                        <div class="col-xs-3">
+                            {{ store.name }}
+                        </div>
+                        <div class="col-xs-3">
+                            {% store_rating store.pk as end %}
+                            {% if stores.0.storegrade_set.all.count == 0 %}
+                            <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                            {% else %}
+                                {% if end == 0 %}
+                                <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 1.5 %}
+                                <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 2.0 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 2.5 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 3.0 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 3.5 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 4.0 %}
+                                <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+                                {% elif end < 4.5 %}
+                                <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                {% elif end < 5.0 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                {% elif end == 5.0 %}
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-3" align="right">
+                        <a href="{% url 'store:store_sell_list' stores.0.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
+                        </div>
+                    </div> <hr/>
+                {% endfor %}
+
+    </div>
+
+
+
+</div>
+
+
+{% endblock %}
+
+
