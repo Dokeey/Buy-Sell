@@ -23,5 +23,6 @@ urlpatterns = [
 
     path('order/histroy/', views.OrderHistory.as_view(), name='order_history'),
     path('seller/histroy/', views.SellerHistory.as_view(), name='seller_history'),
+    path('/info/<int:oid>/', views.TradeInfo.as_view(), name='trade_info'),
     path('test/', views.test, name='test'),
 ]

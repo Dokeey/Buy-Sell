@@ -224,7 +224,7 @@
     function addFileList(fIndex, fileName, fileSize, file){
         var html = "";
         html += '<div id="fileTr_' + fIndex + '" class="file col-xs-4 col-md-2" style="padding-bottom:10px">';
-        html += '<img class="img-rounded" style="cursor: pointer;border: 1px solid #dddddd" onclick="deleteFile(' + fIndex + '); return false;" width="70px" height="70px" src="'+URL.createObjectURL(file)+'">'
+        html += '<img class="img-rounded thumbnail" style="cursor: pointer;border: 1px solid #dddddd" onclick="deleteFile(' + fIndex + '); return false;" width="70px" height="70px" src="'+URL.createObjectURL(file)+'">'
         html += '</div>';
 
         $('.fileList').prepend(html);

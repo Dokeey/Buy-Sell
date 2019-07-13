@@ -360,6 +360,7 @@ class OrderNew(FormView):
                                      address=form.cleaned_data['address'],
                                      detail_address = form.cleaned_data['detail_address'],
                                      requirement = form.cleaned_data['requirement'],
+                                     pay_choice= form.cleaned_data['pay_choice'],
                                      )
 
         if form.cleaned_data['pay_choice'] == 'import':
@@ -372,10 +373,7 @@ class OrderNew(FormView):
             reserv_order = Order.objects.get(user=self.request.user, merchant_uid=order.merchant_uid, status='reserv')
             reserv_order.update()
 
-            return render(self.request, 'trade/seller_info.html', {
-                'seller': item.user
-            })
-
+            return redirect('trade:trade_info', reserv_order.id)
 
     def get_success_url(self):
         next_url = self.request.GET.get('next') or 'mypage:main'  # next get인자가 있으면 넣고 없으면 'profile' 넣기
@@ -438,20 +436,20 @@ class OrderCancle(RedirectView):
             queryset = Order.objects.get(id=self.kwargs.get('order_id'))
 
             if not self.request.user in (queryset.user, queryset.item.user):
-                messages.error(request, '잘못된 접근입니다.')
+                messages.error(self.request, '잘못된 접근입니다.')
                 return redirect(self.url)
 
             if queryset.status == "cancelled":
-                messages.error(request, '이미 주문을 취소하셨습니다.')
+                messages.error(self.request, '이미 주문을 취소하셨습니다.')
                 return redirect(self.url)
             elif queryset.status == "success":
-                messages.error(request, '거래가 완료된 상태입니다.')
+                messages.error(self.request, '거래가 완료된 상태입니다.')
                 return redirect(self.url)
 
             queryset.cancel()
-            messages.info(request, '주문을 취소하셨습니다.')
+            messages.info(self.request, '주문을 취소하셨습니다.')
         except:
-            messages.error(request, '유효하지 않은 상품입니다.')
+            messages.error(self.request, '유효하지 않은 상품입니다.')
 
         return redirect(self.url)
 
@@ -466,14 +464,14 @@ class OrderConfirm(RedirectView):
             queryset = Order.objects.get(id=self.kwargs.get('order_id'))
 
             if self.request.user != queryset.user or not queryset.is_active:
-                messages.error(request, '잘못된 접근입니다.')
+                messages.error(self.request, '잘못된 접근입니다.')
                 return redirect(self.url)
 
             if queryset.status == "success":
-                messages.error(request, '이미 구매확정 하셨습니다.')
+                messages.error(self.request, '이미 구매확정 하셨습니다.')
                 return redirect(self.url)
             elif queryset.status == "cancelled":
-                messages.error(request, '거래가 취소된 상품입니다.')
+                messages.error(self.request, '거래가 취소된 상품입니다.')
                 return redirect(self.url)
 
             elif queryset.status in ('reserv','paid'):
@@ -483,9 +481,9 @@ class OrderConfirm(RedirectView):
                 queryset.item.save()
                 queryset.save()
 
-                messages.info(request, '구매를 축하드립니다!!')
+                messages.info(self.request, '구매를 축하드립니다!!')
         except:
-            messages.error(request, '유효하지 않은 상품입니다.')
+            messages.error(self.request, '유효하지 않은 상품입니다.')
 
         return redirect(self.url)
 
@@ -499,23 +497,23 @@ class SellerConfirm(RedirectView):
             queryset = Order.objects.get(id=self.kwargs.get('order_id'))
 
             if self.request.user != queryset.item.user:
-                messages.error(request, '잘못된 접근입니다.')
+                messages.error(self.request, '잘못된 접근입니다.')
                 return redirect(self.url)
 
             if queryset.status == "success":
-                messages.error(request, '이미 구매확정 하셨습니다.')
+                messages.error(self.request, '이미 구매확정 하셨습니다.')
                 return redirect(self.url)
             elif queryset.status == "cancelled":
-                messages.error(request, '거래가 취소된 상품입니다.')
+                messages.error(self.request, '거래가 취소된 상품입니다.')
                 return redirect(self.url)
 
             if not queryset.is_active:
                 queryset.is_active = True
                 queryset.save()
-                messages.info(request, '입금을 확인하셨습니다.')
+                messages.info(self.request, '입금을 확인하셨습니다.')
 
         except:
-            messages.error(request, '유효하지 않은 상품입니다.')
+            messages.error(self.request, '유효하지 않은 상품입니다.')
 
         return redirect(self.url)
 # @login_required
@@ -591,4 +589,26 @@ class SellerHistory(BaseHistory):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sell_ctn'] = self.queryset.count()
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class TradeInfo(TemplateView):
+    template_name = 'trade/trade_info.html'
+
+    def get(self, request, *args, **kwargs):
+        self.order = Order.objects.get(id=self.kwargs.get('oid'))
+        if not self.request.user in (self.order.user, self.order.item.user):
+            messages.error(self.request, '잘못된 접근입니다.')
+            return redirect('root')
+
+        if not self.order.status in ('reserv','success'):
+            messages.error(self.request, '잘못된 접근입니다.')
+            return redirect('root')
+
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order'] = self.order
         return context

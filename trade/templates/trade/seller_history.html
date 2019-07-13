@@ -1,4 +1,5 @@
 {% extends "mypage/layout.html" %}
+{% load trade_tags %}
 
 {% block mypage_content %}
 
@@ -12,6 +13,7 @@
         <h2>판매 내역 <span style="color:red">{{ sell_ctn }}개</span></h2>
     </div>
     {% for order in sell_list %}
+    {% order_time_check order %}
     <div class="row thumbnail" style="padding: 10px; margin:5px;">
         <div class="col-sm-9" style="padding:0px;">
             <div class="col-xs-3">
@@ -44,18 +46,30 @@
             </div>
         </div>
         <div class="col-sm-3 text-center" style="padding:5px;">
-            <div class="row" style="margin:5px">{{ order.receipt_link|default:"-" }}</div>
+            {% if pay_choice == 'import' %}
+                {% if order.receipt_link %}
+                    <div class="row" style="margin:5px"><button class="btn btn-info col-xs-12"><i class="fas fa-receipt"></i> {{ order.receipt_link }}</button></div>
+                {% endif %}
+            {% else %}
+                {% if order.status == 'reserv' or order.status == 'success' %}
+                    <div class="row" style="margin:5px">
+                        <a href="{% url "trade:trade_info" order.id %}">
+                        <button class="btn btn-info col-xs-12"><i class="fas fa-receipt"></i> 자세히 보기</button>
+                        </a>
+                    </div>
+                {% endif %}
+            {% endif %}
             <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.user.storeprofile.pk %}">
-                <i class="fas fa-user"></i> {{ order.user.profile.nick_name }}</a><hr>
+                <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.user.profile.nick_name }}</button></a>
             </div>
             {% if not order.is_active and order.status == 'reserv' %}
             <div class="row" style="margin:5px">
-                <a href="{% url "trade:seller_confirm" order.id %}"><i class="fa fa-check-circle"></i> 입금 확인</a><br>
+                <a href="{% url "trade:seller_confirm" order.id %}"><button class="btn btn-primary col-xs-12"><i class="fa fa-check-circle"></i> 입금 확인</button></a><br>
             </div>
             {% endif %}
             {% if order.status == 'paid' or order.status == 'reserv' %}
             <div class="row" style="margin:5px">
-                <a href="{% url "trade:order_cancle" order.id %}"><i class="fa fa-times"></i> 주문 취소</a>
+                <a href="{% url "trade:order_cancle" order.id %}"><button class="btn btn-danger col-xs-12"><i class="fa fa-times"></i> 주문 취소</button></a>
             </div>
             {% endif %}
         </div>

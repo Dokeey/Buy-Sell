@@ -120,6 +120,14 @@ class Order(models.Model):
     imp_uid = models.CharField(max_length=100, blank=True)
     name = models.CharField(max_length=100, verbose_name='상품명')
     amount = models.PositiveIntegerField(verbose_name='결제금액')
+    pay_choice = models.CharField(
+        max_length=15,
+        default='import',
+        choices=(
+            ('import', '이니페이 카드결제'),
+            ('bank_trans', '계좌이체'),
+        )
+    )
     status = models.CharField(
         max_length=9,
         choices=(
