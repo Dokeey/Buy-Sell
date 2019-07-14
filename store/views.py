@@ -12,7 +12,7 @@ from django.views.generic.edit import BaseUpdateView
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 
-from trade.models import Item
+from trade.models import Item, Order
 from .models import StoreProfile, QuestionComment, StoreGrade
 from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 
@@ -28,12 +28,25 @@ class StarStoreListView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['grades'] = StoreGrade.objects.values_list('store_profile', flat=True).annotate(rating_sum=Sum('rating')/Count('rating')).order_by('-rating_sum')
-        print(context['grades'])
         store_list = []
         for i in range(0, context['grades'].count()):
             store_list.append(StoreProfile.objects.get(pk=(context['grades'][i])))
         context['stores'] = store_list
-        print(context['stores'])
+
+        hit_list = []
+        items = []
+        sell_list = {}
+        store_all = StoreProfile.objects.all()
+        for store in store_all :
+            hit_count = HitCount.objects.get_for_object(store)
+            hit_list.append(hit_count)
+
+            orders = Order.objects.filter(item__user=store.user,status='success')
+            sell_list[store] = orders.count()
+
+        hit_list.sort(key=operator.attrgetter('hits'),reverse=True)
+        context['hit_lists'] = hit_list
+        context['sdict'] = sorted(sell_list, key=sell_list.get , reverse=True)
         return context
 
 

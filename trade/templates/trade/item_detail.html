@@ -353,7 +353,7 @@
                                 {% else %}
                                     <div class="item">
                                 {% endif %}
-                                        <a href="{% url "trade:item_detail" item.id %}">
+                                        <a href="{% url "trade:item_detail" it.id %}">
                                             <img class="img-thumbnail img-responsive" style="width:auto;" src="{{ item_image.photo.url }}"/>
                                         </a>
                                     </div>

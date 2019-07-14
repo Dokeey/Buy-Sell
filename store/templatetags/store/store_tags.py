@@ -26,7 +26,7 @@ def store_sell_list(pk):
     orders = Item.objects.filter(user=stores.user)
     items = []
     for order in orders:
-        item = len(order.order_set.filter(status='paid'))
+        item = len(order.order_set.filter(status='success'))
         if item == 1:
             items.append(item)
     order = len(items)
