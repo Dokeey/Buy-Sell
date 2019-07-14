@@ -2,18 +2,17 @@
 {% load trade_tags %}
 
 {% block mypage_content %}
-
 <style>
     .thumbnail:hover {
         cursor:auto;
     }
 </style>
-<div class="container-fluid">
+<div class="container-fluid" style="padding: 20px">
     {% for order in sell_list %}
     {% order_time_check order %}
     <div class="row thumbnail" style="padding: 10px; margin:5px;">
         <div class="col-sm-9" style="padding:0px;">
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div id="iteminfo" class="carousel slide" data-ride="carousel">
                     <!--페이지-->
                     <div class="carousel-inner">
@@ -27,11 +26,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-9" style="padding:5px;">
+            <div class="col-sm-8" style="padding:10px;">
                 <div class="col-xs-12" style="padding:0px;">
                     <b class="col-xs-8" style="padding:0px;">{{ order.name }}</b><b class="col-xs-4 text-right pull-right" style="color:orange;padding:0px;">{{ order.amount_html }}</b>
                 </div>
                 <div class="col-xs-12" style="padding:0px;">
+                    <hr>
                     <br>{{ order.status_html }}
                     <small class="pull-right"><i class="far fa-clock"></i> {{ order.updated_at }}</small>
                 <hr>

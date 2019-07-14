@@ -8,7 +8,7 @@
          vertical-align: middle;
     }
 </style>
-<div class="container-fluid" style="padding:0px">
+<div class="container-fluid" style="padding: 20px">
     <div class="row thumbnail" style="padding: 10px; margin:5px;">
         <div class="col-sm-9" style="padding:0px;">
             <div class="col-sm-3">
@@ -25,11 +25,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-9" style="padding:5px;">
+            <div class="col-sm-9" style="padding:10px;">
                 <div class="col-xs-12" style="padding:0px;">
                     <b class="col-xs-8" style="padding:0px;">{{ order.name }}</b><b class="col-xs-4 text-right pull-right" style="color:orange;padding:0px;">{{ order.amount_html }}</b>
                 </div>
                 <div class="col-xs-12" style="padding:0px;">
+                    <hr>
                     <br>{{ order.status_html }}
                     <small class="pull-right"><i class="far fa-clock"></i> {{ order.updated_at }}</small>
                 <hr>
@@ -37,30 +38,46 @@
             </div>
         </div>
         <div class="col-sm-3 text-center" style="padding:5px;">
-            <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.item.user.storeprofile.pk %}">
-                <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.item.user.profile.nick_name }}</button></a>
-            </div>
-            {% if order.status == 'paid' or order.status == 'reserv' and order.is_active %}
-            <div class="row" style="margin:5px">
-                <a href="{% url "trade:order_confirm" order.id %}"><button class="btn btn-primary col-xs-12"><i class="fa fa-check-circle"></i> 구매 확정</button></a>
-            </div>
+            {% if user == order.user %}
+                <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.item.user.storeprofile.pk %}">
+                    <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.item.user.profile.nick_name }}</button></a>
+                </div>
+                {% if order.status == 'paid' or order.status == 'reserv' and order.is_active %}
+                <div class="row" style="margin:5px">
+                    <a href="{% url "trade:order_confirm" order.id %}"><button class="btn btn-primary col-xs-12"><i class="fa fa-check-circle"></i> 구매 확정</button></a>
+                </div>
+                {% endif %}
+                {% if order.status == 'success' %}
+                <div class="row" style="margin:5px">
+                    <a href="{% url "store:store_grade_new" order.item.user.storeprofile.pk order.item.pk %}"><button class="btn btn-primary col-xs-12"><i class="fas fa-pencil-alt"></i> 리뷰쓰러가기</button></a>
+                </div>
+                {% endif %}
+                {% if order.status == 'paid' or order.status == 'reserv' %}
+                <div class="row" style="margin:5px">
+                    <a href="{% url "trade:order_cancle" order.id %}"<button class="btn btn-danger col-xs-12"><i class="fa fa-times"></i> 주문 취소</button></a>
+                </div>
+                {% endif %}
             {% endif %}
-            {% if order.status == 'success' %}
-            <div class="row" style="margin:5px">
-                <a href="{% url "store:store_grade_new" order.item.user.storeprofile.pk order.item.pk %}"><button class="btn btn-primary col-xs-12"><i class="fas fa-pencil-alt"></i> 리뷰쓰러가기</button></a>
-            </div>
-            {% endif %}
-            {% if order.status == 'paid' or order.status == 'reserv' %}
-            <div class="row" style="margin:5px">
-                <a href="{% url "trade:order_cancle" order.id %}"<button class="btn btn-danger col-xs-12"><i class="fa fa-times"></i> 주문 취소</button></a>
-            </div>
+            {% if user == order.item.user %}
+                <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.user.storeprofile.pk %}">
+                    <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.user.profile.nick_name }}</button></a>
+                </div>
+                {% if not order.is_active and order.status == 'reserv' %}
+                <div class="row" style="margin:5px">
+                    <a href="{% url "trade:seller_confirm" order.id %}"><button class="btn btn-primary col-xs-12"><i class="fa fa-check-circle"></i> 입금 확인</button></a><br>
+                </div>
+                {% endif %}
+                {% if order.status == 'paid' or order.status == 'reserv' %}
+                <div class="row" style="margin:5px">
+                    <a href="{% url "trade:order_cancle" order.id %}"><button class="btn btn-danger col-xs-12"><i class="fa fa-times"></i> 주문 취소</button></a>
+                </div>
+                {% endif %}
             {% endif %}
         </div>
         <div class="row col-xs-12 text-center">
                 <h4>결제일 <b style="color:red">{{ order.created_at }}</b> 로부터 <b style="color:red">2일</b> 전까지 입금이 <b style="color:#368AFF">확인</b> 되어야합니다.</h4>
         </div>
     </div>
-</div>
 <hr>
 <div class="thumbnail" style="padding:20px">
 <form class="form-horizontal">
@@ -152,4 +169,6 @@
 </form>
 </div>
 <hr>
+</div>
+
 {% endblock %}
