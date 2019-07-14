@@ -89,23 +89,18 @@ def item_block(item):
     html = """
         <div class="thumbnail">
           <div class="caption text-center">
-            <div class="">
-                <div class="position-relative">
-                  {photos}
-                </div>
+            <div class="position-relative">
+              {photos}
             </div>
-            <div class="">
-                <h4 id="thumbnail-label"><i class="fas fa-won-sign" style="color:green"></i>&nbsp;{amount}</h4><hr style="margin:5px">
-                <div class="thumbnail-description smaller text-center">
-                    <b>{title}</b>
-                    <hr style="margin:5px">
-                    <i class="far fa-clock"></i>&nbsp;{time}<hr style="margin:5px">
-                    <ul class="list-inline">
-                      <li><a href="{user_link}"><i class="fas fa-user light-red lighter bigger-120"></i>&nbsp;{user}</a></li>
-                      <li></li>
-                      <li class="pay-status">{pay_status}</li>
-                    </ul>
-                </div>
+            <h4 id="thumbnail-label"><i class="fas fa-won-sign" style="color:green"></i>&nbsp;{amount}</h4><hr style="margin:5px">
+            <div class="thumbnail-description smaller text-center">
+                <b>{title}</b>
+                <hr style="margin:5px">
+                <i class="far fa-clock"></i>&nbsp;{time}<hr style="margin:5px">
+                <ul class="list-inline">
+                  <li class="col-sm-6 col-xs-12"><a href="{user_link}"><b><i class="fas fa-user light-red lighter bigger-120"></i>&nbsp;{user}</b></a></li>
+                  <li class="pay-status col-sm-6 col-xs-12"><b>{pay_status}</b></li>
+                </ul>
             </div>
           </div>
         </div>

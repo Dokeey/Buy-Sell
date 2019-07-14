@@ -9,10 +9,10 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid col-md-2">
+<div class="container-fluid col-md-2 text-right">
     <h2>MY PAGE</h2>
     <div class="nav-collapse">
-        <ul class="nav nav-pills nav-stacked text-center" ><hr>
+        <ul class="nav nav-pills nav-stacked" ><hr>
             <li role="presentation"><a href="{% url "trade:order_history" %}">구매 내역</a></li><hr>
             <li role="presentation"><a href="{% url "trade:seller_history" %}">판매 내역</a></li><hr>
             <li role="presentation"><a href="{% url "trade:item_new" %}">물품 등록</a></li><hr>

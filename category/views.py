@@ -32,7 +32,7 @@ class SearchItemList(ListView):
     template_name = 'category/search_item.html'
     context_object_name = 'items'
     ordering = '-created_at'
-    paginate_by = 20
+    paginate_by = 24
 
     def get_queryset(self):
         self.query = self.request.GET.get('query','')

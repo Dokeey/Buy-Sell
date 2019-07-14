@@ -40,7 +40,7 @@ class StarStoreListView(TemplateView):
 class StoreSellListView(ListView):
     model = Item
     template_name = 'store/store_sell_list.html'
-    paginate_by = 20
+    paginate_by = 24
     context_object_name = 'items'
 
     # context_object_name = 'stores'
