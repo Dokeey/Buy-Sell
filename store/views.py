@@ -12,6 +12,7 @@ from django.views.generic.edit import BaseUpdateView
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 
+from mypage.models import Follow
 from trade.models import Item, Order
 from .models import StoreProfile, QuestionComment, StoreGrade
 from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
@@ -50,16 +51,50 @@ class StarStoreGradeListView(ListView):
         for i in range(0, context['grades'].count()):
             store_list.append(StoreProfile.objects.get(pk=(context['grades'][i])))
         context['stores'] = store_list
-        sell_list = {}
-        store_all = StoreProfile.objects.all()
-        for store in store_all :
 
-            orders = Order.objects.filter(item__user=store.user,status='success')
-            sell_list[store] = orders.count()
-
-        context['sdict'] = sorted(sell_list, key=sell_list.get , reverse=True)
+        if self.request.user.is_active:
+            if self.request.user.storeprofile.storegrade_set.all().count() != 0:
+                context['my_grade'] = context['stores'].index(self.request.user.storeprofile)+1
+            else:
+                context['my_grade'] = '-'
         return context
 
+class StarStoreSellListView(ListView):
+    template_name = 'store/star_store_sell.html'
+    model = StoreProfile
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        sell_list = {}
+        store_all = StoreProfile.objects.all()
+        for store in store_all:
+            orders = Order.objects.filter(item__user=store.user, status='success')
+            sell_list[store] = orders.count()
+
+        context['sells'] = sorted(sell_list, key=sell_list.get, reverse=True)
+        if self.request.user.is_active:
+            context['my_sell'] = context['sells'].index(self.request.user.storeprofile) + 1
+        return context
+
+class StarStoreFollowListView(ListView):
+    template_name = 'store/star_store_follow.html'
+    model = StoreProfile
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        follow = Follow.objects.values_list('store',flat=True).annotate(foll_count=Count('store')).order_by('-foll_count')
+        print(follow)
+        follow_list = []
+        for i in range(0, follow.count()):
+            follow_list.append(StoreProfile.objects.get(pk=(follow[i])))
+        context['follows'] = follow_list
+
+        if self.request.user.is_active:
+            if self.request.user.storeprofile.follow_set.all().count() != 0:
+                context['my_follow'] = follow_list.index(self.request.user.storeprofile) + 1
+            else:
+                context['my_follow'] = '-'
+        return context
 
 class StoreSellListView(ListView):
     model = Item

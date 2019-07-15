@@ -20,5 +20,7 @@ urlpatterns = [
 
     path('star/store/hit/', views.StarStoreHitListView.as_view(), name='star_store_hit'),
     path('star/store/grade/', views.StarStoreGradeListView.as_view(), name='star_store_grade'),
+    path('star/store/sell/', views.StarStoreSellListView.as_view(), name='star_store_sell'),
+    path('star/store/follow/', views.StarStoreFollowListView.as_view(), name='star_store_follow'),
     #path('profile/', views.my_store_profile, name='my_store_profile'),
 ]
