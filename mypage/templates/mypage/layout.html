@@ -10,8 +10,11 @@
 
 {% block content %}
 <div class="container-fluid text-center" style="margin:10px 0px 10px 0px;">
-    <h2>MY PAGE</h2>
-    <div class="nav-collapse">
+    <h2>MY PAGE
+    <button type="button" class="btn btn-primary navbar-toggle collapsed" style="float: left;" data-toggle="collapse" data-target="#collapse-2" aria-expanded="false">
+        <i class="fas fa-caret-square-down"></i>
+    </button></h2>
+    <div class="collapse navbar-collapse" id="collapse-2">
         <ul class="nav nav-tabs nav-justified"  role="tablist">
             <li role="presentation"><a href="{% url "trade:order_history" %}">구매 내역</a></li>
             <li role="presentation"><a href="{% url "trade:seller_history" %}">판매 내역</a></li>
