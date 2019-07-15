@@ -9,22 +9,21 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid col-md-2 text-right">
+<div class="container-fluid text-center" style="margin:10px 0px 10px 0px;">
     <h2>MY PAGE</h2>
     <div class="nav-collapse">
-        <ul class="nav nav-pills nav-stacked" ><hr>
-            <li role="presentation"><a href="{% url "trade:order_history" %}">구매 내역</a></li><hr>
-            <li role="presentation"><a href="{% url "trade:seller_history" %}">판매 내역</a></li><hr>
-            <li role="presentation"><a href="{% url "trade:item_new" %}">물품 등록</a></li><hr>
-            <li role="presentation"><a href="{% url "mypage:wishlist" %}">찜 목록</a></li><hr>
-            <li role="presentation"><a href="{% url "mypage:follow" %}">팔로우</a></li><hr>
-            <li role="presentation"><a href="{% url "accounts:profile" %}">내 정보 관리</a></li><hr>
-            <li role="presentation"><a href="{% url "customer:customer_ask" %}">문의 내역</a></li><hr>
+        <ul class="nav nav-tabs nav-justified"  role="tablist">
+            <li role="presentation"><a href="{% url "trade:order_history" %}">구매 내역</a></li>
+            <li role="presentation"><a href="{% url "trade:seller_history" %}">판매 내역</a></li>
+            <li role="presentation"><a href="{% url "trade:item_new" %}">물품 등록</a></li>
+            <li role="presentation"><a href="{% url "mypage:wishlist" %}">찜 목록</a></li>
+            <li role="presentation"><a href="{% url "mypage:follow" %}">팔로우</a></li>
+            <li role="presentation"><a href="{% url "accounts:profile" %}">내 정보</a></li>
+            <li role="presentation"><a href="{% url "customer:customer_ask" %}">문의 내역</a></li>
         </ul>
     </div>
 </div>
-
-<div class="container-fluid col-md-10">
+<div class="container-fluid thumbnail" style="box-shadow:none">
 {% block mypage_content %}
 {% endblock %}
 </div>

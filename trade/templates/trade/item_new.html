@@ -22,21 +22,19 @@
         cursor: pointer;
     }
 </style>
-<h2>물품 등록</h2>
-<hr>
-<div class="row" style="padding:20px">
+<div class="row" style="padding:30px">
     <form class="form-horizontal" id="uploadForm" action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
             <div class="form-group">
-                <div class="col-sm-11 col-sm-offset-1 text-center">
+                <div class="col-md-11 col-md-offset-1 text-center">
                     <h2><small>물품을 등록하시면 내 가게에 물품이 진열되고, 해당 카테고리에 광고가 됩니다.</small></h2>
                 </div>
             </div>
         </div>
           <div class="form-group">
-            <label class="col-sm-1 control-label">{{ form.photo.label }}</label>
-              <div class=" col-sm-11">
+            <label class="col-md-1 control-label">{{ form.photo.label }}</label>
+              <div class=" col-md-11">
                   <small class="img-help text-right"></small>
                   <label for="{{ form.photo.id_for_label }}" id="dropZone" class="thumbnail well text-muted text-center col-xs-12" style="padding-top: 4rem; padding-bottom: 4rem; background:#dddddd;">
                       <div class="fileList"></div>
@@ -49,45 +47,45 @@
                     <p class="help-block">사진을 빼려면 사진을 클릭하세요 :)</p>
                   </div>
                 {{ form.photo }}
-              <div id="error_photo" class="col-sm-12"></div>
+              <div id="error_photo" class="col-md-12"></div>
               </div>
           </div>
           <div class="form-group">
-            <label for="{{ form.title.id_for_label }}" class="col-sm-1 control-label">{{ form.title.label }}</label>
-              <div class=" col-sm-11">
+            <label for="{{ form.title.id_for_label }}" class="col-md-1 control-label">{{ form.title.label }}</label>
+              <div class=" col-md-11">
                 {{ form.title }}
-              <div id="error_title" class="col-sm-12" style="margin-top:10px"></div>
+              <div id="error_title" class="col-md-12" style="margin-top:10px"></div>
               </div>
           </div>
             <div class="form-group">
-                <label for="{{ form.amount.id_for_label }}" class="col-sm-1 control-label">{{ form.amount.label }}</label>
-              <div class=" col-sm-11">
+                <label for="{{ form.amount.id_for_label }}" class="col-md-1 control-label">{{ form.amount.label }}</label>
+              <div class=" col-md-11">
                 {{ form.amount }}
-              <div id="error_amount" class="col-sm-12" style="margin-top:10px"></div>
+              <div id="error_amount" class="col-md-12" style="margin-top:10px"></div>
               </div>
             </div>
           <div class="form-group">
-              <label for="{{ form.category.id_for_label }}" class="col-sm-1 control-label">{{ form.category.label }}</label>
-              <div class=" col-sm-11">
+              <label for="{{ form.category.id_for_label }}" class="col-md-1 control-label">{{ form.category.label }}</label>
+              <div class=" col-md-11">
                   {{ form.category }}
-              <div id="error_category" class="col-sm-12" style="margin-top:10px"></div>
+              <div id="error_category" class="col-md-12" style="margin-top:10px"></div>
               </div>
           </div>
           <div class="form-group">
-              <label for="{{ form.item_status.id_for_label }}" class="col-sm-1 control-label">{{ form.item_status.label }}</label>
-              <div class=" col-sm-11">
+              <label for="{{ form.item_status.id_for_label }}" class="col-md-1 control-label">{{ form.item_status.label }}</label>
+              <div class=" col-md-11">
                   {{ form.item_status }}
-              <div id="error_item_status" class="col-sm-12" style="margin-top:10px"></div>
+              <div id="error_item_status" class="col-md-12" style="margin-top:10px"></div>
               </div>
           </div>
             <div class="form-group">
-                <label for="{{ form.desc.id_for_label }}" class="col-sm-1 control-label">{{ form.desc.label }}</label>
-              <div class=" col-sm-11">
+                <label for="{{ form.desc.id_for_label }}" class="col-md-1 control-label">{{ form.desc.label }}</label>
+              <div class=" col-md-11">
                 {{ form.desc }}
               </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-11 col-sm-offset-1">
+                <div class="col-md-11 col-md-offset-1">
                     <button type="button" class="btn btn-primary" onclick="uploadFile(); return false;">등록하기</button>
                 </div>
             </div>

@@ -1,213 +1,293 @@
-<!DOCTYPE>
-<HTML>
-<BODY>
-<script src="http://code.jquery.com/jquery-latest.js"></script>
- 
-<script type="text/javascript">
- 
-    // 파일 리스트 번호
-    var fileIndex = 0;
-    // 등록할 전체 파일 사이즈
-    var totalFileSize = 0;
-    // 파일 리스트
-    var fileList = new Array();
-    // 파일 사이즈 리스트
-    var fileSizeList = new Array();
-    // 등록 가능한 파일 사이즈 MB
-    var uploadSize = 50;
-    // 등록 가능한 총 파일 사이즈 MB
-    var maxUploadSize = 500;
- 
-    $(function (){
-        // 파일 드롭 다운
-        fileDropDown();
-    });
- 
-    // 파일 드롭 다운
-    function fileDropDown(){
-        var dropZone = $("#dropZone");
-        //Drag기능 
-        dropZone.on('dragenter',function(e){
-            e.stopPropagation();
-            e.preventDefault();
-            // 드롭다운 영역 css
-            dropZone.css('background-color','#E3F2FC');
-        });
-        dropZone.on('dragleave',function(e){
-            e.stopPropagation();
-            e.preventDefault();
-            // 드롭다운 영역 css
-            dropZone.css('background-color','#FFFFFF');
-        });
-        dropZone.on('dragover',function(e){
-            e.stopPropagation();
-            e.preventDefault();
-            // 드롭다운 영역 css
-            dropZone.css('background-color','#E3F2FC');
-        });
-        dropZone.on('drop',function(e){
-            e.preventDefault();
-            // 드롭다운 영역 css
-            dropZone.css('background-color','#FFFFFF');
-            
-            var files = e.originalEvent.dataTransfer.files;
-            if(files != null){
-                if(files.length < 1){
-                    alert("폴더 업로드 불가");
-                    return;
-                }
-                selectFile(files)
-            }else{
-                alert("ERROR");
-            }
-        });
-    }
- 
-    // 파일 선택시
-    function selectFile(fileObject){
-        var files = null;
- 
-        if(fileObject != null){
-            // 파일 Drag 이용하여 등록시
-            files = fileObject;
-        }else{
-            // 직접 파일 등록시
-            files = $('#multipaartFileList_' + fileIndex)[0].files;
-        }
-        
-        // 다중파일 등록
-        if(files != null){
-            for(var i = 0; i < files.length; i++){
-                // 파일 이름
-                var fileName = files[i].name;
-                var fileNameArr = fileName.split("\.");
-                // 확장자
-                var ext = fileNameArr[fileNameArr.length - 1];
-                // 파일 사이즈(단위 :MB)
-                var fileSize = files[i].size / 1024 / 1024;
-                
-                if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
-                    // 확장자 체크
-                    alert("등록 불가 확장자");
-                    break;
-                }else if(fileSize > uploadSize){
-                    // 파일 사이즈 체크
-                    alert("용량 초과\n업로드 가능 용량 : " + uploadSize + " MB");
-                    break;
-                }else{
-                    // 전체 파일 사이즈
-                    totalFileSize += fileSize;
-                    
-                    // 파일 배열에 넣기
-                    fileList[fileIndex] = files[i];
-                    
-                    // 파일 사이즈 배열에 넣기
-                    fileSizeList[fileIndex] = fileSize;
- 
-                    // 업로드 파일 목록 생성
-                    addFileList(fileIndex, fileName, fileSize);
- 
-                    // 파일 번호 증가
-                    fileIndex++;
-                }
-            }
-        }else{
-            alert("ERROR");
-        }
-    }
- 
-    // 업로드 파일 목록 생성
-    function addFileList(fIndex, fileName, fileSize){
-        var html = "";
-        html += "<tr id='fileTr_" + fIndex + "'>";
-        html += "    <td class='left' >";
-        html +=         fileName + " / " + fileSize + "MB "  + "<a href='#' onclick='deleteFile(" + fIndex + "); return false;' class='btn small bg_02'>삭제</a>"
-        html += "    </td>"
-        html += "</tr>"
- 
-        $('#fileTableTbody').append(html);
-    }
- 
-    // 업로드 파일 삭제
-    function deleteFile(fIndex){
-        // 전체 파일 사이즈 수정
-        totalFileSize -= fileSizeList[fIndex];
-        
-        // 파일 배열에서 삭제
-        delete fileList[fIndex];
-        
-        // 파일 사이즈 배열 삭제
-        delete fileSizeList[fIndex];
-        
-        // 업로드 파일 테이블 목록에서 삭제
-        $("#fileTr_" + fIndex).remove();
-    }
- 
-    // 파일 등록
-    function uploadFile(){
-        // 등록할 파일 리스트
-        var uploadFileList = Object.keys(fileList);
- 
-        // 파일이 있는지 체크
-        if(uploadFileList.length == 0){
-            // 파일등록 경고창
-            alert("파일이 없습니다.");
-            return;
-        }
-        
-        // 용량을 500MB를 넘을 경우 업로드 불가
-        if(totalFileSize > maxUploadSize){
-            // 파일 사이즈 초과 경고창
-            alert("총 용량 초과\n총 업로드 가능 용량 : " + maxUploadSize + " MB");
-            return;
-        }
-            
-        if(confirm("등록 하시겠습니까?")){
-            // 등록할 파일 리스트를 formData로 데이터 입력
-            var form = $('#uploadForm');
-            var formData = new FormData(form);
-            for(var i = 0; i < uploadFileList.length; i++){
-                formData.append('files', fileList[uploadFileList[i]]);
-            }
-            
-            $.ajax({
-                url:"업로드 경로",
-                data:formData,
-                type:'POST',
-                enctype:'multipart/form-data',
-                processData:false,
-                contentType:false,
-                dataType:'json',
-                cache:false,
-                success:function(result){
-                    if(result.data.length > 0){
-                        alert("성공");
-                        location.reload();
-                    }else{
-                        alert("실패");
-                        location.reload();
-                    }
-                }
-            });
-        }
-    }
-</script>
- 
-    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post">
-        <table class="table" width="100%" border="1px">
-            <tbody id="fileTableTbody">
-                <tr>
-                    <td id="dropZone">
-                        파일을 드래그 하세요
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
-        
-    <a href="#" onclick="uploadFile(); return false;" class="btn bg_01">파일 업로드</a>
-        
-</BODY>
-</HTML>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<style>
 
 
+.card {
+    padding-top: 20px;
+    margin: 10px 0 20px 0;
+    background-color: rgba(214, 224, 226, 0.2);
+    border-top-width: 0;
+    border-bottom-width: 2px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.card .card-heading {
+    padding: 0 20px;
+    margin: 0;
+}
+
+.card .card-heading.simple {
+    font-size: 20px;
+    font-weight: 300;
+    color: #777;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.card .card-heading.image img {
+    display: inline-block;
+    width: 46px;
+    height: 46px;
+    margin-right: 15px;
+    vertical-align: top;
+    border: 0;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.card .card-heading.image .card-heading-header {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.card .card-heading.image .card-heading-header h3 {
+    margin: 0;
+    font-size: 14px;
+    line-height: 16px;
+    color: #262626;
+}
+
+.card .card-heading.image .card-heading-header span {
+    font-size: 12px;
+    color: #999999;
+}
+
+.card .card-body {
+    padding: 0 20px;
+    margin-top: 20px;
+}
+
+.card .card-media {
+    padding: 0 20px;
+    margin: 0 -14px;
+}
+
+.card .card-media img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.card .card-actions {
+    min-height: 30px;
+    padding: 0 20px 20px 20px;
+    margin: 20px 0 0 0;
+}
+
+.card .card-comments {
+    padding: 20px;
+    margin: 0;
+    background-color: #f8f8f8;
+}
+
+.card .card-comments .comments-collapse-toggle {
+    padding: 0;
+    margin: 0 20px 12px 20px;
+}
+
+.card .card-comments .comments-collapse-toggle a,
+.card .card-comments .comments-collapse-toggle span {
+    padding-right: 5px;
+    overflow: hidden;
+    font-size: 12px;
+    color: #999;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-comments .media-heading {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.card.people {
+    position: relative;
+    display: inline-block;
+    width: 170px;
+    height: 300px;
+    padding-top: 0;
+    margin-left: 20px;
+    overflow: hidden;
+    vertical-align: top;
+}
+
+.card.people:first-child {
+    margin-left: 0;
+}
+
+.card.people .card-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    width: 170px;
+    height: 150px;
+    background-color: #ffffff;
+}
+
+.card.people .card-top.green {
+    background-color: #53a93f;
+}
+
+.card.people .card-top.blue {
+    background-color: #427fed;
+}
+
+.card.people .card-info {
+    position: absolute;
+    top: 150px;
+    display: inline-block;
+    width: 100%;
+    height: 101px;
+    overflow: hidden;
+    background: #ffffff;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.card.people .card-info .title {
+    display: block;
+    margin: 8px 14px 0 14px;
+    overflow: hidden;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 18px;
+    color: #404040;
+}
+
+.card.people .card-info .desc {
+    display: block;
+    margin: 8px 14px 0 14px;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 16px;
+    color: #737373;
+    text-overflow: ellipsis;
+}
+
+.card.people .card-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: inline-block;
+    width: 100%;
+    padding: 10px 20px;
+    line-height: 29px;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.card.hovercard {
+    position: relative;
+    padding-top: 0;
+    overflow: hidden;
+    text-align: center;
+    background-color: rgba(214, 224, 226, 0.2);
+}
+
+.card.hovercard .cardheader {
+    background: url("http://lorempixel.com/850/280/nature/4/");
+    background-size: cover;
+    height: 135px;
+}
+
+.card.hovercard .avatar {
+    position: relative;
+    top: -50px;
+    margin-bottom: -50px;
+}
+
+.card.hovercard .avatar img {
+    width: 100px;
+    height: 100px;
+    max-width: 100px;
+    max-height: 100px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 5px solid rgba(255,255,255,0.5);
+}
+
+.card.hovercard .info {
+    padding: 4px 8px 10px;
+}
+
+.card.hovercard .info .title {
+    margin-bottom: 4px;
+    font-size: 24px;
+    line-height: 1;
+    color: #262626;
+    vertical-align: middle;
+}
+
+.card.hovercard .info .desc {
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 20px;
+    color: #737373;
+    text-overflow: ellipsis;
+}
+
+.card.hovercard .bottom {
+    padding: 0 20px;
+    margin-bottom: 17px;
+}
+
+.btn{ border-radius: 50%; width:32px; height:32px; line-height:18px;  }
+
+</style>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container">
+	<div class="row">
+		<div class="col-lg-3 col-sm-6">
+
+            <div class="card hovercard">
+                <div class="cardheader">
+
+                </div>
+                <div class="avatar">
+                    <img alt="" src="http://lorempixel.com/100/100/people/9/">
+                </div>
+                <div class="info">
+                    <div class="title">
+                        <a target="_blank" href="https://scripteden.com/">Script Eden</a>
+                    </div>
+                    <div class="desc">Passionate designer</div>
+                    <div class="desc">Curious developer</div>
+                    <div class="desc">Tech geek</div>
+                </div>
+                <div class="bottom">
+                    <a class="btn btn-primary btn-twitter btn-sm" href="https://twitter.com/webmaniac">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                    <a class="btn btn-danger btn-sm" rel="publisher"
+                       href="https://plus.google.com/+ahmshahnuralam">
+                        <i class="fa fa-google-plus"></i>
+                    </a>
+                    <a class="btn btn-primary btn-sm" rel="publisher"
+                       href="https://plus.google.com/shahnuralam">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                    <a class="btn btn-warning btn-sm" rel="publisher" href="https://plus.google.com/shahnuralam">
+                        <i class="fa fa-behance"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+	</div>
+</div>

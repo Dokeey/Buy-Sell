@@ -7,66 +7,66 @@
         cursor:auto;
     }
 </style>
-<h2>판매 내역</h2>
-<hr>
 <div class="container-fluid" style="padding: 0px">
     {% for order in sell_list %}
     {% order_time_check order %}
-    <div class="row thumbnail" style="padding: 10px; margin:5px;">
-        <div class="col-sm-9" style="padding:0px;">
-            <div class="col-sm-4">
-                <div id="iteminfo" class="carousel slide" data-ride="carousel">
-                    <!--페이지-->
-                    <div class="carousel-inner">
-                        {% for item_image in order.item.itemimage_set.all %}
-                                <div class="item {% if forloop.counter == 1 %}active{% endif %}">
-                                    <a href="{% url "trade:item_detail" order.item.id %}">
-                                        <img class="img-thumbnail img-responsive" style="width:auto;" src="{{ item_image.photo.url }}"/>
-                                    </a>
-                                </div>
-                        {% endfor %}
+    <div class="col-sm-12">
+        <div class="thumbnail col-xs-12">
+            <div class="col-sm-9" style="padding:0px;">
+                <div class="col-sm-4 col-md-3">
+                    <div id="iteminfo" class="carousel slide" data-ride="carousel">
+                        <!--페이지-->
+                        <div class="carousel-inner">
+                            {% for item_image in order.item.itemimage_set.all %}
+                                    <div class="item {% if forloop.counter == 1 %}active{% endif %}">
+                                        <a href="{% url "trade:item_detail" order.item.id %}">
+                                            <img class="img-thumbnail img-responsive" style="max-height:150px;margin: 0 auto;" src="{{ item_image.photo.url }}"/>
+                                        </a>
+                                    </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-8" style="padding:10px;">
-                <div class="col-xs-12" style="padding:0px;">
-                    <b class="col-xs-8" style="padding:0px;">{{ order.name }}</b><b class="col-xs-4 text-right pull-right" style="color:orange;padding:0px;">{{ order.amount_html }}</b>
-                </div>
-                <div class="col-xs-12" style="padding:0px;">
+                <div class="col-sm-8 col-md-9" style="padding:10px;">
+                    <div class="col-xs-12" style="padding:0px;">
+                        <b class="col-xs-8" style="padding:0px;">{{ order.name }}</b><b class="col-xs-4 text-right pull-right" style="color:orange;padding:0px;">{{ order.amount_html }}</b>
+                    </div>
+                    <div class="col-xs-12" style="padding:0px;">
+                        <hr>
+                        <br>{{ order.status_html }}
+                        <small class="pull-right"><i class="far fa-clock"></i> {{ order.updated_at }}</small>
                     <hr>
-                    <br>{{ order.status_html }}
-                    <small class="pull-right"><i class="far fa-clock"></i> {{ order.updated_at }}</small>
-                <hr>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-3 text-center" style="padding:5px;">
-            {% if pay_choice == 'import' %}
-                {% if order.receipt_link %}
-                    <div class="row" style="margin:5px"><button class="btn btn-info col-xs-12"><i class="fas fa-receipt"></i> {{ order.receipt_link }}</button></div>
+            <div class="col-sm-3 text-center" style="padding:5px;">
+                {% if pay_choice == 'import' %}
+                    {% if order.receipt_link %}
+                        <div class="row" style="margin:5px"><button class="btn btn-info col-xs-12"><i class="fas fa-receipt"></i> {{ order.receipt_link }}</button></div>
+                    {% endif %}
+                {% else %}
+                    {% if order.status == 'reserv' or order.status == 'success' %}
+                        <div class="row" style="margin:5px">
+                            <a href="{% url "trade:trade_info" order.id %}">
+                            <button class="btn btn-info col-xs-12"><i class="fas fa-receipt"></i> 자세히 보기</button>
+                            </a>
+                        </div>
+                    {% endif %}
                 {% endif %}
-            {% else %}
-                {% if order.status == 'reserv' or order.status == 'success' %}
-                    <div class="row" style="margin:5px">
-                        <a href="{% url "trade:trade_info" order.id %}">
-                        <button class="btn btn-info col-xs-12"><i class="fas fa-receipt"></i> 자세히 보기</button>
-                        </a>
-                    </div>
+                <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.user.storeprofile.pk %}">
+                    <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.user.profile.nick_name }}</button></a>
+                </div>
+                {% if not order.is_active and order.status == 'reserv' %}
+                <div class="row" style="margin:5px">
+                    <a href="{% url "trade:seller_confirm" order.id %}"><button class="btn btn-primary col-xs-12"><i class="fa fa-check-circle"></i> 입금 확인</button></a><br>
+                </div>
                 {% endif %}
-            {% endif %}
-            <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.user.storeprofile.pk %}">
-                <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.user.profile.nick_name }}</button></a>
+                {% if order.status == 'paid' or order.status == 'reserv' %}
+                <div class="row" style="margin:5px">
+                    <a href="{% url "trade:order_cancle" order.id %}"><button class="btn btn-danger col-xs-12"><i class="fa fa-times"></i> 주문 취소</button></a>
+                </div>
+                {% endif %}
             </div>
-            {% if not order.is_active and order.status == 'reserv' %}
-            <div class="row" style="margin:5px">
-                <a href="{% url "trade:seller_confirm" order.id %}"><button class="btn btn-primary col-xs-12"><i class="fa fa-check-circle"></i> 입금 확인</button></a><br>
-            </div>
-            {% endif %}
-            {% if order.status == 'paid' or order.status == 'reserv' %}
-            <div class="row" style="margin:5px">
-                <a href="{% url "trade:order_cancle" order.id %}"><button class="btn btn-danger col-xs-12"><i class="fa fa-times"></i> 주문 취소</button></a>
-            </div>
-            {% endif %}
         </div>
     </div>
     {% empty %}

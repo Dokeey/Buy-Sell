@@ -8,26 +8,24 @@
          vertical-align: middle;
     }
 </style>
-<h2>주문 상세 내역</h2>
-<hr>
-<div class="container-fluid" style="padding: 0px">
-    <div class="row thumbnail" style="padding: 10px; margin:5px;">
+<div class="container-fluid" style="padding: 20px">
+    <div class="row thumbnail" style="padding: 10px; margin:10px 0px 10px 0px;">
         <div class="col-sm-9" style="padding:0px;">
-            <div class="col-sm-3">
+            <div class="col-sm-4 col-md-3">
                 <div id="iteminfo" class="carousel slide" data-ride="carousel">
                     <!--페이지-->
                     <div class="carousel-inner">
                         {% for item_image in order.item.itemimage_set.all %}
                                 <div class="item {% if forloop.counter == 1 %}active{% endif %}">
                                     <a href="{% url "trade:item_detail" order.item.id %}">
-                                        <img class="img-thumbnail img-responsive" style="width:auto;" src="{{ item_image.photo.url }}"/>
+                                        <img class="img-thumbnail img-responsive" style="max-height:150px;margin: 0 auto;" src="{{ item_image.photo.url }}"/>
                                     </a>
                                 </div>
                         {% endfor %}
                     </div>
                 </div>
             </div>
-            <div class="col-sm-9" style="padding:10px;">
+            <div class="col-sm-8 col-md-9" style="padding:10px;">
                 <div class="col-xs-12" style="padding:0px;">
                     <b class="col-xs-8" style="padding:0px;">{{ order.name }}</b><b class="col-xs-4 text-right pull-right" style="color:orange;padding:0px;">{{ order.amount_html }}</b>
                 </div>
@@ -80,7 +78,6 @@
                 <h4>결제일 <b style="color:red">{{ order.created_at }}</b> 로부터 <b style="color:red">2일</b> 전까지 입금이 <b style="color:#368AFF">확인</b> 되어야합니다.</h4>
         </div>
     </div>
-<hr>
 <div class="thumbnail" style="padding:20px">
 <form class="form-horizontal">
         <div class="form-group">
@@ -128,7 +125,6 @@
             </div>
 </form>
 </div>
-<hr>
 <div class="thumbnail" style="padding:20px">
 <form class="form-horizontal">
         <div class="form-group">
@@ -170,7 +166,6 @@
             </div>
 </form>
 </div>
-<hr>
 </div>
 
 {% endblock %}
