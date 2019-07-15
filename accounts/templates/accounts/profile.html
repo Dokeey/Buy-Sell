@@ -1,29 +1,61 @@
 {% extends "mypage/layout.html" %}
 
 {% block mypage_content %}
+<div class="thumbnail" style="padding:20px">
+<form class="form-horizontal">
+        <div class="form-group">
+            <div class="form-group">
+                <div class="col-sm-12 text-center">
+                    <h2><i class="fas fa-address-card" style="color:#368AFF"></i> 내 정보</h2>
+                </div>
+            </div>
+        </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">ID</label>
+              <div class=" col-sm-10">
+                <input type="text" class="form-control col-sm-10" readonly required value="{{ user.username }}">
+              </div>
+          </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">닉네임</label>
+              <div class=" col-sm-10">
+                <input type="text" class="form-control col-sm-10" readonly required value="{{ profile.nick_name }}">
+              </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">연락처</label>
+              <div class=" col-sm-10">
+                <input type="text" class="form-control col-sm-10" readonly required value="{{ profile.phone }}">
+              </div>
+            </div>
+          <div class="form-group">
+              <label class="col-sm-2 control-label">주소</label>
+              <div class=" col-sm-10">
+                <input type="text" class="form-control col-sm-10" readonly required value="{{ profile.post_code }}{{ profile.address }}{{ profile.detail_address }}">
+              </div>
+          </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">이메일</label>
+              <div class=" col-sm-10">
+                <input type="text" class="form-control col-sm-10" readonly required value="{{ user.email }}">
+              </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">계좌 번호</label>
+              <div class=" col-sm-10">
+                <input type="text" class="form-control col-sm-10" readonly required value="{{ profile.account_num }}">
+              </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <a href="{% url "accounts:profile_edit" %}"><button type="button" class="btn btn-primary">프로필 수정</button></a>
+                    <a href="{% url "accounts:pw_edit" %}"><button type="button" class="btn btn-primary">비밀번호변경</button></a>
+                    <a href="{% url "accounts:withdrawal" %}"><button type="button" class="btn btn-primary">회원탈퇴</button></a>
+                </div>
+            </div>
+</form>
 
-<h3> ID </h3>
-        {{ user.username }}
-<hr>
-<h3> 닉네임 </h3>
-        {{ profile.nick_name }}
-<hr>
-<h3> 주소 </h3>
-        {{ profile.post_code }} {{ profile.address }} {{ profile.detail_address }}
-<hr>
-<h3> 연락처 </h3>
-        {{ profile.phone }}
-<hr>
-<h3> 계좌번호 </h3>
-        {{ profile.account_num }}
-<hr>
-<h3> 이메일 </h3>
-        {{ user.email }}
-<hr>
+</div>
 
-
-<a href="{% url "accounts:profile_edit" %}"> 프로필수정 </a><br>
-<a href="{% url "accounts:pw_edit" %}"> 비밀번호변경 </a><br>
-<a href="{% url "accounts:withdrawal" %}"> 회원탈퇴 </a>
 
 {% endblock %}
