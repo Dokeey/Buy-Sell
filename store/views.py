@@ -21,8 +21,26 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 #     stores = get_object_or_404(StoreProfile, user=request.user)
 #     return render(request, 'store/layout.html',{'stores': stores})
 
-class StarStoreListView(TemplateView):
-    template_name = 'store/star_store.html'
+class StarStoreHitListView(ListView):
+    template_name = 'store/star_store_hit.html'
+    model = StoreProfile
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        store_all = StoreProfile.objects.all()
+        hit_list = []
+        for store in store_all :
+            hit_count = HitCount.objects.get_for_object(store)
+            hit_list.append(hit_count)
+
+        hit_list.sort(key=operator.attrgetter('hits'), reverse=True)
+        context['hit_lists'] = hit_list
+        if self.request.user.is_active:
+            context['my_hit'] = hit_list.index(HitCount.objects.get_for_object(self.request.user.storeprofile))+1
+        return context
+
+class StarStoreGradeListView(ListView):
+    template_name = 'store/star_store_grade.html'
     model = StoreProfile
 
     def get_context_data(self, **kwargs):
@@ -32,20 +50,13 @@ class StarStoreListView(TemplateView):
         for i in range(0, context['grades'].count()):
             store_list.append(StoreProfile.objects.get(pk=(context['grades'][i])))
         context['stores'] = store_list
-
-        hit_list = []
-        items = []
         sell_list = {}
         store_all = StoreProfile.objects.all()
         for store in store_all :
-            hit_count = HitCount.objects.get_for_object(store)
-            hit_list.append(hit_count)
 
             orders = Order.objects.filter(item__user=store.user,status='success')
             sell_list[store] = orders.count()
 
-        hit_list.sort(key=operator.attrgetter('hits'),reverse=True)
-        context['hit_lists'] = hit_list
         context['sdict'] = sorted(sell_list, key=sell_list.get , reverse=True)
         return context
 

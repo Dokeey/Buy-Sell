@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 
 from store.models import StoreProfile, StoreGrade, QuestionComment
 from trade.models import Item, Order
+from django import template
 
 register = template.Library()
 

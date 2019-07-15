@@ -1,0 +1,209 @@
+{% extends "layout.html" %}
+{% load store.store_tags %}
+{% load hitcount_tags %}
+{% load trade_tags %}
+
+{% block head %}
+
+<style xmlns="http://www.w3.org/1999/html">
+
+.gold { font-weight: bold; color:#747474; }
+.fa-star {color: #FFF612}
+.fa-star-half-alt {color: #FFF612}
+
+.relative {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
+.album_img {
+    position: absolute;
+    top:1%; left: 25%;
+    z-index:-1;
+}
+.rank_music {
+    position: absolute;
+    border-radius: 20px;
+    top:1%; left: 25%;
+    height: 296px;
+    width: 300px;
+    padding: 30px;
+    background: url(//cdnimg.melon.co.kr/resource/image/web/chart/rank_bg_album.png) repeat;
+    z-index: 0;
+
+}
+.btn-yellow {
+background-color: #f7e600;
+}
+.white {
+color: white;
+}
+.btn-blue {
+background-color: #00498c;
+}
+</style>
+
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+  </div>
+     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav nav-tabs nav-justified gold" >
+          <li role="presentation"  class="active"><a href="#">방문 순위</a></li>
+          <li role="presentation"><a href="#">판매 순위</a></li>
+          <li role="presentation"><a href="#">평점 순위</a></li>
+          <li role="presentation"><a href="">팔로워 순위</a> </li>
+        </ul>
+     </div>
+</nav>
+
+<div class="row">
+    <div class="col-md-7">
+        <h2 class="gold text-center">방문 순위 <small> TOP.5 </small></h2><hr/>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="relative"></div>
+                <div class="album_img">
+                    <img src="{{ hit_lists.0.content_object.photo.url }}" width="300", height="300", style="
+    border-radius: 20px;", class="img-responsive " />
+                </div>
+                <div class="rank_music">
+                    <h4 style="color:white"><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
+                    <div class="row">
+                        <div class="col-xs-5">
+                             <img src="{{ hit_lists.0.content_object.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
+                        </div>
+                        <div class="col-xs-7" style="font-weight:bold;color:white;">
+                             {{ hit_lists.0.content_object.name }}<br/><br/>
+                            <div class="row">
+                                <div class="col-xs-4" >
+                                    <a class="white">
+                                        <i class="fab fa-facebook"></i>
+                                    </a>
+                                </div>
+                                <div class="col-xs-4">
+                                    <a class="white">
+                                        <i class="fab fa-kickstarter-k"></i>
+                                    </a>
+                                </div>
+                                <div class="col-xs-4" >
+                                    <a class="white" onclick = "location.href ='{% url "mypage:follow_new" hit_lists.0.content_object.pk %}'" >
+                                        <i class="fas fa-user-plus"></i>
+                                     </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr/>
+                    <h2 align="center" style="font-weight:bold;color:white;">{{ hit_lists.0.hits }} 명</h2>
+                        <div align="right">
+                        <a href="{% url 'store:store_sell_list' hit_lists.0.content_object.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
+                        </div>
+                </div>
+                <hr/>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+            <div class="row">
+             <div class="col-md-2">
+                 <h4 style="color:#EDA900">내 순위</h4>
+
+                 {% if my_hit == 1 %}
+                    <h4 ><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
+                 {% elif my_hit == 2 %}
+                    <h4 ><i class="fas fa-trophy" style="color:#C0C0C0;"></i> 2위</h4>
+                 {% elif my_hit == 3 %}
+                    <h4 ><i class="fas fa-trophy" style="color:#cd7f32;"></i> 3위</h4>
+                 {% else %}
+                    <h4 >{{ my_hit }}위</h4>
+                 {% endif %}
+             </div>
+             <div class="col-md-2 col-xs-2">
+                <img src="{{ request.user.storeprofile.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
+             </div>
+             <div class="col-md-8 col-xs-8">
+                {{ request.user.storeprofile.name }}
+                <div class="row">
+                    <br/>
+                <div class="col-md-5 col-xs-5" style="font-size:20px; font-weight:bold;">
+                     {% get_hit_count for request.user.storeprofile %}명
+                </div>
+                <div class="col-xs-7"> <a href="{% url 'store:store_sell_list' request.user.storeprofile.pk %}"  style="color:#C3C3C3;font-weight:bold;">내 가게로 가기 <i class="fas fa-angle-right"></i></a> </div>
+             </div></div>
+            </div>
+            <hr/>
+            {% endif %}
+            {% for hit_list in hit_lists|slice:"5" %}
+                 <div class="row">
+                     <div class="col-md-2">
+                         {% if forloop.counter == 1 %}
+                            <h4 ><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
+                         {% elif forloop.counter == 2 %}
+                            <h4 ><i class="fas fa-trophy" style="color:#C0C0C0;"></i> 2위</h4>
+                         {% elif forloop.counter == 3 %}
+                            <h4 ><i class="fas fa-trophy" style="color:#cd7f32;"></i> 3위</h4>
+                         {% else %}
+                            <h4 >{{ forloop.counter }}위</h4>
+                         {% endif %}
+                     </div>
+                     <div class="col-md-2 col-xs-2">
+                        <img src="{{ hit_list.content_object.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
+                     </div>
+                     <div class="col-md-8 col-xs-8">
+                        {{ hit_list.content_object.name }}
+
+                        <div class="row">
+                            <br/>
+                        <div class="col-md-3 col-xs-12" style="font-size:20px; font-weight:bold;">
+                             {{ hit_list.hits }}명
+                        </div>
+                        <div class="col-md-8 col-xs-12">
+                            <a class="btn btn-blue btn" >
+                                <i class="fab fa-facebook" style="color:white"></i>
+                            </a>
+                            <a class="btn btn-yellow" >
+                                <i class="fab fa-kickstarter-k"></i>
+                            </a>
+                             <a class="btn btn-warning btn-md" onclick = "location.href ='{% url "mypage:follow_new" hit_list.content_object.pk %}'">
+                                <i class="fas fa-user-plus"></i>
+                             </a>
+                            <div class="col-md-12 col-xs-12" align="right">
+                            <a href="{% url 'store:store_sell_list' hit_list.content_object.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
+                            </div>
+                        </div>
+
+                     </div></div>
+                </div> <hr/>
+            {% endfor %}
+    </div>
+
+    <div class="col-md-5 col-xs-5"><h2 class="gold text-center">1등 가게 물품</h2><hr/>
+        <div class="row">
+            {% for item in hit_lists.0.content_object.user.item_set.all|slice:"4" %}
+                <div class="col-sm-6 col-xs-12" style="padding:10px">
+                        {% item_block item %}
+                </div>
+            {% empty %}
+                <h4 class="text-center">물품이 없습니다</h4>
+
+            {% endfor %}
+        </div>
+        <div align="center">
+            <a href="{% url 'store:store_sell_list' hit_lists.0.content_object.pk %}">남은 <span style="color:red;font-weight:bold"> {{ hit_lists.0.content_object.user.item_set.count|add:"-4" }}개</span> 물품 보러가기</a>
+        </div>
+        <hr/>
+    </div>
+</div>
+{% endblock %}

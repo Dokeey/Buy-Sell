@@ -18,6 +18,7 @@ urlpatterns = [
 
     path('sell/list/<int:pk>/', views.StoreSellListView.as_view(), name='store_sell_list'),
 
-    path('star/store/', views.StarStoreListView.as_view(), name='star_store'),
+    path('star/store/hit/', views.StarStoreHitListView.as_view(), name='star_store_hit'),
+    path('star/store/grade/', views.StarStoreGradeListView.as_view(), name='star_store_grade'),
     #path('profile/', views.my_store_profile, name='my_store_profile'),
 ]
