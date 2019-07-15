@@ -336,33 +336,32 @@
                 </div>
             </div>
 
-            <table class="table text-center table-borderless" style="margin-top:10px">
-                <tr>
-                {% for it in items %}
-                    <td style="max-height: 200px;">
-                        <a href="{% url "trade:item_detail" it.id %}">
-                            <div id="iteminfo" class="carousel slide" data-ride="carousel">
-                                <!--페이지-->
-                                <div class="carousel-inner">
-                            {% for item_image in it.itemimage_set.all %}
-                                    <div class="item {% if forloop.counter == 1 %}active{% endif %}">
-                                        <a href="{% url "trade:item_detail" it.id %}">
-                                            <img class="img-thumbnail img-responsive" style="width:auto;" src="{{ item_image.photo.url }}"/>
-                                        </a>
-                                    </div>
-                            {% endfor %}
+            <div class="row text-center" style="margin:5px;padding:5px">
+            {% for it in items %}
+                <div class="col-xs-4" style="padding:5px;">
+                    <a href="{% url "trade:item_detail" it.id %}">
+                        <div id="iteminfo" class="carousel slide" data-ride="carousel">
+                            <!--페이지-->
+                            <div class="carousel-inner">
+                        {% for item_image in it.itemimage_set.all %}
+                                <div class="item {% if forloop.counter == 1 %}active{% endif %}">
+                                    <a href="{% url "trade:item_detail" it.id %}">
+                                        <img class="img-responsive" style="margin:0 auth;height:auto;border:1px solid #ededed;" src="{{ item_image.photo.url }}"/>
+                                    </a>
                                 </div>
+                        {% endfor %}
                             </div>
-                            <h6>{{ it.amount|intcomma }} <small>원</small></h6>
-                        </a>
-                {% empty %}
-                    <td style="max-height: 200px;">
-                        <h6><i class="far fa-meh"></i> 등록한 물품이 없습니다</h6>
-                        <hr>
-                {% endfor %}
-                    </td>
-                </tr>
-            </table>
+                        </div>
+                        <h6>{{ it.amount|intcomma }} <small>원</small></h6>
+                    </a>
+                </div>
+            {% empty %}
+                <div class="col-xs-12">
+                    <h6><i class="far fa-meh"></i> 등록한 물품이 없습니다</h6>
+                    <hr>
+                </div>
+            {% endfor %}
+            </div>
 
             {% if items_ctn > 4 %}
                 <div class="row text-center" style="margin-bottom:50px">
