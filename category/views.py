@@ -1,6 +1,8 @@
 from operator import attrgetter
 
-from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
+from django.db.models import Q, Count
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView
 
 from .models import Category
@@ -26,22 +28,12 @@ from trade.models import Item
 #         'parent_category': parent_category,
 #         'categories_items': categories_items,
 #     })
-
-class SearchItemList(ListView):
+class BaseItemList(ListView):
     model = Item
-    template_name = 'category/search_item.html'
     context_object_name = 'items'
     ordering = '-created_at'
     paginate_by = 24
 
-    def get_queryset(self):
-        self.query = self.request.GET.get('query','')
-        qs = super().get_queryset()
-
-        if self.query:
-            qs = qs.filter(title__icontains=self.query)
-
-        return qs
 
     def get_ordering(self):
         ordering = self.request.GET.get('sort','-created_at')
@@ -54,6 +46,7 @@ class SearchItemList(ListView):
             ordering = 'amount'
 
         return ordering
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,14 +70,45 @@ class SearchItemList(ListView):
 
         context['sort'] = self.request.GET.get('sort','-created_at')
         context['item_ctn'] = self.get_queryset().count()
-        if self.query:
-            context['query'] = self.query
 
         return context
 
 
 
-class CategoryItemList(SearchItemList):
+class SearchItemList(BaseItemList):
+    template_name = 'category/search_item.html'
+
+    def get_queryset(self):
+        self.query = self.request.GET.get('query','')
+        self.cate = self.request.GET.get('cate','')
+        self.qs = super().get_queryset()
+
+        if self.query == '':
+            messages.error(self.request, '잘못된 접근 입니다.')
+            url = self.request.GET.get('next') or 'root'
+            redirect(url)
+
+        if self.query:
+            self.qs = self.qs.filter(Q(title__icontains=self.query) | Q(desc__icontains=self.query)).distinct()
+
+        if self.cate:
+            category = get_object_or_404(Category, id=self.cate)
+            self.qs = self.qs.filter(category=category)
+
+        return self.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['all_category'] = self.qs.values('category__name','category__id').annotate(category_count = Count('id')).order_by('category')
+
+        context['query'] = self.query
+        context['cate'] = self.cate
+
+        return context
+
+
+
+class CategoryItemList(BaseItemList):
     template_name = 'category/category_item.html'
 
 
