@@ -50,6 +50,50 @@
             });
          }
     </script>
+    <script>
+        jQuery(document).ready(function($) {
+            $('#myCarousel').carousel({
+                    interval: 7000
+            });
+
+            //Handles the carousel s
+            $('[id^=carousel-selector-]').click( function(){
+                    var id_selector = $(this).attr("id");
+                    var id = id_selector.substr(id_selector.length -1);
+                    var id = parseInt(id);
+                    $('#myCarousel').carousel(id);
+            });
+
+            // When the carousel slides, auto update the text
+            $('#myCarousel').on('slid', function (e) {
+                    var id = $('.item.active').data('slide-number');
+            });
+        });
+    </script>
+    <style>
+        .bubble
+        {
+            position: relative;
+            padding: 0px;
+            background: #ededed;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+        }
+        .bubble:after
+        {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 14px 23px 14px 0;
+            border-color: transparent #E8E7E7;
+            display: block;
+            width: 0;
+            z-index: 1;
+            left: -23px;
+            top: 18px;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -91,9 +135,18 @@
                         <!--이전, 다음 버튼-->
                         <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon-chevron-left fas fa-angle-left"></span></a>
                         <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon-chevron-left fas fa-angle-right"></span></a>
-                    </div>
-
                 </div>
+                <ul class="list-inline" id="slider-thumbs">
+                    <!-- Bottom switcher of slider -->
+                        {% for item_image in item.itemimage_set.all %}
+                        <li style="padding:0px;padding-top:20px;">
+                            <a id="carousel-selector-{{ forloop.counter|add:"-1" }}">
+                            <img class="img-responsive " style="margin: 0 auto; height:70px;padding:0px;border:1px solid #ededed" src="{{ item_image.photo.url }}"/></a>
+                        </li>
+                        {% endfor %}
+                </ul>
+
+            </div>
         </div><div class="col-md-6 col-xs-12 vcenter">
             <div class="row" style="padding-left:30px">
                 <h2>{{ item.title }}</h2>
@@ -228,74 +281,83 @@
 
                     {% for comment in comments %}
                     <div class="container-fluid" id="block-{{ comment.id }}" style="padding:0px;">
-                        <div class="row">
-                            <div class="col-sm-2 col-xs-3 profile-img vcenter">
-                                <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
-                                    <img class="img-rounded img-thumbnail img-responsive" src="{{ comment.user.storeprofile.photo.url }}"/>
-                                </a>
-                            </div><div class="col-sm-10 col-xs-9 clearfix vcenter" style="padding:10px;">
-                                <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
-                                    <div class="pull-left" ><b class="info">{{ comment.user.profile.nick_name }}</b></div>
-                                </a>
-                                <div class="pull-right">{% simple_time comment.updated_at %}</div>
-                                <br><div id="cmt-{{ comment.id }}" style="padding-top:10px">{{ comment.message|linebreaks }}</div>
-                                {% if comment.user == request.user %}
-                                    <div class="text-right">
-                                        <a class="edit" href="#" data-form="{% url "trade:comment_update" item.id comment.id %}" title="Edit">
-                                            <i class="fas fa-edit" style="margin-right:10px"></i></a>
-                                        <a class="del" href="#" data-form="{% url "trade:comment_delete" item.id comment.id %}" title="Del">
-                                            <i class="fas fa-trash-alt" style="margin-right:10px"></i></a>
+                        <div class="col-xs-12" style="padding:5px;">
+                            <div class="row">
+                                <div class="col-sm-2 col-xs-3 profile-img vcenter">
+                                    <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
+                                        <img class="img-rounded img-thumbnail img-responsive" src="{{ comment.user.storeprofile.photo.url }}"/>
+                                    </a>
+                                </div><div class="col-xs-9 col-sm-10 vcenter ">
+                                <div class="col-sm-12 col-xs-12 clearfix bubble" style="margin:5px;padding:10px;">
+                                        <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
+                                            <div class="pull-left" ><b class="info">{{ comment.user.profile.nick_name }}</b></div>
+                                        </a>
+                                        <div class="pull-right">{% simple_time comment.updated_at %}</div>
+                                        <br><div id="cmt-{{ comment.id }}" style="padding-top:10px;">{{ comment.message|linebreaks }}</div>
+                                        {% if comment.user == request.user %}
+                                            <div class="text-right">
+                                                <a class="edit" href="#" data-form="{% url "trade:comment_update" item.id comment.id %}" title="Edit">
+                                                    <i class="fas fa-edit" style="margin-right:10px"></i></a>
+                                                <a class="del" href="#" data-form="{% url "trade:comment_delete" item.id comment.id %}" title="Del">
+                                                    <i class="fas fa-trash-alt" style="margin-right:10px"></i></a>
+                                            </div>
+                                        {% endif %}
                                     </div>
-                                {% endif %}
-                            </div>
-                            <div class="col-xs-offset-2 col-xs-10">
-                                <hr>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row col-xs-offset-2">
+                        <div class="col-xs-2 text-center" style="padding:0px;">
+                            <i class="fas fa-reply fa-rotate-180 fa-2x"></i>
+                        </div>
+                        <div class="col-xs-10" style="padding:0px;">
                             {% for replay in comment.replies.all|dictsort:"created_at" %}
                             <div class="container-fluid" id="block-{{ replay.id }}" style="padding:0px;">
-                                <div class="col-sm-2 col-xs-3 profile-img vcenter">
-                                    <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
-                                        <img class="img-rounded img-thumbnail img-responsive" src="{{ replay.user.storeprofile.photo.url }}"/>
-                                    </a>
-                                </div><div class="col-sm-10 col-xs-9 clearfix vcenter" style="padding:10px;">
-                                    <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
-                                        <div class="pull-left"><b class="info">{{ replay.user.profile.nick_name }}</b></div>
-                                    </a>
-                                    <div class="pull-right">{% simple_time replay.updated_at %}</div>
-                                    <br><div id="cmt-{{ replay.id }}" style="padding-top:10px;">{{ replay.message }}</div>
-                                    {% if replay.user == request.user %}
-                                        <div class="text-right">
-                                            <a class="edit" href="#" data-form="{% url "trade:comment_update" item.id replay.id %}" title="Edit">
-                                                <i class="fas fa-edit" data-toggle="modal" data-target="#edit-modal"  style="margin-right:10px"></i></a>
-                                            <a class="del" href="#" data-form="{% url "trade:comment_delete" item.id replay.id %}" title="Del">
-                                                <i class="fas fa-trash-alt" data-toggle="modal" data-target="#del-modal"  style="margin-right:10px"></i></a>
+                                <div class="col-xs-12" style="padding-right:10px;">
+                                    <div class="row">
+                                        <div class="col-sm-2 col-xs-3 profile-img vcenter">
+                                            <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
+                                                <img class="img-rounded img-thumbnail img-responsive" src="{{ replay.user.storeprofile.photo.url }}"/>
+                                            </a>
+                                        </div><div class="col-xs-9 col-sm-10 vcenter ">
+                                            <div class="col-sm-12 col-xs-12 clearfix bubble" style="margin:10px;padding:10px;">
+                                                <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
+                                                    <div class="pull-left"><b class="info">{{ replay.user.profile.nick_name }}</b></div>
+                                                </a>
+                                                <div class="pull-right">{% simple_time replay.updated_at %}</div>
+                                                <br><div id="cmt-{{ replay.id }}" style="padding-top:10px;">{{ replay.message }}</div>
+                                                {% if replay.user == request.user %}
+                                                    <div class="text-right">
+                                                        <a class="edit" href="#" data-form="{% url "trade:comment_update" item.id replay.id %}" title="Edit">
+                                                            <i class="fas fa-edit" data-toggle="modal" data-target="#edit-modal"  style="margin-right:10px"></i></a>
+                                                        <a class="del" href="#" data-form="{% url "trade:comment_delete" item.id replay.id %}" title="Del">
+                                                            <i class="fas fa-trash-alt" data-toggle="modal" data-target="#del-modal"  style="margin-right:10px"></i></a>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
                                         </div>
-                                    {% endif %}
-                                </div>
-                                <div class="col-xs-offset-2 col-xs-10">
-                                    <hr>
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}
-                            <div class="col-xs-12">
-                                <form class="form-horizontal" action="" method="POST">
-                                    {% csrf_token %}
-                                      <div class="form-group">
-                                          <div class=" col-xs-12">
-                                            {{ form.message }}
+                            <div class="container-fluid" style="padding:0px;">
+                                <div class="col-xs-12" style="padding:0px;">
+                                    <form class="form-horizontal" action="" method="POST">
+                                        {% csrf_token %}
+                                          <div class="form-group">
+                                              <div class=" col-xs-12">
+                                                {{ form.message }}
+                                              </div>
                                           </div>
-                                      </div>
 
-                                    <div class="form-group">
-                                        <div class="text-right col-xs-12">
-                                            <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                                            <button type="submit" class="btn btn-default"><i class="fas fa-comment-dots"></i> 댓글달기</button>
+                                        <div class="form-group">
+                                            <div class="text-right col-xs-12">
+                                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                                <button type="submit" class="btn btn-default"><i class="fas fa-comment-dots"></i> 댓글달기</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
