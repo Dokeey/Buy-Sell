@@ -15,6 +15,15 @@
   <li class="active"><a style="color:#0fd9a6" href="{% url "category:category_item" category.id %}">{{ category }}</a></li>
 </ol>
 
+{% if category.get_children %}
+    <div align="center">
+        {% for cate in category.get_children %}
+            <a href="{% url "category:category_item" cate.id%}"><button style="margin-bottom: 10px;" class="btn btn-info">{{ cate }} {{ cate.item_set.all.count }}개</button></a>
+        {% endfor %}
+    </div>
+    <br/>
+{% endif %}
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-6 col-xs-12 vcenter">
