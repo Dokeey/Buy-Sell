@@ -50,7 +50,7 @@
                             {% endif %}
                         {% endif %}<br>
                         <a href="{% url "store:store_sell_list" follow.store.user.storeprofile.id %}">
-                            <img class="img-circle img-responsive" style="margin: 0 auto;max-height: 100px;" src="{{ follow.store.photo.url }}"/>
+                            <img class="img-circle img-responsive" style="margin: 0 auto;max-height: 50px;" src="{{ follow.store.photo.url }}"/>
                         </a>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                             {% endfor %}
                                 </div>
                             </div>
-                            <h6>{{ it.amount|intcomma }} <small>원</small></h6>
+                            <b>{{ it.amount|intcomma }} <small>원</small></b>
                         </a>
                     </div>
                 {% empty %}
@@ -91,7 +91,7 @@
                 </div>
                 <div class="row">
                     <div class=" col-xs-12">
-                        <button class="btn btn-warning col-xs-12">
+                        <button class="btn btn-warning col-xs-12" onclick = "location.href ='{% url "mypage:follow_action" follow.store.id %}?next={{ request.path }}'">
                             <i class="fas fa-user-plus"></i> 팔로우
                         </button>
                     </div>
@@ -103,4 +103,58 @@
         <h2 class="text-center"><small><i class="far fa-meh"></i> 팔로잉이 없습니다</small></h2>
     {% endfor %}
 </div>
+
+
+<div class="container-fluid text-center">
+{% if is_paginated %}
+  <nav>
+    <ul class="pagination">
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page=1">
+            <span><i class="fas fa-angle-double-left"></i></span>
+          </a>
+        </li>
+      {% if page_obj.has_previous %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={% if prev >= 1 %}{{ prev }}{% else %}1{% endif %}">
+            <span><i class="fas fa-angle-left"></i></span>
+          </a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href="#">
+            <span><i class="fas fa-angle-left"></i></span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% for page in page_range %}
+        <li {% if page == page_obj.number %}class="active"{% endif %}>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page }}">{{ page }}</a>
+        </li>
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={% if last_page >= next %}{{ next }}{% else %}{{ last_page }}{% endif %}">
+            <span><i class="fas fa-angle-right"></i></span>
+          </a>
+        </li>
+      {% else %}
+        <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+          <a href="#">
+            <span><i class="fas fa-angle-right"></i></span>
+          </a>
+        </li>
+      {% endif %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ last_page }}">
+            <span><i class="fas fa-angle-double-right"></i></span>
+          </a>
+        </li>
+    </ul>
+  </nav>
+{% endif %}
+</div>
+
 {% endblock %}

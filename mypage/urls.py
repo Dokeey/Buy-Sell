@@ -5,13 +5,10 @@ from . import views
 app_name = 'mypage'
 
 urlpatterns = [
-    path('', lambda req: redirect('mypage:main'), name='root'),
-    path('main/', views.mypage_main, name='main'),
-    path('wishlist/', views.wishlist, name='wishlist'),
-    path('wishlist/new/<int:item_id>/', views.wishlist_new, name='wishlist_new'),
-    path('wishlist/delete/<int:item_id>/', views.wishlist_delete, name='wishlist_delete'),
+    path('', lambda req: redirect('mypage:wishlist'), name='root'),
+    path('wishlist/', views.WishListLV.as_view(), name='wishlist'),
+    path('wishlist/<int:item_id>/', views.WishListTV.as_view(), name='wishlist_action'),
 
-    path('follow/', views.follow, name='follow'),
-    path('follow/new/<int:store_id>/', views.follow_new, name='follow_new'),
-    path('follow/delete/<int:store_id>/', views.follow_delete, name='follow_delete'),
+    path('follow/', views.FollowLV.as_view(), name='follow'),
+    path('follow/<int:store_id>/', views.FollowTV.as_view(), name='follow_action'),
 ]

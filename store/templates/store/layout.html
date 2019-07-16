@@ -328,7 +328,7 @@ background-color: blue;
                                 <a class="btn btn-yellow" >
                                     <i class="fab fa-kickstarter-k"></i>
                                 </a>
-                                <a class="btn btn-warning btn" onclick = "location.href ='{% url "mypage:follow_new" stores.pk %}'">
+                                <a class="btn btn-warning btn" onclick = "location.href ='{% url "mypage:follow_action" stores.pk %}?next={{ request.path }}'">
                                     <i class="fas fa-user-plus"></i>
                                 </a>
                             </div>

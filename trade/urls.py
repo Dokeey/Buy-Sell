@@ -5,7 +5,7 @@ from . import views
 app_name='trade'
 
 urlpatterns = [
-    path('', lambda req: redirect('mypage:main')),
+    path('', lambda req: redirect('mypage:root')),
 
     path('item/new/', views.ItemNew.as_view(), name='item_new'),
     path('item/detail/<int:pk>/', views.ItemDetail.as_view(), name='item_detail'),

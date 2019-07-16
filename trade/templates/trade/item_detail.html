@@ -128,7 +128,7 @@
                     </button>
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-danger col-md-12 col-xs-12" style="margin-bottom:10px" onclick="location.href='{% url "mypage:wishlist_new" item.pk %}?next={{ request.path }}'">
+                    <button class="btn btn-danger col-md-12 col-xs-12" style="margin-bottom:10px" onclick="location.href='{% url "mypage:wishlist_action" item.pk %}?next={{ request.path }}'">
                         <i class="fab fa-gratipay"></i> 찜 {{ wish_ctn }}
                     </button>
                 </div>
@@ -330,7 +330,7 @@
 
             <div class="row">
                 <div class=" col-xs-12">
-                    <button class="btn btn-warning col-xs-12" onclick="location.href='{% url "mypage:follow_new" item.user.storeprofile.id %}'">
+                    <button class="btn btn-warning col-xs-12" onclick="location.href='{% url "mypage:follow_action" item.user.storeprofile.id %}?next={{ request.path }}'">
                         <i class="fas fa-user-plus"></i> 팔로우
                     </button>
                 </div>

@@ -29,7 +29,7 @@
                 <hr style="margin:5px">
                 <div class="row" style="padding:5px">
                     <div class="col-sm-6 col-xs-12" style="padding:5px">
-                      <a href="{% url "mypage:wishlist_delete" wishlist.item.id %}">
+                      <a href="{% url "mypage:wishlist_action" wishlist.item.id %}?next={{ request.path }}">
                         <button class="btn btn-danger col-xs-12"><i class="fab fa-gratipay"></i>&nbsp;찜</button>
                       </a>
                     </div>
@@ -48,4 +48,58 @@
     {% empty %}
         <h2 class="text-center"><small><i class="far fa-meh"></i> 찜한 물품이 없습니다</small></h2>
     {% endfor %}
+
+
+<div class="container-fluid text-center">
+{% if is_paginated %}
+  <nav>
+    <ul class="pagination">
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page=1">
+            <span><i class="fas fa-angle-double-left"></i></span>
+          </a>
+        </li>
+      {% if page_obj.has_previous %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={% if prev >= 1 %}{{ prev }}{% else %}1{% endif %}">
+            <span><i class="fas fa-angle-left"></i></span>
+          </a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href="#">
+            <span><i class="fas fa-angle-left"></i></span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% for page in page_range %}
+        <li {% if page == page_obj.number %}class="active"{% endif %}>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page }}">{{ page }}</a>
+        </li>
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={% if last_page >= next %}{{ next }}{% else %}{{ last_page }}{% endif %}">
+            <span><i class="fas fa-angle-right"></i></span>
+          </a>
+        </li>
+      {% else %}
+        <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+          <a href="#">
+            <span><i class="fas fa-angle-right"></i></span>
+          </a>
+        </li>
+      {% endif %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ last_page }}">
+            <span><i class="fas fa-angle-double-right"></i></span>
+          </a>
+        </li>
+    </ul>
+  </nav>
+{% endif %}
+</div>
+
 {% endblock %}

@@ -386,7 +386,7 @@ class OrderNew(FormView):
             return redirect('trade:trade_info', reserv_order.id)
 
     def get_success_url(self):
-        next_url = self.request.GET.get('next') or 'mypage:main'  # next get인자가 있으면 넣고 없으면 'profile' 넣기
+        next_url = self.request.GET.get('next') or 'mypage:root'  # next get인자가 있으면 넣고 없으면 'profile' 넣기
         return redirect(next_url)
 
 

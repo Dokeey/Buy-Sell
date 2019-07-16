@@ -72,7 +72,7 @@ def item_block(item):
     """
 
     next_link = resolve_url('trade:item_detail', item.id)
-    wishlist_link = resolve_url('mypage:wishlist_new', item.id)
+    wishlist_link = resolve_url('mypage:wishlist_action', item.id)
     user_link = resolve_url('store:store_sell_list', item.user.storeprofile.id)
     hit_count = item.hit_count.hits
     title = item.title
