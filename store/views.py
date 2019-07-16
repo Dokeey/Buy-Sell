@@ -46,7 +46,7 @@ class StarStoreGradeListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['grades'] = StoreGrade.objects.values_list('store_profile', flat=True).annotate(rating_sum=Sum('rating')/Count('rating')).order_by('-rating_sum')
+        context['grades'] = StoreGrade.objects.values_list('store_profile', flat=True).annotate(rating_sum=Sum('rating')/Count('rating'),count=Count('rating')).order_by('-rating_sum','-count')
         store_list = []
         for i in range(0, context['grades'].count()):
             store_list.append(StoreProfile.objects.get(pk=(context['grades'][i])))
@@ -205,31 +205,49 @@ class StoreGradeListView(ListView):
     model = StoreGrade
     template_name = 'store/store_grade.html'
     ordering = '-created_at'
+    context_object_name = 'grades'
     def get_ordering(self):
-        sort = self.request.GET.get('sort','')
+        self.sort = self.request.GET.get('sort','recent')
 
-        if sort == 'recent':
+        if self.sort == 'recent':
             sort = '-created_at'
-        elif sort == 'past':
+        elif self.sort == 'past':
             sort = 'created_at'
-        elif sort == 'highgrade':
+        elif self.sort == 'hgrade':
             sort = '-rating'
-        elif sort == 'rowgrade':
+        elif self.sort == 'rgrade':
             sort = 'rating'
         return sort
+
+    def get_queryset(self):
+        self.gsort = self.request.GET.get('gsort', '')
+        self.queryset = self.model.objects.filter(store_profile=self.kwargs['pk'])
+        if self.gsort == 'five':
+            self.queryset = self.model.objects.filter(store_profile=self.kwargs['pk'], rating=5)
+        elif self.gsort == 'four':
+            self.queryset = self.model.objects.filter(store_profile=self.kwargs['pk'], rating=4)
+        elif self.gsort == 'three':
+            self.queryset = self.model.objects.filter(store_profile=self.kwargs['pk'], rating=3)
+        elif self.gsort == 'two':
+            self.queryset = self.model.objects.filter(store_profile=self.kwargs['pk'], rating=2)
+        elif self.gsort == 'one':
+            self.queryset = self.model.objects.filter(store_profile=self.kwargs['pk'], rating=1)
+        return super().get_queryset()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['grades'] = self.model.objects.filter(store_profile=self.kwargs['pk'])
         context['stores'] = StoreProfile.objects.get(pk=self.kwargs['pk'])
+        context['sort'] = self.request.GET.get('sort','recent')
         return context
 
 class StoreGradeCreateView(CreateView):
     model = StoreGrade
     form_class = StoreGradeForm
     template_name = 'store/store_grade_new.html'
+
     def get(self, request, *args, **kwargs):
         try:
-            StoreGrade.objects.get(store_item_id = kwargs['item_id'])
+            self.model.objects.get(store_item_id = kwargs['item_id'])
             messages.error(request, '이미 리뷰를 작성하셨습니다.')
             return redirect("trade:order_history")
         except:
@@ -241,6 +259,7 @@ class StoreGradeCreateView(CreateView):
         gradeform.author = self.request.user
         gradeform.store_profile_id = self.kwargs['pk']
         gradeform.store_item_id = self.kwargs['item_id']
+        gradeform.rating = self.request.POST.get('rating')
         gradeform.save()
         return redirect('store:store_grade', self.kwargs['pk'])
 

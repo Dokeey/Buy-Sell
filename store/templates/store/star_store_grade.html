@@ -164,7 +164,7 @@ background-color: #00498c;
                 {{ request.user.storeprofile.name }}
                 <div class="row">
                     <br/>
-                <div class="col-sm-5 col-xs-5" style="font-size:20px; font-weight:bold;">
+                <div class="col-sm-7 col-xs-7" style="font-size:20px; font-weight:bold;">
                      {% store_rating request.user.storeprofile.pk as end %}
                                 {% if store.storegrade_set.all.count == 0 %}
                                 <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
@@ -192,7 +192,7 @@ background-color: #00498c;
                                     {% endif %}
                                 {% endif %}
                 </div>
-                <div class="col-xs-7"> <a href="{% url 'store:store_sell_list' request.user.storeprofile.pk %}"  style="color:#C3C3C3;font-weight:bold;">내 가게로 가기 <i class="fas fa-angle-right"></i></a> </div>
+                <div class="col-sm-5 col-xs-12" align="right"> <a href="{% url 'store:store_sell_list' request.user.storeprofile.pk %}"  style="color:#C3C3C3;font-weight:bold;">내 가게로 가기 <i class="fas fa-angle-right"></i></a> </div>
              </div></div>
             </div>
             <hr/>
@@ -286,5 +286,3 @@ background-color: #00498c;
 
 
 {% endblock %}
-
-
