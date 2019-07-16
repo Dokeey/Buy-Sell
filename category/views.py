@@ -99,7 +99,7 @@ class SearchItemList(BaseItemList):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['all_category'] = self.qs.values('category__name','category__id').annotate(category_count = Count('id')).order_by('category')
+        context['all_category'] = self.qs.values('category__name','category__id').annotate(category_count = Count('id')).order_by('category__parent')
 
         context['query'] = self.query
         context['cate'] = self.cate

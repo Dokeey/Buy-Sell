@@ -10,7 +10,9 @@
         <div class="row" style="margin:10px;">
             <div align="center">
                 {% for category in all_category %}
-                    <a href="{% url "category:search_item" %}?query={{ query }}&cate={{ category.category__id }}"><button style="margin-bottom: 10px;" class="btn btn-info">{{ category.category__name }} {{ category.category_count }}개</button></a>
+                <a href="{% url "category:search_item" %}?query={{ query }}&cate={{ category.category__id }}">
+                <button style="margin-bottom: 10px;" class="btn btn-primary"><b>{{ category.category__name }}</b> <small>{{ category.category_count }}개</small></button>
+                </a>
                 {% endfor %}
             </div>
             <br/>

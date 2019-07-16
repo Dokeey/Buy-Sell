@@ -18,7 +18,9 @@
 {% if category.get_children %}
     <div align="center">
         {% for cate in category.get_children %}
-            <a href="{% url "category:category_item" cate.id%}"><button style="margin-bottom: 10px;" class="btn btn-info">{{ cate }} {{ cate.item_set.all.count }}개</button></a>
+        <a href="{% url "category:category_item" cate.id%}">
+        <button style="margin-bottom: 10px;" class="btn btn-primary"><b>{{ cate }}</b> <small>{{ cate.item_set.all.count }}개</small></button>
+        </a>
         {% endfor %}
     </div>
     <br/>

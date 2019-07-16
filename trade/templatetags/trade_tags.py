@@ -92,7 +92,7 @@ def item_block(item):
             <div class="position-relative">
               {photos}
             </div>
-            <h4 id="thumbnail-label"><i class="fas fa-won-sign" style="color:green"></i>&nbsp;{amount}</h4><hr style="margin:5px">
+            <h4 id="thumbnail-label">{amount}<small> 원</small></h4><hr style="margin:5px">
             <div class="thumbnail-description smaller text-center">
                 <b>{title}</b>
                 <hr style="margin:5px">
