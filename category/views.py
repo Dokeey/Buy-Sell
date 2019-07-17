@@ -78,15 +78,18 @@ class BaseItemList(ListView):
 class SearchItemList(BaseItemList):
     template_name = 'category/search_item.html'
 
-    def get_queryset(self):
-        self.query = self.request.GET.get('query','')
-        self.cate = self.request.GET.get('cate','')
-        self.qs = super().get_queryset()
+    def get(self, request, *args, **kwargs):
+        self.query = self.request.GET.get('query', '')
 
         if self.query == '':
-            messages.error(self.request, '잘못된 접근 입니다.')
+            messages.info(self.request, '검색어를 입력해주세요')
             url = self.request.GET.get('next') or 'root'
-            redirect(url)
+            return redirect(url)
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        self.cate = self.request.GET.get('cate','')
+        self.qs = super().get_queryset()
 
         if self.query:
             self.qs = self.qs.filter(Q(title__icontains=self.query) | Q(desc__icontains=self.query)).distinct()

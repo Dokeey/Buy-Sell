@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 
     'mptt', # category
     'django_extensions', # models relation graph
+    'django_cleanup', # django delete media file
 
 ]
 

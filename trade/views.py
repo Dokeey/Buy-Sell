@@ -9,6 +9,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, RedirectView, \
     TemplateView
 from django.views.generic.detail import SingleObjectMixin
+from django.views.generic.list import MultipleObjectMixin
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 
@@ -98,16 +99,43 @@ class ItemNew(CreateView):
 #         'form': form,
 #     })
 
-class ItemDetail(CreateView):
+class ItemDetail(MultipleObjectMixin, CreateView):
     model = ItemComment
     template_name = 'trade/item_detail.html'
     form_class = ItemCommentForm
+    paginate_by = 5
+    context_object_name = 'comments'
+
+
+    def get(self, request, *args, **kwargs):
+        self.item = get_object_or_404(Item, pk=self.kwargs.get('pk'))
+        self.queryset = self.model.objects.filter(item=self.item, parent=None)
+        self.object_list = self.queryset
+        return super().get(request, *args, **kwargs)
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['prev'] = start_index - 4
+        context['next'] = end_index + 1
+        context['last_page'] = max_index
+        context['page_range'] = page_range
+
         self.pk = self.kwargs.get('pk')
-        context['item'] = get_object_or_404(Item, pk=self.pk)
-        context['comments'] = self.model.objects.filter(item=context['item'], parent=None)
+        context['item'] = self.item
 
         hit_count = HitCount.objects.get_for_object(context['item'])
         context['hit_count_response'] = HitCountMixin.hit_count(self.request, hit_count)
@@ -126,6 +154,7 @@ class ItemDetail(CreateView):
         context['items_ctn'] = items.count()
         return context
 
+
     def form_valid(self, form):
         if not self.request.user.is_authenticated:
             return redirect(settings.LOGIN_REDIRECT_URL)
@@ -143,6 +172,7 @@ class ItemDetail(CreateView):
         form.instance.user = self.request.user
         form.instance.item = self.get_context_data()['item']
         return super().form_valid(form)
+
 
     def get_success_url(self):
         return reverse_lazy('trade:item_detail', kwargs={'pk': self.pk})
