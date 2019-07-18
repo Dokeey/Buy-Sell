@@ -28,7 +28,7 @@
                              {{ follows.0.name }}<br/><br/>
                             <div class="row">
                                 <div class="col-xs-4" >
-                                    <a class="white">
+                                    <a class="white" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
                                         <i class="fab fa-facebook"></i>
                                     </a>
                                 </div>
@@ -110,7 +110,7 @@
                              {{ follow.follow_set.all.count }}명
                         </div>
                         <div class="col-sm-8 col-xs-6">
-                            <a class="btn btn-blue btn" >
+                               <a class="btn btn-info" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
                                 <i class="fab fa-facebook" style="color:white"></i>
                             </a>
                             <a class="btn btn-yellow" >

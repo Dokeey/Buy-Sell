@@ -9,6 +9,20 @@
             $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
         });
     </script>
+<!--Facebook 공유 기능-->
+    <meta property="fb:app_id"        content="642307389514788"/>
+    <meta property="og:type"          content="website"/>
+    <meta property="og:url"           content="http://{{ request.META.HTTP_HOST }}{{ request.path }}" />
+    <meta property="og:title"         content="{{ stores.name }}" />
+    <meta property="og:description"   content="{{ item.desc|default:'-'|linebreaks }}" />
+    <meta property="og:image"         content="http://{{ request.META.HTTP_HOST }}{{ stores.photo.url }}" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
+
+	<script>
+	function sharefacebook(url) {
+		window.open("http://www.facebook.com/sharer/sharer.php?u=" + url);
+	}
+	</script>
 <style xmlns="http://www.w3.org/1999/html">
 
 .gold { font-weight: bold; color:#747474; }
@@ -37,13 +51,10 @@
 
 }
 .btn-yellow {
-background-color: #f7e600;
+background-color: #ffd700;
 }
 .white {
 color: white;
-}
-.btn-blue {
-background-color: #00498c;
 }
 </style>
 
@@ -106,7 +117,7 @@ background-color: #00498c;
                              {{ hit_lists.0.content_object.name }}<br/><br/>
                             <div class="row">
                                 <div class="col-xs-4" >
-                                    <a class="white">
+                                    <a class="white"  href="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
                                         <i class="fab fa-facebook"></i>
                                     </a>
                                 </div>
@@ -188,7 +199,7 @@ background-color: #00498c;
                              {{ hit_list.hits }}명
                         </div>
                         <div class="col-sm-8 col-xs-6">
-                            <a class="btn btn-blue btn" >
+                            <a class="btn btn-info" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
                                 <i class="fab fa-facebook" style="color:white"></i>
                             </a>
                             <a class="btn btn-yellow" >
