@@ -1,4 +1,9 @@
 {% extends "layout.html" %}
+{% load staticfiles %}
+{% load humanize %}
+{% load category_tags %}
+{% load trade_tags %}
+{% load mptt_tags %}
 
 {% block content %}
 <style>
@@ -14,10 +19,13 @@
     background: none repeat scroll 0 0 #222222;
     border: 4px solid #FFFFFF;
     border-radius: 23px 23px 23px 23px;
-    margin-top: 90px;
+    margin-top: 75px;
 }
 .carousel-control.right {
 	right: -12px;
+}
+.event .carousel-control {
+    margin-top: 130px;
 }
 /* The indicators */
 .carousel-indicators {
@@ -31,117 +39,325 @@
 	background: #cecece;
 }
 .carousel-indicators .active {
-background: #428bca;
+background: #0fd9a6;
+}
+.thumbnail b {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 100%;
+}
+.thumbnail:hover {
+    cursor:pointer;
+}
+
+.shape{
+    border-style: solid; border-width: 0 70px 40px 0; float:right; height: 0px; width: 0px;
+	-ms-transform:rotate(360deg); /* IE 9 */
+	-o-transform: rotate(360deg);  /* Opera 10.5 */
+	-webkit-transform:rotate(360deg); /* Safari and Chrome */
+	transform:rotate(360deg);
+}
+.offer{
+	background:#fff; border:1px solid #ddd; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); margin: 15px 0; overflow:hidden; color: #555;
+}
+.offer:hover {
+}
+.shape {
+	border-color: rgba(255,255,255,0) #d9534f rgba(255,255,255,0) rgba(255,255,255,0);
+}
+.offer-radius{
+	border-radius:7px;
+}
+.offer-danger {	border-color: #d9534f; }
+.offer-danger .shape{
+	border-color: transparent #d9534f transparent transparent;
+}
+.offer-success {	border-color: #5cb85c; }
+.offer-success .shape{
+	border-color: transparent #5cb85c transparent transparent;
+}
+.offer-default {	border-color: #999999; }
+.offer-default .shape{
+	border-color: transparent #999999 transparent transparent;
+}
+.offer-primary {	border-color: #428bca; }
+.offer-primary .shape{
+	border-color: transparent #428bca transparent transparent;
+}
+.offer-info {	border-color: #5bc0de; }
+.offer-info .shape{
+	border-color: transparent #5bc0de transparent transparent;
+}
+.offer-warning {	border-color: #f0ad4e; }
+.offer-warning .shape{
+	border-color: transparent #f0ad4e transparent transparent;
+}
+
+.shape-text{
+	color:#fff; font-size:12px; font-weight:bold; position:relative; right:-40px; top:2px; white-space: nowrap;
+	-ms-transform:rotate(30deg); /* IE 9 */
+	-o-transform: rotate(360deg);  /* Opera 10.5 */
+	-webkit-transform:rotate(30deg); /* Safari and Chrome */
+	transform:rotate(30deg);
+}
+.offer-content{
+	padding:0 20px 10px;
 }
 </style>
 <script>
-        $(document).ready(function() {
-            $('#Carousel').carousel({
-                interval: 5000
-            })
-        });
-      jQuery(document).ready(function($) {
+  jQuery(document).ready(function($) {
+            $('.cate-carousel').carousel({
+                    interval: 5000
+            });
 
-                $('#myCarousel').carousel({
-                        interval: 3000
-                });
+            $('#EventCarousel').carousel({
+                    interval: 3000
+            });
 
 
-                //Handles the carousel s
-                $('[id^=carousel-selector-]').click( function(){
-                        var id_selector = $(this).attr("id");
-                        var id = id_selector.substr(id_selector.length -1);
-                        var id = parseInt(id);
-                        $('#myCarousel').carousel(id);
-                });
+            //Handles the carousel s
+            $('[id^=carousel-selector-]').click( function(){
+                    var id_selector = $(this).attr("id");
+                    var id = id_selector.substr(id_selector.length -1);
+                    var id = parseInt(id);
+                    $('#EventCarousel').carousel(id);
+            });
 
 
-                // When the carousel slides, auto update the text
-                $('#myCarousel').on('slid', function (e) {
-                        var id = $('.item.active').data('slide-number');
-                });
-        });
+            // When the carousel slides, auto update the text
+            $('#EventCarousel').on('slid', function (e) {
+                    var id = $('.item.active').data('slide-number');
+            });
+    });
+
 </script>
-<div class="container-fluid">
+<div class="container-fluid" style="margin:20px;">
     <div id="text-center" align="center">
         <!-- Slider -->
-        <div class="row">
+        <div class="col-xs-12" style="padding:0px">
             <!-- Top part of the slider -->
-            <div class="carousel slide" data-ride="carousel" id="myCarousel">
+            <div class="event carousel slide" data-ride="carousel" id="EventCarousel">
+
+                <ol class="carousel-indicators">
+                    <li data-target="#EventCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#EventCarousel" data-slide-to="1"></li>
+                    <li data-target="#EventCarousel" data-slide-to="2"></li>
+                    <li data-target="#EventCarousel" data-slide-to="3"></li>
+                </ol>
                 <!-- Carousel items -->
                 <div class="carousel-inner">
                     <div class="active item">
-                    <img src="http://placehold.it/770x300&text=one"></div>
+                    <img class="img-responsive" src="{% static "img/django.png" %}" style="width:800px;height:370px;"></div>
 
                     <div class="item">
-                    <img src="http://placehold.it/770x300&text=two"></div>
+                    <img class="img-responsive" src="{% static "img/main.png" %}" style="width:800px;height:370px;"></div>
 
                     <div class="item">
-                    <img src="http://placehold.it/770x300&text=three"></div>
+                    <img class="img-responsive" src="{% static "img/main2.png" %}" style="width:800px;height:370px;"></div>
 
                     <div class="item">
-                    <img src="http://placehold.it/770x300&text=four"></div>
-
-                    <div class="item">
-                    <img src="http://placehold.it/770x300&text=five"></div>
-
-                    <div class="item">
-                    <img src="http://placehold.it/770x300&text=six"></div>
+                    <img class="img-responsive" src="{% static "img/고양이.png" %}" style="width:800px;height:370px;"></div>
                 </div><!-- Carousel nav -->
-                <a class="carousel-control left" data-slide="prev" href="#myCarousel"><</a>
-                <a class="carousel-control right" data-slide="next" href="#myCarousel">></a>
+                <a class="carousel-control left" data-slide="prev" href="#EventCarousel" style="font-size:5px;"><div style="margin-top:9px;">‹</div></a>
+                <a class="carousel-control right" data-slide="next" href="#EventCarousel" style="font-size:5px;"><div style="margin-top:9px;">›</div></a>
             </div>
         </div><!--/Slider-->
     </div>
 </div>
+<hr>
 
-<div class="container-fluid">
+
+<section class="call-to-action text-center">
+    <div class="container">
+        <div class="row">
+            <h1>믿고 쓰는 Buy & Sell</h1>
+            <p>What?
+                </p>
+            </div>
+    	<div class="col-xs-12 col-sm-4 ">
+            <div class="offer offer-default thumbnail">
+				<div class="offer-content ">
+					<h3 class="lead">
+						<i class="fas fa-credit-card" style="color:#0fd9a6"></i> 간편하게 결제하세요 <br>
+					</h3>
+					<p>
+						불안한 중고거래는 이제 그만하셔도 됩니다.<br>
+						<br>
+                        저희가 도와드리겠습니다.
+                        간편한 <span style="font-weight:bold">카드결제</span>와 <span style="font-weight:bold">계좌이체</span> 거래로 편리하게 거래하세요.
+					</p>
+				</div>
+			</div>
+         </div>
+        <div class="col-xs-12 col-sm-4">
+           <div class="offer offer-default thumbnail">
+				<div class="offer-content">
+					<h3 class="lead">
+						<i class="fas fa-tasks" style="color:#0fd9a6"></i> 편리하게 관리하세요
+					</h3>
+					<p>
+                        <span style="font-weight:bold">MY PAGE</span>에서 물품을 등록, 거래 내역 관리, 프로필 관리, 찜 목록, 팔로워 등을 관리해보세요<br><br>
+                        <span style="font-weight:bold">내 가게</span>에서는 등록한 물품을 확인하고 관리하며 내 가게의 평판이나 문의사항들을 확인하세요
+						<br><br>
+					</p>
+				</div>
+			</div>
+            </a>
+        </div>
+    	<div class="col-xs-12 col-sm-4">
+           <div class="offer offer-default thumbnail">
+				<div class="offer-content">
+					<h3 class="lead">
+						<i class="fas fa-crown" style="color:#0fd9a6"></i> 순위를 확인해보세요
+					</h3>
+					<p>
+						각 분야에서 자신과 사람들의 명성을 떨치고있는 가게들을 확인해보세요.
+                        <br><br>어쩌면 가게를 <span style="font-weight:bold">신뢰</span>하는데 도움이 될수도 있습니다.<br>
+					</p>
+				</div>
+			</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+{% category_menu as category %}
+{% recursetree category %}
+    {% if node.is_root_node %}
+<div class="container-fluid" style="margin:20px;">
+    <div class="row">
+        {% child_category_items node as items %}
+        <h2>{{ node.name }} <small><a href="{% url "category:category_item" node.id %}">{{ items.count }}개 보러가기</a></small></h2>
+        <hr>
+    </div>
     <div class="row">
 		<div class="col-md-12">
-            <div id="Carousel" class="carousel slide">
+            <div id="Carousel-{{ node.id }}" class="cate-carousel carousel slide">
 
-            <ol class="carousel-indicators">
-                <li data-target="#Carousel" data-slide-to="0" class="active"></li>
-                <li data-target="#Carousel" data-slide-to="1"></li>
-                <li data-target="#Carousel" data-slide-to="2"></li>
-            </ol>
+                <ol class="carousel-indicators">
 
-            <!-- Carousel items -->
-            <div class="carousel-inner">
+                    {% for item in items|slice:"20" %}
+                        {% if forloop.counter0|divisibleby:4 %}
+                    <li data-target="#Carousel-{{ node.id }}" data-slide-to="{% div forloop.counter0 4 %}" {% if forloop.counter == 1 %}class="active"{% endif %}></li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
 
-            <div class="item active">
-                <div class="row">
-                  <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                  <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                  <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                  <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                </div><!--.row-->
-            </div><!--.item-->
+                <!-- Carousel items -->
+                <div class="carousel-inner text-center">
+                    {% for item in items|slice:"20" %}
+                        {% if forloop.counter0|divisibleby:4 %}
+                    <div class="item {% if forloop.counter == 1 %}active{% endif %}">
+                        <div class="row">
+                          <div class="col-sm-3 col-xs-6">
+                              <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
+                                  <img src="{{ item.itemimage_set.first.photo.url }}" alt="Image" style="max-width:100%;">
+                                  <br>
+                                  <b>{{ item.title }}</b><br>
+                                  {{ item.amount|intcomma }} 원
+                              </a>
+                          </div>
+                        {% elif forloop.counter|divisibleby:4 or forloop.last %}
+                          <div class="col-sm-3 col-xs-6">
+                              <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
+                                  <img src="{{ item.itemimage_set.first.photo.url }}" alt="Image" style="max-width:100%;">
+                                  <br>
+                                  <b>{{ item.title }}</b><br>
+                                  {{ item.amount|intcomma }} 원
+                              </a>
+                          </div>
+                        </div><!--.row-->
+                    </div><!--.item-->
+                        {% else %}
+                          <div class="col-sm-3 col-xs-6">
+                              <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
+                                  <img src="{{ item.itemimage_set.first.photo.url }}" style="max-width:100%;">
+                                  <br>
+                                  <b>{{ item.title }}</b><br>
+                                  {{ item.amount|intcomma }} 원
+                              </a>
+                          </div>
+                        {% endif %}
+                    {% endfor %}
 
-            <div class="item">
-                <div class="row">
-                    <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                    <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                    <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                    <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                </div><!--.row-->
-            </div><!--.item-->
-
-            <div class="item">
-                <div class="row">
-                    <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                    <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                    <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                    <div class="col-md-3"><a href="#" class="thumbnail"><img src="http://placehold.it/250x250" alt="Image" style="max-width:100%;"></a></div>
-                </div><!--.row-->
-            </div><!--.item-->
-
-            </div><!--.carousel-inner-->
-              <a data-slide="prev" href="#Carousel" class="left carousel-control">‹</a>
-              <a data-slide="next" href="#Carousel" class="right carousel-control">›</a>
+                </div><!--.carousel-inner-->
+                <a data-slide="prev" href="#Carousel-{{ node.id }}" class="left carousel-control" style="font-size:5px;"><div style="margin-top:9px;">‹</div></a>
+                <a data-slide="next" href="#Carousel-{{ node.id }}" class="right carousel-control" style="font-size:5px;"><div style="margin-top:9px;">›</div></a>
             </div><!--.Carousel-->
 
 		</div>
 	</div>
 </div><!--.container-->
+    {% endif %}
+{% endrecursetree %}
+
+<hr>
+<section class="call-to-action text-center" style="margin-bottom:100px">
+    <div class="container">
+        <div class="row">
+            <h1>바로 시작해보세요!</h1>
+            <p>How?
+                </p>
+            </div>
+    	<div class="col-xs-12 ">
+            <div class="offer offer-default thumbnail">
+				<div class="offer-content ">
+					<h3 class="lead">
+                    <p>쓸모없는 물건들.. 애물단지들.. 더 이상 지체하지마세요. </p>
+						<a href="{% url "trade:item_new" %}">
+                            <button class="btn btn-primary btn-lg">Buy & Sell로 물건 팔러가기</button>
+                        </a>
+					</h3>
+				</div>
+			</div>
+         </div>
+    	<div class="col-xs-12 col-sm-4">
+           <a href="{% url "customer:customer_notice" %}">
+           <div class="offer offer-default thumbnail">
+				<div class="offer-content">
+					<h3 class="lead">
+						<i class="fas fa-check" style="color:#0fd9a6"></i> 공지사항
+					</h3>
+					<p>
+                        Buy & Sell의 <span style="font-weight:bold">소식</span>을 보러가세요
+                        <br><br>
+					</p>
+				</div>
+			</div>
+            </a>
+        </div>
+        <div class="col-xs-12 col-sm-3">
+           <a href="{% url "customer:customer_faq" %}">
+           <div class="offer offer-default thumbnail">
+				<div class="offer-content">
+					<h3 class="lead">
+						<i class="far fa-question-circle" style="color:#0fd9a6"></i> 자주 묻는 질문
+					</h3>
+					<p>
+                        <span style="font-weight:bold">자주 묻는 질문</span>을 통해 궁금한 점을 해결하세요
+						<br><br>
+					</p>
+				</div>
+			</div>
+            </a>
+        </div>
+        <div class="col-xs-12 col-sm-5">
+           <a href="{% url "customer:customer_ask" %}">
+           <div class="offer offer-default thumbnail">
+				<div class="offer-content">
+					<h3 class="lead">
+						<i class="fas fa-comment-dots" style="color:#0fd9a6"></i> 문의 하기
+					</h3>
+					<p>
+						아직 궁금하신게 남았나요?
+                        <br><br><span style="font-weight:bold">1:1 문의</span>를 지원합니다. 언제든지 물어보세요.<br>
+					</p>
+				</div>
+			</div>
+            </a>
+        </div>
+    </div>
+</section>
 {% endblock %}

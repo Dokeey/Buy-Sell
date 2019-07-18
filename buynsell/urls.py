@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import path, include
-from . import views
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,7 +29,7 @@ urlpatterns = [
     path('mypage/', include('mypage.urls')),
     path('customer/', include('customer.urls')),
     path('policy/', include('policy.urls')),
-    path('', views.MainLV.as_view(), name='root'),
+    path('', TemplateView.as_view(template_name = 'base.html'), name='root'),
 ]
 
 
