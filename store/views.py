@@ -11,7 +11,6 @@ from django.views.generic import RedirectView, ListView, TemplateView, DetailVie
 from django.views.generic.edit import BaseUpdateView
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
-
 from mypage.models import Follow
 from trade.models import Item, Order
 from .models import StoreProfile, QuestionComment, StoreGrade
@@ -21,6 +20,23 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 # def my_store_profile(request):
 #     stores = get_object_or_404(StoreProfile, user=request.user)
 #     return render(request, 'store/layout.html',{'stores': stores})
+
+class StarStoreSearchList(ListView):
+    model = StoreProfile
+    template_name = 'store/star_store_search.html'
+    context_object_name = 'star_search'
+    def get_queryset(self):
+        self.query = self.request.GET.get('query','')
+        self.qs = super().get_queryset()
+        if self.query:
+            qs = self.qs.filter(name__icontains=self.query)
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(StarStoreSearchList, self).get_context_data()
+        if self.query:
+            context['query'] = self.query
+        return context
 
 class StarStoreHitListView(ListView):
     template_name = 'store/star_store_hit.html'

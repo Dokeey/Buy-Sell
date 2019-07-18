@@ -1,7 +1,6 @@
 from django import template
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.shortcuts import get_object_or_404
-
 from store.models import StoreProfile, StoreGrade, QuestionComment
 from trade.models import Item, Order
 from django import template

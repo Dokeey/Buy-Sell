@@ -4,7 +4,11 @@
 {% load trade_tags %}
 
 {% block head %}
-
+    <script>
+        $(document).ready(function () {
+            $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
+        });
+    </script>
 <style xmlns="http://www.w3.org/1999/html">
 
 .gold { font-weight: bold; color:#747474; }
@@ -43,8 +47,10 @@ background-color: #00498c;
 }
 </style>
 
-{% endblock %}
+{% block star_head %}
 
+{% endblock %}
+{% endblock %}
 {% block content %}
 <nav class="navbar navbar-default">
   <div class="container-fluid">
@@ -60,14 +66,26 @@ background-color: #00498c;
   </div>
      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav nav-tabs nav-justified gold" >
-          <li role="presentation"  class="active"><a href="{% url 'store:star_store_hit' %}">방문 순위</a></li>
+          <li role="presentation"><a href="{% url 'store:star_store_hit' %}">방문 순위</a></li>
           <li role="presentation"><a href="{% url 'store:star_store_sell' %}">판매 순위</a></li>
           <li role="presentation"><a href="{% url 'store:star_store_grade' %}">평점 순위</a></li>
           <li role="presentation"><a href="{% url 'store:star_store_follow' %}">팔로워 순위</a> </li>
-        </ul>
+        </ul><br/>
+         <div align="center">
+        <form style="width:60%;" action="{% url "store:star_store_search" %}">
+            <div class="input-group">
+              <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid #0fd9a6;" placeholder="가게 찾기" >
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="submit" style="border:1px solid #0fd9a6;">
+                    <i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+        <form/>
+        </div>
      </div>
 </nav>
-
+{% block star_content %}
 <div class="row">
     <div class="col-sm-7">
         <h2 class="gold text-center">방문 순위 <small> TOP 5 </small></h2><hr/>
@@ -189,7 +207,9 @@ background-color: #00498c;
             {% endfor %}
     </div>
 
-    <div class="col-sm-5 col-xs-10"><h2 class="gold text-center">1등 가게 물품</h2><hr/>
+    <div class="col-sm-5 col-xs-10">
+
+        <h2 class="gold text-center">1등 가게 물품</h2><hr/>
         <div class="row">
             {% for item in hit_lists.0.content_object.user.item_set.all|slice:"4" %}
                 <div class="col-sm-6 col-xs-12" style="padding:10px">
@@ -206,4 +226,5 @@ background-color: #00498c;
         <hr/>
     </div>
 </div>
+{% endblock %}
 {% endblock %}

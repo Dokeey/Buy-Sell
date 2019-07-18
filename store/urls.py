@@ -23,4 +23,6 @@ urlpatterns = [
     path('star/store/sell/', views.StarStoreSellListView.as_view(), name='star_store_sell'),
     path('star/store/follow/', views.StarStoreFollowListView.as_view(), name='star_store_follow'),
     #path('profile/', views.my_store_profile, name='my_store_profile'),
+
+    path('star/store/search/', views.StarStoreSearchList.as_view(), name='star_store_search')
 ]
