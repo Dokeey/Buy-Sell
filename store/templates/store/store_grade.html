@@ -17,14 +17,6 @@
 
 {% store_rating stores.pk as end %}
 {% block store_content %}
-<div>
-  <ul class="nav nav-tabs nav-justified" role="tablist">
-    <li role="presentation" ><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
-    <li role="presentation" class="active"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>
-    <li role="presentation"><a href="{% url "store:store_question" stores.pk %}" aria-controls="messages" role="tab" >가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span></a></li>
-  </ul>
-</div>
-<br/>
 
     <div class="row">
         <div class="col-xs-12 col-md-12">
@@ -166,6 +158,51 @@
 
     {% endfor %}
 
+
+<div class="row">
+    <div class="col-xs-12">
+<div class="container-fluid text-center">
+{% if is_paginated %}
+  <nav>
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">
+            <span>Prev</span>
+          </a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href="#">
+            <span>Previous</span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% for page in page_range %}
+        <li {% if page == page_obj.number %}class="active"{% endif %}>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page }}">{{ page }}</a>
+        </li>
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">
+            <span>Next</span>
+          </a>
+        </li>
+      {% else %}
+        <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+          <a href="#">
+            <span>Next</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}
+</div>
+</div></div>
 {% endblock %}
 
 {% block store_extra_content %}

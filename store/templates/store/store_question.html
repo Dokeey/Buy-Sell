@@ -52,21 +52,12 @@ top: 33px;
     display: none !important;
   }
 }
+.mint_active { color:#0fd9a6; font-weight:bold; }
 </style>
 
 {% endblock %}
 
-he
-
 {% block store_content %}
-
-<div>
-  <ul class="nav nav-tabs nav-justified" role="tablist">
-    <li role="presentation" ><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
-    <li role="presentation"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>
-    <li role="presentation" class="active"><a href="{% url "store:store_question" stores.pk %}" aria-controls="messages" role="tab" >가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span></a></li>
-  </ul>
-</div><br/>
 
 {% if request.user.pk != stores.user.pk %}
     <form action="" method="POST">
@@ -85,7 +76,10 @@ he
     </form>
 {% endif %}
 
- <hr/>
+<div class="col-xs-12" align="right">
+    <a href="{% url "store:store_question" stores.pk %}?&sort=all" >전체보기</a><small style="padding:8px;"> | </small>
+    <a class="mint_active" href="{% url "store:store_question" stores.pk %}?&sort=my" >내가 쓴 글만 보기</a>
+</div><br/><br/>
 
 {% for comm in comms %}
     <div class="well">
@@ -158,4 +152,17 @@ he
     <h4 align="center"><i class="far fa-sad-tear"></i>문의글이 없습니다.</h4>
 {% endfor %}
 
+{% endblock %}
+
+
+{% block store_extra_content %}
+    <script>
+        $(document).ready(function() {
+          $('a.mint_active').removeClass('mint_active');
+          if ('{{ sort }}' == ''){
+              $('a[href="' + location.pathname + '"]').addClass('mint_active');
+          }
+          $('a[href="' + location.pathname + '?&sort={{ sort }}"]').addClass('mint_active');
+        });
+    </script>
 {% endblock %}

@@ -25,6 +25,7 @@ class StarStoreSearchList(ListView):
     model = StoreProfile
     template_name = 'store/star_store_search.html'
     context_object_name = 'star_search'
+    paginate_by = 21
     def get_queryset(self):
         self.query = self.request.GET.get('query','')
         self.qs = super().get_queryset()
@@ -34,6 +35,22 @@ class StarStoreSearchList(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(StarStoreSearchList, self).get_context_data()
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
+        context['ctn'] = self.get_queryset().count()
         if self.query:
             context['query'] = self.query
         return context
@@ -160,16 +177,13 @@ class StoreProfileEditView(UpdateView):
 
 
 
-class StoreQuestionLCView(CreateView):
-    model = QuestionComment
+class StoreQuestionLCView(ListView):
 
+    model = QuestionComment
     form_class = StoreQuestionForm
     template_name = 'store/store_question.html'
-
-    def get(self, request, *args, **kwargs):
-        stores = get_object_or_404(StoreProfile, pk=self.kwargs['pk'])
-        comms =  QuestionComment.objects.filter(store_profile_id=self.kwargs['pk'], parent__isnull=True)
-        return render(request, self.template_name, {'comms': comms, 'form':self.form_class, 'stores':stores})
+    paginate_by = 5
+    ordering = '-created_at'
 
     def form_valid(self, form):
         parent_obj = None
@@ -190,6 +204,23 @@ class StoreQuestionLCView(CreateView):
         comment.author=self.request.user
         comment.save()
         return redirect('store:store_question', self.kwargs['pk'])
+    
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(StoreQuestionLCView, self).get_context_data(**kwargs)
+        self.sort = self.request.GET.get('sort', '')
+
+        context['sort'] = self.sort
+        context['form'] = self.form_class
+        context['comms'] = self.model.objects.filter(store_profile_id=self.kwargs['pk'], parent__isnull=True)
+        if self.sort == 'all':
+            context['comms'] = self.model.objects.filter(store_profile_id=self.kwargs['pk'], parent__isnull=True)
+        elif self.sort == 'my':
+            context['comms'] = self.model.objects.filter(author=self.request.user, parent__isnull=True)
+
+        context['stores'] = get_object_or_404(StoreProfile, pk=self.kwargs['pk'])
+
+        return context
+        
 
 class StoreQuestionEditView(UpdateView):
     form_class = StoreQuestionForm
@@ -222,6 +253,7 @@ class StoreGradeListView(ListView):
     template_name = 'store/store_grade.html'
     ordering = '-created_at'
     context_object_name = 'grades'
+    paginate_by = 1
     def get_ordering(self):
         self.sort = self.request.GET.get('sort','recent')
 
@@ -252,6 +284,21 @@ class StoreGradeListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        paginator = context['paginator']
+        page_numbers_range = 5  # Display only 5 page numbers
+        max_index = len(paginator.page_range)
+
+        page = self.request.GET.get('page')
+        current_page = int(page) if page else 1
+
+        start_index = int((current_page - 1) / page_numbers_range) * page_numbers_range
+        end_index = start_index + page_numbers_range
+        if end_index >= max_index:
+            end_index = max_index
+
+        page_range = paginator.page_range[start_index:end_index]
+        context['page_range'] = page_range
+
         context['stores'] = StoreProfile.objects.get(pk=self.kwargs['pk'])
         context['sort'] = self.request.GET.get('sort','recent')
         return context

@@ -4,6 +4,11 @@
 
 
 {% block head %}
+    <script>
+        $(document).ready(function () {
+            $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
+        });
+    </script>
 <style>
     .fa-star {color: #FFF612}
     .fa-star-half-alt {color: #FFF612}
@@ -380,10 +385,17 @@ background-color: #00498c;
 
         </div>
     </div>
-    <br/>
-
+<div>
+  <ul class="nav nav-tabs nav-justified" role="tablist">
+    <li role="presentation" ><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
+    <li role="presentation"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>
+    <li role="presentation"><a href="{% url "store:store_question" stores.pk %}" aria-controls="messages" role="tab" >가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span></a></li>
+  </ul>
+</div>
+<br/>
     {% block store_content %}
     {% endblock %}
     {% block store_extra_content %}
     {% endblock %}
+
 {% endblock %}
