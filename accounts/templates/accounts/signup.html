@@ -1,15 +1,128 @@
 {% extends "accounts/layout.html" %}
 
+{% block accounts_extra %}
+<script>
+    $(document).ready(function(){
+
+        $(".btn-primary").click(function(){
+            if($("#id_policy_check_0").is(":checked") == false){
+                alert("Buy&Sell 이용약관에 동의 하셔야 합니다.");
+                return;
+            }else if($("#id_policy_check_1").is(":checked") == false){
+                alert("개인정보 처리방침에 동의 하셔야 합니다.");
+                return;
+            }else{
+                $("#signup").submit();
+            }
+        });
+    });
+</script>
+
+{% endblock %}
 {% block content %}
-
-<form action="" method="POST" novalidate>
-    {% csrf_token %}
-    <table>
-        <th>
-			{{ form.as_table}}
-        </th>
-    </table>
-    <input type="submit" value="가입하기">
-</form>
-
+<div class="thumbnail" style="padding:20px">
+<form class="form-horizontal" action="" id="signup" method="POST" novalidate>
+        {% csrf_token %}
+        <div class="thumbnail" style="padding:20px">
+        <div class="form-group">
+            <div class="form-group">
+                <div class="col-sm-12 text-center">
+                    <h2><i class="far fa-id-card" style="color:#368AFF"></i> 회원 가입</h2><hr>
+                </div>
+            </div>
+        </div>
+          <div class="form-group">
+            <label for="{{ form.username.id_for_label }}" class="col-sm-2 control-label">{{ form.username.label }}</label>
+              <div class=" col-sm-10">
+                {{ form.username }}
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="{{ form.password1.id_for_label }}" class="col-sm-2 control-label">{{ form.password1.label }}</label>
+              <div class=" col-sm-10">
+                {{ form.password1 }}
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="{{ form.password2.id_for_label }}" class="col-sm-2 control-label">{{ form.password2.label }}</label>
+              <div class=" col-sm-10">
+                {{ form.password2 }}
+              </div>
+          </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}" class="col-sm-2 control-label">{{ form.nick_name.label }}</label>
+              <div class=" col-sm-10">
+                {{ form.nick_name }}
+              </div>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}" class="col-sm-2 control-label">{{ form.email.label }}</label>
+              <div class=" col-sm-10">
+                {{ form.email }}
+              </div>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.phone.id_for_label }}" class="col-sm-2 control-label">{{ form.phone.label }}</label>
+              <div class=" col-sm-10">
+                {{ form.phone }}
+              </div>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.account_num.id_for_label }}" class="col-sm-2 control-label">{{ form.account_num.label }}</label>
+              <div class=" col-sm-10">
+                {{ form.account_num }}
+              </div>
+            </div>
+          <div class="form-group">
+              <label for="{{ form.post_code.id_for_label }}" class="col-sm-2 control-label">주 소</label>
+              <div class=" col-sm-10">
+                  {{ form.post_code }}
+              </div>
+          </div>
+          <div class="form-group">
+              <div class=" col-sm-10 col-sm-offset-2">
+                  {{ form.address }}
+              </div>
+          </div>
+            <div class="form-group">
+              <div class=" col-sm-10 col-sm-offset-2">
+                {{ form.detail_address }}
+              </div>
+            </div>
+        </div>
+            <hr>
+        <div class="thumbnail">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-12 text-center">
+                        <h2><i class="far fa-check-square" style="color:red"></i> {{ form.policy_check.label }}</h2>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="form-group">
+                <div class="col-sm-12 text-center">
+                  {% for choice in form.policy_check %}
+                    <div class="radio col-xs-12">
+                        <h5>{{ choice }}</h5>
+                        <a href="{% if choice.id_for_label == 'id_policy_check_0' %}
+                            {% url "policy:policy_service" %}
+                        {% elif choice.id_for_label == 'id_policy_check_1' %}
+                            {% url "policy:policy_privacy" %}
+                        {% else %}
+                            {% url "policy:policy_location" %}
+                        {% endif %}">약관보기</a>
+                    </div>
+                  {% endfor %}
+              </div>
+            </div>
+        </div>
+            <hr>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-primary col-xs-12">가입하기</button>
+                </div>
+            </div>
+    </form>
+</div>
 {% endblock %}

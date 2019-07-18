@@ -12,7 +12,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from store.models import StoreProfile
-from .models import Profile, phone_validate
+from .models import Profile
 
 User = get_user_model()
 
@@ -27,14 +27,13 @@ class SignupForm(UserCreationForm):
     detail_address = forms.CharField()
     account_num = forms.CharField()
     email = forms.EmailField()
-
-    '''
-    def clean_username(self):
-        value = self.cleaned_data('username')
-        if value:
-            validate_email(value)
-        return value
-    '''
+    CHOICE = (
+        ("policy1", "(필수)Buy&Sell 이용약관 동의"),
+        ("policy2", "(필수)개인정보 처리방침 동의"),
+        ("policy3", "(선택)위치기반 서비스 이용약관 동의"),
+        # ("policy3", "(선택)SNS, 이메일 마케팅 동의"),
+    )
+    policy_check = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=CHOICE)
 
     def __init__(self, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)
@@ -94,10 +93,14 @@ class SignupForm(UserCreationForm):
             'class': 'form-control col-sm-10',
             'placeholder': "'-'를 제외한 숫자로 입력해주세요",
         })
+        self.fields['policy_check'].label = '약관 동의'
+        self.fields['policy_check'].widget.attrs.update({
+            'required' : 'required',
+        })
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'post_code', 'address', 'detail_address', 'account_num', 'email')
+        fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'post_code', 'address', 'detail_address', 'account_num', 'email','policy_check')
 
 
     def save(self, commit=True):
@@ -195,10 +198,3 @@ class AuthProfileForm(ProfileForm):
     class Meta:
         model = ProfileForm.Meta.model
         fields = ProfileForm.Meta.fields + ['password']
-
-class CheckUserForm(forms.Form):
-    password = forms.CharField(
-        widget=forms.PasswordInput,
-    )
-    class Meta:
-        fields = ['password']

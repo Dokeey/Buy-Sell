@@ -15,7 +15,7 @@ from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 
 from .models import Profile
-from .forms import SignupForm, AuthProfileForm, CheckUserForm
+from .forms import SignupForm, AuthProfileForm
 
 User = get_user_model()
 
@@ -23,24 +23,17 @@ User = get_user_model()
 def signup(request):
     get_success_url = settings.LOGIN_REDIRECT_URL
     if request.user.is_authenticated:
-        redirect_to = get_success_url
-        if redirect_to == request.path:
+        if get_success_url == request.path:
             raise ValueError(
                 "Redirection loop for authenticated user detected. Check that "
                 "your LOGIN_REDIRECT_URL doesn't point to a login page."
             )
-        return HttpResponseRedirect(redirect_to)
+        return HttpResponseRedirect(get_success_url)
 
     if request.method == "POST":
         form = SignupForm(request.POST, request.FILES)
-
         if form.is_valid():
             form.save()
-
-            # 메일 인증
-            # current_site = get_current_site(self.request)
-
-            # template에서 넘어온 인자들을 모두 합쳐 주소필드에 저장한다.
             return redirect('accounts:login')
     else:
         form = SignupForm()
@@ -57,13 +50,12 @@ class SigninView(LoginView):
 
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
-            redirect_to = self.get_success_url()
-            if redirect_to == self.request.path:
+            if self.get_success_url() == self.request.path:
                 raise ValueError(
                     "Redirection loop for authenticated user detected. Check that "
                     "your LOGIN_REDIRECT_URL doesn't point to a login page."
                 )
-            return HttpResponseRedirect(redirect_to)
+            return HttpResponseRedirect(self.get_success_url())
         return super().dispatch(request, *args, **kwargs)
 
 signout = LogoutView.as_view()
@@ -77,24 +69,24 @@ def profile_view(request):
     })
 
 
-def check_user(fn):
-    def wrapper(*args, **kwargs):
-        request = args[0]
-        profile = get_object_or_404(Profile, user=request.user)
-        if request.method == "POST":
-            form = CheckUserForm(request.POST)
-            if form.is_valid():
-                if check_password(form.cleaned_data['password'], profile.user.password):
-                    return True
-                else:
-                    messages.error(request, '패스워드를 확인해주세요 :(')
-        else:
-            form = CheckUserForm
-
-        return render(request, 'accounts/check_user.html', {
-            'form': form
-        })
-    return wrapper
+# def check_user(fn):
+#     def wrapper(*args, **kwargs):
+#         request = args[0]
+#         profile = get_object_or_404(Profile, user=request.user)
+#         if request.method == "POST":
+#             form = CheckUserForm(request.POST)
+#             if form.is_valid():
+#                 if check_password(form.cleaned_data['password'], profile.user.password):
+#                     return True
+#                 else:
+#                     messages.error(request, '패스워드를 확인해주세요 :(')
+#         else:
+#             form = CheckUserForm
+#
+#         return render(request, 'accounts/check_user.html', {
+#             'form': form
+#         })
+#     return wrapper
 
 @login_required
 def profile_edit(request):
@@ -121,7 +113,11 @@ class PasswordChange(PasswordChangeView):
     template_name = 'accounts/pw_edit.html'
     success_url = reverse_lazy('accounts:profile')
 
-pw_edit = PasswordChange.as_view()
+    def form_valid(self, form):
+        if form.cleaned_data['old_password'] == form.cleaned_data['new_password1']:
+            messages.error(self.request, '이전 비밀번호와 동일합니다.')
+            return self.form_invalid(form)
+        return super().form_valid(form)
 
 
 def withdrawal(request):
