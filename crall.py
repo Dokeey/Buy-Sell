@@ -64,7 +64,7 @@ def main(query):
         item_image.save()
 
         ctn += 1
-        if ctn > 10:
+        if ctn > 19:
             break
 
 

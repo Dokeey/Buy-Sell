@@ -79,8 +79,8 @@ class ItemImage(models.Model):
     photo = ProcessedImageField(
             upload_to = 'item_img/{0}'.format(datetime.now().strftime("%Y-%m-%d")),
             processors = [ResizeToFill(640, 640)],
-            format='PNG',
-            options = {'quality': 100}
+            format='JPEG',
+            options = {'quality': 70}
         )
 
 

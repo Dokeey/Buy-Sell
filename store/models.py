@@ -6,13 +6,14 @@ from django.db import models
 from hitcount.models import HitCountMixin, HitCount
 from imagekit.models import ProcessedImageField
 from pilkit.processors import ResizeToFill
-
+from django_cleanup import cleanup
 
 
 def get_random():
     rand = randrange(1,10)
     return 'profile/default/{}.png'.format(rand)
 
+@cleanup.ignore
 class StoreProfile(models.Model, HitCountMixin):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=20, unique=True)

@@ -2,8 +2,8 @@
 {% load staticfiles %}
 {% load humanize %}
 {% load category_tags %}
-{% load trade_tags %}
 {% load mptt_tags %}
+{% load imagekit %}
 
 {% block content %}
 <style>
@@ -160,8 +160,8 @@ background: #0fd9a6;
                     <div class="item">
                     <img class="img-responsive" src="{% static "img/고양이.png" %}" style="width:800px;height:370px;"></div>
                 </div><!-- Carousel nav -->
-                <a class="carousel-control left" data-slide="prev" href="#EventCarousel" style="font-size:5px;"><div style="margin-top:9px;">‹</div></a>
-                <a class="carousel-control right" data-slide="next" href="#EventCarousel" style="font-size:5px;"><div style="margin-top:9px;">›</div></a>
+                <a class="carousel-control left" data-slide="prev" href="#EventCarousel" style="font-size:10px;"><div style="margin-top:6px;"><i class="fas fa-angle-left fa-2x"></i></div></a>
+                <a class="carousel-control right" data-slide="next" href="#EventCarousel" style="font-size:10px;"><div style="margin-top:6px;"><i class="fas fa-angle-right fa-2x"></i></div></a>
             </div>
         </div><!--/Slider-->
     </div>
@@ -252,8 +252,9 @@ background: #0fd9a6;
                     <div class="item {% if forloop.counter == 1 %}active{% endif %}">
                         <div class="row">
                           <div class="col-sm-3 col-xs-6">
+                              {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
                               <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                  <img src="{{ item.itemimage_set.first.photo.url }}" alt="Image" style="max-width:100%;">
+                                  <img src="{{ thumb.url }}" alt="Image" width="{{ thumb.width }}" height="{{ thumb.height }}">
                                   <br>
                                   <b>{{ item.title }}</b><br>
                                   {{ item.amount|intcomma }} 원
@@ -261,8 +262,9 @@ background: #0fd9a6;
                           </div>
                         {% elif forloop.counter|divisibleby:4 or forloop.last %}
                           <div class="col-sm-3 col-xs-6">
+                              {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
                               <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                  <img src="{{ item.itemimage_set.first.photo.url }}" alt="Image" style="max-width:100%;">
+                                  <img src="{{ thumb.url }}" alt="Image" width="{{ thumb.width }}" height="{{ thumb.height }}">
                                   <br>
                                   <b>{{ item.title }}</b><br>
                                   {{ item.amount|intcomma }} 원
@@ -272,8 +274,9 @@ background: #0fd9a6;
                     </div><!--.item-->
                         {% else %}
                           <div class="col-sm-3 col-xs-6">
+                              {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
                               <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                  <img src="{{ item.itemimage_set.first.photo.url }}" style="max-width:100%;">
+                                  <img src="{{ thumb.url }}" alt="Image" width="{{ thumb.width }}" height="{{ thumb.height }}">
                                   <br>
                                   <b>{{ item.title }}</b><br>
                                   {{ item.amount|intcomma }} 원
@@ -283,8 +286,8 @@ background: #0fd9a6;
                     {% endfor %}
 
                 </div><!--.carousel-inner-->
-                <a data-slide="prev" href="#Carousel-{{ node.id }}" class="left carousel-control" style="font-size:5px;"><div style="margin-top:9px;">‹</div></a>
-                <a data-slide="next" href="#Carousel-{{ node.id }}" class="right carousel-control" style="font-size:5px;"><div style="margin-top:9px;">›</div></a>
+                <a data-slide="prev" href="#Carousel-{{ node.id }}" class="left carousel-control" style="font-size:10px;"><div style="margin-top:6px;"><i class="fas fa-angle-left fa-2x"></i></div></a>
+                <a data-slide="next" href="#Carousel-{{ node.id }}" class="right carousel-control" style="font-size:10px;"><div style="margin-top:6px;"><i class="fas fa-angle-right fa-2x"></i></div></a>
             </div><!--.Carousel-->
 
 		</div>
@@ -305,7 +308,7 @@ background: #0fd9a6;
             <div class="offer offer-default thumbnail">
 				<div class="offer-content ">
 					<h3 class="lead">
-                    <p>쓸모없는 물건들.. 애물단지들.. 더 이상 지체하지마세요. </p>
+                    <p>안쓰는 물건들.. 애물단지들.. 더 이상 지체하지마세요. </p>
 						<a href="{% url "trade:item_new" %}">
                             <button class="btn btn-primary btn-lg">Buy & Sell로 물건 팔러가기</button>
                         </a>
