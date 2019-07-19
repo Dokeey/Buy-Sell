@@ -1,18 +1,73 @@
-{% extends "accounts/layout.html" %}
+{% extends "mypage/layout.html" %}
 
-{% block content %}
+{% block mypage_content %}
 
-
-<form action="" method="POST" novalidate>
-    {% csrf_token %}
-    <table>
-        <th>
-            {{ form.as_table}}
-        </th>
-    </table>
-    <input type="submit" value="가입하기">
+<div class="thumbnail" style="padding:20px">
+<form class="form-horizontal" method="POST" action="">
+        {% csrf_token %}
+        <div class="form-group">
+            <div class="form-group">
+                <div class="col-sm-12 text-center">
+                    <h2><i class="fas fa-address-card" style="color:#368AFF"></i> 내 정보 변경</h2>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form.nick_name.label }}</label>
+          <div class=" col-sm-10">
+              {{ form.nick_name }}
+          </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form.phone.label }}</label>
+          <div class=" col-sm-10">
+              {{ form.phone }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">{{ form.post_code.label }}</label>
+          <div class=" col-sm-10">
+              {{ form.post_code }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label"></label>
+          <div class=" col-sm-10">
+              {{ form.address }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label"></label>
+          <div class=" col-sm-10">
+              {{ form.detail_address }}
+          </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form.email.label }}</label>
+          <div class=" col-sm-10">
+              {{ form.email }}
+          </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form.account_num.label }}</label>
+          <div class=" col-sm-10">
+              {{ form.account_num }}
+          </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{ form.password.label }}</label>
+          <div class=" col-sm-10">
+              {{ form.password }}
+          </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-10 col-sm-offset-2">
+                <button class="btn btn-primary">수정하기</button>
+                <a href="{% url "accounts:pw_edit" %}"><button type="button" class="btn btn-danger">비밀번호변경</button></a>
+                <a href="{% url "accounts:withdrawal" %}"><button type="button" class="btn btn-default">회원탈퇴</button></a>
+            </div>
+        </div>
 </form>
-<hr>
-<a href="{% url "accounts:pw_edit" %}"> 비밀번호변경 </a>
 
+</div>
 {% endblock %}

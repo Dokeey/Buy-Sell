@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'mptt', # category
     'django_extensions', # models relation graph
     'django_cleanup', # django delete media file
+    # 'sslserver', # django SSL server module
 
 ]
 
@@ -156,7 +157,7 @@ AUTH_USER_MODEL = 'accounts.User'
 from django.urls import reverse_lazy
 
 LOGIN_URL = reverse_lazy('accounts:login')
-LOGIN_REDIRECT_URL = reverse_lazy('accounts:profile')
+LOGIN_REDIRECT_URL = reverse_lazy('root')
 LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login')
 
 # Email
@@ -207,3 +208,15 @@ GRAPH_MODELS = {
 # Session Time Out
 SESSION_COOKIE_AGE = 3600   # 1시간
 SESSION_SAVE_EVERY_REQUEST = True   # 리퀘스트시 세션 정보 갱신 허용
+
+# KAKAO TALK API
+KAKAO_KEY_JS = '43b0c47e22303f599cf49a0f42e75f86'
+
+# FACEBOOK API
+FACEBOOK_KEY = '642307389514788'
+
+# Django SSL 통신 관련 설정
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')

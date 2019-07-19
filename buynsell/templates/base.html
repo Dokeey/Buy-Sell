@@ -25,7 +25,7 @@
 	right: -12px;
 }
 .event .carousel-control {
-    margin-top: 130px;
+    margin-top: 165px;
 }
 /* The indicators */
 .carousel-indicators {
@@ -238,7 +238,7 @@ background: #0fd9a6;
 
                 <ol class="carousel-indicators">
 
-                    {% for item in items|slice:"20" %}
+                    {% for item in items|slice:"12" %}
                         {% if forloop.counter0|divisibleby:4 %}
                     <li data-target="#Carousel-{{ node.id }}" data-slide-to="{% div forloop.counter0 4 %}" {% if forloop.counter == 1 %}class="active"{% endif %}></li>
                         {% endif %}
@@ -247,7 +247,7 @@ background: #0fd9a6;
 
                 <!-- Carousel items -->
                 <div class="carousel-inner text-center">
-                    {% for item in items|slice:"20" %}
+                    {% for item in items|slice:"12" %}
                         {% if forloop.counter0|divisibleby:4 %}
                     <div class="item {% if forloop.counter == 1 %}active{% endif %}">
                         <div class="row">

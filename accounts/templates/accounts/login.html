@@ -9,4 +9,24 @@
     <input type="submit" value="login">
 </form>
     <a href="{% url "accounts:id_find" %}">아이디</a>/<a href="{% url "accounts:password_reset" %}">비밀번호 찾기</a>
+
+<br>
+<a id="kakao-login-btn"></a>
+<a href="http://developers.kakao.com/logout"></a>
+<script type='text/javascript'>
+  //<![CDATA[
+    // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init('43b0c47e22303f599cf49a0f42e75f86');
+    // 카카오 로그인 버튼을 생성합니다.
+    Kakao.Auth.createLoginButton({
+      container: '#kakao-login-btn',
+      success: function(authObj) {
+        alert(JSON.stringify(authObj));
+      },
+      fail: function(err) {
+         alert(JSON.stringify(err));
+      }
+    });
+  //]]>
+</script>
 {% endblock %}

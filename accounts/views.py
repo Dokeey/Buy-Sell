@@ -15,7 +15,7 @@ from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 
 from .models import Profile
-from .forms import SignupForm, AuthProfileForm
+from .forms import SignupForm, AuthProfileForm, CustomPasswordChangeForm
 
 User = get_user_model()
 
@@ -112,6 +112,7 @@ def profile_edit(request):
 class PasswordChange(PasswordChangeView):
     template_name = 'accounts/pw_edit.html'
     success_url = reverse_lazy('accounts:profile')
+    form_class = CustomPasswordChangeForm
 
     def form_valid(self, form):
         if form.cleaned_data['old_password'] == form.cleaned_data['new_password1']:

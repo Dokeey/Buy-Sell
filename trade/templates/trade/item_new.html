@@ -299,6 +299,9 @@
             formData.append('{{ form.photo.name }}', fileList[uploadFileList[i]]);
         }
 
+        var loader = $("#loading");
+        var container = $("#body");
+
         $.ajax({
             url:"{{ request.path }}",
             data:formData,
@@ -316,7 +319,15 @@
                         $('#error_'+key).html('<div class="text-center alert alert-warning alert-dismissible" role="alert">' + result.error[key][0] + '</div>');
                     }
                 }
-            }
+            },
+            beforeSend:function(){
+                loader.css("display","block");
+                container.css("display","none");
+            },
+            complete:function(){
+                loader.css("display","none");
+                container.css("display","block");
+            },
         });
     }
 </script>

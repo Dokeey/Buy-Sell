@@ -6,7 +6,7 @@
 {% block head %}
 
     <!--Facebook 공유 기능-->
-    <meta property="fb:app_id"        content="642307389514788"/>
+    <meta property="fb:app_id"        content="{{ facebook_key }}"/>
     <meta property="og:type"          content="website"/>
     <meta property="og:url"           content="http://{{ request.META.HTTP_HOST }}{{ request.path }}" />
     <meta property="og:title"         content="{{ item.title }} {{ item.amount|intcomma }}원" />
@@ -21,9 +21,8 @@
 	</script>
 
     <!--Kakao Talk 공유 기능-->
-    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
     <script>
-        Kakao.init('43b0c47e22303f599cf49a0f42e75f86');
+        Kakao.init('{{ kakao_key }}');
         function sendLink() {
             Kakao.Link.sendDefault({
               objectType: 'feed',

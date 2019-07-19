@@ -152,6 +152,8 @@ class ItemDetail(MultipleObjectMixin, CreateView):
 
         context['items'] = item_list
         context['items_ctn'] = items.count()
+        context['kakao_key'] = settings.KAKAO_KEY_JS
+        context['facebook_key'] = settings.FACEBOOK_KEY
         return context
 
 
