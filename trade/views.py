@@ -172,12 +172,12 @@ class ItemDetail(MultipleObjectMixin, CreateView):
                 form.instance.parent = parent_obj
 
         form.instance.user = self.request.user
-        form.instance.item = self.get_context_data()['item']
+        form.instance.item = get_object_or_404(Item, pk=self.kwargs.get('pk'))
         return super().form_valid(form)
 
 
     def get_success_url(self):
-        return reverse_lazy('trade:item_detail', kwargs={'pk': self.pk})
+        return reverse_lazy('trade:item_detail', kwargs={'pk': self.kwargs.get('pk')})
 
 
 # def item_update(request, pk):
