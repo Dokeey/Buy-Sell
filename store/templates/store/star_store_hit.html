@@ -14,7 +14,7 @@
     <meta property="og:type"          content="website"/>
     <meta property="og:url"           content="http://{{ request.META.HTTP_HOST }}{{ request.path }}" />
     <meta property="og:title"         content="{{ stores.name }}" />
-    <meta property="og:description"   content="{{ item.desc|default:'-'|linebreaks }}" />
+    <meta property="og:description"   content="1234" />
     <meta property="og:image"         content="http://{{ request.META.HTTP_HOST }}{{ stores.photo.url }}" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
 
@@ -82,18 +82,7 @@ color: white;
           <li role="presentation"><a href="{% url 'store:star_store_grade' %}">평점 순위</a></li>
           <li role="presentation"><a href="{% url 'store:star_store_follow' %}">팔로워 순위</a> </li>
         </ul><br/>
-         <div align="center">
-        <form style="width:60%;" action="{% url "store:star_store_search" %}">
-            <div class="input-group">
-              <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid #0fd9a6;" placeholder="가게 찾기" >
-              <span class="input-group-btn">
-                <button class="btn btn-primary" type="submit" style="border:1px solid #0fd9a6;">
-                    <i class="fa fa-search"></i>
-                </button>
-              </span>
-            </div>
-        <form/>
-        </div>
+
      </div>
 </nav>
 {% block star_content %}
@@ -236,6 +225,20 @@ color: white;
         </div>
         <hr/>
     </div>
+
+    <div align="center">
+        <form style="width:60%;" action="{% url "store:star_store_search" %}">
+            <div class="input-group">
+              <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid #0fd9a6;" placeholder="가게 찾기" >
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="submit" style="border:1px solid #0fd9a6;">
+                    <i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+        <form/>
+        </div>
+
 </div>
 {% endblock %}
 {% endblock %}

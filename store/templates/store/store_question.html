@@ -75,12 +75,14 @@ top: 33px;
 
     </form>
 {% endif %}
-
+{% if user.is_authenticated %}
 <div class="col-xs-12" align="right">
     <a href="{% url "store:store_question" stores.pk %}?&sort=all" >전체보기</a><small style="padding:8px;"> | </small>
-    <a class="mint_active" href="{% url "store:store_question" stores.pk %}?&sort=my" >내가 쓴 글만 보기</a>
-</div><br/><br/>
 
+    <a class="mint_active" href="{% url "store:store_question" stores.pk %}?&sort=my" >내가 쓴 글만 보기</a>
+
+</div><br/><br/>
+{% endif %}
 {% for comm in comms %}
     <div class="well">
     <div class="row">

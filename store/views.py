@@ -177,12 +177,11 @@ class StoreProfileEditView(UpdateView):
 
 
 
-class StoreQuestionLCView(ListView):
+class StoreQuestionLCView(CreateView):
 
     model = QuestionComment
     form_class = StoreQuestionForm
     template_name = 'store/store_question.html'
-    paginate_by = 5
     ordering = '-created_at'
 
     def form_valid(self, form):
@@ -235,13 +234,22 @@ class StoreQuestionEditView(UpdateView):
 
 class StoreQuestionDelView(DeleteView):
     model = QuestionComment
-
+    template_name = 'store/store_question_delete.html'
+    pk_url_kwarg = 'cid'
     # get method 일때 post mothod를 리턴하여 confirm template없이 삭제 가능하지만 추천하는 방법은 아님
-    def get(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
+    # def get(self, request, *args, **kwargs):
+    #     return self.post(request, *args, **kwargs)
+    #
+    # def get_object(self, queryset=None):
+    #     return self.model.objects.get(pk=self.kwargs['cid'])
 
-    def get_object(self, queryset=None):
-        return self.model.objects.get(pk=self.kwargs['cid'])
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        print(self.object)
+        if self.request.user != self.object.author:
+            messages.error(self.request, '잘못된 접근 입니다.')
+            return redirect('store:store_question', self.kwargs.get('pk'))
+        return super().get(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy("store:store_question", kwargs={'pk': self.kwargs['pk']})

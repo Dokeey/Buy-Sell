@@ -1,0 +1,18 @@
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+        <form class="del-form" id="del-form" method="post">
+          <div class="modal-body col-xs-12">
+              <h3 class="text-center"><i class="fas fa-trash-alt" style="margin-right:10px"></i> 가게 문의 글을 삭제하시겠습니까?
+                  <br><small>삭제된 글은 복구할 수 없습니다.</small></h3>
+                    {% csrf_token %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+            <button onclick="javascript:delSubmit()" class="btn btn-danger" >삭제하기</button>
+          </div>
+        </form>
+    </div>
+  </div>
