@@ -129,7 +129,7 @@ class UserDeleteView(FormView):
             return redirect(self.success_url)
         else:
             messages.error(self.request, '패스워드를 확인해주세요 :(')
-            return self.form_invalid(form)
+            return redirect('accounts:profile')
 
 
 # 이메일 인증 활성화 뷰

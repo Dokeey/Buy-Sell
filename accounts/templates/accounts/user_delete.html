@@ -1,16 +1,18 @@
-{% extends "accounts/layout.html" %}
-
-{% block content %}
-
-<form action="" method="POST" novalidate>
-    {% csrf_token %}
-    <table>
-        <th>
-            {{ form.as_table}}
-        </th>
-    </table>
-    <input type="submit" value="확인">
-</form>
-<hr>
-
-{% endblock %}
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+        <form id="del-form" method="post" action="{% url "accounts:user_delete" %}">
+          <div class="modal-body col-xs-12">
+              <h2 class="text-center"><i class="fas fa-exclamation-circle" style="color:red"></i> 주의! 정말로 <b style="color:red">탈퇴</b>하시겠습니까?<br><small>탈퇴 즉시 모든 정보들은 복구가 불가능 합니다.</small></h2>
+                {% csrf_token %}
+                <br>{{ form.password }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+            <button class="btn btn-danger" >탈퇴하기</button>
+          </div>
+        </form>
+    </div>
+  </div>
