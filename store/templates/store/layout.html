@@ -10,53 +10,19 @@
         });
     </script>
 <!--Facebook 공유 기능-->
-    <meta property="fb:app_id"        content="642307389514788"/>
-    <meta property="og:type"          content="website"/>
-    <meta property="og:url"           content="http://{{ request.META.HTTP_HOST }}{{ request.path }}" />
-    <meta property="og:title"         content="{{ stores.name }}" />
-    <meta property="og:description"   content="{{ item.desc|default:'-'|linebreaks }}" />
-    <meta property="og:image"         content="http://{{ request.META.HTTP_HOST }}{{ stores.photo.url }}" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
+ <!-- You can use Open Graph tags to customize link previews.
+    Learn more: https://developers.facebook.com/docs/sharing/webmasters -->
+  <meta property="og:url"           content="http://14.36.187.98:8000{{ request.path }}" />
+  <meta property="og:type"          content="website" />
+  <meta property="og:title"         content="{{ stores.name }}" />
+  <meta property="og:description"   content="{{ stores.comment|linebreaks }}" />
+  <meta property="og:image"         content="http://14.36.187.98:8000{{ stores.photo.url }}" />
 
 	<script>
 	function sharefacebook(url) {
 		window.open("http://www.facebook.com/sharer/sharer.php?u=" + url);
 	}
 	</script>
-
-    <!--Kakao Talk 공유 기능-->
-    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
-    <script>
-        Kakao.init('43b0c47e22303f599cf49a0f42e75f86');
-        function sendLink() {
-            Kakao.Link.sendDefault({
-              objectType: 'feed',
-              content: {
-                title: '1234원',
-                description: 'Buy & Sell에서 싸게 사자!',
-                imageUrl: 'http://{{ request.META.HTTP_HOST }}{{ stores.photo.url }}',
-                link: {
-                  webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                  mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
-                }
-              },
-            social: {
-              viewCount: {% get_hit_count for stores %},
-              commentCount: 111,
-              sharedCount: {{ wish_ctn }}
-            },
-              buttons: [
-                {
-                  title: '이 가게 대박이다',
-                  link: {
-                    mobileWebUrl: 'http://http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                    webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
-                  }
-                }
-              ]
-            });
-         }
-    </script>
 <style>
     .fa-star {color: #FFF612}
     .fa-star-half-alt {color: #FFF612}
@@ -377,7 +343,7 @@ background-color: #00498c;
 
                             <div class="bottom">
                                 <!--Facebook 공유 button-->
-                                <a class="btn btn-blue btn" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
+                                <a class="btn btn-blue btn" onclick="javascript:sharefacebook('http://14.36.187.98:8000{{ request.path }}')">
                                     <i class="fab fa-facebook" style="color:white"></i>
                                 </a>
                                 <!--Kakao Talk 공유 button-->

@@ -261,7 +261,7 @@ class StoreGradeListView(ListView):
     template_name = 'store/store_grade.html'
     ordering = '-created_at'
     context_object_name = 'grades'
-    paginate_by = 1
+    paginate_by = 10
     def get_ordering(self):
         self.sort = self.request.GET.get('sort','recent')
 
@@ -338,21 +338,29 @@ class StoreGradeEditView(UpdateView):
     form_class = StoreGradeForm
     model = StoreGrade
     template_name = 'store/store_grade_new.html'
+    pk_url_kwarg = 'gid'
+    # def get_object(self, queryset=None):
+    #     return self.model.objects.get(pk=self.kwargs['gid'])
 
-    def get_object(self, queryset=None):
-        return self.model.objects.get(pk=self.kwargs['gid'])
-
+    def get_context_data(self, **kwargs):
+        context = super(StoreGradeEditView, self).get_context_data()
+        grade = self.model.objects.get(pk=self.kwargs['gid'])
+        context['items'] = get_object_or_404(Item, pk=grade.store_item_id)
+        return context
     def get_success_url(self, **kwargs):
         return reverse_lazy("store:store_grade", kwargs={'pk': self.kwargs['pk']})
 
 class StoreGradeDelView(DeleteView):
     model = StoreGrade
+    template_name = 'store/store_question_delete.html'
+    pk_url_kwarg = 'gid'
 
     def get(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
-
-    def get_object(self, queryset=None):
-        return self.model.objects.get(pk=self.kwargs['gid'])
+        self.object = self.get_object()
+        if self.request.user != self.object.author:
+            messages.error(self.request, '잘못된 접근 입니다.')
+            return redirect('store:store_grade', self.kwargs.get('pk'))
+        return super().get(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy("store:store_grade", kwargs={'pk': self.kwargs['pk']})

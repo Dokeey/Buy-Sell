@@ -1,5 +1,5 @@
 {% extends "store/layout.html" %}
-
+{% load trade_tags %}
 {% block store_head %}
 <style>
 .bubble
@@ -83,9 +83,11 @@ top: 33px;
 
 </div><br/><br/>
 {% endif %}
+
+
 {% for comm in comms %}
-    <div class="well">
-    <div class="row">
+    <div class="well" >
+    <div class="row" id="block-{{ comm.id }}" >
 
         <div class="col-md-3 col-xs-3 imggrid" align="center">
              <img src="{{ comm.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
@@ -93,11 +95,15 @@ top: 33px;
 
         <div class="col-md-8 col-xs-8">
             <div class="bubble" >
-                {{ comm.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{{ comm.created_at | date:"M d일, y년" }}
+                {{ comm.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{% simple_time comm.updated_at %}
                 <div align="right" style="display: inline;float: right;" >
+                    <!--댓글 수정 삭제 -->
                 {% if request.user.pk == comm.author.pk %}
-                  <a href="{% url "store:store_question_edit" pk=stores.pk cid=comm.pk  %}">수정</a> /
-                  <a href="{% url "store:store_question_del" pk=stores.pk cid=comm.pk  %}">삭제</a>
+                  <a href="{% url "store:store_question_edit" pk=stores.pk cid=comm.pk  %}"> <i class="fas fa-edit" style="margin-right:10px"></i></a>
+
+                    <a class="del" href="#" data-form="{% url "store:store_question_del" stores.id comm.id %}" >
+                        <i class="fas fa-trash-alt" data-toggle="modal" data-target="#del-modal"  style="margin-right:10px"></i></a>
+
                   {% endif %}
                 </div>
                 <hr/>
@@ -107,25 +113,34 @@ top: 33px;
         </div>
     </div>
 
+
     {% for replay in comm.replies.all %}
         <br/>
-        <div class="row">
+        <div class="row" id="block-{{ replay.id }}">
             <div class="col-md-1 col-xs-1" align="right"><i class="fas fa-reply fa-rotate-180"></i></i></div>
             <div class="col-md-3 col-xs-3 imggrid" align="center">
                 <img src="{{ replay.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
             </div>
 
             <div class="col-md-8 col-xs-8">
+
                 <div class="bubble" >
-                    {{ replay.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{{ replay.created_at | date:"M d일, y년" }}
+                    {{ replay.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i> {% simple_time replay.updated_at %}
+
                     <div align="right" style="display: inline;float: right;" >
-                     {% if request.user.pk == replay.author.pk %}
-                      <a href="{% url "store:store_question_edit" pk=stores.pk cid=replay.pk  %}">수정</a> /
-                      <a href="{% url "store:store_question_del" pk=stores.pk cid=replay.pk  %}">삭제</a>
-                      {% endif %}
+                        <!--대댓글 수정 삭제 -->
+                        {% if request.user.pk == replay.author.pk %}
+                            <a href="{% url "store:store_question_edit" pk=stores.pk cid=replay.pk  %}"> <i class="fas fa-edit" style="margin-right:10px"></i></a>
+
+                            <a class="del" href="#" data-form="{% url "store:store_question_del" stores.id replay.id %}" >
+                                <i class="fas fa-trash-alt" data-toggle="modal" data-target="#del-modal"  style="margin-right:10px"></i></a>
+
+                        {% endif %}
                     </div>
+
                     <hr/>
                     <div class="scrollblind" >{{ replay.comment | linebreaks }}</div>
+
                 </div>
             </div>
         </div>
@@ -150,6 +165,8 @@ top: 33px;
 
     {% endif %}
     </div>
+   <div class="modal fade myModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+   </div>
     {% empty %}
     <h4 align="center"><i class="far fa-sad-tear"></i>문의글이 없습니다.</h4>
 {% endfor %}
@@ -159,6 +176,7 @@ top: 33px;
 
 {% block store_extra_content %}
     <script>
+
         $(document).ready(function() {
           $('a.mint_active').removeClass('mint_active');
           if ('{{ sort }}' == ''){
@@ -166,5 +184,16 @@ top: 33px;
           }
           $('a[href="' + location.pathname + '?&sort={{ sort }}"]').addClass('mint_active');
         });
+
+         $(".del").click(function(ev) { // for each edit contact url
+            ev.preventDefault(); // prevent navigation
+            var del_url = $(this).data("form"); // get the contact form url
+            $("#myModal").load(del_url, function() { // load the url into the modal
+                $(this).modal("show"); // display the modal on url load
+                $("#del-form").attr("action", del_url);
+            });
+            return false; // prevent the click propagation
+        });
+
     </script>
 {% endblock %}

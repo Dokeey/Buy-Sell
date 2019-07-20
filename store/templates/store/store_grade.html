@@ -1,5 +1,6 @@
 {% extends "store/layout.html" %}
 {% load store.store_tags %}
+{% load trade_tags %}
 
 {% block store_head %}
 <style>
@@ -146,13 +147,15 @@
              <h4><a href="{% url 'store:store_sell_list' grade.author.storeprofile.pk %}">{{ grade.author }}</a></h4>
              <div align="right" style="display: inline;float: right;" >
                 {% if request.user.pk == grade.author.pk %}
-                  <a href="{% url "store:store_grade_edit" pk=stores.pk gid=grade.pk  %}">수정</a> /
-                  <a href="{% url "store:store_grade_del" pk=stores.pk gid=grade.pk  %}">삭제</a>
+                  <a href="{% url "store:store_grade_edit" pk=stores.pk gid=grade.pk  %}"><i class="fas fa-edit" style="margin-right:10px"></i></a>
+                  <a class="del" href="#" data-form="{% url "store:store_grade_del" pk=stores.pk gid=grade.pk  %}">
+                    <i class="fas fa-trash-alt" data-toggle="modal" data-target="#del-modal"  style="margin-right:10px"></i></a>
                   {% endif %}
                 </div>
-                {{ grade.get_rating_display }}&nbsp;&nbsp;<i class="far fa-clock"></i> {{ grade.created_at | date:"M d일, y년" }} <br/>
+                {{ grade.get_rating_display }}&nbsp;&nbsp;<i class="far fa-clock"></i> {% simple_time grade.updated_at %} <br/>
              <h5>{{ grade.grade_comment | linebreaks }} </h5>
          </div>
+        <div class="modal fade myModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"></div>
         {% empty %}
         <h4 align="center"><i class="far fa-sad-tear"></i>가게 평점이 없습니다.</h4>
 
@@ -213,6 +216,16 @@
               $('a[href="' + location.pathname + '"]').addClass('mint_active');
           }
           $('a[href="' + location.pathname + '?&sort={{ sort }}"]').addClass('mint_active');
+        });
+
+         $(".del").click(function(ev) { // for each edit contact url
+            ev.preventDefault(); // prevent navigation
+            var del_url = $(this).data("form"); // get the contact form url
+            $("#myModal").load(del_url, function() { // load the url into the modal
+                $(this).modal("show"); // display the modal on url load
+                $("#del-form").attr("action", del_url);
+            });
+            return false; // prevent the click propagation
         });
     </script>
 {% endblock %}

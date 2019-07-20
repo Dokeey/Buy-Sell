@@ -9,6 +9,7 @@ from ..models import Item
 
 register = template.Library()
 
+@register.simple_tag
 def simple_time(time):
     delta_time = datetime.now() - time
     delta_time = delta_time.total_seconds()
