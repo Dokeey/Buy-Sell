@@ -1,0 +1,16 @@
+{% extends "accounts/layout.html" %}
+
+{% block content %}
+
+<form action="" method="POST" novalidate>
+    {% csrf_token %}
+    <table>
+        <th>
+            {{ form.as_table}}
+        </th>
+    </table>
+    <input type="submit" value="확인">
+</form>
+<hr>
+
+{% endblock %}

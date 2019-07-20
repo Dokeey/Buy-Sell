@@ -1,52 +1,53 @@
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView, \
-    PasswordResetConfirmView
+from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView
 from django.core.exceptions import ValidationError
+from django.forms.utils import ErrorList
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
+from django.views.generic import CreateView, TemplateView, UpdateView, DeleteView, FormView
 
 from .models import Profile
-from .forms import SignupForm, AuthProfileForm, CustomPasswordChangeForm
+from .forms import SignupForm, AuthProfileForm, CustomPasswordChangeForm, CustomAuthenticationForm, CheckPasswordForm
 
 User = get_user_model()
 
 
-def signup(request):
-    get_success_url = settings.LOGIN_REDIRECT_URL
-    if request.user.is_authenticated:
-        if get_success_url == request.path:
-            raise ValueError(
-                "Redirection loop for authenticated user detected. Check that "
-                "your LOGIN_REDIRECT_URL doesn't point to a login page."
-            )
-        return HttpResponseRedirect(get_success_url)
 
-    if request.method == "POST":
-        form = SignupForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('accounts:login')
-    else:
-        form = SignupForm()
+class SignupView(CreateView):
+    model = User
+    template_name = 'accounts/signup.html'
+    form_class = SignupForm
 
-    return render(request, 'accounts/signup.html', {
-        'form': form,
-    })
 
+    def get(self, request, *args, **kwargs):
+        url = settings.LOGIN_REDIRECT_URL
+        if request.user.is_authenticated:
+            if url == request.path:
+                raise ValueError(
+                    "Redirection loop for authenticated user detected. Check that "
+                    "your LOGIN_REDIRECT_URL doesn't point to a login page."
+                )
+            return HttpResponseRedirect(url)
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        messages.info(self.request, '회원가입을 축하드립니다!')
+        return settings.LOGIN_URL
 
 
 
 class SigninView(LoginView):
     template_name = 'accounts/login.html'
+    form_class = CustomAuthenticationForm
 
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
@@ -58,54 +59,42 @@ class SigninView(LoginView):
             return HttpResponseRedirect(self.get_success_url())
         return super().dispatch(request, *args, **kwargs)
 
-signout = LogoutView.as_view()
 
 
-@login_required
-def profile_view(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    return render(request, 'accounts/profile.html',{
-        'profile': profile,
-    })
+
+@method_decorator(login_required, name='dispatch')
+class ProfileView(TemplateView):
+    template_name = 'accounts/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['profile'] = get_object_or_404(Profile, user=self.request.user)
+        return context
 
 
-# def check_user(fn):
-#     def wrapper(*args, **kwargs):
-#         request = args[0]
-#         profile = get_object_or_404(Profile, user=request.user)
-#         if request.method == "POST":
-#             form = CheckUserForm(request.POST)
-#             if form.is_valid():
-#                 if check_password(form.cleaned_data['password'], profile.user.password):
-#                     return True
-#                 else:
-#                     messages.error(request, '패스워드를 확인해주세요 :(')
-#         else:
-#             form = CheckUserForm
-#
-#         return render(request, 'accounts/check_user.html', {
-#             'form': form
-#         })
-#     return wrapper
 
-@login_required
-def profile_edit(request):
-    profile = get_object_or_404(Profile, user=request.user)
+@method_decorator(login_required, name='dispatch')
+class ProfileEditView(UpdateView):
+    model = Profile
+    template_name = 'accounts/profile_form.html'
+    form_class = AuthProfileForm
+    success_url = reverse_lazy('accounts:profile')
 
-    if request.method == "POST":
-        form = AuthProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            if check_password(request.POST['password'], profile.user.password):
-                form.save()
-                return redirect('accounts:profile')
-            else:
-                messages.error(request, '패스워드를 확인해주세요 :(')
-    else:
-        form = AuthProfileForm(instance=profile)
 
-    return render(request, 'accounts/profile_form.html',{
-        'form': form
-    })
+    def dispatch(self, request, *args, **kwargs):
+        self.kwargs['pk'] = request.user.profile.id
+        return super().dispatch(request, *args, **kwargs)
+
+
+    def form_valid(self, form):
+        profile = get_object_or_404(Profile, user=self.request.user)
+        if check_password(form.cleaned_data['password'], profile.user.password):
+            return super().form_valid(form)
+        else:
+            errors = form._errors.setdefault("password", ErrorList())
+            errors.append("패스워드를 확인해주세요 :(")
+            return self.form_invalid(form)
+
 
 
 @method_decorator(login_required, name='dispatch')
@@ -116,14 +105,31 @@ class PasswordChange(PasswordChangeView):
 
     def form_valid(self, form):
         if form.cleaned_data['old_password'] == form.cleaned_data['new_password1']:
-            messages.error(self.request, '이전 비밀번호와 동일합니다.')
+            errors = form._errors.setdefault("new_password1", ErrorList())
+            errors.append("이전 비밀번호와 동일합니다.")
             return self.form_invalid(form)
         return super().form_valid(form)
 
 
-def withdrawal(request):
-    request.user.delete()
-    return redirect('root')
+
+@method_decorator(login_required, name='dispatch')
+class UserDeleteView(FormView):
+    model = User
+    form_class = CheckPasswordForm
+    template_name = 'accounts/user_delete.html'
+    success_url = reverse_lazy('root')
+
+
+    def form_valid(self, form):
+        user = get_object_or_404(User, id=self.request.user.id)
+        if check_password(form.cleaned_data['password'], user.password):
+            self.request.user.delete()
+            messages.info(self.request, '그동안 이용해주셔서 감사합니다.')
+            logout(self.request)
+            return redirect(self.success_url)
+        else:
+            messages.error(self.request, '패스워드를 확인해주세요 :(')
+            return self.form_invalid(form)
 
 
 # 이메일 인증 활성화 뷰

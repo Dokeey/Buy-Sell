@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator, default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
@@ -226,3 +226,35 @@ class CustomPasswordChangeForm(PasswordChangeForm):
             'class': 'form-control col-sm-10',
             'placeholder': '패스워드를 한번 더 입력해주세요',
         })
+
+
+class CustomAuthenticationForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomAuthenticationForm, self).__init__(*args, **kwargs)
+        self.fields['username'].label = 'ID'
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-control input-sm chat-input',
+            'placeholder': 'ID',
+        })
+        self.fields['password'].label = 'Password'
+        self.fields['password'].widget.attrs.update({
+            'class': 'form-control input-sm chat-input',
+            'placeholder': 'Password',
+        })
+
+
+class CheckPasswordForm(forms.Form):
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(CheckPasswordForm, self).__init__(*args, **kwargs)
+        self.fields['password'].label = '비밀번호'
+        self.fields['password'].widget.attrs.update({
+            'class': 'form-control col-sm-10',
+            'placeholder': '기존 패스워드를 입력해주세요',
+        })
+
+    class Meta:
+        fields = ['password']

@@ -99,6 +99,7 @@ class ItemNew(CreateView):
 #         'form': form,
 #     })
 
+@method_decorator(login_required, name='post')
 class ItemDetail(MultipleObjectMixin, CreateView):
     model = ItemComment
     template_name = 'trade/item_detail.html'
@@ -158,9 +159,6 @@ class ItemDetail(MultipleObjectMixin, CreateView):
 
 
     def form_valid(self, form):
-        if not self.request.user.is_authenticated:
-            return redirect(settings.LOGIN_REDIRECT_URL)
-
         try:
             parent_id = int(self.request.POST.get('parent_id'))
         except:

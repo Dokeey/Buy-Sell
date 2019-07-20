@@ -1,3 +1,4 @@
+from django.contrib.auth.views import LogoutView
 from django.shortcuts import redirect
 from django.urls import path
 from . import views
@@ -6,13 +7,13 @@ app_name = 'accounts'
 
 urlpatterns = [
     path('', lambda req: redirect('accounts:profile')),
-    path('signup/', views.signup, name='signup'),
+    path('signup/', views.SignupView.as_view(), name='signup'),
     path('login/', views.SigninView.as_view(), name='login'),
-    path('logout/', views.signout, name='logout'),
-    path('withdrawal/', views.withdrawal, name='withdrawal'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('withdrawal/', views.UserDeleteView.as_view(), name='withdrawal'),
 
-    path('profile/', views.profile_view, name='profile'),
-    path('profile/edit/', views.profile_edit, name='profile_edit'),
+    path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('profile/edit/', views.ProfileEditView.as_view(), name='profile_edit'),
     path('profile/edit/pw/', views.PasswordChange.as_view(), name='pw_edit'),
 
     path('accounts/<str:uidb64>/<str:token>', views.activate, name='activate'),

@@ -319,9 +319,11 @@
 
             {% if messages %}                            <!-- message -->
                 {% for message in messages %}
+                <div class="col-xs-12" style="padding: 20px;">
                     <div class="text-center alert alert-{{ message.tags }} alert-dismissible" role="alert">
                       {{ message }}
                     </div>
+                </div>
                 {% endfor %}
             {% endif %}
 
@@ -365,6 +367,8 @@ BuynSell㈜는 통신판매중개자로서 중고거래마켓 BuynSell의 거래
         &copy; 2019. yejin & donghoo
     </div>
 </div>
+
+<!-- Page Loading Action -->
 <style>
     .sk-folding-cube {
       margin: 20px auto;
@@ -463,6 +467,8 @@ BuynSell㈜는 통신판매중개자로서 중고거래마켓 BuynSell의 거래
           container.css("display","block");
     };
 </script>
+
+<!-- Navbar fixed -->
 <script>
 window.onscroll = function() {myFunction()};
 
@@ -478,7 +484,7 @@ function myFunction() {
 }
 </script>
 
-
+<!-- SideBar -->
 <style>
   a.top {
     position: fixed;

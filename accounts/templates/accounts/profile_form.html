@@ -3,6 +3,15 @@
 {% block mypage_content %}
 
 <div class="thumbnail" style="padding:20px">
+{% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <div class="col-xs-12 text-center" style="padding-top: 10px;">
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
 <form class="form-horizontal" method="POST" action="">
         {% csrf_token %}
         <div class="form-group">
@@ -14,51 +23,123 @@
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">{{ form.nick_name.label }}</label>
-          <div class=" col-sm-10">
-              {{ form.nick_name }}
-          </div>
+                <div class=" col-sm-10">
+                  {{ form.nick_name }}
+                </div>
+                {% if form.nick_name.errors %}
+                    {% for error in form.nick_name.errors %}
+                <div class="col-sm-offset-2 col-sm-10 text-center" style="padding-top: 10px;">
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                </div>
+                    {% endfor %}
+                {% endif %}
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">{{ form.phone.label }}</label>
-          <div class=" col-sm-10">
-              {{ form.phone }}
-          </div>
+                <div class=" col-sm-10">
+                  {{ form.phone }}
+                </div>
+                {% if form.phone.errors %}
+                    {% for error in form.phone.errors %}
+                <div class="col-sm-offset-2 col-sm-10 text-center" style="padding-top: 10px;">
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                </div>
+                    {% endfor %}
+                {% endif %}
         </div>
         <div class="form-group">
-          <label class="col-sm-2 control-label">{{ form.post_code.label }}</label>
-          <div class=" col-sm-10">
-              {{ form.post_code }}
-          </div>
+            <label class="col-sm-2 control-label">{{ form.post_code.label }}</label>
+                <div class=" col-sm-10">
+                {{ form.post_code }}
+                </div>
+                {% if form.post_code.errors %}
+                    {% for error in form.post_code.errors %}
+                <div class="col-sm-offset-2 col-sm-10 text-center" style="padding-top: 10px;">
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                </div>
+                    {% endfor %}
+                {% endif %}
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label"></label>
           <div class=" col-sm-10">
               {{ form.address }}
           </div>
+                {% if form.address.errors %}
+                    {% for error in form.address.errors %}
+                <div class="col-sm-offset-2 col-sm-10 text-center" style="padding-top: 10px;">
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                </div>
+                    {% endfor %}
+                {% endif %}
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label"></label>
           <div class=" col-sm-10">
               {{ form.detail_address }}
           </div>
+                {% if form.detail_address.errors %}
+                    {% for error in form.detail_address.errors %}
+                <div class="col-sm-offset-2 col-sm-10 text-center" style="padding-top: 10px;">
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                </div>
+                    {% endfor %}
+                {% endif %}
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">{{ form.email.label }}</label>
           <div class=" col-sm-10">
               {{ form.email }}
           </div>
+                {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                <div class="col-sm-offset-2 col-sm-10 text-center" style="padding-top: 10px;">
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                </div>
+                    {% endfor %}
+                {% endif %}
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">{{ form.account_num.label }}</label>
           <div class=" col-sm-10">
               {{ form.account_num }}
           </div>
+                {% if form.account_num.errors %}
+                    {% for error in form.account_num.errors %}
+                <div class="col-sm-offset-2 col-sm-10 text-center" style="padding-top: 10px;">
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                </div>
+                    {% endfor %}
+                {% endif %}
         </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">{{ form.password.label }}</label>
           <div class=" col-sm-10">
               {{ form.password }}
           </div>
+                {% if form.password.errors %}
+                    {% for error in form.password.errors %}
+                <div class="col-sm-offset-2 col-sm-10 text-center" style="padding-top: 10px;">
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                </div>
+                    {% endfor %}
+                {% endif %}
         </div>
         <div class="form-group">
             <div class="col-sm-10 col-sm-offset-2">
