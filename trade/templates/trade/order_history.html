@@ -40,9 +40,13 @@
                 </div>
             </div>
             <div class="col-sm-3 text-center" style="padding:5px;">
-                {% if pay_choice == 'import' %}
+                {% if order.pay_choice == 'import' %}
                     {% if order.receipt_link %}
-                        <div class="row" style="margin:5px"><button class="btn btn-info col-xs-12"><i class="fas fa-receipt"></i> {{ order.receipt_link }}</button></div>
+                        <div class="row" style="margin:5px">
+                            <a href="{{ order.receipt_url }}">
+                            <button class="btn btn-info col-xs-12"><i class="fas fa-receipt"></i> 영수증</button>
+                            </a>
+                        </div>
                     {% endif %}
                 {% else %}
                     {% if order.status == 'reserv' or order.status == 'success' %}
@@ -54,7 +58,7 @@
                     {% endif %}
                 {% endif %}
                 <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.item.user.storeprofile.pk %}">
-                    <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.item.user.profile.nick_name }}</button></a>
+                    <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.item.user.storeprofile.name }}</button></a>
                 </div>
                 {% if order.status == 'paid' or order.status == 'reserv' and order.is_active %}
                 <div class="row" style="margin:5px">

@@ -378,6 +378,11 @@ class OrderNew(FormView):
         return context
 
 
+    def get_initial(self):
+        self.initial = {'email':self.request.user.email}
+        return super().get_initial()
+
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update({

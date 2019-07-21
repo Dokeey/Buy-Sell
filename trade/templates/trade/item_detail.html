@@ -247,7 +247,7 @@
                     <hr style="border-top: 1px solid #bbbbbb;">
                     <table class="table table-hover table-borderless">
                         <tr class="active">
-                            <td style="min-width:120px">{{ item.user.profile.nick_name }}님의 말</td> <td>{{ item.desc|default:"-"|linebreaks }}</td>
+                            <td style="min-width:120px">{{ item.user.storeprofile.name }}의 말</td> <td>{{ item.desc|default:"-"|linebreaks }}</td>
                         </tr>
                         <tr>
                             <td>상태</td> <td>{{ item.get_item_status_display }}</td>
@@ -296,7 +296,7 @@
                                 </div><div class="col-xs-9 col-sm-10 vcenter ">
                                 <div class="col-sm-12 col-xs-12 clearfix bubble" style="margin:5px;padding:10px;">
                                         <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
-                                            <div class="pull-left" ><b>{{ comment.user.profile.nick_name }}{% if item.user == comment.user %} (주인장){% endif %}</b></div>
+                                            <div class="pull-left" ><b>{{ comment.user.storeprofile.name }}{% if item.user == comment.user %} (주인장){% endif %}</b></div>
                                         </a>
                                         <div class="pull-right">{% simple_time comment.updated_at %}</div>
                                         <br><div id="cmt-{{ comment.id }}" style="padding-top:10px;">{{ comment.message|linebreaks }}</div>
@@ -328,7 +328,7 @@
                                         </div><div class="col-xs-9 col-sm-10 vcenter ">
                                             <div class="col-sm-12 col-xs-12 clearfix bubble" style="margin:10px;padding:10px;">
                                                 <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
-                                                    <div class="pull-left"><b>{{ replay.user.profile.nick_name }}{% if item.user == replay.user %} (주인장){% endif %}</b></div>
+                                                    <div class="pull-left"><b>{{ replay.user.storeprofile.name }}{% if item.user == replay.user %} (주인장){% endif %}</b></div>
                                                 </a>
                                                 <div class="pull-right">{% simple_time replay.updated_at %}</div>
                                                 <br><div id="cmt-{{ replay.id }}" style="padding-top:10px;">{{ replay.message|linebreaks }}</div>
@@ -442,7 +442,7 @@
                         <img class="img-rounded img-thumbnail img-responsive" src="{{ item.user.storeprofile.photo.url }}"/>
                     </a>
                 </div><div class="col-xs-8 vcenter" style="padding:10px;">
-                    <a href="{% url "store:store_sell_list" item.user.storeprofile.id %}">{{ item.user.profile.nick_name }}</a> <br><br>
+                    <a href="{% url "store:store_sell_list" item.user.storeprofile.id %}">{{ item.user.storeprofile.name }}</a> <br><br>
                     물품 {{ item.user.item_set.count }} <small style="padding:8px;"> | </small> 팔로워 {{ follow_ctn }}
                 </div>
             </div>
@@ -503,7 +503,7 @@
                         </div><div class="col-xs-8 vcenter">
                             <a href="{% url "store:store_grade" item.user.storeprofile.id %}">
                                 <div class="clearfix">
-                                    <div class="pull-left"><b>{{ grade.author.profile.nick_name }}</b></div>
+                                    <div class="pull-left"><b>{{ grade.author.storeprofile.name }}</b></div>
                                     <div class="pull-right">{% simple_time grade.updated_at %}</div>
                                     <br>
                                     {{ grade.get_rating_display }}<br>

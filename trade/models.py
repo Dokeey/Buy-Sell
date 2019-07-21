@@ -218,7 +218,7 @@ class Order(models.Model):
 
     @named_property('영수증 링크')
     def receipt_link(self):
-        if self.is_paid_ok and self.receipt_url:
+        if self.is_success and self.receipt_url:
             return mark_safe('<a href="{0}" target="_blank">영수증</a>'.format(self.receipt_url))
 
     def update(self, commit=True, meta=None):

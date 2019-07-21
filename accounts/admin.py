@@ -24,7 +24,7 @@ class AdminUser(AuthUserAdmin):
     def 유저_스토어프로필_만들기(self, request, queryset):
         from store.models import StoreProfile
         for user in queryset:
-            StoreProfile.objects.create(user=user, name=user.profile.nick_name + '의 가게')
+            StoreProfile.objects.create(user=user, name=user.username + '의 가게')
 
 
 @admin.register(UserSession)
@@ -34,4 +34,4 @@ class Session(admin.ModelAdmin):
 
 @admin.register(Profile)
 class AdminProfile(admin.ModelAdmin):
-    list_display = ('user', 'email', 'nick_name', 'phone', 'post_code','address', 'detail_address','account_num')
+    list_display = ('user', 'phone', 'post_code','address', 'detail_address','account_num')

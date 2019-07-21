@@ -21,12 +21,11 @@ User = get_user_model()
 class SignupForm(UserCreationForm):
 
     phone = forms.CharField()
-    nick_name = forms.CharField()
     post_code = forms.CharField()
     address = forms.CharField()
     detail_address = forms.CharField()
     account_num = forms.CharField()
-    email = forms.EmailField()
+    email = forms.EmailField(widget=forms.EmailInput)
     CHOICE = (
         ("policy1", "(필수)Buy&Sell 이용약관 동의"),
         ("policy2", "(필수)개인정보 처리방침 동의"),
@@ -52,15 +51,10 @@ class SignupForm(UserCreationForm):
             'class': 'form-control col-sm-10',
             'placeholder': '비밀번호를 확인하겠습니다',
         })
-        self.fields['nick_name'].label = '닉네임'
-        self.fields['nick_name'].widget.attrs.update({
-            'class': 'form-control col-sm-10',
-            'placeholder': '닉네임을 정해주세요',
-        })
         self.fields['email'].label = '이메일'
         self.fields['email'].widget.attrs.update({
             'class': 'form-control col-sm-10',
-            'placeholder': 'ex) buynsell@naver.com',
+            'placeholder': 'ex) buynsell@naver.com / 아이디, 비밀번호 찾기에 이용됩니다.',
         })
         self.fields['phone'].label = '연락처'
         self.fields['phone'].widget.attrs.update({
@@ -91,16 +85,16 @@ class SignupForm(UserCreationForm):
         self.fields['account_num'].label = '계좌번호'
         self.fields['account_num'].widget.attrs.update({
             'class': 'form-control col-sm-10',
-            'placeholder': "'-'를 제외한 숫자로 입력해주세요",
+            'placeholder': "'-'를 제외한 숫자로 입력해주세요 / 환불 계좌, 입금 계좌로 이용됩니다.",
         })
         self.fields['policy_check'].label = '약관 동의'
         self.fields['policy_check'].widget.attrs.update({
             'required' : 'required',
         })
 
-    class Meta(UserCreationForm.Meta):
+    class Meta:
         model = User
-        fields = UserCreationForm.Meta.fields + ('phone', 'nick_name', 'post_code', 'address', 'detail_address', 'account_num', 'email','policy_check')
+        fields = UserCreationForm.Meta.fields + ('email', 'phone', 'post_code', 'address', 'detail_address', 'account_num', 'policy_check')
 
 
     def save(self, commit=True):
@@ -126,35 +120,22 @@ class SignupForm(UserCreationForm):
             )
 
         phone = self.cleaned_data.get('phone', None)
-        email = self.cleaned_data.get('email', None)
         post_code = self.cleaned_data.get('post_code', None)
         address = self.cleaned_data.get('address', None)
         detail_address = self.cleaned_data.get('detail_address', None)
-        nick_name = self.cleaned_data.get('nick_name', None)
         account_num = self.cleaned_data.get('account_num', None)
 
-        Profile.objects.create(user=user, email=email,
-                               phone=phone, address=address,
-                               nick_name=nick_name, account_num=account_num,
-                               post_code=post_code, detail_address=detail_address
+        Profile.objects.create(user=user, phone=phone,
+                               address=address, post_code=post_code, detail_address=detail_address,
+                               account_num=account_num,
                                )
 
-        StoreProfile.objects.create(user=user, name=user.profile.nick_name + '의 가게')
+        StoreProfile.objects.create(user=user, name=user.username + '의 가게')
 
 
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
-        self.fields['nick_name'].label = '닉네임'
-        self.fields['nick_name'].widget.attrs.update({
-            'class': 'form-control col-sm-10',
-            'placeholder': '닉네임을 정해주세요',
-        })
-        self.fields['email'].label = '이메일'
-        self.fields['email'].widget.attrs.update({
-            'class': 'form-control col-sm-10',
-            'placeholder': 'ex) buynsell@naver.com',
-        })
         self.fields['phone'].label = '연락처'
         self.fields['phone'].widget.attrs.update({
             'class': 'form-control col-sm-10',
@@ -187,7 +168,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['nick_name', 'email', 'phone', 'post_code', 'address', 'detail_address','account_num']
+        fields = ['phone', 'post_code', 'address', 'detail_address','account_num']
 
 
 class AuthProfileForm(ProfileForm):

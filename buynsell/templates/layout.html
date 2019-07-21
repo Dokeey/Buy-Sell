@@ -171,7 +171,7 @@
                           {% if user.is_authenticated %}
 
                             <li class="dropdown">
-                              <a href="{% url "mypage:root" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ request.user.profile.nick_name }} PAGE<span class="caret"></span></a>
+                              <a href="{% url "mypage:root" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">MY PAGE<span class="caret"></span></a>
                               <ul class="dropdown-menu">
                                 <li><a href="{% url "trade:order_history" %}">구매 내역</a></li>
                                 <li><a href="{% url "trade:seller_history" %}">판매 내역</a></li>
@@ -231,7 +231,7 @@
 
                   <form class="navbar-form" action="{% url "category:search_item" %}" style="left: 50%; transform: translatex(3%); padding-right: 30px;padding-bottom: 1px; padding-top: 1px; border:none" >
                     <div class="input-group">
-                      <input name="query" value="{{ query }}" type="search" size="60" class="form-control" placeholder="어떤 물품을 찾고계세요?">
+                      <input name="query" value="{{ query }}" type="search" size="60" class="form-control" placeholder="{{ request.user }}님 어떤 물품을 찾고계세요?">
                       <span class="input-group-btn">
                         <button class="btn btn-primary" type="submit" style="border:1px solid #0fd9a6;">
                             <i class="fa fa-search"></i>
@@ -319,7 +319,7 @@
 
             {% if messages %}                            <!-- message -->
                 {% for message in messages %}
-                <div class="col-xs-12" style="padding: 20px;">
+                <div class="col-xs-12" style="padding-top: 20px;">
                     <div class="text-center alert alert-{{ message.tags }} alert-dismissible" role="alert">
                       {{ message }}
                     </div>

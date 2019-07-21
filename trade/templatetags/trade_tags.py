@@ -116,7 +116,7 @@ def item_block(item):
                updated_at=updated_at,
                created_at=created_at,
                updated_str=updated_str,
-               user=item.user.profile.nick_name,
+               user=item.user.storeprofile.name,
                user_link=user_link,
                wishlist_link=wishlist_link,
                )

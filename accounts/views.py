@@ -40,7 +40,7 @@ class SignupView(CreateView):
         return super().get(request, *args, **kwargs)
 
     def get_success_url(self):
-        messages.info(self.request, '회원가입을 축하드립니다!')
+        messages.success(self.request, '회원님의 입력한 Email 주소로 인증 메일이 발송되었습니다. 메일을 확인하시고 로그인 해주세요!')
         return settings.LOGIN_URL
 
 
