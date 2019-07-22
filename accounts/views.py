@@ -138,13 +138,14 @@ def activate(request, uidb64, token):
         uid = force_text(urlsafe_base64_decode(uidb64.encode('utf-8')))
         current_user = User.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
-        raise None
+        messages.error(request, '메일 인증이 실패되었습니다.')
+        return redirect('accounts:login')
 
     if default_token_generator.check_token(current_user, token):
         current_user.is_active = True
         current_user.save()
 
-        messages.info(request, '메일 인증이 완료 되었습니다.')
+        messages.info(request, '메일 인증이 완료 되었습니다. 회원가입을 축하드립니다!')
         return redirect('accounts:login')
 
     messages.error(request, '메일 인증이 실패되었습니다.')

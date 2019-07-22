@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator, default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
-from django.core.mail import send_mail
 from django.core.validators import validate_email, validate_integer, RegexValidator, \
     MaxLengthValidator  # 이메일 문법을 검사하는 클래스
 from django import forms
@@ -12,6 +11,8 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from store.models import StoreProfile
+
+from accounts.supporter import send_mail
 from .models import Profile
 
 User = get_user_model()
@@ -106,14 +107,13 @@ class SignupForm(UserCreationForm):
 
             # 회원가입 인증 메일 발송
             send_mail(
-                'hello,' + user.username,
+                '[Buy & Sell] {}님의 회원가입 인증메일 입니다.'.format(user.username),
                 '',
-                'buynsell',
+                'BuynSell',
                 [user.email],
-                fail_silently=False,
-                html_message=render_to_string('accounts/user_activate_email.html', {
+                html=render_to_string('accounts/user_activate_email.html', {
                     'user': user,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode('utf-8'),
+                    'uid': urlsafe_base64_encode(force_bytes(user.id)).decode('utf-8'),
                     'domain': 'localhost:8000',
                     'token': default_token_generator.make_token(user),
                 }),
