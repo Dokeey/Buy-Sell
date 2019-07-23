@@ -1,12 +1,6 @@
 {% load staticfiles %}
-{% load trade_tags %}
 
-<link rel="stylesheet" href="{% static "css/theme.css" %}"> <!-- Custom bootstrap -->
-<script src="//code.jquery.com/jquery-2.2.4.min.js"></script> <!-- Jquery -->
-<script src="{% static 'js/bootstrap.js' %}"></script> <!-- Custom bootstrap JS -->
 
-<link rel="stylesheet" href="{% static "css/all.css" %}"> <!-- Font Awesome -->
-<script src="{% static 'js/all.js' %}"></script> <!-- Font Awesome JS -->
 <!------ Include the above in your HEAD tag ---------->
 
 <!--
@@ -113,8 +107,8 @@ html { -webkit-text-size-adjust:none; -ms-text-size-adjust: none;}
 							<!-- padding --><div style="height: 20px; line-height: 20px; font-size: 10px;"> </div>
 							<table width="150" border="0" cellspacing="0" cellpadding="0" >
 								<tr><td align="left" valign="top" class="mob_center">
-									<a href="{% url "root" %}" target="_blank" style="color: #596167; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">
-									<img class="img-responsive" src="{% static "img/logo.jpg" %}"></a>
+									<a href="http://{{ domain }}{% url "root" %}" target="_blank" style="color: #596167; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">
+									<img class="img-responsive" style="height: 20px;"  src="http://{{ domain }}{% static "img/logo.jpg" %}"></a>
 								</td></tr>
 							</table>
 						</td></tr>
@@ -131,29 +125,8 @@ html { -webkit-text-size-adjust:none; -ms-text-size-adjust: none;}
 	<!--content 1 -->
 	<tr><td align="center" bgcolor="#fbfcfd">
 		<table width="90%" border="0" cellspacing="0" cellpadding="0">
-			<tr><td align="center">
-				<!-- padding --><div style="height: 60px; line-height: 60px; font-size: 10px;"> </div>
-				<div style="line-height: 44px;">
-					<font face="Arial, Helvetica, sans-serif" size="5" color="#57697e" style="font-size: 34px;">
-					<span style="font-family: Arial, Helvetica, sans-serif; font-size: 34px; color: #57697e;">
-						물품에 문의글이 등록되었습니다.
-					</span></font>
-				</div>
-				<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
-			</td></tr>
-			<tr><td align="center">
-				<div style="line-height: 24px;">
-                    {% item_block item %}
-				</div>
-				<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
-			</td></tr>
-			<tr><td align="center">
-				<div style="line-height: 24px;">
-					<a href="http://{{ request.META.HTTP_HOST }}{% url "trade:item_detail" item.id %}" target="_blank" class="btn btn-primary">
-						확인하러 가기</a>
-				</div>
-				<!-- padding --><div style="height: 60px; line-height: 60px; font-size: 10px;"> </div>
-			</td></tr>
+			{% block content %}
+            {% endblock %}
 		</table>
 	</td></tr>
 	<!--content 1 END-->
@@ -171,7 +144,7 @@ html { -webkit-text-size-adjust:none; -ms-text-size-adjust: none;}
 							<div style="line-height: 14px;">
 								<font face="Arial, Helvetica, sans-serif" size="3" color="#4db3a4" style="font-size: 14px;">
 								<strong style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #4db3a4;">
-									<a href="#1" target="_blank" style="color: #4db3a4; text-decoration: none;">간편하게 결제하세요</a>
+									<a href="http://{{ domain }}{% url "root" %}" target="_blank" style="color: #4db3a4; text-decoration: none;">간편하게 결제하세요</a>
 								</strong></font>
 							</div>
 							<!-- padding --><div style="height: 18px; line-height: 18px; font-size: 10px;"> </div>
@@ -194,7 +167,7 @@ html { -webkit-text-size-adjust:none; -ms-text-size-adjust: none;}
 							<div style="line-height: 14px;">
 								<font face="Arial, Helvetica, sans-serif" size="3" color="#4db3a4" style="font-size: 14px;">
 								<strong style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #4db3a4;">
-									<a href="#2" target="_blank" style="color: #4db3a4; text-decoration: none;">편리하게 관리하세요</a>
+									<a href="http://{{ domain }}{% url "root" %}" target="_blank" style="color: #4db3a4; text-decoration: none;">편리하게 관리하세요</a>
 								</strong></font>
 							</div>
 							<!-- padding --><div style="height: 18px; line-height: 18px; font-size: 10px;"> </div>
@@ -215,7 +188,7 @@ html { -webkit-text-size-adjust:none; -ms-text-size-adjust: none;}
 							<div style="line-height: 14px;">
 								<font face="Arial, Helvetica, sans-serif" size="3" color="#4db3a4" style="font-size: 14px;">
 								<strong style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #4db3a4;">
-									<a href="#3" target="_blank" style="color: #4db3a4; text-decoration: none;">순위를 확인하세요</a>
+									<a href="http://{{ domain }}{% url "root" %}" target="_blank" style="color: #4db3a4; text-decoration: none;">순위를 확인하세요</a>
 								</strong></font>
 							</div>
 							<!-- padding --><div style="height: 18px; line-height: 18px; font-size: 10px;"> </div>
@@ -255,10 +228,10 @@ html { -webkit-text-size-adjust:none; -ms-text-size-adjust: none;}
 	<!-- padding --><div style="height: 80px; line-height: 80px; font-size: 10px;"> </div>
 	</td></tr>
 </table>
-<!--[if gte mso 10]>
+<!--[if gte mso 10]-->
 </td></tr>
 </table>
-<![endif]-->
+<!--[endif]-->
 
 </td></tr>
 </table>

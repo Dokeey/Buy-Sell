@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import RedirectView, ListView, TemplateView, DetailView, DeleteView, UpdateView, CreateView
@@ -13,6 +14,8 @@ from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 
 from trade.models import Item
+
+from accounts.supporter import send_mail
 from .models import StoreProfile, QuestionComment, StoreGrade
 from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 
@@ -117,6 +120,21 @@ class StoreQuestionLCView(CreateView):
         comment.store_profile_id= self.kwargs['pk']
         comment.author=self.request.user
         comment.save()
+
+        # 물품 주문알림 메일 발송
+        self.object = form.save()
+        if self.model.objects.filter(store_profile=self.object.store_profile).count() % 5 == 1:
+            send_mail(
+                '[Buy & Sell] {}님의 가게에 문의가 등록되었습니다.'.format(self.object.store_profile.user.username),
+                '',
+                'BuynSell',
+                [self.object.store_profile.user.email],
+                html=render_to_string('store/store_comment_alert.html', {
+                    'user': self.object.store_profile.user,
+                    'domain': self.request.META['HTTP_HOST'],
+                    'store': self.object.store_profile,
+                }),
+            )
         return redirect('store:store_question', self.kwargs['pk'])
 
 class StoreQuestionEditView(UpdateView):

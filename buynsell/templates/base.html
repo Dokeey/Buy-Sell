@@ -7,12 +7,12 @@
 
 {% block content %}
 <style>
-.carousel {
+.sub.carousel {
     margin-bottom: 0;
     padding: 0 40px 30px 40px;
 }
 /* The controlsy */
-.carousel-control {
+.sub .carousel-control.left {
 	left: -12px;
     height: 40px;
 	width: 40px;
@@ -21,11 +21,21 @@
     border-radius: 23px 23px 23px 23px;
     margin-top: 75px;
 }
-.carousel-control.right {
+.sub .carousel-control.right {
 	right: -12px;
+    height: 40px;
+	width: 40px;
+    background: none repeat scroll 0 0 #222222;
+    border: 4px solid #FFFFFF;
+    border-radius: 23px 23px 23px 23px;
+    margin-top: 90px;
 }
-.event .carousel-control {
-    margin-top: 165px;
+.carousel-control {
+    border-radius: 5px;
+    margin: 0 0 30px 0;
+}
+.carousel {
+    padding: 0 0 30px 0;
 }
 /* The indicators */
 .carousel-indicators {
@@ -133,100 +143,96 @@ background: #0fd9a6;
     });
 
 </script>
-<div class="container-fluid" style="margin:20px;">
-    <div id="text-center" align="center">
-        <!-- Slider -->
-        <div class="col-xs-12" style="padding:0px">
-            <!-- Top part of the slider -->
-            <div class="event carousel slide" data-ride="carousel" id="EventCarousel">
 
-                <ol class="carousel-indicators">
-                    <li data-target="#EventCarousel" data-slide-to="0" class="active"></li>
-                    <li data-target="#EventCarousel" data-slide-to="1"></li>
-                    <li data-target="#EventCarousel" data-slide-to="2"></li>
-                    <li data-target="#EventCarousel" data-slide-to="3"></li>
-                </ol>
-                <!-- Carousel items -->
-                <div class="carousel-inner">
-                    <div class="active item">
-                    <img class="img-responsive" src="{% static "img/switch_banner.jpg" %}" style="width:800px;height:370px;"></div>
+    <div class="col-xs-12" align="center" style="padding:30px 0 0 0;">
+        <div class="carousel slide" data-ride="carousel" id="EventCarousel">
 
-                    <div class="item">
-                    <img class="img-responsive" src="{% static "img/iphone_banner.jpg" %}" style="width:800px;height:370px;"></div>
+            <ol class="carousel-indicators">
+                <li data-target="#EventCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#EventCarousel" data-slide-to="1"></li>
+                <li data-target="#EventCarousel" data-slide-to="2"></li>
+                <li data-target="#EventCarousel" data-slide-to="3"></li>
+            </ol>
+            <!-- Carousel items -->
+            <div class="carousel-inner" style="margin:0; padding:0">
+                <div class="active item">
+                <img class="img-responsive" src="{% static "img/iphone_banner.jpg" %}" style="width:979px;height:auto;"></div>
 
-                    <div class="item">
-                    <img class="img-responsive" src="{% static "img/main2.png" %}" style="width:800px;height:370px;"></div>
+                <div class="item">
+                <img class="img-responsive" src="{% static "img/switch_banner.jpg" %}" style="width:979px;height:auto;"></div>
 
-                    <div class="item">
-                    <img class="img-responsive" src="{% static "img/고양이.png" %}" style="width:800px;height:370px;"></div>
-                </div><!-- Carousel nav -->
-                <a class="carousel-control left" data-slide="prev" href="#EventCarousel" style="font-size:10px;"><div style="margin-top:6px;"><i class="fas fa-angle-left fa-2x"></i></div></a>
-                <a class="carousel-control right" data-slide="next" href="#EventCarousel" style="font-size:10px;"><div style="margin-top:6px;"><i class="fas fa-angle-right fa-2x"></i></div></a>
-            </div>
-        </div><!--/Slider-->
-    </div>
-</div>
-<hr>
+                <div class="item">
+                <img class="img-responsive" src="{% static "img/apple_banner.jpg" %}" style="width:979px;height:auto;"></div>
 
-
-<section class="call-to-action text-center">
-    <div class="container">
-        <div class="row">
-            <h1>믿고 쓰는 Buy & Sell</h1>
-            <p>What?
-                </p>
-            </div>
-    	<div class="col-xs-12 col-sm-4 ">
-            <div class="offer offer-default thumbnail">
-				<div class="offer-content ">
-					<h3 class="lead">
-						<i class="fas fa-credit-card" style="color:#0fd9a6"></i> 간편하게 결제하세요 <br>
-					</h3>
-					<p>
-						불안한 중고거래는 이제 그만하셔도 됩니다.<br>
-						<br>
-                        저희가 도와드리겠습니다.
-                        간편한 <span style="font-weight:bold">카드결제</span>와 <span style="font-weight:bold">계좌이체</span> 거래로 편리하게 거래하세요.
-					</p>
-				</div>
-			</div>
-         </div>
-        <div class="col-xs-12 col-sm-4">
-           <div class="offer offer-default thumbnail">
-				<div class="offer-content">
-					<h3 class="lead">
-						<i class="fas fa-tasks" style="color:#0fd9a6"></i> 편리하게 관리하세요
-					</h3>
-					<p>
-                        <span style="font-weight:bold">MY PAGE</span>에서 물품을 등록, 거래 내역 관리, 프로필 관리, 찜 목록, 팔로워 등을 관리해보세요<br><br>
-                        <span style="font-weight:bold">내 가게</span>에서는 등록한 물품을 확인하고 관리하며 내 가게의 평판이나 문의사항들을 확인하세요
-						<br><br>
-					</p>
-				</div>
-			</div>
-            </a>
+                <div class="item">
+                <img class="img-responsive" src="{% static "img/dog_banner.jpg" %}" style="width:979px;height:auto;"></div>
+            </div><!-- Carousel nav -->
+            <!--<a class="carousel-control left" data-slide="prev" href="#EventCarousel" style="font-size:10px;"><div style="margin-top:6px;"><i class="fas fa-angle-left fa-2x"></i></div></a>-->
+            <!--<a class="carousel-control right" data-slide="next" href="#EventCarousel" style="font-size:10px;"><div style="margin-top:6px;"><i class="fas fa-angle-right fa-2x"></i></div></a>-->
+            <a class="left carousel-control" href="#EventCarousel" data-slide="prev"><span class="glyphicon-chevron-left fas fa-angle-left"></span></a>
+            <a class="right carousel-control" href="#EventCarousel" data-slide="next"><span class="glyphicon-chevron-left fas fa-angle-right"></span></a>
         </div>
-    	<div class="col-xs-12 col-sm-4">
-           <div class="offer offer-default thumbnail">
-				<div class="offer-content">
-					<h3 class="lead">
-						<i class="fas fa-crown" style="color:#0fd9a6"></i> 순위를 확인해보세요
-					</h3>
-					<p>
-						각 분야에서 자신과 사람들의 명성을 떨치고있는 가게들을 확인해보세요.
-                        <br><br>어쩌면 가게를 <span style="font-weight:bold">신뢰</span>하는데 도움이 될수도 있습니다.<br>
-					</p>
-				</div>
-			</div>
-            </a>
-        </div>
+    <hr>
     </div>
-</section>
+
+    <section class="call-to-action text-center">
+        <div class="container-fluid" style="margin:10;padding:10;">
+            <div class="row">
+                <h1>믿고 쓰는 Buy & Sell</h1>
+                <p>What?
+                    </p>
+                </div>
+            <div class="col-xs-12 col-sm-4 ">
+                <div class="offer offer-default thumbnail">
+                    <div class="offer-content ">
+                        <h3 class="lead">
+                            <i class="fas fa-credit-card" style="color:#0fd9a6"></i> 간편하게 결제하세요 <br>
+                        </h3>
+                        <p>
+                            불안한 중고거래는 이제 그만하셔도 됩니다.<br>
+                            <br>
+                            저희가 도와드리겠습니다.
+                            간편한 <span style="font-weight:bold">카드결제</span>와 <span style="font-weight:bold">계좌이체</span> 거래로 편리하게 거래하세요.
+                        </p>
+                    </div>
+                </div>
+             </div>
+            <div class="col-xs-12 col-sm-4">
+               <div class="offer offer-default thumbnail">
+                    <div class="offer-content">
+                        <h3 class="lead">
+                            <i class="fas fa-tasks" style="color:#0fd9a6"></i> 편리하게 관리하세요
+                        </h3>
+                        <p>
+                            <span style="font-weight:bold">MY PAGE</span>에서 물품을 등록, 거래 내역 관리, 프로필 관리, 찜 목록, 팔로워 등을 관리해보세요<br><br>
+                            <span style="font-weight:bold">내 가게</span>에서 등록한 물품을 확인하고 관리하며 내 가게의 평판이나 문의사항들을 확인하세요
+                            <br><br>
+                        </p>
+                    </div>
+                </div>
+                </a>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+               <div class="offer offer-default thumbnail">
+                    <div class="offer-content">
+                        <h3 class="lead">
+                            <i class="fas fa-crown" style="color:#0fd9a6"></i> 순위를 확인해보세요
+                        </h3>
+                        <p>
+                            각 분야에서 자신과 사람들의 명성을 떨치고있는 가게들을 확인해보세요.
+                            <br><br>어쩌면 가게를 <span style="font-weight:bold">신뢰</span>하는데 도움이 될수도 있습니다.<br>
+                        </p>
+                    </div>
+                </div>
+                </a>
+            </div>
+        </div>
+    </section>
 
 {% category_menu as category %}
 {% recursetree category %}
     {% if node.is_root_node %}
-<div class="container-fluid" style="margin:20px;">
+<div class="container-fluid" style="margin-top:20px;">
     <div class="row">
         {% child_category_items node as items %}
         <h2>{{ node.name }} <small><a href="{% url "category:category_item" node.id %}">{{ items.count }}개 보러가기</a></small></h2>
@@ -234,7 +240,7 @@ background: #0fd9a6;
     </div>
     <div class="row">
 		<div class="col-md-12">
-            <div id="Carousel-{{ node.id }}" class="cate-carousel carousel slide">
+            <div id="Carousel-{{ node.id }}" class="sub cate-carousel carousel slide">
 
                 <ol class="carousel-indicators">
 
@@ -298,7 +304,7 @@ background: #0fd9a6;
 
 <hr>
 <section class="call-to-action text-center" style="margin-bottom:100px">
-    <div class="container">
+    <div class="container-fluid" style="margin:10;padding:10;">
         <div class="row">
             <h1>바로 시작해보세요!</h1>
             <p>How?

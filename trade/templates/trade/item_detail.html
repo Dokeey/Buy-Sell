@@ -44,7 +44,7 @@
                 {
                   title: '빨리 사러가자!',
                   link: {
-                    mobileWebUrl: 'http://http://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                    mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
                     webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
                   }
                 }
@@ -291,7 +291,7 @@
                             <div class="row">
                                 <div class="col-sm-2 col-xs-3 profile-img" style="margin-top:5px">
                                     <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
-                                        <img class="img-rounded img-thumbnail img-responsive" src="{{ comment.user.storeprofile.photo.url }}"/>
+                                        <img style="padding:0px" class="img-rounded img-thumbnail img-responsive" src="{{ comment.user.storeprofile.photo.url }}"/>
                                     </a>
                                 </div><div class="col-xs-9 col-sm-10 vcenter ">
                                 <div class="col-sm-12 col-xs-12 clearfix bubble" style="margin:5px;padding:10px;">
@@ -323,7 +323,7 @@
                                     <div class="row">
                                         <div class="col-sm-2 col-xs-3 profile-img" style="margin-top:15px">
                                             <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
-                                                <img class="img-rounded img-thumbnail img-responsive" src="{{ replay.user.storeprofile.photo.url }}"/>
+                                                <img style="padding:0px" class="img-rounded img-thumbnail img-responsive" src="{{ replay.user.storeprofile.photo.url }}"/>
                                             </a>
                                         </div><div class="col-xs-9 col-sm-10 vcenter ">
                                             <div class="col-sm-12 col-xs-12 clearfix bubble" style="margin:10px;padding:10px;">

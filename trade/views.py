@@ -3,26 +3,28 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, RedirectView, \
-    TemplateView
-from django.views.generic.detail import SingleObjectMixin
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView, RedirectView, TemplateView
 from django.views.generic.list import MultipleObjectMixin
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 
-from category.models import Category
 from accounts.models import Profile
 from mypage.models import WishList, Follow
+
+from accounts.supporter import send_mail
 from .models import Item, ItemImage, ItemComment, Order
 from .forms import ItemForm, ItemUpdateForm, ItemCommentForm, PayForm, OrderForm
 
 from time import time
 
 def test(request):
-    return render(request, 'trade/test.html')
+    return render(request, 'trade/test.html', {
+        'item': get_object_or_404(Item, id=5000)
+    })
 # @login_required
 # def item_new(request):
 #     if request.method == "POST":
@@ -170,8 +172,23 @@ class ItemDetail(MultipleObjectMixin, CreateView):
                 form.instance.parent = parent_obj
 
         form.instance.user = self.request.user
-        form.instance.item = get_object_or_404(Item, pk=self.kwargs.get('pk'))
-        return super().form_valid(form)
+        item = get_object_or_404(Item, pk=self.kwargs.get('pk'))
+        form.instance.item = item
+        self.object = form.save()
+        # 물품 문의알림 메일 발송
+        if item.itemcomment_set.all().count() % 5 == 1:
+            send_mail(
+                '[Buy & Sell] {}님 물품에 문의글이 생겼습니다.'.format(item.user.username),
+                '',
+                'BuynSell',
+                [item.user.email],
+                html=render_to_string('trade/item_comment_alert.html', {
+                    'user': item.user,
+                    'domain': self.request.META['HTTP_HOST'],
+                    'item': item,
+                }),
+            )
+        return redirect(self.get_success_url())
 
 
     def get_success_url(self):
@@ -418,6 +435,19 @@ class OrderNew(FormView):
             reserv_order = Order.objects.get(user=self.request.user, merchant_uid=order.merchant_uid, status='reserv')
             reserv_order.update()
 
+            # 물품 주문알림 메일 발송
+            send_mail(
+                '[Buy & Sell] 구매자가 {}님의 물품을 예약하였습니다.'.format(item.user.username),
+                '',
+                'BuynSell',
+                [item.user.email],
+                html=render_to_string('trade/item_sell_alert.html', {
+                    'user': item.user,
+                    'domain': self.request.META['HTTP_HOST'],
+                    'item': item,
+                }),
+            )
+
             return redirect('trade:trade_info', reserv_order.id)
 
     def get_success_url(self):
@@ -455,6 +485,23 @@ class OrderPay(CreateView):
             'instance': get_object_or_404(Order, user=self.request.user, merchant_uid=self.kwargs.get('merchant_uid'), status='ready'),
         })
         return kwargs
+
+    def form_valid(self, form):
+
+        # 물품 주문알림 메일 발송
+        self.object = form.save()
+        send_mail(
+            '[Buy & Sell] 구매자가 {}님의 물품을 결제하였습니다.'.format(self.object.item.user.username),
+            '',
+            'BuynSell',
+            [self.object.item.user.email],
+            html=render_to_string('trade/item_sell_alert.html', {
+                'user': self.object.item.user,
+                'domain': self.request.META['HTTP_HOST'],
+                'item': self.object.item,
+            }),
+        )
+        return redirect(self.get_success_url())
 
 
 

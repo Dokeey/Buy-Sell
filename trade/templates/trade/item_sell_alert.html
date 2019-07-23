@@ -1,4 +1,6 @@
 {% extends "email_layout.html" %}
+{% load humanize %}
+{% load trade_tags %}
 
 {% block content %}
 	<!--content 1 -->
@@ -9,23 +11,29 @@
 				<div style="line-height: 44px;">
 					<font face="Arial, Helvetica, sans-serif" size="5" color="#57697e" style="font-size: 34px;">
 					<span style="font-family: Arial, Helvetica, sans-serif; font-size: 34px; color: #57697e;">
-                        가입 인증을 통해 buynsell을 이용해 보세요.
+						구매자가 물품을 주문하였습니다.
 					</span></font>
 				</div>
 				<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
 			</td></tr>
 			<tr><td align="center">
 				<div style="line-height: 24px;">
+					<a style="text-decoration: none;" href="http://{{ domain }}{% url "trade:item_detail" item.id %}" target="_blank" class="btn btn-primary">
+                    <img style="height: 200px;border: 1px solid #999999; border-radius: 15px;" src="http://{{ domain }}{{ item.itemimage_set.first.photo.url }}" target="_blank" class="btn btn-primary"><br>
 					<font face="Arial, Helvetica, sans-serif" size="4" color="#57697e" style="font-size: 15px;">
 					<span style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #57697e;">
-						아래 링크를 통해서 인증을 완료하실 수 있습니다.
+						물품 : {{ item.title }}<br>
+						가격 : {{ item.amount|intcomma }} 원<br>
+						재고 : {{ item.get_pay_status_display }}
 					</span></font>
+					</a>
 				</div>
 				<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
 			</td></tr>
 			<tr><td align="center">
 				<div style="line-height: 24px;">
-                    <a style="color: #4db3a4; text-decoration: none;font-size:20px;" target="_blank" href="http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}" >인증하기</a>
+					<a style="color: #4db3a4; text-decoration: none;font-size:20px;" target="_blank" href="http://{{ domain }}{% url "trade:seller_history" %}" class="btn btn-primary">
+						확인하러 가기</a>
 				</div>
 				<!-- padding --><div style="height: 60px; line-height: 60px; font-size: 10px;"> </div>
 			</td></tr>
@@ -33,5 +41,3 @@
 	</td></tr>
 	<!--content 1 END-->
 {% endblock %}
-
-

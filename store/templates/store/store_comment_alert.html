@@ -9,7 +9,7 @@
 				<div style="line-height: 44px;">
 					<font face="Arial, Helvetica, sans-serif" size="5" color="#57697e" style="font-size: 34px;">
 					<span style="font-family: Arial, Helvetica, sans-serif; font-size: 34px; color: #57697e;">
-                        가입 인증을 통해 buynsell을 이용해 보세요.
+                        가게에 문의글이 등록되어 알려드립니다.
 					</span></font>
 				</div>
 				<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
@@ -18,14 +18,15 @@
 				<div style="line-height: 24px;">
 					<font face="Arial, Helvetica, sans-serif" size="4" color="#57697e" style="font-size: 15px;">
 					<span style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #57697e;">
-						아래 링크를 통해서 인증을 완료하실 수 있습니다.
+						손님들의 궁금한 사항들을 해결해주세요!<br>
+						문의글 수 : {{ store.questioncomment_set.all.count }} 개
 					</span></font>
 				</div>
 				<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
 			</td></tr>
 			<tr><td align="center">
 				<div style="line-height: 24px;">
-                    <a style="color: #4db3a4; text-decoration: none;font-size:20px;" target="_blank" href="http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}" >인증하기</a>
+                    <a style="color: #4db3a4; text-decoration: none;font-size:20px;" target="_blank" href="http://{{ domain }}{% url "store:store_question" store.id %}" >확인하러 가기</a>
 				</div>
 				<!-- padding --><div style="height: 60px; line-height: 60px; font-size: 10px;"> </div>
 			</td></tr>

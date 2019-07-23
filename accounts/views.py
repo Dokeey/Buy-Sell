@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model, logout
+from django.contrib.auth import get_user_model, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.tokens import default_token_generator
@@ -11,10 +11,12 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.utils.encoding import force_text
-from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_text, force_bytes
 from django.views.generic import CreateView, TemplateView, UpdateView, DeleteView, FormView
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
+from accounts.supporter import send_mail
 from .models import Profile
 from .forms import SignupForm, AuthProfileForm, CustomPasswordChangeForm, CustomAuthenticationForm, CheckPasswordForm
 
@@ -42,6 +44,24 @@ class SignupView(CreateView):
     def get_success_url(self):
         messages.success(self.request, '회원님의 입력한 Email 주소로 인증 메일이 발송되었습니다. 메일을 확인하시고 로그인 해주세요!')
         return settings.LOGIN_URL
+
+    def form_valid(self, form):
+        self.object = form.save()
+
+        # 회원가입 인증 메일 발송
+        send_mail(
+            '[Buy & Sell] {}님의 회원가입 인증메일 입니다.'.format(self.object.username),
+            '',
+            'BuynSell',
+            [self.object.email],
+            html=render_to_string('accounts/user_activate_email.html', {
+                'user': self.object,
+                'uid': urlsafe_base64_encode(force_bytes(self.object.id)).decode('utf-8'),
+                'domain': self.request.META['HTTP_HOST'],
+                'token': default_token_generator.make_token(self.object),
+            }),
+        )
+        return redirect(self.get_success_url())
 
 
 
@@ -108,7 +128,24 @@ class PasswordChange(PasswordChangeView):
             errors = form._errors.setdefault("new_password1", ErrorList())
             errors.append("이전 비밀번호와 동일합니다.")
             return self.form_invalid(form)
-        return super().form_valid(form)
+
+        form.save()
+        # Updating the password logs out all other sessions for the user
+        # except the current one.
+        update_session_auth_hash(self.request, form.user)
+
+        # 회원가입 인증 메일 발송
+        send_mail(
+            '[Buy & Sell] {}님 방금 패스워드를 변경하셨습니다.'.format(self.request.user.username),
+            '',
+            'BuynSell',
+            [self.request.user.email],
+            html=render_to_string('accounts/password_change_alert.html', {
+                'user': self.request.user,
+                'domain': self.request.META['HTTP_HOST'],
+            }),
+        )
+        return redirect(self.get_success_url())
 
 
 

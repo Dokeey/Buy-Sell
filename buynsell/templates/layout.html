@@ -14,8 +14,8 @@
     <script src="//code.jquery.com/jquery-2.2.4.min.js"></script> <!-- Jquery -->
     <script src="{% static 'js/bootstrap.js' %}"></script> <!-- Custom bootstrap JS -->
 
-    <link rel="stylesheet" href="{% static "css/all.css" %}"> <!-- bootstrap -->
-    <script src="{% static 'js/all.js' %}"></script> <!-- bootstrap JS -->
+    <link rel="stylesheet" href="{% static "css/all.css" %}"> <!-- Font Awesome -->
+    <script src="{% static 'js/all.js' %}"></script> <!-- Font Awesome JS -->
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"> <!-- Favicon -->
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script> <!-- Kakao Talk -->
 
@@ -112,13 +112,19 @@
            border-radius: 5px;
          }
          .thumbnail-description {
-           min-height: 90px;
+           min-height: 100px;
          }
          .thumbnail:hover {
            cursor: auto;
            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 1);
          }
-         .thumbnail-description > b,
+         .thumbnail-description > b {
+             display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+         }
          .thumbnail-description > .list-inline b{
             white-space: nowrap;
             overflow: hidden;
@@ -218,14 +224,16 @@
 
     <nav class="navbar navbar-default header" id="myHeader" style="border-bottom: 1px solid #bbbbbb; ">
         <div class="container-fluid">
-            <div class="container-fluid col-sm-3 col-xs-5" name="menu-collaps" >
-                <div class="row"  style=" " >
-                    <a class="navbar-brand" style="color: #0fd9a6" href="{% url "root" %}">Buy & Sell</a>
+            <div class="container-fluid col-sm-3 col-xs-4" name="menu-collaps" >
+                <div class="row">
+                    <a style="color: #0fd9a6;font-family: Stencil" href="{% url "root" %}">
+                        <img class="img-responsive" style="height:35px;padding-top:5px;" src="{% static "img/logo.jpg" %}">
+                    </a>
                 </div>
             </div>
 
 
-              <div class="container-fluid col-sm-6 col-xs-7"style="" name="menu-layout">
+              <div class="container-fluid col-sm-6 col-xs-8"style="" name="menu-layout">
 
                 <div class="row"  >
 
@@ -358,7 +366,7 @@
 <hr style="border-top: 1px solid #bbbbbb;margin-top:0px"/>
 <div class="container">
     <div class="container-fluid" name="footer" style="padding:15px;">
-        <h3>Buy & Sell<br><small>안전하고 아름다운 중고거래를 만들어 가고자 합니다.</small></h3><br>
+        <h3><img class="img-responsive" style="height:20px;" src="{% static "img/logo.jpg" %}"><small>안전하고 아름다운 중고거래를 만들어 가고자 합니다.</small></h3><br>
 
 대표이사 : 예진이 개인정보보호담당자 : 황예진 사업자등록정보 : 123-45-67890 통신판매업신고 : 1111-서울-2222<br>
 주소 : 서울특별시 관악구 신림동 TEL/FAX 02-123-4567/010-123-1234 <br>
