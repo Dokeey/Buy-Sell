@@ -21,7 +21,7 @@ class StoreProfile(models.Model, HitCountMixin):
         default=get_random,
         upload_to='profile/storephoto',
         processors=[ResizeToFill(200, 200)],
-        format='PNG',
+        format='JPEG',
         options={'quality': 60}
 
     )
@@ -29,6 +29,9 @@ class StoreProfile(models.Model, HitCountMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk',
                                         related_query_name='hit_count_generic_relation')
+
+    def __str__(self):
+        return self.name
 
 from django.contrib.auth import get_user_model
 User = get_user_model()

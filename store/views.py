@@ -11,6 +11,8 @@ from django.views.generic import RedirectView, ListView, TemplateView, DetailVie
 from django.views.generic.edit import BaseUpdateView
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
+from rank import Rank
+
 from mypage.models import Follow
 from trade.models import Item, Order
 from .models import StoreProfile, QuestionComment, StoreGrade
@@ -25,7 +27,7 @@ class StarStoreSearchList(ListView):
     model = StoreProfile
     template_name = 'store/star_store_search.html'
     context_object_name = 'star_search'
-    paginate_by = 21
+    paginate_by = 6
     def get_queryset(self):
         self.query = self.request.GET.get('query','')
         self.qs = super().get_queryset()
@@ -35,6 +37,8 @@ class StarStoreSearchList(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(StarStoreSearchList, self).get_context_data()
+
+        #페이지네이션
         paginator = context['paginator']
         page_numbers_range = 5  # Display only 5 page numbers
         max_index = len(paginator.page_range)
@@ -53,6 +57,7 @@ class StarStoreSearchList(ListView):
         context['ctn'] = self.get_queryset().count()
         if self.query:
             context['query'] = self.query
+
         return context
 
 class StarStoreHitListView(ListView):
@@ -163,7 +168,7 @@ class StoreSellListView(ListView):
         self.queryset = self.store.user.item_set.all()
         return super().get_queryset()
 
-
+@method_decorator(login_required, name='dispatch')
 class StoreProfileEditView(UpdateView):
     form_class = StoreProfileForm
     model = StoreProfile
@@ -176,7 +181,7 @@ class StoreProfileEditView(UpdateView):
         return reverse_lazy("store:store_sell_list", kwargs={'pk': self.request.user.storeprofile.pk})
 
 
-
+@method_decorator(login_required, name='dispatch')
 class StoreQuestionLCView(CreateView):
 
     model = QuestionComment
@@ -220,7 +225,7 @@ class StoreQuestionLCView(CreateView):
 
         return context
         
-
+@method_decorator(login_required, name='dispatch')
 class StoreQuestionEditView(UpdateView):
     form_class = StoreQuestionForm
     model = QuestionComment
@@ -232,6 +237,7 @@ class StoreQuestionEditView(UpdateView):
     def get_success_url(self, **kwargs):
         return reverse_lazy("store:store_question", kwargs={'pk': self.kwargs['pk']})
 
+@method_decorator(login_required, name='dispatch')
 class StoreQuestionDelView(DeleteView):
     model = QuestionComment
     template_name = 'store/store_question_delete.html'
@@ -311,6 +317,8 @@ class StoreGradeListView(ListView):
         context['sort'] = self.request.GET.get('sort','recent')
         return context
 
+
+@method_decorator(login_required, name='dispatch')
 class StoreGradeCreateView(CreateView):
     model = StoreGrade
     form_class = StoreGradeForm
@@ -334,6 +342,8 @@ class StoreGradeCreateView(CreateView):
         gradeform.save()
         return redirect('store:store_grade', self.kwargs['pk'])
 
+
+@method_decorator(login_required, name='dispatch')
 class StoreGradeEditView(UpdateView):
     form_class = StoreGradeForm
     model = StoreGrade
@@ -350,6 +360,8 @@ class StoreGradeEditView(UpdateView):
     def get_success_url(self, **kwargs):
         return reverse_lazy("store:store_grade", kwargs={'pk': self.kwargs['pk']})
 
+
+@method_decorator(login_required, name='dispatch')
 class StoreGradeDelView(DeleteView):
     model = StoreGrade
     template_name = 'store/store_question_delete.html'

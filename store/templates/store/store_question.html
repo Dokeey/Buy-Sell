@@ -90,12 +90,12 @@ top: 33px;
     <div class="row" id="block-{{ comm.id }}" >
 
         <div class="col-md-3 col-xs-3 imggrid" align="center">
-             <img src="{{ comm.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
+             <img src="{{ comm.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="100px" height="100px" />
         </div>
 
         <div class="col-md-8 col-xs-8">
             <div class="bubble" >
-                {{ comm.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{% simple_time comm.updated_at %}
+                <a href="{% url 'store:store_sell_list' comm.author.storeprofile.pk %}">{{ comm.author }}</a>   &nbsp;&nbsp;  <i class="far fa-clock"></i>{% simple_time comm.updated_at %}
                 <div align="right" style="display: inline;float: right;" >
                     <!--댓글 수정 삭제 -->
                 {% if request.user.pk == comm.author.pk %}
@@ -119,10 +119,10 @@ top: 33px;
         <div class="row" id="block-{{ replay.id }}">
             <div class="col-md-1 col-xs-1" align="right"><i class="fas fa-reply fa-rotate-180"></i></i></div>
             <div class="col-md-3 col-xs-3 imggrid" align="center">
-                <img src="{{ replay.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
+                <img src="{{ replay.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="100px" height="100px" />
             </div>
 
-            <div class="col-md-8 col-xs-8">
+            <div class="col-md-8 col-xs-7">
 
                 <div class="bubble" >
                     {{ replay.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i> {% simple_time replay.updated_at %}
@@ -152,13 +152,13 @@ top: 33px;
              {% csrf_token %}
             <div class="row">
                 <div class="col-md-1 col-xs-1" align="right"><i class="fas fa-reply fa-rotate-180"></i></div>
-                <div class="col-md-8 col-xs-8">
+                <div class="col-md-9 col-xs-7">
                     {{ form.comment }}
 
                     <input type="hidden" name="parent_id" value="{{ comm.id }}">
                 </div>
-                <div class="col-md-3 col-xs-3">
-                    <input type="submit" class="btn btn-default block" value="등록">
+                <div class="col-md-2 col-xs-3">
+                    <input type="submit" class="btn btn-default" style="height:120px;width:100%" value="등록">
                 </div>
             </div>
         </form>

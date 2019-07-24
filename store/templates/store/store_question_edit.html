@@ -43,19 +43,20 @@ top: 33px;
 </style>
 {% endblock %}
 {% block content %}
-
+<div class="col-sm-11 col-sm-offset-1 text-center">
+            <h2><small>가게 문의글 수정</small></h2>
 <form action="" method="POST">
      {% csrf_token %}
      <div class="well">
     <div class="row">
-        <div class="col-md-8 col-xs-10" >
+        <div class="col-md-8 col-xs-9" >
             {{ form.comment }}
         </div>
-        <div class="col-md-3 col-xs-2" >
-            <input type="submit" class="btn btn-default block" value="등록">
+        <div class="col-md-3 col-xs-3" >
+            <input type="submit" class="btn btn-default" style="height:120px" value="등록">
         </div>
     </div>
 </div>
 </form>
-
+</div>
 {% endblock %}

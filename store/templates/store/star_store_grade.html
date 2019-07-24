@@ -11,7 +11,7 @@
     <div class="col-sm-7">
         <h2 class="gold text-center">평점 순위 <small> TOP.5 </small></h2><hr/>
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-offset-3 col-sm-9 col-xs-offset-1 col-xs-10">
                 <div class="relative"></div>
                 <div class="album_img">
                     <img src="{{stores.0.photo.url }}" width="300", height="300", style="
@@ -85,26 +85,27 @@
 
             {% if user.is_authenticated %}
             <div class="row">
-             <div class="col-sm-2">
-                 <h4 style="color:#EDA900">내 순위</h4>
+             <div class="col-sm-12">
+                 <h4><span style="color:#EDA900">내 순위</span>
+
                  {% if my_grade == 1 %}
-                    <h4 ><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
+                    <i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
                  {% elif my_grade == 2 %}
-                    <h4 ><i class="fas fa-trophy" style="color:#C0C0C0;"></i> 2위</h4>
+                    <i class="fas fa-trophy" style="color:#C0C0C0;"></i> 2위</h4>
                  {% elif my_grade == 3 %}
-                    <h4 ><i class="fas fa-trophy" style="color:#cd7f32;"></i> 3위</h4>
+                    <i class="fas fa-trophy" style="color:#cd7f32;"></i> 3위</h4>
                  {% else %}
-                    <h4 >{{ my_grade }}위</h4>
+                    {{ my_grade }}위</h4>
                  {% endif %}
              </div>
-             <div class="col-sm-2 col-xs-2">
+             <div class="col-sm-2 col-xs-3">
                 <img src="{{ request.user.storeprofile.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
              </div>
-             <div class="col-sm-8 col-xs-8">
+             <div class="col-sm-10 col-xs-9">
                 {{ request.user.storeprofile.name }}
                 <div class="row">
                     <br/>
-                <div class="col-sm-7 col-xs-7" style="font-size:20px; font-weight:bold;">
+                <div class="col-sm-7 col-xs-12" style="font-size:20px; font-weight:bold;">
                      {% store_rating request.user.storeprofile.pk as end %}
                                 {% if store.storegrade_set.all.count == 0 %}
                                 <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
@@ -139,7 +140,7 @@
             {% endif %}
             {% for store in stores|slice:"5" %}
                  <div class="row">
-                     <div class="col-sm-2">
+                     <div class="col-sm-12">
                          {% if forloop.counter == 1 %}
                             <h4 ><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
                          {% elif forloop.counter == 2 %}
@@ -150,15 +151,15 @@
                             <h4 >{{ forloop.counter }}위</h4>
                          {% endif %}
                      </div>
-                     <div class="col-sm-2 col-xs-2">
+                     <div class="col-sm-2 col-xs-3">
                         <img src="{{store.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
                      </div>
-                     <div class="col-sm-8 col-xs-8">
+                     <div class="col-sm-10 col-xs-9">
                         {{ store.name }}
 
                         <div class="row">
                             <br/>
-                        <div class="col-sm-5 col-xs-6" style="font-size:20px; font-weight:bold;">
+                        <div class="col-sm-5 col-xs-12" style="font-size:20px; font-weight:bold;">
                             {% store_rating store.pk as end %}
                                 {% if store.storegrade_set.all.count == 0 %}
                                 <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
@@ -186,7 +187,7 @@
                                     {% endif %}
                                 {% endif %}
                         </div>
-                        <div class="col-sm-7 col-xs-6">
+                        <div class="col-sm-7 col-xs-12">
                                <a class="btn btn-info" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
                                 <i class="fab fa-facebook" style="color:white"></i>
                             </a>
@@ -206,7 +207,8 @@
             {% endfor %}
     </div>
 
-    <div class="col-sm-5 col-xs-10"><h2 class="gold text-center">1등 가게 물품</h2><hr/>
+    <div class="col-sm-offset-0 col-sm-5 col-xs-offset-1 col-xs-10">
+        <h2 class="gold text-center">1등 가게 물품</h2><hr/>
         <div class="row">
             {% for item in stores.0.user.item_set.all|slice:"4" %}
                 <div class="col-sm-6 col-xs-12" style="padding:10px">
@@ -224,5 +226,19 @@
     </div>
 </div>
 
+
+<!-- search -->
+<div align="center">
+    <form style="width:60%;" action="{% url "store:star_store_search" %}">
+        <div class="input-group">
+          <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid #0fd9a6;" placeholder="가게 찾기" >
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="submit" style="border:1px solid #0fd9a6;">
+                <i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
+    <form/>
+</div>
 
 {% endblock %}

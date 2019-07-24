@@ -15,7 +15,7 @@
             <div class="col-sm-12">
                 <div class="relative"></div>
                 <div class="album_img">
-                    <img src="{{ follows.0.photo.url }}" width="300", height="300", style="
+                    <img src="{{ follows.0.photo.url }}" width="300" height="300" style="
     border-radius: 20px;", class="img-responsive " />
                 </div>
                 <div class="rank_music">
@@ -55,25 +55,26 @@
                 <hr/>
                 </div>
             </div>
+        <!-- 내 순위 -->
             {% if user.is_authenticated %}
             <div class="row">
-             <div class="col-sm-2">
-                 <h4 style="color:#EDA900">내 순위</h4>
+             <div class="col-sm-12">
+                 <h4><span style="color:#EDA900">내 순위</span>
 
                  {% if my_follow == 1 %}
-                    <h4 ><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
+                    <i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
                  {% elif my_follow == 2 %}
-                    <h4 ><i class="fas fa-trophy" style="color:#C0C0C0;"></i> 2위</h4>
+                    <i class="fas fa-trophy" style="color:#C0C0C0;"></i> 2위</h4>
                  {% elif my_follow == 3 %}
-                    <h4 ><i class="fas fa-trophy" style="color:#cd7f32;"></i> 3위</h4>
+                    <i class="fas fa-trophy" style="color:#cd7f32;"></i> 3위</h4>
                  {% else %}
-                    <h4 >{{ my_follow }}위</h4>
+                    {{ my_follow }}위</h4>
                  {% endif %}
              </div>
-             <div class="col-sm-2 col-xs-2">
+             <div class="col-sm-2 col-xs-3">
                 <img src="{{ request.user.storeprofile.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
              </div>
-             <div class="col-sm-8 col-xs-8">
+             <div class="col-sm-10 col-xs-9">
                 {{ request.user.storeprofile.name }}
                 <div class="row">
                     <br/>
@@ -85,9 +86,11 @@
             </div>
             <hr/>
             {% endif %}
+
+    <!--가게 순위-->
             {% for follow in  follows|slice:"5" %}
                  <div class="row">
-                     <div class="col-sm-2">
+                     <div class="col-sm-12">
                          {% if forloop.counter == 1 %}
                             <h4 ><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
                          {% elif forloop.counter == 2 %}
@@ -98,38 +101,39 @@
                             <h4 >{{ forloop.counter }}위</h4>
                          {% endif %}
                      </div>
-                     <div class="col-sm-2 col-xs-2">
+                     <div class="col-sm-2 col-xs-3">
                         <img src="{{ follow.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
                      </div>
-                     <div class="col-sm-8 col-xs-8">
+                     <div class="col-sm-10 col-xs-9">
                         {{ follow.name }}
 
                         <div class="row">
                             <br/>
-                        <div class="col-sm-3 col-xs-6" style="font-size:20px; font-weight:bold;">
-                             {{ follow.follow_set.all.count }}명
-                        </div>
-                        <div class="col-sm-8 col-xs-6">
-                               <a class="btn btn-info" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
-                                <i class="fab fa-facebook" style="color:white"></i>
-                            </a>
-                            <a class="btn btn-yellow" >
-                                <i class="fab fa-kickstarter-k"></i>
-                            </a>
-                             <a class="btn btn-warning btn-md" onclick = "location.href ='{% url "mypage:follow_new" follow.pk %}'">
-                                <i class="fas fa-user-plus"></i>
-                             </a>
-                            <div class="col-sm-12 col-xs-12" align="right">
-                            <a href="{% url 'store:store_sell_list' follow.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
+                            <div class="col-sm-4 col-xs-12" style="font-size:20px; font-weight:bold;">
+                                 {{ follow.follow_set.all.count }}명
                             </div>
-                        </div>
+                            <div class="col-sm-8 col-xs-12">
+                                   <a class="btn btn-info" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
+                                    <i class="fab fa-facebook" style="color:white"></i>
+                                </a>
+                                <a class="btn btn-yellow" >
+                                    <i class="fab fa-kickstarter-k"></i>
+                                </a>
+                                 <a class="btn btn-warning btn-md" onclick = "location.href ='{% url "mypage:follow_new" follow.pk %}'">
+                                    <i class="fas fa-user-plus"></i>
+                                 </a>
+                                <div class="col-sm-12 col-xs-12" align="right">
+                                <a href="{% url 'store:store_sell_list' follow.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
+                                </div>
+                            </div>
 
                      </div></div>
                 </div> <hr/>
             {% endfor %}
     </div>
 
-    <div class="col-sm-5 col-xs-10"><h2 class="gold text-center">1등 가게 물품</h2><hr/>
+    <div class="col-sm-offset-0 col-sm-5 col-xs-offset-1 col-xs-10">
+        <h2 class="gold text-center">1등 가게 물품</h2><hr/>
         <div class="row">
             {% for item in follows.0.user.item_set.all|slice:"4" %}
                 <div class="col-sm-6 col-xs-12" style="padding:10px">
@@ -146,4 +150,17 @@
         <hr/>
     </div>
 </div>
+
+    <div align="center">
+        <form style="width:60%;" action="{% url "store:star_store_search" %}">
+            <div class="input-group">
+              <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid #0fd9a6;" placeholder="가게 찾기" >
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="submit" style="border:1px solid #0fd9a6;">
+                    <i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+        <form/>
+        </div>
 {% endblock %}
