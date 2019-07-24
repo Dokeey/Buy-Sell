@@ -1,0 +1,55 @@
+{% extends "accounts/layout.html" %}
+
+{% block content %}
+<style>
+h4 {
+ border:0 solid #baf0e2;
+ border-bottom-width:1px;
+ padding-bottom:10px;
+ text-align: center;
+}
+.form-login {
+    background-color: #EDEDED;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 15px;
+    border-color:#baf0e2;
+    border-width: 5px;
+    box-shadow:0 1px 0 #cfcfcf;
+}
+
+.form-control {
+    border-radius: 10px;
+}
+
+.wrapper {
+    text-align: center;
+}
+hr.login {
+ border-top:1px solid #baf0e2 !important;
+}
+
+</style>
+{% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <div class="col-xs-12 text-center" style="padding-top: 10px;">
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+<div class="container" style="padding: 50px 0px 50px 0px">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4 col-sm-offset-3 col-sm-6 col-xs-12">
+            <div class="thumbnail form-login" style="background:#fff;">
+                {% block login_content %}
+                {% endblock %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -3,18 +3,7 @@
 {% block login_content %}
 <form action="" method="POST">
     {% csrf_token %}
-    <h4>비밀번호 찾기</h4>
-    {{ form.username }}
-    {% if form.username.errors %}
-        {% for error in form.username.errors %}
-    <div class="col-xs-12 text-center" style="padding-top: 10px;">
-        <div class="alert alert-danger">
-            <strong>{{ error|escape }}</strong>
-        </div>
-    </div>
-        {% endfor %}
-    {% endif %}
-    </br>
+    <h4>아이디 찾기</h4>
     {{ form.email }}
     {% if form.email.errors %}
         {% for error in form.email.errors %}
@@ -32,6 +21,6 @@
 </form>
 <hr class="login">
 <div class="text-center">
-    <a href="{% url "accounts:id_find" %}"><button class="btn btn-info">아이디 찾기</button></a>
+    <a href="{% url "accounts:password_reset" %}"><button class="btn btn-info"> 비밀번호 찾기</button></a>
 </div>
 {% endblock %}

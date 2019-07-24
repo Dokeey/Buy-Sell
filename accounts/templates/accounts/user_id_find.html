@@ -1,5 +1,38 @@
+{% extends "email_layout.html" %}
 
-회원님의 이메일로 가입된 아이디 입니다. <br>
-{{ user.username }} <br>
+{% block content %}
+	<!--content 1 -->
+	<tr><td align="center" bgcolor="#fbfcfd">
+		<table width="90%" border="0" cellspacing="0" cellpadding="0">
+			<tr><td align="center">
+				<!-- padding --><div style="height: 60px; line-height: 60px; font-size: 10px;"> </div>
+				<div style="line-height: 44px;">
+					<font face="Arial, Helvetica, sans-serif" size="5" color="#57697e" style="font-size: 34px;">
+					<span style="font-family: Arial, Helvetica, sans-serif; font-size: 34px; color: #57697e;">
+                        회원님의 잊어버렸던 ID 입니다.
+					</span></font>
+				</div>
+				<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
+			</td></tr>
+			<tr><td align="center">
+				<div style="line-height: 24px;">
+					<font face="Arial, Helvetica, sans-serif" size="4" color="#57697e" style="font-size: 15px;">
+					<span style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #57697e;">
+						회원님의 이메일로 가입된 아이디 입니다.<br>
+                        ID : {{ user.username }}
+					</span></font>
+				</div>
+				<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
+			</td></tr>
+			<tr><td align="center">
+				<div style="line-height: 24px;">
+                    <a style="color: #4db3a4; text-decoration: none;font-size:20px;" target="_blank" href="http://{{ domain }}{% url 'accounts:login' %}"  >로그인 하러가기</a>
+				</div>
+				<!-- padding --><div style="height: 60px; line-height: 60px; font-size: 10px;"> </div>
+			</td></tr>
+		</table>
+	</td></tr>
+	<!--content 1 END-->
+{% endblock %}
 
-<a href="http://{{ domain }}{% url 'accounts:login' %}" >로그인하러가기</a>
+

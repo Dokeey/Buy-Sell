@@ -179,8 +179,6 @@ class ItemDetail(MultipleObjectMixin, CreateView):
         if item.itemcomment_set.all().count() % 5 == 1:
             send_mail(
                 '[Buy & Sell] {}님 물품에 문의글이 생겼습니다.'.format(item.user.username),
-                '',
-                'BuynSell',
                 [item.user.email],
                 html=render_to_string('trade/item_comment_alert.html', {
                     'user': item.user,
@@ -438,8 +436,6 @@ class OrderNew(FormView):
             # 물품 주문알림 메일 발송
             send_mail(
                 '[Buy & Sell] 구매자가 {}님의 물품을 예약하였습니다.'.format(item.user.username),
-                '',
-                'BuynSell',
                 [item.user.email],
                 html=render_to_string('trade/item_sell_alert.html', {
                     'user': item.user,
@@ -492,8 +488,6 @@ class OrderPay(CreateView):
         self.object = form.save()
         send_mail(
             '[Buy & Sell] 구매자가 {}님의 물품을 결제하였습니다.'.format(self.object.item.user.username),
-            '',
-            'BuynSell',
             [self.object.item.user.email],
             html=render_to_string('trade/item_sell_alert.html', {
                 'user': self.object.item.user,

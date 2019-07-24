@@ -1,112 +1,41 @@
-{% extends "accounts/layout.html" %}
+{% extends "accounts/login_layout.html" %}
 
-{% block content %}
-<style>
-h4 {
- border:0 solid #baf0e2;
- border-bottom-width:1px;
- padding-bottom:10px;
- text-align: center;
-}
-.form-login {
-    background-color: #EDEDED;
-    padding-top: 10px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 15px;
-    border-color:#baf0e2;
-    border-width: 5px;
-    box-shadow:0 1px 0 #cfcfcf;
-}
-
-.form-control {
-    border-radius: 10px;
-}
-
-.wrapper {
-    text-align: center;
-}
-hr.login {
- border-top:1px solid #baf0e2 !important;
-}
-
-</style>
-{% if form.non_field_errors %}
-    {% for error in form.non_field_errors %}
+{% block login_content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <h4>LOGIN</h4>
+    {{ form.username }}
+    {% if form.username.errors %}
+        {% for error in form.username.errors %}
     <div class="col-xs-12 text-center" style="padding-top: 10px;">
         <div class="alert alert-danger">
             <strong>{{ error|escape }}</strong>
         </div>
     </div>
-    {% endfor %}
-{% endif %}
-<div class="container" style="padding: 50px 0px 50px 0px">
-    <div class="row">
-        <div class="col-md-offset-4 col-md-4 col-sm-offset-3 col-sm-6 col-xs-12">
-            <div class="thumbnail form-login" style="background:#fff;">
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <h4>LOGIN</h4>
-                    {{ form.username }}
-                    {% if form.username.errors %}
-                        {% for error in form.username.errors %}
-                    <div class="col-xs-12 text-center" style="padding-top: 10px;">
-                        <div class="alert alert-danger">
-                            <strong>{{ error|escape }}</strong>
-                        </div>
-                    </div>
-                        {% endfor %}
-                    {% endif %}
-                    </br>
-                    {{ form.password }}
-                    {% if form.password.errors %}
-                        {% for error in form.password.errors %}
-                    <div class="col-xs-12 text-center" style="padding-top: 10px;">
-                        <div class="alert alert-danger">
-                            <strong>{{ error|escape }}</strong>
-                        </div>
-                    </div>
-                        {% endfor %}
-                    {% endif %}
-                    </br>
-                    <div class="wrapper">
-                        <button class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> 로그인</button>
-                        <a href="{% url "accounts:signup" %}">
-                            <button type="button" class="btn btn-danger"><i class="fas fa-user-plus"></i> 회원가입</button>
-                        </a>
-                    </div>
-                </form>
-                <hr class="login">
-                <div class="text-center">
-                    <a id="kakao-login-btn"></a>
-                    <a href="http://developers.kakao.com/logout"></a>
-                </div>
-                <hr class="login">
-                <div class="text-center">
-                    <a href="{% url "accounts:id_find" %}"><button class="btn btn-info">아이디 찾기 </button></a>
-                    <a href="{% url "accounts:password_reset" %}"><button class="btn btn-info">비밀번호 찾기</button></a>
-                </div>
-            </div>
-
+        {% endfor %}
+    {% endif %}
+    </br>
+    {{ form.password }}
+    {% if form.password.errors %}
+        {% for error in form.password.errors %}
+    <div class="col-xs-12 text-center" style="padding-top: 10px;">
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
         </div>
     </div>
+        {% endfor %}
+    {% endif %}
+    </br>
+    <div class="wrapper">
+        <button class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> 로그인</button>
+        <a href="{% url "accounts:signup" %}">
+            <button type="button" class="btn btn-danger"><i class="fas fa-user-plus"></i> 회원가입</button>
+        </a>
+    </div>
+</form>
+<hr class="login">
+<div class="text-center">
+    <a href="{% url "accounts:id_find" %}"><button class="btn btn-info">아이디 찾기 </button></a>
+    <a href="{% url "accounts:password_reset" %}"><button class="btn btn-info">비밀번호 찾기</button></a>
 </div>
-
-<script type='text/javascript'>
-  //<![CDATA[
-    // 사용할 앱의 JavaScript 키를 설정해 주세요.
-    Kakao.init('43b0c47e22303f599cf49a0f42e75f86');
-    // 카카오 로그인 버튼을 생성합니다.
-    Kakao.Auth.createLoginButton({
-      container: '#kakao-login-btn',
-      success: function(authObj) {
-        alert(JSON.stringify(authObj));
-      },
-      fail: function(err) {
-         alert(JSON.stringify(err));
-      }
-    });
-  //]]>
-</script>
 {% endblock %}

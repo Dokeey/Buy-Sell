@@ -1,8 +1,16 @@
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm, PasswordResetForm, \
+    SetPasswordForm
 from django.contrib.auth import get_user_model
 from django import forms
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 from store.models import StoreProfile
+
+from .supporter import send_mail
 from .models import Profile
 
 User = get_user_model()
@@ -214,3 +222,91 @@ class CheckPasswordForm(forms.Form):
 
     class Meta:
         fields = ['password']
+
+
+class IdFindForm(PasswordResetForm):
+
+    def __init__(self, *args, **kwargs):
+        super(IdFindForm, self).__init__(*args, **kwargs)
+        self.fields['email'].label = 'Email'
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-control input-sm chat-input',
+            'placeholder': 'Email을 입력해주세요',
+        })
+
+
+    def save(self, domain_override=None, subject='[Buy & Sell] 아이디 찾기 결과입니다.',
+             subject_template_name='registration/password_reset_subject.txt',
+             email_template_name='registration/password_reset_email.html',
+             use_https=False, token_generator=default_token_generator,
+             from_email=None, request=None, html_email_template_name=None,
+             extra_email_context=None):
+
+        email = self.cleaned_data["email"]
+        user_flag = False
+        for user in self.get_users(email):
+            user_flag = True
+            if not domain_override:
+                current_site = get_current_site(request)
+                site_name = current_site.name
+                domain = current_site.domain
+            else:
+                site_name = domain = domain_override
+            context = {
+                'email': email,
+                'domain': domain,
+                'site_name': site_name,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+                'user': user,
+                'token': token_generator.make_token(user),
+                'protocol': 'https' if use_https else 'http',
+                **(extra_email_context or {}),
+            }
+
+            # 아이디/패스워드 인증 메일 발송
+            send_mail(
+                subject,
+                [email],
+                html=render_to_string(email_template_name, context),
+            )
+
+        return user_flag
+
+
+
+class CustomPasswordResetForm(IdFindForm):
+    username = forms.CharField()
+
+    class Meta:
+        fields = ['username', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super(CustomPasswordResetForm, self).__init__(*args, **kwargs)
+        self.fields['username'].label = 'ID'
+        self.fields['username'].widget.attrs.update({
+            'class': 'form-control input-sm chat-input',
+            'placeholder': 'ID를 입력해주세요',
+        })
+
+    def get_users(self, email):
+        active_users = User._default_manager.filter(**{
+            'username': self.cleaned_data['username'],
+            '%s__iexact' % User.get_email_field_name(): email,
+            'is_active': True,
+        })
+        return (u for u in active_users if u.has_usable_password())
+
+
+class CustomSetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomSetPasswordForm, self).__init__(*args, **kwargs)
+        self.fields['new_password1'].label = '새 비밀번호'
+        self.fields['new_password1'].widget.attrs.update({
+            'class': 'form-control input-sm chat-input',
+            'placeholder': '새 비밀번호를 입력해주세요',
+        })
+        self.fields['new_password2'].label = '비밀번호 확인'
+        self.fields['new_password2'].widget.attrs.update({
+            'class': 'form-control input-sm chat-input',
+            'placeholder': '한번 더 입력해주세요',
+        })

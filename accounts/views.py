@@ -18,7 +18,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from accounts.supporter import send_mail
 from .models import Profile
-from .forms import SignupForm, AuthProfileForm, CustomPasswordChangeForm, CustomAuthenticationForm, CheckPasswordForm
+from .forms import SignupForm, AuthProfileForm, CustomPasswordChangeForm, CustomAuthenticationForm, CheckPasswordForm, \
+IdFindForm, CustomPasswordResetForm, CustomSetPasswordForm
 
 User = get_user_model()
 
@@ -51,8 +52,6 @@ class SignupView(CreateView):
         # 회원가입 인증 메일 발송
         send_mail(
             '[Buy & Sell] {}님의 회원가입 인증메일 입니다.'.format(self.object.username),
-            '',
-            'BuynSell',
             [self.object.email],
             html=render_to_string('accounts/user_activate_email.html', {
                 'user': self.object,
@@ -134,11 +133,9 @@ class PasswordChange(PasswordChangeView):
         # except the current one.
         update_session_auth_hash(self.request, form.user)
 
-        # 회원가입 인증 메일 발송
+        # 패스워드 변경 알림 메일 발송
         send_mail(
             '[Buy & Sell] {}님 방금 패스워드를 변경하셨습니다.'.format(self.request.user.username),
-            '',
-            'BuynSell',
             [self.request.user.email],
             html=render_to_string('accounts/password_change_alert.html', {
                 'user': self.request.user,
@@ -188,33 +185,50 @@ def activate(request, uidb64, token):
     messages.error(request, '메일 인증이 실패되었습니다.')
     return redirect('accounts:login')
 
-#비밀번호 찾기
-class MyPasswordResetView(PasswordResetView):
+
+class IdFindView(PasswordResetView):
     success_url = reverse_lazy('accounts:login')
-    template_name = 'accounts/password_reset_form.html'
-    email_template_name='accounts/user_password_reset.html'
-    html_email_template_name='accounts/user_password_reset.html'
+    template_name = 'accounts/id_find_form.html'
+    email_template_name = 'accounts/user_id_find.html'
+    form_class = IdFindForm
+    subject = '[Buy & Sell] 아이디 찾기 결과입니다.'
+    error_message = 'Email을 다시 한번 확인해주세요.'
+    success_message = '아이디 찾기 메일을 발송했습니다.'
 
     def form_valid(self, form):
-        messages.info(self.request, '암호 메일을 보냈습니다.')
-        return super().form_valid(form)
+        context = {
+            'subject': self.subject,
+            'use_https': self.request.is_secure(),
+            'token_generator': self.token_generator,
+            'email_template_name': self.email_template_name,
+            'request': self.request,
+            'extra_email_context': self.extra_email_context,
+        }
+        flag = form.save(**context)
+        if not flag:
+            messages.error(self.request, self.error_message)
+            return self.form_invalid(form)
+
+        messages.info(self.request, self.success_message)
+        return redirect(self.get_success_url())
+
+
+#비밀번호 찾기
+class MyPasswordResetView(IdFindView):
+    template_name = 'accounts/password_reset_form.html'
+    email_template_name='accounts/user_password_reset.html'
+    form_class = CustomPasswordResetForm
+    subject = '[Buy & Sell] 비밀번호 찾기 결과입니다.'
+    error_message = 'ID 혹은 Email을 다시 한번 확인해주세요.'
+    success_message = '비밀번호 찾기 메일을 보냈습니다.'
+
+
 
 class MyPasswordResetConfirmView(PasswordResetConfirmView):
     success_url = reverse_lazy('accounts:login')
     template_name = 'accounts/password_reset_confirm.html'
+    form_class = CustomSetPasswordForm
 
     def form_valid(self, form):
-        messages.info(self.request, '암호를 변경 하였습니다.')
-        return super().form_valid(form)
-
-class IdFindView(PasswordResetView):
-
-    success_url = reverse_lazy('accounts:login')
-    template_name = 'accounts/password_reset_form.html'
-    subject_template_name = 'accounts/user_id_find_name.html'
-    email_template_name = 'accounts/user_id_find.html'
-    html_email_template_name = 'accounts/user_id_find.html'
-
-    def form_valid(self, form):
-        messages.info(self.request, '아이디 확인 메일을 보냈습니다.')
+        messages.info(self.request, '비밀번호를 변경 하였습니다.')
         return super().form_valid(form)

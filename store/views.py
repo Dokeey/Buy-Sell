@@ -121,13 +121,11 @@ class StoreQuestionLCView(CreateView):
         comment.author=self.request.user
         comment.save()
 
-        # 물품 주문알림 메일 발송
+        # 가게 문의알림 메일 발송
         self.object = form.save()
         if self.model.objects.filter(store_profile=self.object.store_profile).count() % 5 == 1:
             send_mail(
                 '[Buy & Sell] {}님의 가게에 문의가 등록되었습니다.'.format(self.object.store_profile.user.username),
-                '',
-                'BuynSell',
                 [self.object.store_profile.user.email],
                 html=render_to_string('store/store_comment_alert.html', {
                     'user': self.object.store_profile.user,
