@@ -1,14 +1,12 @@
 
-from django import template
-from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Sum, Count
 from django.shortcuts import get_object_or_404
 from hitcount.models import HitCount
-from rank import Rank, UpperRank, DenseRank
+from rank import DenseRank
 
 from mypage.models import Follow
-from store.models import StoreProfile, StoreGrade, QuestionComment
+from store.models import StoreProfile, StoreGrade
 from trade.models import Item, Order
 from django import template
 
@@ -29,7 +27,6 @@ def store_rating(pk):
 @register.simple_tag
 def store_sell_list(pk):
     stores = get_object_or_404(StoreProfile, pk=pk)
-    # order = Item.objects.filter(user=stores.user, pay_status='sale_complete').count()
     orders = Item.objects.filter(user=stores.user)
     items = []
     for order in orders:
@@ -51,6 +48,8 @@ def store_rating_percent(pk,ra):
     else:
         rate = 0
     return rate
+
+
 # star_grade 전역 변수
 ctype = ContentType.objects.get_for_model(StoreProfile)
 search_grade = StoreGrade.objects.values('store_profile').annotate(rating_sum=Sum('rating') / Count('rating'),

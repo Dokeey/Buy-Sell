@@ -12,33 +12,33 @@
     <div class="col-sm-7">
         <h2 class="gold text-center">팔로워 순위 <small> TOP 5 </small></h2><hr/>
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-offset-3 col-sm-9 col-xs-offset-1 col-xs-10">
                 <div class="relative"></div>
                 <div class="album_img">
-                    <img src="{{ follows.0.photo.url }}" width="300" height="300" style="
+                    <img src="{{ stores.0.store_info.photo.url }}" width="300" height="300" style="
     border-radius: 20px;", class="img-responsive " />
                 </div>
                 <div class="rank_music">
                     <h4 style="color:white"><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
                     <div class="row">
                         <div class="col-xs-5">
-                             <img src="{{  follows.0.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
+                             <img src="{{  stores.0.store_info.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
                         </div>
                         <div class="col-xs-7" style="font-weight:bold;color:white;">
-                             {{ follows.0.name }}<br/><br/>
+                             {{ stores.0.store_info.name }}<br/><br/>
                             <div class="row">
                                 <div class="col-xs-4" >
-                                    <a class="white" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
+                                    <a class="white" onclick="javascript:sharefacebook('{{ request.META.HTTP_HOST }}{{ request.path }}')">
                                         <i class="fab fa-facebook"></i>
                                     </a>
                                 </div>
                                 <div class="col-xs-4">
-                                    <a class="white">
+                                    <a class="white" onclick="javascript:sendLink()">
                                         <i class="fab fa-kickstarter-k"></i>
                                     </a>
                                 </div>
                                 <div class="col-xs-4" >
-                                    <a class="white" onclick = "location.href ='{% url "mypage:follow_new"  follows.0.pk %}'" >
+                                    <a class="white" onclick = "location.href ='{% url "mypage:follow_new"  stores.0.store_info.pk %}'" >
                                         <i class="fas fa-user-plus"></i>
                                      </a>
                                 </div>
@@ -47,19 +47,19 @@
                     </div>
 
                     <hr/>
-                    <h2 align="center" style="font-weight:bold;color:white;">{{ follows.0.follow_set.all.count }}명</h2>
+                    <h2 align="center" style="font-weight:bold;color:white;">{{ stores.0.foll_count }}명</h2>
                         <div align="right">
-                        <a href="{% url 'store:store_sell_list'  follows.0.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
+                        <a href="{% url 'store:store_sell_list'  stores.0.store_info.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
                         </div>
-                </div>
-                <hr/>
+                     </div>
                 </div>
             </div>
+        <hr/>
         <!-- 내 순위 -->
             {% if user.is_authenticated %}
             <div class="row">
-             <div class="col-sm-12">
-                 <h4><span style="color:#EDA900">내 순위</span>
+             <div class="col-sm-2 col-xs-12">
+                 <h4><span style="color:#EDA900">나는</span>
 
                  {% if my_follow == 1 %}
                     <i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
@@ -74,93 +74,51 @@
              <div class="col-sm-2 col-xs-3">
                 <img src="{{ request.user.storeprofile.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
              </div>
-             <div class="col-sm-10 col-xs-9">
+             <div class="col-sm-8 col-xs-9">
                 {{ request.user.storeprofile.name }}
                 <div class="row">
                     <br/>
                 <div class="col-sm-5 col-xs-5" style="font-size:20px; font-weight:bold;">
                     {{ request.user.storeprofile.follow_set.all.count }}명
                 </div>
-                <div class="col-xs-7"> <a href="{% url 'store:store_sell_list' request.user.storeprofile.pk %}"  style="color:#C3C3C3;font-weight:bold;">내 가게로 가기 <i class="fas fa-angle-right"></i></a> </div>
+                <div class="col-xs-7" align="center"> <a href="{% url 'store:store_sell_list' request.user.storeprofile.pk %}"  style="color:#C3C3C3;font-weight:bold;">내 가게로 가기 <i class="fas fa-angle-right"></i></a> </div>
              </div></div>
             </div>
             <hr/>
             {% endif %}
 
     <!--가게 순위-->
-            {% for follow in  follows|slice:"5" %}
+            {% for store in  stores|slice:"5" %}
                  <div class="row">
-                     <div class="col-sm-12">
-                         {% if forloop.counter == 1 %}
+                     <div class="col-sm-2 col-xs-12">
+                         {% if store.rank == 1 %}
                             <h4 ><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
-                         {% elif forloop.counter == 2 %}
+                         {% elif store.rank == 2 %}
                             <h4 ><i class="fas fa-trophy" style="color:#C0C0C0;"></i> 2위</h4>
-                         {% elif forloop.counter == 3 %}
+                         {% elif store.rank == 3 %}
                             <h4 ><i class="fas fa-trophy" style="color:#cd7f32;"></i> 3위</h4>
                          {% else %}
-                            <h4 >{{ forloop.counter }}위</h4>
+                            <h4 >{{ store.rank }}위</h4>
                          {% endif %}
                      </div>
                      <div class="col-sm-2 col-xs-3">
-                        <img src="{{ follow.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
+                        <img src="{{ store.store_info.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
                      </div>
-                     <div class="col-sm-10 col-xs-9">
-                        {{ follow.name }}
+                     <div class="col-sm-8 col-xs-9">
+                        {{ store.store_info.name }}
 
                         <div class="row">
                             <br/>
-                            <div class="col-sm-4 col-xs-12" style="font-size:20px; font-weight:bold;">
-                                 {{ follow.follow_set.all.count }}명
+                            <div class="col-sm-5 col-xs-5" style="font-size:20px; font-weight:bold;">
+                                 {{ store.foll_count }}명
                             </div>
-                            <div class="col-sm-8 col-xs-12">
-                                   <a class="btn btn-info" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
-                                    <i class="fab fa-facebook" style="color:white"></i>
-                                </a>
-                                <a class="btn btn-yellow" >
-                                    <i class="fab fa-kickstarter-k"></i>
-                                </a>
-                                 <a class="btn btn-warning btn-md" onclick = "location.href ='{% url "mypage:follow_new" follow.pk %}'">
-                                    <i class="fas fa-user-plus"></i>
-                                 </a>
-                                <div class="col-sm-12 col-xs-12" align="right">
-                                <a href="{% url 'store:store_sell_list' follow.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
-                                </div>
+                            <div class="col-sm-7 col-xs-7" align="center">
+                                <a href="{% url 'store:store_sell_list' store.store_info.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
+
                             </div>
 
                      </div></div>
                 </div> <hr/>
-            {% endfor %}
+        {% endfor %}
     </div>
-
-    <div class="col-sm-offset-0 col-sm-5 col-xs-offset-1 col-xs-10">
-        <h2 class="gold text-center">1등 가게 물품</h2><hr/>
-        <div class="row">
-            {% for item in follows.0.user.item_set.all|slice:"4" %}
-                <div class="col-sm-6 col-xs-12" style="padding:10px">
-                        {% item_block item %}
-                </div>
-            {% empty %}
-                <h4 class="text-center">물품이 없습니다</h4>
-
-            {% endfor %}
-        </div>
-        <div align="center">
-            <a href="{% url 'store:store_sell_list' follows.0.pk %}">남은 <span style="color:red;font-weight:bold"> {{ follows.0.user.item_set.count|add:"-4" }}개</span> 물품 보러가기</a>
-        </div>
-        <hr/>
-    </div>
-</div>
-
-    <div align="center">
-        <form style="width:60%;" action="{% url "store:star_store_search" %}">
-            <div class="input-group">
-              <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid #0fd9a6;" placeholder="가게 찾기" >
-              <span class="input-group-btn">
-                <button class="btn btn-primary" type="submit" style="border:1px solid #0fd9a6;">
-                    <i class="fa fa-search"></i>
-                </button>
-              </span>
-            </div>
-        <form/>
-        </div>
 {% endblock %}

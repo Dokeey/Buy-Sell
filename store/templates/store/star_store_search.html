@@ -155,46 +155,47 @@ background-color: #00498c;
 
 <div class="row">
     <div class="col-xs-12">
-<div class="container-fluid text-center">
-{% if is_paginated %}
-  <nav>
-    <ul class="pagination">
-      {% if page_obj.has_previous %}
-        <li>
-          <a href="?query={{ query }}&page={{ page_obj.previous_page_number }}">
-            <span>Prev</span>
-          </a>
-        </li>
-      {% else %}
-        <li class="disabled">
-          <a href="#">
-            <span>Previous</span>
-          </a>
-        </li>
-      {% endif %}
+        <div class="container-fluid text-center">
+        {% if is_paginated %}
+          <nav>
+            <ul class="pagination">
+              {% if page_obj.has_previous %}
+                <li>
+                  <a href="?query={{ query }}&page={{ page_obj.previous_page_number }}">
+                    <span>Prev</span>
+                  </a>
+                </li>
+              {% else %}
+                <li class="disabled">
+                  <a href="#">
+                    <span>Previous</span>
+                  </a>
+                </li>
+              {% endif %}
 
-      {% for page in page_range %}
-        <li {% if page == page_obj.number %}class="active"{% endif %}>
-          <a href="?query={{ query }}&page={{ page }}">{{ page }}</a>
-        </li>
-      {% endfor %}
+              {% for page in page_range %}
+                <li {% if page == page_obj.number %}class="active"{% endif %}>
+                  <a href="?query={{ query }}&page={{ page }}">{{ page }}</a>
+                </li>
+              {% endfor %}
 
-      {% if page_obj.has_next %}
-        <li>
-          <a href="?query={{ query }}&page={{ page_obj.next_page_number }}">
-            <span>Next</span>
-          </a>
-        </li>
-      {% else %}
-        <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
-          <a href="#">
-            <span>Next</span>
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-  </nav>
-{% endif %}
+              {% if page_obj.has_next %}
+                <li>
+                  <a href="?query={{ query }}&page={{ page_obj.next_page_number }}">
+                    <span>Next</span>
+                  </a>
+                </li>
+              {% else %}
+                <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+                  <a href="#">
+                    <span>Next</span>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+        </div>
+    </div>
 </div>
-</div></div>
 {% endblock %}
