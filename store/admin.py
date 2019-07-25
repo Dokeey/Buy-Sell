@@ -1,11 +1,7 @@
 from django.contrib import admin
 
-from .models import StoreProfile, QuestionComment, StoreGrade
+from .models import QuestionComment, StoreGrade
 
-
-@admin.register(StoreProfile)
-class StoreProfileAdmin(admin.ModelAdmin):
-	list_display=['id', 'user','name']
 
 @admin.register(QuestionComment)
 class CommentAdmin(admin.ModelAdmin):

@@ -112,7 +112,7 @@
            border-radius: 5px;
          }
          .thumbnail-description {
-           min-height: 100px;
+           <!--min-height: 90px;-->
          }
          .thumbnail:hover {
            cursor: auto;
@@ -152,9 +152,13 @@
           background-color:transparent !important;
         }
         .main-footer a:hover {
+            box-shadow: none;
             background-color: #0fd9a6 !important;
             border-radius: 5px;
             color:#fff !important;
+        }
+        .main-footer > a {
+            margin:5px 0 5px 0;
         }
 
     </style>
@@ -349,19 +353,16 @@
 <div style="position:fixed; bottom:30px; right:30px;">
     <a class="top" href="#"><i class="fas fa-angle-double-up fa-5x" style="color:#0fd9a6"></i></a>
 </div>
-
+<style>
+</style>
 <hr style="border-top: 1px solid #bbbbbb;margin-bottom:0px"/>
-<div class="container">
-    <div class="row main-footer col-xs-12">
-      <ul class="nav navbar-nav navbar-center collaps-block" style="padding:5px;padding-left:20px;">
-            <li><a href="{% url "policy:policy_service" %}">이용 약관</a></li>
-            <li><a href="{% url "policy:policy_privacy" %}">개인정보 처리방침</a></li>
-            <li><a href="{% url "policy:policy_location" %}">위치기반 서비스 이용약관</a></li>
-            <li><a href="{% url "customer:customer_notice" %}">공지사항</a></li>
-            <li><a href="{% url "customer:customer_faq" %}">자주 묻는 질문</a></li>
-            <li><a href="{% url "customer:customer_ask" %}">1:1 문의</a></li>
-      </ul>
-    </div>
+<div class="main-footer" align="center">
+    <a class="btn" href="{% url "policy:policy_service" %}">이용 약관</a>
+    <a class="btn" href="{% url "policy:policy_privacy" %}">개인정보 처리방침</a>
+    <a class="btn" href="{% url "policy:policy_location" %}">위치기반 서비스 이용약관</a>
+    <a class="btn" href="{% url "customer:customer_notice" %}">공지사항</a>
+    <a class="btn" href="{% url "customer:customer_faq" %}">자주 묻는 질문</a>
+    <a class="btn" href="{% url "customer:customer_ask" %}">1:1 문의</a>
 </div>
 <hr style="border-top: 1px solid #bbbbbb;margin-top:0px"/>
 <div class="container">

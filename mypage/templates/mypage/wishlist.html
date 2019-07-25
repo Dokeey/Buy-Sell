@@ -23,7 +23,7 @@
             </div>
             <h4 id="thumbnail-label"><i class="fas fa-won-sign" style="color:green"></i>&nbsp;{{ wishlist.item.amount|intcomma }} 원</h4><hr style="margin:5px">
             <div class="thumbnail-description smaller text-center">
-                <b>{{ wishlist.item.title }}</b>
+                <b style="min-height: 38px;">{{ wishlist.item.title }}</b>
                 <hr style="margin:5px">
                 <i class="far fa-handshake"></i>&nbsp;<span style="color:{% if wishlist.item.pay_status == 'ready' %}#368AFF;{% else %}red;{% endif %}">{{ wishlist.item.get_pay_status_display }}</span>
                 <hr style="margin:5px">

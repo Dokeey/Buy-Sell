@@ -49,21 +49,27 @@ class User(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=11, validators=[phone_validate])
-    post_code = models.CharField(max_length=10)
-    address = models.CharField(max_length=100)
-    detail_address = models.CharField(max_length=20)
-    account_num = models.CharField(max_length=20, validators=[MaxLengthValidator(20)])
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    phone = models.CharField(verbose_name="연락처", max_length=11, validators=[phone_validate])
+    post_code = models.CharField(verbose_name="우편번호", max_length=10)
+    address = models.CharField(verbose_name="주소", max_length=100)
+    detail_address = models.CharField(verbose_name="상세 주소", max_length=20)
+    account_num = models.CharField(verbose_name="계좌번호", max_length=20, validators=[MaxLengthValidator(20)])
+    created_at = models.DateTimeField(verbose_name="생성일", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="최근 업데이트", auto_now=True)
 
     def __str__(self):
         return self.user.username
 
+    class Meta:
+        verbose_name_plural = "프로필"
+
 class UserSession(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
-    session_key = models.CharField(max_length=40, editable=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    session_key = models.CharField(verbose_name="세션키", max_length=40, editable=False)
+    created_at = models.DateTimeField(verbose_name="생성일", auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "유저 세션"
 
 def kicked_my_other_sessions(sender, request, user, **kwargs):
     user.is_user_logged_in = True
