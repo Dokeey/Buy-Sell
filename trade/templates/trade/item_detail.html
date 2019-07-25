@@ -1,4 +1,5 @@
 {% extends "trade/layout.html" %}
+{% load static %}
 {% load humanize %}
 {% load trade_tags %}
 {% load hitcount_tags %}
@@ -100,6 +101,28 @@
             top: 18px;
         }
     </style>
+
+    <!-- 댓글 더보기 기능 -->
+    <script src="{% static "js/readmore-2.2.1.min.js" %}"></script> <!-- Readmore.js -->
+    <script>
+        jQuery(document).ready(function() {
+
+        jQuery('.more').readmore({
+            speed: 300,
+            collapsedHeight: 67,
+            moreLink: '<a href="#">더 보기</a>',
+            lessLink: '<a href="#">다시 닫기</a>',
+            heightMargin: 16
+        });
+
+    });
+    </script>
+    <style>
+        .more {
+            overflow: hidden;
+        }
+    </style>
+
 {% endblock %}
 
 {% block content %}
@@ -299,7 +322,7 @@
                                             <div class="pull-left" ><b>{{ comment.user.storeprofile.name }}{% if item.user == comment.user %} (주인장){% endif %}</b></div>
                                         </a>
                                         <div class="pull-right">{% simple_time comment.updated_at %}</div>
-                                        <br><div id="cmt-{{ comment.id }}" style="padding-top:10px;">{{ comment.message|linebreaks }}</div>
+                                        <br><div id="cmt-{{ comment.id }}" class="more" style="padding-top:10px;">{{ comment.message|linebreaks }}</div>
                                         {% if comment.user == request.user %}
                                             <div class="text-right">
                                                 <a class="edit" href="#" data-form="{% url "trade:comment_update" item.id comment.id %}" title="Edit">
@@ -331,7 +354,7 @@
                                                     <div class="pull-left"><b>{{ replay.user.storeprofile.name }}{% if item.user == replay.user %} (주인장){% endif %}</b></div>
                                                 </a>
                                                 <div class="pull-right">{% simple_time replay.updated_at %}</div>
-                                                <br><div id="cmt-{{ replay.id }}" style="padding-top:10px;">{{ replay.message|linebreaks }}</div>
+                                                <br><div id="cmt-{{ replay.id }}" class="more" style="padding-top:10px;">{{ replay.message|linebreaks }}</div>
                                                 {% if replay.user == request.user %}
                                                     <div class="text-right">
                                                         <a class="edit" href="#" data-form="{% url "trade:comment_update" item.id replay.id %}" title="Edit">
