@@ -101,6 +101,8 @@ class ItemComment(models.Model):
         # sort comments in chronological order by default
         ordering = ('-created_at',)
 
+    def __str__(self):
+        return self.message
 
 from accounts.validators import phone_validate
 

@@ -3,11 +3,12 @@ from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth import get_user_model
 
 from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count
 from django.urls import reverse
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
-
+from hitcount.models import HitCount
 
 from store.models import StoreProfile, QuestionComment, StoreGrade
 
@@ -44,11 +45,23 @@ class QuestionCommentAdmin(admin.StackedInline):
     fields = ['author', 'comment', 'updated_at']
     readonly_fields = ['author', 'updated_at']
 
+    def has_add_permission(self, request, obj):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 class StoreGradeAdmin(admin.StackedInline):
     model = StoreGrade
     extra = 0
     fields = ['store_item', 'rating', 'author', 'grade_comment', 'updated_at']
     readonly_fields = ['store_item', 'rating', 'author', 'updated_at']
+
+    def has_add_permission(self, request, obj):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -65,14 +78,13 @@ class StoreProfileInline(admin.StackedInline):
                 url=url,
                 text=("가게 평점, 문의글 보러가기"),
             ))
-        return ("(save and continue editing to create a link)")
+        return "저장하시고 이용해주세요"
     get_edit_link.short_description = ("가게 자세히 보기")
-    get_edit_link.allow_tags = True
 
 
 @admin.register(get_user_model())
 class AdminUser(AuthUserAdmin):
-
+    save_on_top = True
     list_display = ('id', store_image,'username','email','user_phone', 'is_active', 'is_staff','item_ctn')
     list_display_links = ['username']
     list_editable = ('is_active', 'is_staff')
@@ -139,10 +151,20 @@ class AdminUser(AuthUserAdmin):
 
 
 
+@admin.register(StoreProfile)
 class StoreProfileAdmin(admin.ModelAdmin):
+    save_on_top = True
+    list_display = ['user', 'name', 'hit_count']
+    list_display_links = ['user', 'name']
     fields = ['name', store_image, 'photo', 'comment']
     readonly_fields = [store_image]
     inlines = [QuestionCommentAdmin, StoreGradeAdmin]
+
+
+    def hit_count(self, obj):
+        return obj.hit_count.hits
+    hit_count.short_description = '조회수'
+    hit_count.admin_order_field = 'hit_count_generic'
 
     def get_model_perms(self, request):
         """
@@ -150,7 +172,12 @@ class StoreProfileAdmin(admin.ModelAdmin):
         """
         return {}
 
-admin.site.register(StoreProfile, StoreProfileAdmin)
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 @admin.register(UserSession)
 class Session(admin.ModelAdmin):
