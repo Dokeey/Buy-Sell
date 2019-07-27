@@ -22,6 +22,7 @@
 	</script>
 
     <!--Kakao Talk 공유 기능-->
+    <script src="{% static 'js/kakao.min.js' %}"></script> <!-- Kakao Talk -->
     <script>
         Kakao.init('{{ kakao_key }}');
         function sendLink() {

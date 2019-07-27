@@ -1,4 +1,6 @@
 {% extends "trade/layout.html" %}
+{% load static %}
+
 {% block content %}
 <div class="container">
     <div class="col-md-8 offset-md-2 mt-3">
@@ -18,5 +20,5 @@
 </div>
 {% endblock %}
 {% block extra_content %}
-<script src="//service.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+<script src="{% static "js/iamport.payment-1.1.5.js" %}"></script>
 {% endblock %}
