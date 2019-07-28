@@ -411,7 +411,6 @@ class OrderNew(FormView):
 
         order = Order.objects.create(user=self.request.user,
                                      item=item,
-                                     name=item.title,
                                      amount=item.amount,
                                      email=form.cleaned_data['email'],
                                      username=form.cleaned_data['username'],

@@ -40,16 +40,17 @@ INSTALLED_APPS = [
 
     'django.contrib.humanize',
 
-    'accounts',
-    'category',
-    'store',
-    'trade',
-    'imagekit', # image
-    'mypage',
-    'customer',
-    'hitcount', # 조회수
-    'policy',
+    'hitcount',  # 조회수
 
+    'accounts.apps.AccountsConfig',
+    'category.apps.CategoryConfig',
+    'store.apps.StoreConfig',
+    'trade.apps.TradeConfig',
+    'mypage.apps.MypageConfig',
+    'customer.apps.CustomerConfig',
+    'policy.apps.PolicyConfig',
+
+    'imagekit', # image
     'mptt', # category
     'django_extensions', # models relation graph
     'django_cleanup', # django delete media file
@@ -152,6 +153,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
+# Media
+MEDIA_URL = '/files/' # 업로드 할 경로
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
 AUTH_USER_MODEL = 'accounts.User'
 
 from django.urls import reverse_lazy
@@ -179,9 +184,6 @@ LANGUAGES = [  # Available languages
     ('ko_kr', _("한국어")),
 ]
 
-# Media
-MEDIA_URL = '/files/' # 업로드 할 경로
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # IAMPORT API
 IAMPORT_SHOP_ID = 'iamport' # 가맹점 식별코드

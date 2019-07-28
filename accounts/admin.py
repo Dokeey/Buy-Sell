@@ -4,24 +4,28 @@ from django.contrib.auth import get_user_model
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Count
+from django.db.models import Count, F
 from django.urls import reverse
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
-from hitcount.models import HitCount
+from hitcount.models import HitCount, Hit, BlacklistIP, BlacklistUserAgent
 
 from store.models import StoreProfile, QuestionComment, StoreGrade
 
 from .forms import SignupForm
-from .models import UserSession, Profile
+from .models import UserSession, Profile, ProxyStoreProfile
 
+admin.site.unregister(HitCount)
+admin.site.unregister(Hit)
+admin.site.unregister(BlacklistIP)
+admin.site.unregister(BlacklistUserAgent)
 admin.site.register(Permission)
 
 
 def store_image(obj):
 
     if type(obj) == get_user_model():
-        link = reverse('admin:store_storeprofile_change', args=[force_text(obj.storeprofile.pk)])
+        link = reverse('admin:accounts_proxystoreprofile_change', args=[force_text(obj.storeprofile.pk)])
         return mark_safe('<a href="{link}"><img src="{url}" width="{width}" height={height} /></a>'.format(
             link=link,
             url=obj.storeprofile.photo.url,
@@ -29,7 +33,7 @@ def store_image(obj):
             height=100,
         ))
     else:
-        link = reverse('admin:store_storeprofile_change', args=[force_text(obj.pk)])
+        link = reverse('admin:accounts_proxystoreprofile_change', args=[force_text(obj.pk)])
         return mark_safe('<a href="{link}"><img src="{url}" width="{width}" height={height} /></a>'.format(
             link=link,
             url=obj.photo.url,
@@ -85,7 +89,7 @@ class StoreProfileInline(admin.StackedInline):
 @admin.register(get_user_model())
 class AdminUser(AuthUserAdmin):
     save_on_top = True
-    list_display = ('id', store_image,'username','email','user_phone', 'is_active', 'is_staff','item_ctn')
+    list_display = ('id', store_image,'username','email','user_phone', 'is_active', 'is_staff','item_ctn', 'hit_count')
     list_display_links = ['username']
     list_editable = ('is_active', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'date_joined')
@@ -93,6 +97,7 @@ class AdminUser(AuthUserAdmin):
     actions = ('user_acitve','user_disable')
     ordering = ('-is_superuser', '-is_staff', '-is_active')
     list_per_page = 20
+    date_hierarchy = 'date_joined'
 
     inlines = (ProfileInline, StoreProfileInline,)
     fieldsets = (
@@ -114,6 +119,7 @@ class AdminUser(AuthUserAdmin):
         queryset = super().get_queryset(request)
         queryset = queryset.annotate(
             _item_count=Count("item", distinct=True),
+            hit_count_generic = F('storeprofile__hit_count_generic')
         )
         return queryset
 
@@ -124,6 +130,10 @@ class AdminUser(AuthUserAdmin):
             return []
 
 
+    def hit_count(self, obj):
+        return obj.storeprofile.hit_count.hits
+    hit_count.short_description = '방문수'
+    hit_count.admin_order_field = 'hit_count_generic'
 
     def item_ctn(self, obj):
         return obj._item_count
@@ -151,7 +161,7 @@ class AdminUser(AuthUserAdmin):
 
 
 
-@admin.register(StoreProfile)
+@admin.register(ProxyStoreProfile)
 class StoreProfileAdmin(admin.ModelAdmin):
     save_on_top = True
     list_display = ['user', 'name', 'hit_count']
@@ -163,7 +173,7 @@ class StoreProfileAdmin(admin.ModelAdmin):
 
     def hit_count(self, obj):
         return obj.hit_count.hits
-    hit_count.short_description = '조회수'
+    hit_count.short_description = '방문수'
     hit_count.admin_order_field = 'hit_count_generic'
 
     def get_model_perms(self, request):

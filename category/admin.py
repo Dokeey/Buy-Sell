@@ -43,10 +43,12 @@ class InlineItemAdmin(admin.StackedInline):
 
     def has_add_permission(self, request, obj):
         return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 class CategoryFilter(SimpleListFilter):
-    title = '최상위 카테고리' # or use _('country') for translated title
+    title = '최상위 카테고리'
     parameter_name = 'parent'
 
     def lookups(self, request, model_admin):
@@ -59,7 +61,7 @@ class CategoryFilter(SimpleListFilter):
         else:
             return queryset
 
-@admin.register(Category)
+# @admin.register(Category)
 class CategoryAdmin(DraggableMPTTAdmin):
     # specify pixel amount for this ModelAdmin only:
 

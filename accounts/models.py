@@ -46,9 +46,12 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     object = UserManager()
 
+    class Meta:
+        verbose_name = "사용자"
+        verbose_name_plural = "사용자"
 
 class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="사용자", on_delete=models.CASCADE)
     phone = models.CharField(verbose_name="연락처", max_length=11, validators=[phone_validate])
     post_code = models.CharField(verbose_name="우편번호", max_length=10)
     address = models.CharField(verbose_name="주소", max_length=100)
@@ -61,6 +64,7 @@ class Profile(models.Model):
         return self.user.username
 
     class Meta:
+        verbose_name = "프로필"
         verbose_name_plural = "프로필"
 
 class UserSession(models.Model):
@@ -69,6 +73,7 @@ class UserSession(models.Model):
     created_at = models.DateTimeField(verbose_name="생성일", auto_now_add=True)
 
     class Meta:
+        verbose_name = "유저 세션"
         verbose_name_plural = "유저 세션"
 
 def kicked_my_other_sessions(sender, request, user, **kwargs):
@@ -76,3 +81,10 @@ def kicked_my_other_sessions(sender, request, user, **kwargs):
 
 user_logged_in.connect(kicked_my_other_sessions)
 
+from store.models import StoreProfile
+
+class ProxyStoreProfile(StoreProfile):
+    class Meta:
+        proxy = True
+        verbose_name = "가게"
+        verbose_name_plural = "가게"
