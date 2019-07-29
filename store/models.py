@@ -23,7 +23,7 @@ class StoreProfile(models.Model, HitCountMixin):
         default=get_random,
         upload_to='profile/storephoto',
         processors=[ResizeToFill(200, 200)],
-        format='PNG',
+        format='JPEG',
         options={'quality': 60}
 
     )

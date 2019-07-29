@@ -1,5 +1,5 @@
 {% extends "store/layout.html" %}
-
+{% load trade_tags %}
 {% block store_head %}
 <style>
 .bubble
@@ -52,21 +52,12 @@ top: 33px;
     display: none !important;
   }
 }
+.mint_active { color:#0fd9a6; font-weight:bold; }
 </style>
 
 {% endblock %}
 
-he
-
 {% block store_content %}
-
-<div>
-  <ul class="nav nav-tabs nav-justified" role="tablist">
-    <li role="presentation" ><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
-    <li role="presentation"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>
-    <li role="presentation" class="active"><a href="{% url "store:store_question" stores.pk %}" aria-controls="messages" role="tab" >가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span></a></li>
-  </ul>
-</div><br/>
 
 {% if request.user.pk != stores.user.pk %}
     <form action="" method="POST">
@@ -84,24 +75,35 @@ he
 
     </form>
 {% endif %}
+{% if user.is_authenticated %}
+<div class="col-xs-12" align="right">
+    <a href="{% url "store:store_question" stores.pk %}?&sort=all" >전체보기</a><small style="padding:8px;"> | </small>
 
- <hr/>
+    <a class="mint_active" href="{% url "store:store_question" stores.pk %}?&sort=my" >내가 쓴 글만 보기</a>
+
+</div><br/><br/>
+{% endif %}
+
 
 {% for comm in comms %}
-    <div class="well">
-    <div class="row">
+    <div class="well" >
+    <div class="row" id="block-{{ comm.id }}" >
 
         <div class="col-md-3 col-xs-3 imggrid" align="center">
-             <img src="{{ comm.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
+             <img src="{{ comm.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="100px" height="100px" />
         </div>
 
         <div class="col-md-8 col-xs-8">
             <div class="bubble" >
-                {{ comm.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{{ comm.created_at | date:"M d일, y년" }}
+                <a href="{% url 'store:store_sell_list' comm.author.storeprofile.pk %}">{{ comm.author }}</a>   &nbsp;&nbsp;  <i class="far fa-clock"></i>{% simple_time comm.updated_at %}
                 <div align="right" style="display: inline;float: right;" >
+                    <!--댓글 수정 삭제 -->
                 {% if request.user.pk == comm.author.pk %}
-                  <a href="{% url "store:store_question_edit" pk=stores.pk cid=comm.pk  %}">수정</a> /
-                  <a href="{% url "store:store_question_del" pk=stores.pk cid=comm.pk  %}">삭제</a>
+                  <a href="{% url "store:store_question_edit" pk=stores.pk cid=comm.pk  %}"> <i class="fas fa-edit" style="margin-right:10px"></i></a>
+
+                    <a class="del" href="#" data-form="{% url "store:store_question_del" stores.id comm.id %}" >
+                        <i class="fas fa-trash-alt" data-toggle="modal" data-target="#del-modal"  style="margin-right:10px"></i></a>
+
                   {% endif %}
                 </div>
                 <hr/>
@@ -111,25 +113,34 @@ he
         </div>
     </div>
 
+
     {% for replay in comm.replies.all %}
         <br/>
-        <div class="row">
+        <div class="row" id="block-{{ replay.id }}">
             <div class="col-md-1 col-xs-1" align="right"><i class="fas fa-reply fa-rotate-180"></i></i></div>
             <div class="col-md-3 col-xs-3 imggrid" align="center">
-                <img src="{{ replay.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="60%" height="60%" />
+                <img src="{{ replay.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="100px" height="100px" />
             </div>
 
-            <div class="col-md-8 col-xs-8">
+            <div class="col-md-8 col-xs-7">
+
                 <div class="bubble" >
-                    {{ replay.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i>{{ replay.created_at | date:"M d일, y년" }}
+                    {{ replay.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i> {% simple_time replay.updated_at %}
+
                     <div align="right" style="display: inline;float: right;" >
-                     {% if request.user.pk == replay.author.pk %}
-                      <a href="{% url "store:store_question_edit" pk=stores.pk cid=replay.pk  %}">수정</a> /
-                      <a href="{% url "store:store_question_del" pk=stores.pk cid=replay.pk  %}">삭제</a>
-                      {% endif %}
+                        <!--대댓글 수정 삭제 -->
+                        {% if request.user.pk == replay.author.pk %}
+                            <a href="{% url "store:store_question_edit" pk=stores.pk cid=replay.pk  %}"> <i class="fas fa-edit" style="margin-right:10px"></i></a>
+
+                            <a class="del" href="#" data-form="{% url "store:store_question_del" stores.id replay.id %}" >
+                                <i class="fas fa-trash-alt" data-toggle="modal" data-target="#del-modal"  style="margin-right:10px"></i></a>
+
+                        {% endif %}
                     </div>
+
                     <hr/>
                     <div class="scrollblind" >{{ replay.comment | linebreaks }}</div>
+
                 </div>
             </div>
         </div>
@@ -141,21 +152,48 @@ he
              {% csrf_token %}
             <div class="row">
                 <div class="col-md-1 col-xs-1" align="right"><i class="fas fa-reply fa-rotate-180"></i></div>
-                <div class="col-md-8 col-xs-8">
+                <div class="col-md-9 col-xs-7">
                     {{ form.comment }}
 
                     <input type="hidden" name="parent_id" value="{{ comm.id }}">
                 </div>
-                <div class="col-md-3 col-xs-3">
-                    <input type="submit" class="btn btn-default block" value="등록">
+                <div class="col-md-2 col-xs-3">
+                    <input type="submit" class="btn btn-default" style="height:120px;width:100%" value="등록">
                 </div>
             </div>
         </form>
 
     {% endif %}
     </div>
+   <div class="modal fade myModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+   </div>
     {% empty %}
-    <h4>There are no comments yet.</h4>
+    <h4 align="center"><i class="far fa-sad-tear"></i>문의글이 없습니다.</h4>
 {% endfor %}
 
+{% endblock %}
+
+
+{% block store_extra_content %}
+    <script>
+
+        $(document).ready(function() {
+          $('a.mint_active').removeClass('mint_active');
+          if ('{{ sort }}' == ''){
+              $('a[href="' + location.pathname + '"]').addClass('mint_active');
+          }
+          $('a[href="' + location.pathname + '?&sort={{ sort }}"]').addClass('mint_active');
+        });
+
+         $(".del").click(function(ev) { // for each edit contact url
+            ev.preventDefault(); // prevent navigation
+            var del_url = $(this).data("form"); // get the contact form url
+            $("#myModal").load(del_url, function() { // load the url into the modal
+                $(this).modal("show"); // display the modal on url load
+                $("#del-form").attr("action", del_url);
+            });
+            return false; // prevent the click propagation
+        });
+
+    </script>
 {% endblock %}

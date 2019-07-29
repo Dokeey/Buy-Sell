@@ -1,5 +1,6 @@
 from django import forms
-from django.forms import Textarea, Select
+from django.forms import Textarea, Select, RadioSelect, TextInput
+from prompt_toolkit.widgets import RadioList
 
 from .models import StoreProfile, QuestionComment, StoreGrade
 
@@ -8,7 +9,10 @@ class StoreProfileForm(forms.ModelForm):
     class Meta:
         model = StoreProfile
         fields = ['name','photo','comment']
-
+        widgets = {
+            'comment': Textarea(attrs={'class': 'form-control'}),
+            'name': TextInput(attrs={'class': 'form-control'})
+        }
 
 class StoreQuestionForm(forms.ModelForm):
 
@@ -22,8 +26,7 @@ class StoreQuestionForm(forms.ModelForm):
 class StoreGradeForm(forms.ModelForm):
     class Meta:
         model = StoreGrade
-        fields = ['grade_comment', 'rating']
+        fields = ['grade_comment']
         widgets = {
-            'grade_comment': Textarea(attrs={'class': 'form-control'}),
-            'rating': Select(attrs={'class': 'form-control'})
+            'grade_comment': Textarea(attrs={'class': 'form-control'})
         }

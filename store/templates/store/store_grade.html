@@ -1,5 +1,6 @@
 {% extends "store/layout.html" %}
 {% load store.store_tags %}
+{% load trade_tags %}
 
 {% block store_head %}
 <style>
@@ -11,18 +12,12 @@
 .progress-bar { text-align: left; }
 .rating-desc .col-md-3 {padding-right: 0px;}
 .sr-only { margin-left: 5px;overflow: visible;clip: auto; }
+.mint_active { color:#0fd9a6; font-weight:bold; }
 </style>
 {% endblock %}
+
 {% store_rating stores.pk as end %}
 {% block store_content %}
-<div>
-  <ul class="nav nav-tabs nav-justified" role="tablist">
-    <li role="presentation" ><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
-    <li role="presentation" class="active"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>
-    <li role="presentation"><a href="{% url "store:store_question" stores.pk %}" aria-controls="messages" role="tab" >가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span></a></li>
-  </ul>
-</div>
-<br/>
 
     <div class="row">
         <div class="col-xs-12 col-md-12">
@@ -69,10 +64,12 @@
                             </div>
                             <div class="col-xs-8 col-md-9">
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="20"
+                                    <a href="{% url "store:store_grade" stores.pk %}?&gsort=five">
+                                        <div class="progress-bar progress-bar-default" role="progressbar" aria-valuenow="20"
                                         aria-valuemin="0" aria-valuemax="100" style="width: {% store_rating_percent stores.pk 5 %}%">
                                         <span class="sr-only">{% store_rating_percent stores.pk 5 %}%</span>
                                     </div>
+                                    </a>
                                 </div>
                             </div>
                             <!-- end 5 -->
@@ -81,10 +78,11 @@
                             </div>
                             <div class="col-xs-8 col-md-9">
                                 <div class="progress">
+                                    <a href="{% url "store:store_grade" stores.pk %}?&gsort=four">
                                     <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20"
                                         aria-valuemin="0" aria-valuemax="100" style="width: {% store_rating_percent stores.pk 4 %}%">
                                         <span class="sr-only">{% store_rating_percent stores.pk 4 %}%</span>
-                                    </div>
+                                    </div></a>
                                 </div>
                             </div>
                             <!-- end 4 -->
@@ -93,10 +91,11 @@
                             </div>
                             <div class="col-xs-8 col-md-9">
                                 <div class="progress">
+                                    <a href="{% url "store:store_grade" stores.pk %}?&gsort=three">
                                     <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20"
                                         aria-valuemin="0" aria-valuemax="100" style="width: {% store_rating_percent stores.pk 3 %}%">
                                         <span class="sr-only">{% store_rating_percent stores.pk 3 %}%</span>
-                                    </div>
+                                    </div></a>
                                 </div>
                             </div>
                             <!-- end 3 -->
@@ -105,10 +104,11 @@
                             </div>
                             <div class="col-xs-8 col-md-9">
                                 <div class="progress">
+                                    <a href="{% url "store:store_grade" stores.pk %}?&gsort=two">
                                     <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="20"
                                         aria-valuemin="0" aria-valuemax="100" style="width: {% store_rating_percent stores.pk 2 %}%">
                                         <span class="sr-only">{% store_rating_percent stores.pk 2 %}%</span>
-                                    </div>
+                                    </div></a>
                                 </div>
                             </div>
                             <!-- end 2 -->
@@ -117,10 +117,11 @@
                             </div>
                             <div class="col-xs-8 col-md-9">
                                 <div class="progress">
+                                    <a href="{% url "store:store_grade" stores.pk %}?&gsort=one">
                                     <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80"
                                         aria-valuemin="0" aria-valuemax="100" style="width: {% store_rating_percent stores.pk 1 %}%">
                                         <span class="sr-only">{% store_rating_percent stores.pk 1 %}%</span>
-                                    </div>
+                                    </div></a>
                                 </div>
                             </div>
                             <!-- end 1 -->
@@ -132,30 +133,99 @@
         </div>
     </div>
 
-<div align="right">
-    <a href="{% url 'store:store_grade' stores.pk %}?sort=recent">최신순</a>·
-    <a href="{% url 'store:store_grade' stores.pk %}?sort=past">과거순</a>·
-    <a href="{% url 'store:store_grade' stores.pk %}?sort=highgrade">평점 높은순</a>·
-    <a href="{% url 'store:store_grade' stores.pk %}?sort=rowgrade">평점 낮은순</a>
+<div class="col-xs-12" align="right">
+    <a class="mint_active" href="{% url "store:store_grade" stores.pk %}?&sort=recent" >최신순</a> <small style="padding:8px;"> | </small>
+    <a href="{% url "store:store_grade" stores.pk %}?&sort=past" >과거순</a> <small style="padding:8px;"> | </small>
+    <a href="{% url "store:store_grade" stores.pk %}?&sort=hgrade" >평점 높은순</a> <small style="padding:8px;"> | </small>
+    <a href="{% url "store:store_grade" stores.pk %}?&sort=rgrade" >평점 낮은순</a>
 </div>
-<br/>
+<br/><br/>
 
-{% for grade in grades %}
+    {% for grade in grades %}
 
-     <div class="well">
-         <h4><a href="{% url 'store:store_sell_list' grade.author.storeprofile.pk %}">{{ grade.author }}</a></h4>
-         <div align="right" style="display: inline;float: right;" >
-            {% if request.user.pk == grade.author.pk %}
-              <a href="{% url "store:store_grade_edit" pk=stores.pk gid=grade.pk  %}">수정</a> /
-              <a href="{% url "store:store_grade_del" pk=stores.pk gid=grade.pk  %}">삭제</a>
-              {% endif %}
-            </div>
-            {{ grade.get_rating_display }}&nbsp;&nbsp;<i class="far fa-clock"></i> {{ grade.created_at | date:"M d일, y년" }} <br/>
-         <h5>{{ grade.grade_comment | linebreaks }} </h5>
-     </div>
-    {% empty %}
-    <h4>가게 평점이 없습니다.</h4>
+         <div class="well">
+             <h4><a href="{% url 'store:store_sell_list' grade.author.storeprofile.pk %}">{{ grade.author }}</a></h4>
+             <div align="right" style="display: inline;float: right;" >
+                {% if request.user.pk == grade.author.pk %}
+                  <a href="{% url "store:store_grade_edit" pk=stores.pk gid=grade.pk  %}"><i class="fas fa-edit" style="margin-right:10px"></i></a>
+                  <a class="del" href="#" data-form="{% url "store:store_grade_del" pk=stores.pk gid=grade.pk  %}">
+                    <i class="fas fa-trash-alt" data-toggle="modal" data-target="#del-modal"  style="margin-right:10px"></i></a>
+                  {% endif %}
+                </div>
+                {{ grade.get_rating_display }}&nbsp;&nbsp;<i class="far fa-clock"></i> {% simple_time grade.updated_at %} <br/>
+             <h5>{{ grade.grade_comment | linebreaks }} </h5>
+         </div>
+        <div class="modal fade myModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"></div>
+        {% empty %}
+        <h4 align="center"><i class="far fa-sad-tear"></i>가게 평점이 없습니다.</h4>
 
-{% endfor %}
+    {% endfor %}
 
+
+<div class="row">
+    <div class="col-xs-12">
+<div class="container-fluid text-center">
+{% if is_paginated %}
+  <nav>
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">
+            <span>Prev</span>
+          </a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href="#">
+            <span>Previous</span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% for page in page_range %}
+        <li {% if page == page_obj.number %}class="active"{% endif %}>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page }}">{{ page }}</a>
+        </li>
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li>
+          <a href="?query={{ query }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">
+            <span>Next</span>
+          </a>
+        </li>
+      {% else %}
+        <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+          <a href="#">
+            <span>Next</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}
+</div>
+</div></div>
+{% endblock %}
+
+{% block store_extra_content %}
+    <script>
+        $(document).ready(function() {
+          $('a.mint_active').removeClass('mint_active');
+          if ('{{ sort }}' == ''){
+              $('a[href="' + location.pathname + '"]').addClass('mint_active');
+          }
+          $('a[href="' + location.pathname + '?&sort={{ sort }}"]').addClass('mint_active');
+        });
+
+         $(".del").click(function(ev) { // for each edit contact url
+            ev.preventDefault(); // prevent navigation
+            var del_url = $(this).data("form"); // get the contact form url
+            $("#myModal").load(del_url, function() { // load the url into the modal
+                $(this).modal("show"); // display the modal on url load
+                $("#del-form").attr("action", del_url);
+            });
+            return false; // prevent the click propagation
+        });
+    </script>
 {% endblock %}
