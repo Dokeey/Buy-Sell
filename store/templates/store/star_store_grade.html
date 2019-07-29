@@ -37,7 +37,7 @@
                                     </a>
                                 </div>
                                 <div class="col-xs-4" >
-                                    <a class="white" onclick = "location.href ='{% url "mypage:follow_new" stores.0.store_info.pk %}'" >
+                                    <a class="white" onclick = "location.href ='{% url "mypage:follow_action" stores.0.store_info.pk %}?next={{ request.path }}'" >
                                         <i class="fas fa-user-plus"></i>
                                      </a>
                                 </div>
