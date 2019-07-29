@@ -77,7 +77,7 @@ class StoreProfileInline(admin.StackedInline):
 
     def get_edit_link(self, obj=None):
         if obj.pk:  # if object has already been saved and has a primary key, show link to it
-            url = reverse('admin:%s_%s_change' % (obj._meta.app_label, obj._meta.model_name), args=[force_text(obj.pk)])
+            url = reverse('admin:accounts_proxystoreprofile_change', args=[force_text(obj.pk)])
             return mark_safe("""<a href="{url}">{text}</a>""".format(
                 url=url,
                 text=("가게 평점, 문의글 보러가기"),
