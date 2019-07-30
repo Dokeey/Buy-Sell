@@ -2,7 +2,8 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, FloatField
+from django.db.models.functions import Cast
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.template.loader import render_to_string
@@ -27,11 +28,6 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 # def my_store_profile(request):
 #     stores = get_object_or_404(StoreProfile, user=request.user)
 #     return render(request, 'store/layout.html',{'stores': stores})
-
-
-
-
-
 
 
 class StarStoreSearchList(ListView):
@@ -98,11 +94,7 @@ class StarStoreGradeListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_grade = StoreGrade.objects.values('store_profile').annotate(rating_sum=Sum('rating') / Count('rating'),
-                                                                           count=Count('rating'),
-                                                                           rank=DenseRank('rating_sum',
-                                                                                          'count')).order_by(
-            '-rating_sum', '-count')
+        search_grade = StoreGrade.objects.values('store_profile').annotate(count=Count('rating'), rating_sum=Cast(Sum('rating'),FloatField())/Cast( Count('rating'), FloatField()),rank=DenseRank('rating_sum')).order_by('-rating_sum', '-count')
         context['my_grade'] = ''
         for i in search_grade:
             if i['store_profile']:
@@ -113,7 +105,6 @@ class StarStoreGradeListView(ListView):
 
         if context['my_grade'] == '':
             context['my_grade'] = '-'
-
         context['stores'] = search_grade
         return context
 
@@ -123,18 +114,14 @@ class StarStoreSellListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),
-                                                                                           rank=DenseRank(
-                                                                                               'count')).order_by(
-            'user')
+        search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),rank=DenseRank('count')).order_by('user')
         context['my_sell'] = ''
         for i in search_sell:
             if i['rank']:
                 i['store_info'] = StoreProfile.objects.get(user_id=i['item__user'])
             if self.request.user.is_active:
-                if i['item__user'] == self.request.user:
+                if i['item__user'] == self.request.user.pk:
                     context['my_sell'] = i['rank']
-
         if context['my_sell'] == '':
             context['my_sell'] = '-'
         context['stores'] = search_sell
@@ -148,7 +135,6 @@ class StarStoreFollowListView(ListView):
         context = super().get_context_data(**kwargs)
         search_follow = Follow.objects.values('store').annotate(foll_count=Count('store'),
                                                                 rank=DenseRank('foll_count')).order_by('-foll_count')
-        print(search_follow)
         context['my_follow'] = ''
         for i in search_follow:
             if i['store']:
@@ -310,7 +296,7 @@ class StoreQuestionDelView(DeleteView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        print(self.object)
+
         if self.request.user != self.object.author:
             messages.error(self.request, '잘못된 접근 입니다.')
             return redirect('store:store_question', self.kwargs.get('pk'))
@@ -413,6 +399,13 @@ class StoreGradeEditView(UpdateView):
         grade = self.model.objects.get(pk=self.kwargs['gid'])
         context['items'] = get_object_or_404(Item, pk=grade.store_item_id)
         return context
+
+    def form_valid(self, form):
+        gradeform = form.save(commit=False)
+        print(self.request.POST.get('rating'))
+        gradeform.rating = self.request.POST.get('rating')
+        gradeform.save()
+        return redirect('store:store_grade', self.kwargs['pk'])
     def get_success_url(self, **kwargs):
         return reverse_lazy("store:store_grade", kwargs={'pk': self.kwargs['pk']})
 

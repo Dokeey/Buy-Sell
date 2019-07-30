@@ -1,34 +1,35 @@
 {% extends "store/layout.html" %}
 {% load trade_tags %}
 {% block store_head %}
+{% load static %}
 <style>
-.bubble
-{
-position: relative;
-width: 100%;
-height: 120px;
-padding: 5px;
-background: #FFFFFF;
--webkit-border-radius: 10px;
--moz-border-radius: 10px;
-border-radius: 10px;
-border: #FFFFFF solid 2px;
-}
 
-.bubble:after
-{
-content: '';
-position: absolute;
-border-style: solid;
-border-width: 16px 17px 16px 0;
-border-color: transparent #FFFFFF;
-display: block;
-width: 0;
-z-index: 1;
-left: -17px;
-top: 33px;
+    .bubble
+        {
+            position: relative;
+            width: 100%;
+            height: 120px;
+            padding: 5px;
+            background: #FFFFFF;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            border: #FFFFFF solid 2px;
+        }
 
-}
+    .bubble:after
+        {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 16px 17px 16px 0;
+            border-color: transparent #FFFFFF;
+            display: block;
+            width: 0;
+            z-index: 1;
+            left: -17px;
+            top: 33px;
+        }
 
 .imggrid{
     max-height: 200px;
@@ -43,17 +44,27 @@ top: 33px;
   cursor: pointer;
   text-align: center;
 }
-.scrollblind{
-	height:50px;
-	overflow-y:auto;
-	overflow-x: none;
-	-ms-overflow-style: none;
-  &::-webkit-scrollbar {
-    display: none !important;
-  }
-}
 .mint_active { color:#0fd9a6; font-weight:bold; }
 </style>
+<script src="{% static 'js/readmore-2.2.1.min.js' %}" ></script> <!-- Readmore.js -->
+    <script>
+        jQuery(document).ready(function() {
+
+        jQuery('.more').readmore({
+            speed: 300,
+            collapsedHeight: 110,
+            moreLink: '<a href="#">더 보기</a>',
+            lessLink: '<a href="#">다시 닫기</a>',
+            heightMargin: 16
+        });
+
+    });
+    </script>
+    <style>
+        .more {
+            overflow: hidden;
+        }
+    </style>
 
 {% endblock %}
 
@@ -87,14 +98,14 @@ top: 33px;
 
 {% for comm in comms %}
     <div class="well" >
-    <div class="row" id="block-{{ comm.id }}" >
+    <div class="row" id="block-{{ comm.id }}">
 
         <div class="col-md-3 col-xs-3 imggrid" align="center">
              <img src="{{ comm.author.storeprofile.photo.url }}" class="img-responsive img-thumbnail" width="100px" height="100px" />
         </div>
 
-        <div class="col-md-8 col-xs-8">
-            <div class="bubble" >
+        <div class="col-md-8 col-xs-8" >
+            <div class="bubble more" >
                 <a href="{% url 'store:store_sell_list' comm.author.storeprofile.pk %}">{{ comm.author }}</a>   &nbsp;&nbsp;  <i class="far fa-clock"></i>{% simple_time comm.updated_at %}
                 <div align="right" style="display: inline;float: right;" >
                     <!--댓글 수정 삭제 -->
@@ -107,7 +118,7 @@ top: 33px;
                   {% endif %}
                 </div>
                 <hr/>
-                <div class="scrollblind" > {{ comm.comment | linebreaks }}</div>
+                {{ comm.comment | linebreaks }}
 
             </div>
         </div>
@@ -124,7 +135,7 @@ top: 33px;
 
             <div class="col-md-8 col-xs-7">
 
-                <div class="bubble" >
+                <div class="bubble more" >
                     {{ replay.author }}  &nbsp;&nbsp;  <i class="far fa-clock"></i> {% simple_time replay.updated_at %}
 
                     <div align="right" style="display: inline;float: right;" >
@@ -139,7 +150,7 @@ top: 33px;
                     </div>
 
                     <hr/>
-                    <div class="scrollblind" >{{ replay.comment | linebreaks }}</div>
+                    {{ replay.comment | linebreaks }}
 
                 </div>
             </div>

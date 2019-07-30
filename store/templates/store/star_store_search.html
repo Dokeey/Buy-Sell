@@ -46,6 +46,13 @@ color: white;
 .btn-blue {
 background-color: #00498c;
 }
+ b{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        max-width: 100%;
+     }
 </style>
 {% endblock %}
 
@@ -54,23 +61,23 @@ background-color: #00498c;
 
 {% for star in star_search %}
 
-    <div class="col-md-4 col-xs-12">
+    <div class="col-md-4 col-sm-6 col-xs-12">
       <div class="thumbnail">
           <div class="row">
-            <div class="col-sm-12 text-center">
-                <h4>{{ star.name }}</h4>
+            <div class="col-sm-12 text-center" >
+               <h4> <b style="padding:5px;height:25px">{{ star.name }}</b></h4>
                 <hr/>
             </div>
             <div class="col-sm-12 col-xs-12 text-center">
 
-                <img src="{{ star.photo.url }}" width="50%", height="50%", class="img-responsive img-thumbnail "><hr/>
+                <img src="{{ star.photo.url }}" style="max-height:150px;" class="img-responsive img-thumbnail "><hr/>
             </div>
         {% star_grade star as rank %}
       <div class="caption">
             <div class="col-sm-12 col-xs-12">
             <div class="row">
 
-                <div class="col-sm-12 col-xs-12" style="padding:5px">
+                <div class="col-sm-12 col-xs-12" style="padding:3px">
                     <div class="col-xs-4" style="font-weight:bold;">
                         방문 순위
                     </div>
@@ -82,7 +89,7 @@ background-color: #00498c;
                     </div>
                 </div>
 
-                <div class="col-sm-12 col-xs-12" style="padding:5px">
+                <div class="col-sm-12 col-xs-12" style="padding:3px">
                     <div class="col-xs-4" style="font-weight:bold;">
                          판매 순위
                     </div>
@@ -94,7 +101,7 @@ background-color: #00498c;
                     </div>
                 </div>
 
-                <div class="col-sm-12 col-xs-12" style="padding:5px">
+                <div class="col-sm-12 col-xs-12" style="padding:3px">
                     <div class="col-xs-4" style="font-weight:bold;">
                         평점 순위
                     </div>
@@ -130,7 +137,7 @@ background-color: #00498c;
                                 {% endif %}
                     </div>
                 </div>
-                <div class="col-sm-12 col-xs-12" style="padding:5px">
+                <div class="col-sm-12 col-xs-12" style="padding:3px">
                     <div class="col-xs-4" style="font-weight:bold;">
                         팔로워 순위
                     </div>
@@ -198,4 +205,6 @@ background-color: #00498c;
         </div>
     </div>
 </div>
+{% endblock %}
+{% block bottom %}
 {% endblock %}
