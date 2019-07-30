@@ -105,7 +105,6 @@ class StarStoreGradeListView(ListView):
 
         if context['my_grade'] == '':
             context['my_grade'] = '-'
-        print(search_grade)
         context['stores'] = search_grade
         return context
 
@@ -115,18 +114,14 @@ class StarStoreSellListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),
-                                                                                           rank=DenseRank(
-                                                                                               'count')).order_by(
-            'user')
+        search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),rank=DenseRank('count')).order_by('user')
         context['my_sell'] = ''
         for i in search_sell:
             if i['rank']:
                 i['store_info'] = StoreProfile.objects.get(user_id=i['item__user'])
             if self.request.user.is_active:
-                if i['item__user'] == self.request.user:
+                if i['item__user'] == self.request.user.pk:
                     context['my_sell'] = i['rank']
-
         if context['my_sell'] == '':
             context['my_sell'] = '-'
         context['stores'] = search_sell

@@ -1,7 +1,7 @@
 {% extends "store/layout.html" %}
 {% load store.store_tags %}
 {% load trade_tags %}
-
+{% load static %}
 {% block store_head %}
 <style>
     body{ margin-top:20px;}
@@ -14,6 +14,26 @@
 .sr-only { margin-left: 5px;overflow: visible;clip: auto; }
 .mint_active { color:#0fd9a6; font-weight:bold; }
 </style>
+<script src="{% static 'js/readmore-2.2.1.min.js' %}" ></script> <!-- Readmore.js -->
+    <script>
+        jQuery(document).ready(function() {
+
+        jQuery('.more').readmore({
+            speed: 300,
+            collapsedHeight: 74,
+            moreLink: '<a href="#">더 보기</a>',
+            lessLink: '<a href="#">다시 닫기</a>',
+            heightMargin: 16
+        });
+
+    });
+    </script>
+    <style>
+        .more {
+            overflow: hidden;
+        }
+    </style>
+
 {% endblock %}
 
 {% store_rating stores.pk as end %}
@@ -153,7 +173,7 @@
                   {% endif %}
                 </div>
                 {{ grade.get_rating_display }}&nbsp;&nbsp;<i class="far fa-clock"></i> {% simple_time grade.updated_at %} <br/>
-             <h5>{{ grade.grade_comment | linebreaks }} </h5>
+             <h5 class="more">{{ grade.grade_comment | linebreaks }} </h5>
          </div>
         <div class="modal fade myModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"></div>
         {% empty %}

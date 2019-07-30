@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% load store.store_tags %}
 {% load hitcount_tags %}
-
+{% load static %}
 
 {% block head %}
         <script>
@@ -315,10 +315,31 @@
         display: none !important;
       }
     }
+
+
     </style>
 
 
 {% block store_head %}
+    <script src="{% static 'js/readmore-2.2.1.min.js' %}" ></script> <!-- Readmore.js -->
+        <script>
+            jQuery(document).ready(function() {
+
+            jQuery('.more').readmore({
+                speed: 300,
+                collapsedHeight: 74,
+                moreLink: '<a href="#">더 보기</a>',
+                lessLink: '<a href="#">다시 닫기</a>',
+                heightMargin: 16
+            });
+
+        });
+        </script>
+        <style>
+            .more {
+                overflow: hidden;
+            }
+        </style>
 
 {% endblock %}
 {% endblock %}
@@ -330,7 +351,7 @@
 {% store_sell_list stores.pk as order %}
 
 
-    <div class="row">
+    <div class="row" style="padding:5px">
 
         <div class="col-md-4 col-xs-12 " align="center">
 
@@ -417,11 +438,13 @@
             <hr/>
 
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-xs-12" >
                     <i class="fas fa-pencil-alt" style="color:#993800"></i> 가게 소개
+
                 </div>
-                <div class="col-md-10 col-xs-12 scrollBlind">
-                   {{ stores.comment | linebreaks }}
+                <br/>
+                <div class="col-md-12 col-xs-12" style="padding:10px">
+                   <div class="more">{{ stores.comment | linebreaks }}</div>
                 </div>
             </div> <hr/>
 
@@ -433,7 +456,7 @@
 
         </div>
     </div>
-<div>
+<div class="row" style="padding:10px">
   <ul class="nav nav-tabs nav-justified" role="tablist">
     <li role="presentation" ><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
     <li role="presentation"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>

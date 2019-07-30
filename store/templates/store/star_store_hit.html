@@ -286,9 +286,13 @@ border-radius: 20px;", class="img-responsive" />
 
             {% endfor %}
         </div>
-        {% if store.store_info.user.item_set.all.count > 0 %}
+        {% if store.store_info.user.item_set.all.count > 4 %}
         <div align="center">
             <a href="{% url 'store:store_sell_list' store.store_info.pk %}">남은 <span style="color:red;font-weight:bold"> {{ store.store_info.user.item_set.count|add:"-4" }}개</span> 물품 보러가기</a>
+        </div>
+        {% else %}
+        <div align="center">
+            <a href="{% url 'store:store_sell_list' store.store_info.pk %}">가게 구경 가기</a>
         </div>
         {% endif %}
         <hr/>
