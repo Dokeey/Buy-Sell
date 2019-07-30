@@ -12,9 +12,29 @@ class WishListAdmin(admin.ModelAdmin):
     list_display = ['id','user','item']
 
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return False
+
+
 @admin.register(Follow)
-class WishListAdmin(admin.ModelAdmin):
+class FollowAdmin(admin.ModelAdmin):
     list_display = ['id','user','store']
+
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return False
 
 
 @admin.register(ProxyOrder)
@@ -152,3 +172,13 @@ class OrderAdmin(admin.ModelAdmin):
             self.message_user(request, '취소할 주문이 없습니다.')
 
     do_cancel.short_description = '선택된 주문에 대해 결제취소요청하기'
+
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return False
