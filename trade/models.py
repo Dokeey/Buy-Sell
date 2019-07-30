@@ -29,6 +29,12 @@ def named_property(name):
         return property(fn)
     return wrap
 
+def order_property(order):
+    def wrap(fn):
+        fn.admin_order_field = order
+        return fn
+    return wrap
+
 def timestamp_to_datetime(timestamp):
     if timestamp:
         tz = pytz.timezone(settings.TIME_ZONE)
@@ -129,10 +135,11 @@ class Order(models.Model):
 
     item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE)
     merchant_uid = models.UUIDField(default=uuid4, editable=False)
-    imp_uid = models.CharField(max_length=100, blank=True)
+    imp_uid = models.CharField(verbose_name="이니페이 UID",max_length=100, blank=True)
     # name = models.CharField(max_length=100, verbose_name='상품명')
     amount = models.PositiveIntegerField(verbose_name='결제금액')
     pay_choice = models.CharField(
+        verbose_name='결제 방식',
         max_length=15,
         default='import',
         choices=(
@@ -141,6 +148,7 @@ class Order(models.Model):
         )
     )
     status = models.CharField(
+        verbose_name='처리 결과',
         max_length=9,
         choices=(
             ('ready', '미결제'),
@@ -187,6 +195,9 @@ class Order(models.Model):
     #아래와 같은 말
 
     # receipt_url = named_property('영수증')(lambda self: self.meta.get('receipt_url'))
+
+    def __str__(self):
+        return self.item.title
 
     class Meta:
         ordering = ('-id',)

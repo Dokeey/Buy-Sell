@@ -146,7 +146,7 @@ class CategoryItmeFilter(CategoryFilter):
 class ItemAdmin(admin.ModelAdmin):
 
     save_on_top = True
-    list_display = ['hit_count', 'pk','user','title','desc','amount', 'category', 'item_status','pay_status', 'updated_at']
+    list_display = ['hit_count', 'get_wishlist_count', 'pk','user','title','desc','amount', 'category', 'item_status','pay_status', 'updated_at']
     list_display_links = ['user','amount', 'title', 'desc']
     # list_editable = ('title', 'desc')
     list_filter = (CategoryItmeFilter,'item_status','pay_status', 'updated_at')
@@ -155,7 +155,7 @@ class ItemAdmin(admin.ModelAdmin):
     inlines = [ItemImageAdmin, ItemCommentAdmin]
     date_hierarchy = 'created_at'
 
-    readonly_fields = ['hit_count', 'get_user_link', 'amount', 'category', 'item_status', 'pay_status']
+    readonly_fields = ['hit_count', 'get_wishlist_count', 'get_user_link', 'amount', 'category', 'item_status', 'pay_status']
 
 
     def get_user_link(self, obj):
@@ -172,6 +172,10 @@ class ItemAdmin(admin.ModelAdmin):
         return obj.hit_count.hits
     hit_count.short_description = '조회수'
     hit_count.admin_order_field = 'hit_count_generic'
+
+    def get_wishlist_count(self, obj):
+        return obj.wishlist_set.all().count()
+    get_wishlist_count.short_description = '찜한 횟수'
 
     def has_add_permission(self, request, obj=None):
         return False

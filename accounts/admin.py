@@ -3,7 +3,6 @@ from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth import get_user_model
 
 from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, F
 from django.urls import reverse
 from django.utils.encoding import force_text
@@ -12,6 +11,7 @@ from hitcount.models import HitCount, Hit, BlacklistIP, BlacklistUserAgent
 
 from store.models import StoreProfile, QuestionComment, StoreGrade
 
+from mypage.models import Follow
 from .forms import SignupForm
 from .models import UserSession, Profile, ProxyStoreProfile
 
@@ -43,11 +43,25 @@ def store_image(obj):
 store_image.short_description = '스토어 사진 뷰'
 
 
+def store_follow_count(obj=None):
+    return obj.follow_set.count()
+store_follow_count.short_description = '팔로워 수'
+
+
+def get_user_link(obj):
+    url = reverse('admin:accounts_user_change', args=[force_text(obj.author.pk)])
+    return mark_safe("""<a href="{url}">{text}</a>""".format(
+        url=url,
+        text=obj.author.username,
+    ))
+get_user_link.short_description = ("사용자 자세히 보기")
+
+
 class QuestionCommentAdmin(admin.StackedInline):
     model = QuestionComment
     extra = 0
-    fields = ['author', 'comment', 'updated_at']
-    readonly_fields = ['author', 'updated_at']
+    fields = [get_user_link, 'comment', 'updated_at']
+    readonly_fields = [get_user_link, 'updated_at']
 
     def has_add_permission(self, request, obj):
         return False
@@ -58,8 +72,8 @@ class QuestionCommentAdmin(admin.StackedInline):
 class StoreGradeAdmin(admin.StackedInline):
     model = StoreGrade
     extra = 0
-    fields = ['store_item', 'rating', 'author', 'grade_comment', 'updated_at']
-    readonly_fields = ['store_item', 'rating', 'author', 'updated_at']
+    fields = ['store_item', 'rating', get_user_link, 'grade_comment', 'updated_at']
+    readonly_fields = ['store_item', 'rating', get_user_link, 'updated_at']
 
     def has_add_permission(self, request, obj):
         return False
@@ -72,8 +86,8 @@ class ProfileInline(admin.StackedInline):
 
 class StoreProfileInline(admin.StackedInline):
     model = StoreProfile
-    fields = ['name', store_image, 'photo', 'comment','get_edit_link']
-    readonly_fields = [store_image,'get_edit_link']
+    fields = ['name', store_image, 'photo', 'comment', store_follow_count, 'get_edit_link']
+    readonly_fields = [store_image,'get_edit_link', store_follow_count]
 
     def get_edit_link(self, obj=None):
         if obj.pk:  # if object has already been saved and has a primary key, show link to it
@@ -89,7 +103,7 @@ class StoreProfileInline(admin.StackedInline):
 @admin.register(get_user_model())
 class AdminUser(AuthUserAdmin):
     save_on_top = True
-    list_display = ('id', store_image,'username','email','user_phone', 'is_active', 'is_staff','item_ctn', 'hit_count')
+    list_display = ('id', store_image,'username','email','user_phone', 'is_active', 'is_staff','item_ctn', 'hit_count', 'follow_count')
     list_display_links = ['username']
     list_editable = ('is_active', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'date_joined')
@@ -119,7 +133,8 @@ class AdminUser(AuthUserAdmin):
         queryset = super().get_queryset(request)
         queryset = queryset.annotate(
             _item_count=Count("item", distinct=True),
-            hit_count_generic = F('storeprofile__hit_count_generic')
+            _follow_count=Count("storeprofile__follow", distinct=True),
+            hit_count_generic=F('storeprofile__hit_count_generic')
         )
         return queryset
 
@@ -134,6 +149,11 @@ class AdminUser(AuthUserAdmin):
         return obj.storeprofile.hit_count.hits
     hit_count.short_description = '방문수'
     hit_count.admin_order_field = 'hit_count_generic'
+
+    def follow_count(self, obj):
+        return obj._follow_count
+    follow_count.short_description = '팔로워 수'
+    follow_count.admin_order_field = '_follow_count'
 
     def item_ctn(self, obj):
         return obj._item_count
@@ -166,8 +186,8 @@ class StoreProfileAdmin(admin.ModelAdmin):
     save_on_top = True
     list_display = ['user', 'name', 'hit_count']
     list_display_links = ['user', 'name']
-    fields = ['name', store_image, 'photo', 'comment']
-    readonly_fields = [store_image]
+    fields = ['name', store_image, 'photo', 'comment', store_follow_count]
+    readonly_fields = [store_image, store_follow_count]
     inlines = [QuestionCommentAdmin, StoreGradeAdmin]
 
 

@@ -1,0 +1,241 @@
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
+{% block extrastyle %}{% endblock %}
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
+{% block extrahead %}{% endblock %}
+{% block responsive %}
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive.css" %}">
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
+{% endblock %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+
+
+    <link rel="stylesheet" href="{% static "css/all.css" %}"> <!-- Font Awesome -->
+    <script src="{% static 'js/all.js' %}"></script> <!-- Font Awesome JS -->
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"> <!-- Favicon -->
+        <style>
+        @media (max-width: 768px) {
+
+            .collaps-block>li{
+              float: left !important;
+            }
+
+            .collaps-block {
+              float: right!important;
+            }
+            .navbar-fixed-top + .content {
+              padding-top: 43px;
+            }
+              .category {
+                width: 350px;
+                height: auto;
+              }
+              .navbar-brand {
+                font-size: 20px;
+              }
+        }
+        @media (min-width: 768px) {
+          .container {
+            width: 700px;
+          }
+            .dropdown:hover .dropdown-menu {
+                display: block;
+                margin-top: 0;
+            }
+            .header {
+                padding: 15px;
+                padding-left: 60px;
+            }
+            .content {
+                border-bottom: 1px solid #dddddd;
+            }
+            .navbar-fixed-top + .content {
+              padding-top: 74px;
+            }
+          .category {
+            width: 600px;
+          }
+        }
+        @media (min-width: 992px) {
+          .container {
+            width: 979px;
+          }
+        }
+
+        body {
+            padding-bottom: 70px;
+            padding-top: 0px;
+            background: white !important;
+        }
+        .navbar-nav.navbar-center {
+            position: relative;
+            left: 50%;
+            transform: translatex(-50%);
+            min-height: 40px;
+            margin-bottom: 0px;
+            border: 1px solid transparent;
+            padding: 15px;
+        }
+        .btn {
+            border:none;
+        }
+        .btn:hover {
+            border:none;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+        }
+        .table-borderless > tbody > tr > td,
+        .table-borderless > tbody > tr > th,
+        .table-borderless > tfoot > tr > td,
+        .table-borderless > tfoot > tr > th,
+        .table-borderless > thead > tr > td,
+        .table-borderless > thead > tr > th {
+            border: none;
+        }
+        .vcenter {
+            display: inline-block;
+            vertical-align: middle;
+            float: none;
+        }
+        .profile-img { max-width: 150px; max-height: 150px;}
+        .profile-img > img {max-height: 100%; width:auto;}
+        .thumbnail {
+           box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+           transition: 0.3s;
+           min-width: 40%;
+           border-radius: 5px;
+         }
+         .thumbnail-description {
+           <!--min-height: 90px;-->
+         }
+         .thumbnail:hover {
+           cursor: auto;
+           box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 1);
+         }
+         .thumbnail-description > b {
+             display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+         }
+         .thumbnail-description > .list-inline b{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            max-width: 100%;
+         }
+         .pagination {
+           box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+         }
+         .navbar-fixed-top {
+           box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+         }
+
+        .nav-tabs > li > a:hover,
+        .nav-tabs > .active a {
+            background-color: #0fd9a6 !important;
+            border-radius: 5px;
+            color:#fff !important;
+        }
+        img {
+            border-radius: 5px;
+        }
+        input[readonly] {
+          background-color:transparent !important;
+        }
+        .main-footer a:hover {
+            box-shadow: none;
+            background-color: #0fd9a6 !important;
+            border-radius: 5px;
+            color:#fff !important;
+        }
+        .main-footer > a {
+            margin:5px 0 5px 0;
+        }
+
+    </style>
+
+</head>
+{% load i18n %}
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+  data-admin-utc-offset="{% now "Z" %}">
+
+<!-- Container -->
+<div id="container">
+
+    {% if not is_popup %}
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        {% block branding %}{% endblock %}
+        </div>
+        {% block usertools %}
+        {% if has_permission %}
+        <div id="user-tools">
+            {% block welcome-msg %}
+                {% trans 'Welcome,' %}
+                <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+            {% endblock %}
+            {% block userlinks %}
+                {% if site_url %}
+                    <a href="{{ site_url }}">{% trans 'View site' %}</a> /
+                {% endif %}
+                {% if user.is_active and user.is_staff %}
+                    {% url 'django-admindocs-docroot' as docsroot %}
+                    {% if docsroot %}
+                        <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
+                    {% endif %}
+                {% endif %}
+                {% if user.has_usable_password %}
+                <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+                {% endif %}
+                <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+            {% endblock %}
+        </div>
+        {% endif %}
+        {% endblock %}
+        {% block nav-global %}{% endblock %}
+    </div>
+    <!-- END Header -->
+    {% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    {% if title %} &rsaquo; {{ title }}{% endif %}
+    </div>
+    {% endblock %}
+    {% endif %}
+
+    {% block messages %}
+        {% if messages %}
+        <ul class="messagelist">{% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+        {% endfor %}</ul>
+        {% endif %}
+    {% endblock messages %}
+
+    <!-- Content -->
+    <div id="content" class="{% block coltype %}colM{% endblock %}">
+        {% block pretitle %}{% endblock %}
+        {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+        {% block content %}
+        {% block object-tools %}{% endblock %}
+        {{ content }}
+        {% endblock %}
+        {% block sidebar %}{% endblock %}
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    {% block footer %}<div id="footer"></div>{% endblock %}
+</div>
+<!-- END Container -->
+
+</body>
+</html>
