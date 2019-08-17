@@ -4,12 +4,14 @@ from django.contrib.auth import get_user_model
 from django import forms
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.validators import MaxLengthValidator
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
 from store.models import StoreProfile
 
+from .validators import phone_validate
 from .supporter import send_mail
 from .models import Profile
 
@@ -19,11 +21,11 @@ User = get_user_model()
 
 class SignupForm(UserCreationForm):
 
-    phone = forms.CharField()
-    post_code = forms.CharField()
-    address = forms.CharField()
-    detail_address = forms.CharField()
-    account_num = forms.CharField()
+    phone = forms.CharField(validators=[phone_validate, MaxLengthValidator(11)])
+    post_code = forms.CharField(validators=[MaxLengthValidator(10)])
+    address = forms.CharField(validators=[MaxLengthValidator(100)])
+    detail_address = forms.CharField(validators=[MaxLengthValidator(20)])
+    account_num = forms.CharField(validators=[MaxLengthValidator(20)])
     email = forms.EmailField(widget=forms.EmailInput)
     CHOICE = (
         ("policy1", "(필수)Buy&Sell 이용약관 동의"),

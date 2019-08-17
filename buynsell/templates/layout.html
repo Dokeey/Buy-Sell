@@ -210,8 +210,8 @@
 
                           {% else %}
 
-                            <li><a href="{% url "accounts:login" %}">로그인</a></li>
-                            <li><a href="{% url "accounts:signup" %}">회원가입</a></li>
+                            <li><a href="{% url "accounts:login" %}?next={{ request.path }}">로그인</a></li>
+                            <li><a href="{% url "accounts:signup" %}?next={{ request.path }}">회원가입</a></li>
 
                           {% endif %}
 
@@ -482,7 +482,7 @@ BuynSell㈜는 통신판매중개자로서 중고거래마켓 BuynSell의 거래
 
 #loading-image {
  position: absolute;
- top: 30%;
+ top: 25%;
  left: 50%;
  z-index: 100; }
 </style>

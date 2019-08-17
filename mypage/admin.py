@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.db.models import F
+from django.db.models import F, Count
 from django.urls import reverse
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
@@ -9,7 +9,13 @@ from .models import WishList, Follow, ProxyOrder
 
 @admin.register(WishList)
 class WishListAdmin(admin.ModelAdmin):
-    list_display = ['id','user','item']
+    list_display = ['item']
+
+    # def get_queryset(self, request):
+    #     qs = super().get_queryset(request)
+    #     qs = qs.values('item__title').distinct()
+    #     return qs
+
 
 
     def has_delete_permission(self, request, obj=None):

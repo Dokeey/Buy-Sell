@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
-from django.db.models import Count
+from django.db.models import Count, F
 
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -150,13 +150,19 @@ class ItemAdmin(admin.ModelAdmin):
     list_display_links = ['user','amount', 'title', 'desc']
     # list_editable = ('title', 'desc')
     list_filter = (CategoryItmeFilter,'item_status','pay_status', 'updated_at')
-    search_fields = ('title','desc')
+    search_fields = ('_username', 'title','desc')
     list_per_page = 50
     inlines = [ItemImageAdmin, ItemCommentAdmin]
     date_hierarchy = 'created_at'
 
     readonly_fields = ['hit_count', 'get_wishlist_count', 'get_user_link', 'amount', 'category', 'item_status', 'pay_status']
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.annotate(
+            _username=F('user__username'),
+        )
+        return qs
 
     def get_user_link(self, obj):
         if obj.pk:  # if object has already been saved and has a primary key, show link to it
@@ -178,8 +184,5 @@ class ItemAdmin(admin.ModelAdmin):
     get_wishlist_count.short_description = '찜한 횟수'
 
     def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
         return False
 
