@@ -4,32 +4,29 @@
 {% load static %}
 <style>
 
-    .bubble
+        .bubble
         {
             position: relative;
-            width: 100%;
-            height: 120px;
-            padding: 5px;
-            background: #FFFFFF;
+            padding: 10px;
+            background: #ededed;
             -webkit-border-radius: 10px;
             -moz-border-radius: 10px;
             border-radius: 10px;
-            border: #FFFFFF solid 2px;
         }
-
-    .bubble:after
+        .bubble:after
         {
             content: '';
             position: absolute;
             border-style: solid;
-            border-width: 16px 17px 16px 0;
-            border-color: transparent #FFFFFF;
+            border-width: 14px 23px 14px 0;
+            border-color: transparent #ededed;
             display: block;
             width: 0;
             z-index: 1;
-            left: -17px;
-            top: 33px;
+            left: -23px;
+            top: 18px;
         }
+
 
 .imggrid{
     max-height: 200px;
@@ -71,22 +68,25 @@
 {% block store_content %}
 
 {% if request.user.pk != stores.user.pk %}
-    <form action="" method="POST">
+    <form class="form-horizontal" action="" method="POST">
+        <div class="col-xs-offset-1 col-xs-10">
          {% csrf_token %}
-<div class="well">
-    <div class="row">
-        <div class="col-md-9 col-xs-8" >
-            {{ form.comment }}
+        <div class="form-group">
+              <div class="col-xs-12">
+                {{ form.comment }}
+              </div>
+          </div>
+
+        <div class="form-group">
+            <div class="col-xs-12 text-right">
+                <button type="submit" class="btn btn-default"><i class="fas fa-comments"></i> 문의하기</button>
+            </div>
         </div>
-        <div class="col-md-3 col-xs-4" >
-            <input type="submit" class="btn btn-default block" value="등록">
         </div>
-    </div>
-</div>
 
     </form>
 {% endif %}
-{% if user.is_authenticated %}
+{% if user.is_authenticated and stores.questioncomment_set.all.count > 0 %}
 <div class="col-xs-12" align="right">
     <a href="{% url "store:store_question" stores.pk %}?&sort=all" >전체보기</a><small style="padding:8px;"> | </small>
 
@@ -97,7 +97,6 @@
 
 
 {% for comm in comms %}
-    <div class="well" >
     <div class="row" id="block-{{ comm.id }}">
 
         <div class="col-md-3 col-xs-3 imggrid" align="center">
@@ -105,7 +104,7 @@
         </div>
 
         <div class="col-md-8 col-xs-8" >
-            <div class="bubble more" >
+            <div class="bubble" >
                 <a href="{% url 'store:store_sell_list' comm.author.storeprofile.pk %}">{{ comm.author }}</a>   &nbsp;&nbsp;  <i class="far fa-clock"></i>{% simple_time comm.updated_at %}
                 <div align="right" style="display: inline;float: right;" >
                     <!--댓글 수정 삭제 -->
@@ -118,7 +117,7 @@
                   {% endif %}
                 </div>
                 <hr/>
-                {{ comm.comment | linebreaks }}
+                <div class=" more"> {{ comm.comment | linebreaks }}</div>
 
             </div>
         </div>
@@ -175,7 +174,7 @@
         </form>
 
     {% endif %}
-    </div>
+
    <div class="modal fade myModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
    </div>
     {% empty %}

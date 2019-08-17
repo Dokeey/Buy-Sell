@@ -159,10 +159,10 @@ border-radius: 20px;", class="img-responsive" />
                 <h4 style="color:white"><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
                 <div class="row">
                     <div class="col-xs-5">
-                         <img src="{{ stores.0.store_info.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
+                        <a href="{% url 'store:store_sell_list' stores.0.object_pk %}"><img src="{{ stores.0.store_info.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail "></a>
                     </div>
                     <div class="col-xs-7" style="font-weight:bold;color:white;">
-                         {{ stores.0.store_info.name }}<br/><br/>
+                        <a href="{% url 'store:store_sell_list' stores.0.object_pk %}" style="color:white;font-weight:bold;">{{ stores.0.store_info.name }}</a><br/><br/>
                         <div class="row">
                             <div class="col-xs-4" >
                                 <a class="white" onclick="javascript:sharefacebook('{{ request.META.HTTP_HOST }}{{ request.path }}')">
@@ -212,10 +212,10 @@ border-radius: 20px;", class="img-responsive" />
 
          </div>
          <div class="col-sm-2 col-xs-3">
-            <img src="{{ request.user.storeprofile.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
+             <a href="{% url 'store:store_sell_list' request.user.storeprofile.pk %}" ><img src="{{ request.user.storeprofile.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail "></a>
          </div>
          <div class="col-sm-8 col-xs-9">
-            {{ request.user.storeprofile.name }}
+             <a href="{% url 'store:store_sell_list' request.user.storeprofile.pk %}" >{{ request.user.storeprofile.name }}</a>
             <div class="row">
                 <br/>
             <div class="col-sm-5 col-xs-5" style="font-size:20px; font-weight:bold;">
@@ -241,10 +241,10 @@ border-radius: 20px;", class="img-responsive" />
                      {% endif %}
                  </div>
                  <div class="col-sm-2 col-xs-3">
-                    <img src="{{ store.store_info.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
+                    <a href="{% url 'store:store_sell_list' store.object_pk %}"><img src="{{ store.store_info.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail "></a>
                  </div>
                  <div class="col-sm-8 col-xs-9">
-                    {{ store.store_info.name }}
+                     <a href="{% url 'store:store_sell_list' store.object_pk %}">{{ store.store_info.name }}</a>
 
                     <div class="row">
                         <br/>
@@ -273,8 +273,8 @@ border-radius: 20px;", class="img-responsive" />
             <div class="col-sm-offset-1 col-sm-10 col-xs-offset-1 col-xs-10">
 
         <div class="text-center">
-            <h3 style="padding:0px;">{{ store.store_info.name }}</h3>
-            </div>
+            <a href="{% url 'store:store_sell_list' store.store_info.pk %}"> <h3 style="padding:0px;"><i class="fas fa-trophy" style="color:#FFD700;"></i> <span style="color:#EDA900">1위</span> {{ store.store_info.name }}</h3>
+            </a></div>
         <div class="row">
 
             {% for item in store.store_info.user.item_set.all|slice:"4" %}
