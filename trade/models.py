@@ -100,10 +100,18 @@ class ItemImage(models.Model):
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
-user_pk = User.objects.get(username='deleteuser').id
+try:
+    user_pk = User.objects.get(username='deleteuser').id
+except:
+    user_pk = None
 
 class ItemComment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.SET_DEFAULT, default=user_pk)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.CASCADE)
+
+    if user_pk:
+        user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자",
+                                 on_delete=models.SET_DEFAULT, default=user_pk)
+
     item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE)
     message = models.TextField(verbose_name="내용")
     secret = models.BooleanField(verbose_name="비밀글", default=True)

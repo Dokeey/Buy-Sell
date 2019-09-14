@@ -100,11 +100,11 @@ DATABASES = {
     'default': {
         # Database 엔진으로 postgresql을 사용
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'buynselldb',
-        'USER': 'bns',
-        'PASSWORD': 'wjdqhqhdks',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.environ.get('DJANGO_DB_NAME', 'buynselldb'),
+        'USER': os.environ.get('DJANGO_DB_USERNAME', 'bns'),
+        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD', 'wjdqhqhdks'),
+        'HOST': os.environ.get('DJANGO_DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DJANGO_DB_PORT', '5432'),
     }
 }
 
