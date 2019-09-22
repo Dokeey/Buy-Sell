@@ -2,7 +2,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Sum, Count, FloatField
+from django.db.models import Sum, Count, FloatField, IntegerField
 from django.db.models.functions import Cast
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
@@ -94,7 +94,8 @@ class StarStoreGradeListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_grade = StoreGrade.objects.values('store_profile').annotate(count=Count('rating'), rating_sum=Cast(Sum('rating'),FloatField())/Cast( Count('rating'), FloatField()),rank=DenseRank('rating_sum')).order_by('-rating_sum', '-count')
+        search_grade = StoreGrade.objects.values('store_profile').annotate(count=Count('rating'), rating_sum=Cast(Sum('rating'),FloatField())/Cast( Count('rating'), FloatField()),rank=Cast(DenseRank('rating_sum'), IntegerField())).order_by('-rating_sum', '-count')
+
         context['my_grade'] = ''
         for i in search_grade:
             if i['store_profile']:

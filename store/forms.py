@@ -20,7 +20,7 @@ class StoreQuestionForm(forms.ModelForm):
         model = QuestionComment
         fields = ['comment']
         widgets = {
-            'comment': Textarea(attrs={'class': 'bubble'}),
+            'comment': Textarea(attrs={'class': 'form-control col-sm-10', 'rows': 3, 'cols': 50}),
         }
 
 class StoreGradeForm(forms.ModelForm):
@@ -28,5 +28,5 @@ class StoreGradeForm(forms.ModelForm):
         model = StoreGrade
         fields = ['grade_comment']
         widgets = {
-            'grade_comment': Textarea(attrs={'class': 'form-control'})
+            'grade_comment': Textarea(attrs={'class': 'form-control', 'rows': 5, 'cols': 50})
         }
