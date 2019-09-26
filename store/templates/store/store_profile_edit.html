@@ -27,45 +27,68 @@
 {% endblock %}
 
 {% block content %}
+<div class="row" style="padding:30px">
+<div class="container-fluid thumbnail" style="box-shadow:none; padding:20px;">
 
-<form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
-     {% csrf_token %}
-    <div class="row">
-        <div class="col-sm-11 col-sm-offset-1 text-center">
-            <h2><small>가게 이름을 바꿔보세요</small></h2>
-        </div>
-        <div class="col-sm-6 col-xs-12">
-             {{ form.name }}
-        </div>
-        <br/>
-        <div class="col-sm-12">
+    <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
 
+            <div class="col-sm-12 text-center">
+                <h2><small>가게 이름을 바꿔보세요</small></h2>
+            </div>
             <div class="form-group">
-                <div class="col-sm-11 col-sm-offset-1 text-center">
-                    <h2><small>가게 프로필을 바꿔보세요</small></h2>
-                </div>
-                <div class="col-sm-11 col-sm-offset-1 text-center">
-                    <img src="{{ request.user.storeprofile.photo.url }}"> <br/>
-                    {{ form.photo }}
+                <label for="{{ form.title.id_for_label }}" class="col-md-2 control-label">{{ form.name.label }}</label>
+                <div class=" col-md-8">
+                    {{ form.name }}
+                    <div id="error_title" class="col-md-12" style="margin-top:10px"></div>
                 </div>
             </div>
             <br/>
-            <div class="col-sm-11 col-sm-offset-1 text-center">
-                    <h2><small>가게 코멘트를 바꿔보세요</small></h2>
-                </div>
-            <div class="col-sm-12">
-                {{ form.comment }}
+
+            <div class="col-sm-12 text-center">
+                <h2><small>가게 프로필 사진을 바꿔보세요</small></h2>
             </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">{{ form.photo.label }}</label>
+                <div class=" col-md-8">
+                    <small class="img-help text-right"></small>
+                    <label for="{{ form.photo.id_for_label }}" id="dropZone" class="thumbnail well text-muted text-center col-xs-12" style="padding-top: 4rem; padding-bottom: 4rem; background:#dddddd;">
+                        <div class="fileList"></div>
+                        <div id="upload_help">
+                            <i class="fas fa-arrow-alt-circle-down fa-5x"></i>
+                            <h4>이미지를 드래그 하거나 파일을 불러오세요</h4>
+                        </div>
+                    </label>
+                    <div>
+                    <p class="help-block">사진을 빼려면 사진을 클릭하세요 :)</p>
+                    </div>
+                    {{ form.photo }}
+                    <div id="error_photo" class="col-md-12"></div>
+                </div>
+            </div>
+            <br/>
+            
+            <div class="col-sm-12 text-center">
+                <h2><small>가게 코멘트를 바꿔보세요</small></h2>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">{{ form.comment.label }}</label>
+                <div class="col-sm-8">
+                    {{ form.comment }}
+                </div>
+            </div>
+
         </div>
-    </div>
-    <br/>
+        <br/>
 
-    <div class="text-center">
-        <input type="submit" class="btn btn-primary btn-lg" value="등록하기">
-    </div>
+        <div class="text-center">
+            <input type="submit" class="btn btn-primary btn-lg" value="등록하기">
+        </div>
 
-</form>
-
+    </form>
+</div>
+</div>
 {% endblock %}
 {% block extra_content %}
 <script src="http://code.jquery.com/jquery-latest.js"></script>

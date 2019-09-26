@@ -4,13 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Sum, Count, FloatField, IntegerField
 from django.db.models.functions import Cast
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse ,HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.template.loader import render_to_string
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DeleteView, UpdateView, CreateView
+from django.views.generic import ListView, DeleteView, UpdateView, CreateView, RedirectView, TemplateView
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 from rank import DenseRank
@@ -29,6 +28,12 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 #     stores = get_object_or_404(StoreProfile, user=request.user)
 #     return render(request, 'store/layout.html',{'stores': stores})
 
+# class StoreError(TemplateView):
+#     template_name = 'store/store_error.html'
+
+
+def StoreError(request):
+    return render(request, 'store/store_error.html')
 
 class StarStoreSearchList(ListView):
     model = StoreProfile
@@ -114,20 +119,31 @@ class StarStoreSellListView(ListView):
     model = StoreProfile
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),rank=DenseRank('count')).order_by('user')
-        context['my_sell'] = ''
-        for i in search_sell:
-            if i['rank']:
-                i['store_info'] = StoreProfile.objects.get(user_id=i['item__user'])
-            if self.request.user.is_active:
-                if i['item__user'] == self.request.user.pk:
-                    context['my_sell'] = i['rank']
-        if context['my_sell'] == '':
-            context['my_sell'] = '-'
-        context['stores'] = search_sell
-        return context
-
+        try:
+            context = super().get_context_data(**kwargs)
+            search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),rank=DenseRank('count')).order_by('user')         
+            context['my_sell'] = ''
+            for i in search_sell:
+                if i['rank']:
+                    i['store_info'] = StoreProfile.objects.get(user_id=i['item__user'])
+                if self.request.user.is_active:
+                    if i['item__user'] == self.request.user.pk:
+                        context['my_sell'] = i['rank']
+            if context['my_sell'] == '':
+                context['my_sell'] = '-'
+            context['stores'] = search_sell
+        except:
+            return HttpResponseRedirect(reverse('store:store_error'))
+        else:
+            return context
+    
+    # def render_to_response(self, context, **response_kwargs):
+    #     if context['stores'] == '<QuerySet []>':
+    #         print('nono')
+    #         return redirect('store:store_error')
+    #     return super().render_to_response(
+    #             context, **response_kwargs
+    #         )
 class StarStoreFollowListView(ListView):
     template_name = 'store/star_store_follow.html'
     model = StoreProfile
@@ -265,8 +281,7 @@ class StoreQuestionLCView(CreateView):
         if self.sort == 'all':
             context['comms'] = self.model.objects.filter(store_profile_id=self.kwargs['pk'], parent__isnull=True)
         elif self.sort == 'my':
-            context['comms'] = self.model.objects.filter(author=self.request.user, parent__isnull=True)
-
+            context['comms'] = self.model.objects.filter(author=self.request.user,store_profile_id=self.kwargs['pk'], parent__isnull=True)
         context['stores'] = get_object_or_404(StoreProfile, pk=self.kwargs['pk'])
 
         return context
