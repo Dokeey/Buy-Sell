@@ -1,0 +1,6 @@
+-r common.txt
+
+uwsgi
+
+django-storages~=1.7.0
+azure-storage-blob~=2.0.0

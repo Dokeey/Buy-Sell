@@ -8,19 +8,20 @@ from imagekit.models import ProcessedImageField
 from pilkit.processors import ResizeToFill
 from django_cleanup import cleanup
 
+from store.fields import DefaultStaticProcessedImageField
+
 
 def get_random():
     rand = randrange(1,10)
-    return 'profile/default/{}.png'.format(rand)
+    return '/static/profile/{}.png'.format(rand)
 
 @cleanup.ignore
 class StoreProfile(models.Model, HitCountMixin):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="유저", on_delete=models.CASCADE)
     name = models.CharField(max_length=20, verbose_name="가게명", unique=True)
-    photo = ProcessedImageField(
+    photo = DefaultStaticProcessedImageField(
         verbose_name="가게 사진",
         null=True,
-        default=get_random,
         upload_to='profile/storephoto',
         processors=[ResizeToFill(200, 200)],
         format='JPEG',
