@@ -18,7 +18,7 @@ from rank import DenseRank
 from trade.models import Item
 
 from accounts.supporter import send_mail
-from buynsell import settings
+from django.conf import settings
 from mypage.models import Follow
 from trade.models import Item, Order
 from .models import StoreProfile, QuestionComment, StoreGrade
