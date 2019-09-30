@@ -589,6 +589,7 @@
 
     function editSubmit(){
         var params = jQuery("#edit-form").serialize();
+        console.log(params)
         $.ajax({
             type: 'POST',
             url: edit_url,

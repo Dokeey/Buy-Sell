@@ -42,20 +42,7 @@
 }
 .mint_active { color:#0fd9a6; font-weight:bold; }
 </style>
-<script src="{% static 'js/readmore-2.2.1.min.js' %}" ></script> <!-- Readmore.js -->
-    <script>
-        jQuery(document).ready(function() {
 
-        jQuery('.more').readmore({
-            speed: 300,
-            collapsedHeight: 60,
-            moreLink: '<a href="#">더 보기</a>',
-            lessLink: '<a href="#">다시 닫기</a>',
-            heightMargin: 16
-        });
-
-    });
-    </script>
     <style>
         .more {
             overflow: hidden;
@@ -116,8 +103,8 @@
                     <!--댓글 수정 삭제 -->
                     <div align="right" style="display: inline;float: right;" >
                         {% if request.user.pk == comm.author.pk %}
-                            <a href="{% url "store:store_question_edit" pk=stores.pk cid=comm.pk  %}">
-                                <i class="fas fa-edit" style="margin-right:10px"></i>
+                            <a class="edit" href="#" data-form="{% url "store:store_question_edit" stores.id comm.id %}">
+                                <i class="fas fa-edit" data-toggle="modal" data-target="#edit-modal" style="margin-right:10px"></i>
                             </a>
                             <a class="del" href="#" data-form="{% url "store:store_question_del" stores.id comm.id %}" >
                                 <i class="fas fa-trash-alt" data-toggle="modal" data-target="#del-modal"  style="margin-right:10px"></i>
@@ -125,8 +112,7 @@
                         {% endif %}
                     </div>
                     <hr/>
-
-                    <div class=" more"> {{ comm.comment | linebreaks }}</div>
+                    <div id="cmt-{{ comm.id }}" class="more" style="padding-top:10px;">{{ comm.comment|linebreaks }}</div>
                 </div>
             </div>
         </div>
@@ -189,7 +175,6 @@
         
 <!-- 글 삭제 모달 -->
         <div class="modal fade myModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"></div>
-
     {% empty %}
         <div class="col-xs-12">
             <h4 align="center"><i class="far fa-sad-tear"></i>문의글이 없습니다.</h4>
@@ -200,8 +185,34 @@
 
 
 {% block store_extra_content %}
+<style>
+        pre{
+            padding: 0px;
+            border: none;
+            font-family: nanumgothic, "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 13px;
+            color: #777777;
+            background-color: transparent;
+        }
+</style>
+<script src="{% static 'js/readmore-2.2.1.min.js' %}" ></script> <!-- Readmore.js -->
     <script>
+        jQuery(document).ready(function() {
 
+        jQuery('.more').readmore({
+            speed: 300,
+            collapsedHeight: 60,
+            moreLink: '<a href="#">더 보기</a>',
+            lessLink: '<a href="#">다시 닫기</a>',
+            heightMargin: 16
+        });
+
+    });
+</script>
+    <script>
+        var edit_url = '';
+        var del_url = '';
+//sort highlight
         $(document).ready(function() {
           $('a.mint_active').removeClass('mint_active');
           if ('{{ sort }}' == ''){
@@ -210,6 +221,31 @@
           $('a[href="' + location.pathname + '?&sort={{ sort }}"]').addClass('mint_active');
         });
 
+//수정 모달
+        $(".edit").click(function(ev) { // for each edit contact url
+            ev.preventDefault(); // prevent navigation
+            edit_url = $(this).data("form"); // get the contact form url
+            $("#myModal").load(edit_url, function() { // load the url into the modal
+                $(this).modal("show"); // display the modal on url load
+            });
+            return false; // prevent the click propagation
+        });
+
+        function editSubmit(){
+            var params = jQuery("#edit-form").serialize();
+            console.log(params)
+            $.ajax({
+                type: 'POST',
+                url: edit_url,
+                data: params,
+                success: function(data) {
+                    $('#cmt-'+data.id).html('<pre>'+data.msg+'</pre>');
+                }
+            });
+            return false;
+        }
+
+//삭제 모달
          $(".del").click(function(ev) { // for each edit contact url
             ev.preventDefault(); // prevent navigation
             var del_url = $(this).data("form"); // get the contact form url

@@ -290,13 +290,19 @@ class StoreQuestionLCView(CreateView):
 class StoreQuestionEditView(UpdateView):
     form_class = StoreQuestionForm
     model = QuestionComment
+    pk_url_kwarg = 'cid'
     template_name = 'store/store_question_edit.html'
 
     def get_object(self, queryset=None):
-        return self.model.objects.get(pk=self.kwargs['cid'])
+        return self.model.objects.get(pk=self.kwargs.get(self.pk_url_kwarg))
 
-    def get_success_url(self, **kwargs):
-        return reverse_lazy("store:store_question", kwargs={'pk': self.kwargs['pk']})
+    def form_valid(self, form):
+        comm = get_object_or_404(QuestionComment, pk=self.kwargs.get(self.pk_url_kwarg))
+        self.object = form.save()
+
+        data = {'id':comm.id, 'msg':form.cleaned_data['comment']}
+        print(data)
+        return JsonResponse(data)
 
 @method_decorator(login_required, name='dispatch')
 class StoreQuestionDelView(DeleteView):
