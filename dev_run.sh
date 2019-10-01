@@ -6,5 +6,6 @@ docker run \
     -e DB_NAME="postgres" \
     -e DB_USER="bns@buynsell" \
     -e DB_PASSWORD="wjdqhqhdks1!" \
-    --rm -it \
-    ehdgnv/bns-azure:1.0 sh
+    -v $(pwd)/.:/bns \
+    --rm -it -d \
+    ehdgnv/bns-azure:1.0

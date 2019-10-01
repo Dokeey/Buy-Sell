@@ -18,7 +18,7 @@
 
         <script>
         function sharefacebook(url) {
-            window.open("http://www.facebook.com/sharer/sharer.php?u=" + url);
+            window.open("https://www.facebook.com/sharer/sharer.php?u=" + url);
         }
         </script>
     <!--Kakao Talk 공유 기능-->
@@ -31,10 +31,10 @@
                       content: {
                        title: '{{ stores.0.store_info.name }}',
                         description: 'Buy & Sell의 인기 가게!',
-                        imageUrl: 'http://{{ request.META.HTTP_HOST }}{{ stores.0.store_info.photo.url }}',
+                        imageUrl: 'https://{{ request.META.HTTP_HOST }}{{ stores.0.store_info.photo.url }}',
                         link: {
-                          webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                          mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                          webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                          mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
                         }
                       },
                     social: {
@@ -46,8 +46,8 @@
                         {
                            title: '인기 가게 구경가자!',
                           link: {
-                            mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                            webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                            mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                            webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
                           }
                         }
                       ]
@@ -55,7 +55,7 @@
                  }
             </script>
 
-    <style xmlns="http://www.w3.org/1999/html">
+    <style xmlns="https://www.w3.org/1999/html">
     .nav-tabs > li > a:hover,
         .nav-tabs > .active a {
             background-color: #F768FF !important;

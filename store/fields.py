@@ -9,7 +9,7 @@ def get_random():
     rand = randrange(1,10)
     return 'profile/{}.png'.format(rand)
 
-DEFAULT_IMAGE_PATH = get_random()
+# DEFAULT_IMAGE_PATH = get_random()
 
 
 class DefaultStaticImageFieldFile(ProcessedImageFieldFile):
@@ -30,7 +30,7 @@ class DefaultStaticImageFieldFile(ProcessedImageFieldFile):
                 return staticfiles_storage.url(self.field.static_image_path)
             # static_image_path값에 해당하는 경로에 파일이 없다면
             # DEFAULT_IMAGE_PATH 경로의 파일을 사용합니다.
-            return staticfiles_storage.url(DEFAULT_IMAGE_PATH)
+            return staticfiles_storage.url(get_random())
 
 class DefaultStaticProcessedImageField(ProcessedImageField):
     # field에 접근 시 프록시로 사용할 필드파일 클래스를 지정합니다.
@@ -42,6 +42,6 @@ class DefaultStaticProcessedImageField(ProcessedImageField):
         # 이것도 정의되어 있지 않다면 현재 모듈의 'DEFAULT_IMAGE_PATH'상수의 값을 사용합니다.
         self.static_image_path = kwargs.pop(
             'default_image_path',
-            getattr(settings, 'DEFAULT_IMAGE_PATH', DEFAULT_IMAGE_PATH))
+            getattr(settings, 'DEFAULT_IMAGE_PATH', get_random()))
         # 추가 정의된 키워드인수의 값을 pop()으로 제거한 뒤, 부모의 초기화 메서드를 실행합니다.
         super().__init__(*args, **kwargs)
