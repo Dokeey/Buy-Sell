@@ -84,7 +84,7 @@
                 </div>
             </div>
         </form>
-    {% endif %}
+
 
     <!-- 문의 글 정렬 -->
     {% if user.is_authenticated and stores.questioncomment_set.all.count > 0 %}
@@ -96,7 +96,7 @@
         </div>
     </div><hr/>
     {% endif %}
-
+    {% endif %}
 
     {% for comm in comms %}
 
@@ -134,7 +134,7 @@
         <br/>
 
 <!-- 문의 글 답변(가게 주인)list -->
-        {% for replay in comm.replies.all %}
+        {% for replay in comm.replies.all|dictsort:"created_at" %}
             <div class="row" id="block-{{ replay.id }}">
 
                 <div class="col-md-1 col-xs-1" align="right"><i class="fas fa-reply fa-rotate-180"></i></div>
@@ -166,26 +166,29 @@
                     </div>
                 </div>
             </div>
+            <br/>
         {% endfor %}
 
 <!-- 대댓글 작성 폼(가게 주인만 가능) -->
         {% if request.user.pk == stores.user.pk %}
             <br/>
-            <form action="" method="POST">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-1 col-xs-1" align="right"><i class="fas fa-reply fa-rotate-180"></i></div>
-                    <div class="col-md-9 col-xs-7">
-                        {{ form.comment }}
-
-                        <input type="hidden" name="parent_id" value="{{ comm.id }}">
+            <form class="form-horizontal" action="" method="POST">
+                    <div class="col-xs-offset-1 col-xs-10">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                {{ form.comment }}
+                                <input type="hidden" name="parent_id" value="{{ comm.id }}">
+                            </div>
+                        </div>
+        
+                        <div class="form-group">
+                            <div class="col-xs-12 text-right">
+                                <button type="submit" class="btn btn-default"><i class="fas fa-comments"></i> 답변하기</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-2 col-xs-3">
-                        <input type="submit" class="btn btn-default" style="height:120px;width:100%" value="등록">
-                    </div>
-                </div>
-            </form>
-
+                </form>
         {% endif %}
         
 <!-- 글 삭제 모달 -->

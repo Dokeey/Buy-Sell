@@ -6,13 +6,14 @@ from .models import StoreProfile, QuestionComment, StoreGrade
 
 
 class StoreProfileForm(forms.ModelForm):
-
+    photo = forms.ImageField()
     def __init__(self, *args, **kwargs):
         super(StoreProfileForm, self).__init__(*args, **kwargs)
         self.fields['name'].label = '가게 이름'
         self.fields['name'].widget.attrs.update({
             'class': 'form-control col-sm-10'
         })
+        
         self.fields['photo'].label = '가게 사진'
         self.fields['photo'].widget.attrs.update({
             'class': 'form-control col-sm-10',

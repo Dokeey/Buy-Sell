@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DeleteView, UpdateView, CreateView, RedirectView, TemplateView
+from django.views.generic.list import MultipleObjectMixin
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 from rank import DenseRank
@@ -227,6 +228,11 @@ class StoreProfileEditView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.storeprofile
 
+    def form_valid(self, form):
+        # 유효성 검사 항목 추가하기
+        self.object = form.save()
+        return JsonResponse({'is_vaild' : True}, status=200)
+
     def get_success_url(self, **kwargs):
         return reverse_lazy("store:store_sell_list", kwargs={'pk': self.request.user.storeprofile.pk})
 
@@ -237,7 +243,7 @@ class StoreQuestionLCView(CreateView):
     form_class = StoreQuestionForm
     template_name = 'store/store_question.html'
     ordering = '-created_at'
-
+    
     def form_valid(self, form):
         parent_obj = None
 
@@ -269,10 +275,10 @@ class StoreQuestionLCView(CreateView):
                     'store': self.object.store_profile,
                 }),
             )
-        return redirect('store:store_question', self.kwargs['pk'])
+        return redirect(self.get_success_url())
     
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(StoreQuestionLCView, self).get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         self.sort = self.request.GET.get('sort', '')
 
         context['sort'] = self.sort
@@ -286,6 +292,9 @@ class StoreQuestionLCView(CreateView):
 
         return context
         
+    def get_success_url(self):
+        return reverse_lazy('store:store_question', kwargs={'pk': self.kwargs.get('pk')})
+  
 @method_decorator(login_required, name='dispatch')
 class StoreQuestionEditView(UpdateView):
     form_class = StoreQuestionForm
