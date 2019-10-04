@@ -320,35 +320,35 @@
     </style>
 
 
-{% block store_head %}
-    <script src="{% static 'js/readmore-2.2.1.min.js' %}" ></script> <!-- Readmore.js -->
-        <script>
-            jQuery(document).ready(function() {
+    {% block store_head %}
+        <script src="{% static 'js/readmore-2.2.1.min.js' %}" ></script> <!-- Readmore.js -->
+            <script>
+                jQuery(document).ready(function() {
 
-            jQuery('.more').readmore({
-                speed: 300,
-                collapsedHeight: 74,
-                moreLink: '<a href="#">더 보기</a>',
-                lessLink: '<a href="#">다시 닫기</a>',
-                heightMargin: 16
+                jQuery('.more').readmore({
+                    speed: 300,
+                    collapsedHeight: 74,
+                    moreLink: '<a href="#">더 보기</a>',
+                    lessLink: '<a href="#">다시 닫기</a>',
+                    heightMargin: 16
+                });
+
             });
+            </script>
+            <style>
+                .more {
+                    overflow: hidden;
+                }
+            </style>
 
-        });
-        </script>
-        <style>
-            .more {
-                overflow: hidden;
-            }
-        </style>
-
-{% endblock %}
+    {% endblock %}
 {% endblock %}
 
 
 {% block content %}
 
-{% store_rating stores.pk as end %}
-{% store_sell_list stores.pk as order %}
+    {% store_rating stores.pk as end %}
+    {% store_sell_list stores.pk as order %}
 
 
     <div class="row" style="padding:5px">
@@ -387,7 +387,7 @@
                     </div>
                 </div>
                 <div class="avatar">
-                     <img src="{{ stores.photo.url }}" width="200px" height="200px" align="center" class="img-responsive img-thumbnail" alt="가게 프로필 사진"/>
+                        <img src="{{ stores.photo.url }}" width="200px" height="200px" align="center" class="img-responsive img-thumbnail" alt="가게 프로필 사진"/>
                 </div>
                 <div class="info">
                     <div class="title">
@@ -428,7 +428,7 @@
                 <div class="col-md-3 col-xs-12">
                     <i class="far fa-eye" style="color:purple"></i> 방문 횟수 {% get_hit_count for stores %}
                 </div>
-                 <div class="col-md-3 col-xs-12">
+                    <div class="col-md-3 col-xs-12">
                                     <i class="fas fa-user-friends" style="color:#368AFF"></i> 팔로워 {{ stores.follow_set.all.count }}명
                                 </div>
                 <div class="col-md-3 col-xs-12">
@@ -444,28 +444,31 @@
                 </div>
                 <br/>
                 <div class="col-md-12 col-xs-12" style="padding:10px">
-                   <div class="more">{{ stores.comment | linebreaks }}</div>
+                    <div class="more">{{ stores.comment | linebreaks }}</div>
                 </div>
             </div> <hr/>
 
 
 
             {% if user.is_authenticated and request.user.pk == stores.user.pk %}
-                 <a href="{% url "store:store_profile_edit" %}"><i class="fas fa-user-edit" ></i>가게 프로필 수정</a>
+                    <a href="{% url "store:store_profile_edit" %}"><i class="fas fa-user-edit" ></i>가게 프로필 수정</a>
             {% endif %}
 
         </div>
     </div>
-<div class="row" style="padding:10px">
-  <ul class="nav nav-tabs nav-justified" role="tablist">
-    <li role="presentation" ><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
-    <li role="presentation"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>
-    <li role="presentation"><a href="{% url "store:store_question" stores.pk %}" aria-controls="messages" role="tab" >가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span></a></li>
-  </ul>
-</div>
-<br/>
+
+    <div class="row" style="padding:10px">
+    <ul class="nav nav-tabs nav-justified" role="tablist">
+        <li role="presentation" ><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
+        <li role="presentation"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>
+        <li role="presentation"><a href="{% url "store:store_question" stores.pk %}" aria-controls="messages" role="tab" >가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span></a></li>
+    </ul>
+    </div>
+    <br/>
+
     {% block store_content %}
     {% endblock %}
+    
     {% block store_extra_content %}
     {% endblock %}
 

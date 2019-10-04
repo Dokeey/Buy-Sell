@@ -1,59 +1,9 @@
-{% extends "store/star_store_hit.html" %}
+{% extends "store/star_layout.html" %}
 {% load store.store_tags %}
 {% load hitcount_tags %}
 {% load trade_tags %}
 
-{% block head %}
-    <script>
-        $(document).ready(function () {
-            $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
-        });
-    </script>
-<style xmlns="http://www.w3.org/1999/html">
-
-.gold { font-weight: bold; color:#747474; }
-.fa-star {color: #FFF612}
-.fa-star-half-alt {color: #FFF612}
-
-.relative {
-  position: relative;
-  width: 300px;
-  height: 300px;
-  z-index: -2;
-}
-.album_img {
-    position: absolute;
-    top:0%; left: 0%;
-    z-index:0;
-}
-.rank_music {
-    position: absolute;
-    border-radius: 20px;
-    top:0%; left: 0%;
-    height: 98%;
-    width: 100%;
-    padding: 30px;
-    background: url(//cdnimg.melon.co.kr/resource/image/web/chart/rank_bg_album.png) repeat;
-    z-index: 0;
-
-}
-.btn-yellow {
-background-color: #f7e600;
-}
-.white {
-color: white;
-}
-.btn-blue {
-background-color: #00498c;
-}
- b{
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: inline-block;
-        max-width: 100%;
-     }
-</style>
+{% block share_head %}
 {% endblock %}
 
 {% block star_content %}
@@ -156,7 +106,7 @@ background-color: #00498c;
       </div>
         </div>
 {% empty %}
-<hr/>
+
     <h2 align="center"><i class="far fa-flushed"></i>가게를 찾을 수 없습니다.</h2>
 {% endfor %}
 
@@ -206,5 +156,6 @@ background-color: #00498c;
     </div>
 </div>
 {% endblock %}
+
 {% block bottom %}
 {% endblock %}

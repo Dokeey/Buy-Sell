@@ -41,9 +41,11 @@ class StarStoreSearchList(ListView):
     template_name = 'store/star_store_search.html'
     context_object_name = 'star_search'
     paginate_by = 6
+    
     def get_queryset(self):
         self.query = self.request.GET.get('query','')
         self.qs = super().get_queryset()
+        
         if self.query:
             qs = self.qs.filter(name__icontains=self.query)
         return qs
