@@ -168,6 +168,20 @@ class StoreSellListView(ListView):
     template_name = 'store/store_sell_list.html'
     paginate_by = 24
     context_object_name = 'items'
+    ordering = '-created_at'
+
+
+    def get_ordering(self):
+        ordering = self.request.GET.get('sort','-created_at')
+
+        if ordering == 'looks':
+            ordering = 'hit_count_generic'
+        elif ordering == 'hprice':
+            ordering = '-amount'
+        elif ordering == 'lprice':
+            ordering = 'amount'
+
+        return ordering
 
     # context_object_name = 'stores'
     def get_context_data(self, **kwargs):
@@ -193,6 +207,7 @@ class StoreSellListView(ListView):
         context['stores'] = self.store
         hit_count = HitCount.objects.get_for_object(context['stores'])
         context['hit_count_response'] = HitCountMixin.hit_count(self.request, hit_count)
+        context['sort'] = self.request.GET.get('sort','-created_at')
         return context
 
     def get_queryset(self):
