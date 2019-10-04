@@ -41,9 +41,17 @@ class StarStoreSearchList(ListView):
     template_name = 'store/star_store_search.html'
     context_object_name = 'star_search'
     paginate_by = 6
-    
+
+    def get(self, request, *args, **kwargs):
+        self.query = self.request.GET.get('query', '')
+        
+        if self.query == '':
+            messages.info(self.request, '검색어를 입력해주세요')
+            url = self.request.GET.get('next')
+            return redirect(url)
+        return super().get(request, *args, **kwargs)
+
     def get_queryset(self):
-        self.query = self.request.GET.get('query','')
         self.qs = super().get_queryset()
         
         if self.query:
