@@ -173,7 +173,7 @@ EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'buysell0503@gmail.com' # ex) bum752@gmail.com
-EMAIL_HOST_PASSWORD = 'wjdqhqhdks' # ex) P@ssw0rd
+EMAIL_HOST_PASSWORD = 'wjdqhqhdks1!' # ex) P@ssw0rd
 SERVER_EMAIL = 'buysell0503@gmail.com' # ex) bum752@gmail.com
 DEFAULT_FROM_MAIL = 'BuynSell' # ex) bum752
 

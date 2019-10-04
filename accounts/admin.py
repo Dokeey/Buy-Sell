@@ -179,6 +179,8 @@ class AdminUser(AuthUserAdmin):
             StoreProfile.objects.create(user=user, name=user.username + '의 가게')
     create_storeprofile.short_description = '스토어프로필 만들기'
 
+    def has_add_permission(self, request):
+        return False
 
 
 @admin.register(ProxyStoreProfile)

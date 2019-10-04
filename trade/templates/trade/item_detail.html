@@ -12,7 +12,7 @@
     <meta property="og:url"           content="https://{{ request.META.HTTP_HOST }}{{ request.path }}" />
     <meta property="og:title"         content="{{ item.title }} {{ item.amount|intcomma }}원" />
     <meta property="og:description"   content="{{ item.desc|default:'-'|linebreaks }}" />
-    <meta property="og:image"         content="https://{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}" />
+    <meta property="og:image"         content="{{ item.itemimage_set.first.photo.url }}" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
 
 	<script>
@@ -31,7 +31,7 @@
               content: {
                 title: '{{ item.title }} {{ item.amount|intcomma }}원',
                 description: 'Buy & Sell에서 싸게 사자!',
-                imageUrl: 'https://{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}',
+                imageUrl: '{{ item.itemimage_set.first.photo.url }}',
                 link: {
                   webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
                   mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'

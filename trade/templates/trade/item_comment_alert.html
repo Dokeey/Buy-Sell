@@ -19,7 +19,7 @@
 			<tr><td align="center">
 				<div style="line-height: 24px;">
 					<a style="text-decoration: none;" href="https://{{ domain }}{% url "trade:item_detail" item.id %}" target="_blank" class="btn btn-primary">
-                    <img style="height: 200px;border: 1px solid #999999; border-radius: 15px;" src="https://{{ domain }}{{ item.itemimage_set.first.photo.url }}" target="_blank" class="btn btn-primary"><br>
+                    <img style="height: 200px;border: 1px solid #999999; border-radius: 15px;" src="{{ item.itemimage_set.first.photo.url }}" target="_blank" class="btn btn-primary"><br>
 					<font face="Arial, Helvetica, sans-serif" size="4" color="#57697e" style="font-size: 15px;">
 					<span style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #57697e;">
 						물품 : {{ item.title }}<br>
