@@ -2,15 +2,15 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Sum, Count, FloatField
+from django.db.models import Sum, Count, FloatField, IntegerField
 from django.db.models.functions import Cast
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse ,HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from django.template.loader import render_to_string
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DeleteView, UpdateView, CreateView
+from django.views.generic import ListView, DeleteView, UpdateView, CreateView, RedirectView, TemplateView
+from django.views.generic.list import MultipleObjectMixin
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
 from rank import DenseRank
@@ -29,15 +29,31 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 #     stores = get_object_or_404(StoreProfile, user=request.user)
 #     return render(request, 'store/layout.html',{'stores': stores})
 
+# class StoreError(TemplateView):
+#     template_name = 'store/store_error.html'
+
+
+def StoreError(request):
+    return render(request, 'store/store_error.html')
 
 class StarStoreSearchList(ListView):
     model = StoreProfile
     template_name = 'store/star_store_search.html'
     context_object_name = 'star_search'
     paginate_by = 6
+
+    def get(self, request, *args, **kwargs):
+        self.query = self.request.GET.get('query', '')
+        
+        if self.query == '':
+            messages.info(self.request, '검색어를 입력해주세요')
+            url = self.request.GET.get('next')
+            return redirect(url)
+        return super().get(request, *args, **kwargs)
+
     def get_queryset(self):
-        self.query = self.request.GET.get('query','')
         self.qs = super().get_queryset()
+        
         if self.query:
             qs = self.qs.filter(name__icontains=self.query)
         return qs
@@ -94,7 +110,8 @@ class StarStoreGradeListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_grade = StoreGrade.objects.values('store_profile').annotate(count=Count('rating'), rating_sum=Cast(Sum('rating'),FloatField())/Cast( Count('rating'), FloatField()),rank=DenseRank('rating_sum')).order_by('-rating_sum', '-count')
+        search_grade = StoreGrade.objects.values('store_profile').annotate(count=Count('rating'), rating_sum=Cast(Sum('rating'),FloatField())/Cast( Count('rating'), FloatField()),rank=Cast(DenseRank('rating_sum'), IntegerField())).order_by('-rating_sum', '-count')
+
         context['my_grade'] = ''
         for i in search_grade:
             if i['store_profile']:
@@ -113,20 +130,31 @@ class StarStoreSellListView(ListView):
     model = StoreProfile
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),rank=DenseRank('count')).order_by('user')
-        context['my_sell'] = ''
-        for i in search_sell:
-            if i['rank']:
-                i['store_info'] = StoreProfile.objects.get(user_id=i['item__user'])
-            if self.request.user.is_active:
-                if i['item__user'] == self.request.user.pk:
-                    context['my_sell'] = i['rank']
-        if context['my_sell'] == '':
-            context['my_sell'] = '-'
-        context['stores'] = search_sell
-        return context
-
+        try:
+            context = super().get_context_data(**kwargs)
+            search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),rank=DenseRank('count')).order_by('user')         
+            context['my_sell'] = ''
+            for i in search_sell:
+                if i['rank']:
+                    i['store_info'] = StoreProfile.objects.get(user_id=i['item__user'])
+                if self.request.user.is_active:
+                    if i['item__user'] == self.request.user.pk:
+                        context['my_sell'] = i['rank']
+            if context['my_sell'] == '':
+                context['my_sell'] = '-'
+            context['stores'] = search_sell
+        except:
+            return HttpResponseRedirect(reverse('store:store_error'))
+        else:
+            return context
+    
+    # def render_to_response(self, context, **response_kwargs):
+    #     if context['stores'] == '<QuerySet []>':
+    #         print('nono')
+    #         return redirect('store:store_error')
+    #     return super().render_to_response(
+    #             context, **response_kwargs
+    #         )
 class StarStoreFollowListView(ListView):
     template_name = 'store/star_store_follow.html'
     model = StoreProfile
@@ -225,6 +253,11 @@ class StoreProfileEditView(UpdateView):
     def get_object(self, queryset=None):
         return self.request.user.storeprofile
 
+    def form_valid(self, form):
+        # 유효성 검사 항목 추가하기
+        self.object = form.save()
+        return JsonResponse({'is_vaild' : True}, status=200)
+
     def get_success_url(self, **kwargs):
         return reverse_lazy("store:store_sell_list", kwargs={'pk': self.request.user.storeprofile.pk})
 
@@ -235,7 +268,7 @@ class StoreQuestionLCView(CreateView):
     form_class = StoreQuestionForm
     template_name = 'store/store_question.html'
     ordering = '-created_at'
-
+    
     def form_valid(self, form):
         parent_obj = None
 
@@ -267,10 +300,10 @@ class StoreQuestionLCView(CreateView):
                     'store': self.object.store_profile,
                 }),
             )
-        return redirect('store:store_question', self.kwargs['pk'])
+        return redirect(self.get_success_url())
     
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(StoreQuestionLCView, self).get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         self.sort = self.request.GET.get('sort', '')
 
         context['sort'] = self.sort
@@ -279,23 +312,31 @@ class StoreQuestionLCView(CreateView):
         if self.sort == 'all':
             context['comms'] = self.model.objects.filter(store_profile_id=self.kwargs['pk'], parent__isnull=True)
         elif self.sort == 'my':
-            context['comms'] = self.model.objects.filter(author=self.request.user, parent__isnull=True)
-
+            context['comms'] = self.model.objects.filter(author=self.request.user,store_profile_id=self.kwargs['pk'], parent__isnull=True)
         context['stores'] = get_object_or_404(StoreProfile, pk=self.kwargs['pk'])
 
         return context
         
+    def get_success_url(self):
+        return reverse_lazy('store:store_question', kwargs={'pk': self.kwargs.get('pk')})
+  
 @method_decorator(login_required, name='dispatch')
 class StoreQuestionEditView(UpdateView):
     form_class = StoreQuestionForm
     model = QuestionComment
+    pk_url_kwarg = 'cid'
     template_name = 'store/store_question_edit.html'
 
     def get_object(self, queryset=None):
-        return self.model.objects.get(pk=self.kwargs['cid'])
+        return self.model.objects.get(pk=self.kwargs.get(self.pk_url_kwarg))
 
-    def get_success_url(self, **kwargs):
-        return reverse_lazy("store:store_question", kwargs={'pk': self.kwargs['pk']})
+    def form_valid(self, form):
+        comm = get_object_or_404(QuestionComment, pk=self.kwargs.get(self.pk_url_kwarg))
+        self.object = form.save()
+
+        data = {'id':comm.id, 'msg':form.cleaned_data['comment']}
+        print(data)
+        return JsonResponse(data)
 
 @method_decorator(login_required, name='dispatch')
 class StoreQuestionDelView(DeleteView):

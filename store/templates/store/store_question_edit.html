@@ -1,62 +1,19 @@
-{% extends "layout.html" %}
-
-{% block head %}
-
-<style>
-.bubble
-{
-position: relative;
-width: 100%;
-height: 120px;
-padding: 5px;
-background: #FFFFFF;
--webkit-border-radius: 10px;
--moz-border-radius: 10px;
-border-radius: 10px;
-border: #FFFFFF solid 2px;
-}
-
-.bubble:after
-{
-content: '';
-position: absolute;
-border-style: solid;
-border-width: 16px 17px 16px 0;
-border-color: transparent #FFFFFF;
-display: block;
-width: 0;
-z-index: 1;
-left: -17px;
-top: 33px;
-
-}.block {
-  display: block;
-  width: 50%;
-  height: 120px;
-  border: none;
-  background-color: #4CAF50;
-  padding: 30px 30px;
-
-  cursor: pointer;
-  text-align: center;
-}
-</style>
-{% endblock %}
-{% block content %}
-<div class="col-sm-11 col-sm-offset-1 text-center">
-            <h2><small>가게 문의글 수정</small></h2>
-<form action="" method="POST">
-     {% csrf_token %}
-     <div class="well">
-    <div class="row">
-        <div class="col-md-10 col-xs-9" >
-            {{ form.comment }}
+<div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title"><i class="fas fa-edit" style="margin-right:10px"></i> 가게 문의 수정</h4>
+          </div>
+            <form class="edit-form" id="edit-form" action="" method="post">
+              <div class="modal-body col-xs-12">
+                    {{ form.comment }}
+                    {% csrf_token %}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                <button type="button" onclick="javascript:editSubmit()" data-dismiss="modal" class="btn btn-primary" >수정하기</button>
+              </div>
+            </form>
         </div>
-        <div class="col-md-2 col-xs-3">
-                    <input type="submit" class="btn btn-default" style="height:120px;width:100%" value="등록">
-        </div>
-    </div>
-</div>
-</form>
-</div>
-{% endblock %}
+      </div>
+    

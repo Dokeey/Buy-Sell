@@ -27,53 +27,71 @@
 {% endblock %}
 
 {% block content %}
+<div class="row" style="padding:30px">
+<div class="container-fluid thumbnail" style="box-shadow:none; padding:20px;">
 
-<form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
-     {% csrf_token %}
-    <div class="row">
-        <div class="col-sm-11 col-sm-offset-1 text-center">
-            <h2><small>가게 이름을 바꿔보세요</small></h2>
-        </div>
-        <div class="col-sm-12">
-             {{ form.name }}
-        </div>
-        <br/>
-        <div class="col-sm-12">
+    <form class="form-horizontal" id="uploadForm" action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
 
+            <div class="col-sm-12 text-center">
+                <h2><small>가게 이름을 바꿔보세요</small></h2>
+            </div>
             <div class="form-group">
-                <div class="col-sm-11 col-sm-offset-1 text-center">
-                    <h2><small>가게 프로필을 바꿔보세요</small></h2>
-                </div>
-                <div class="col-sm-11 col-sm-offset-1 text-center">
-                    <img src="{{ request.user.storeprofile.photo.url }}"> <br/>
-                    {{ form.photo }}
+                <label for="{{ form.title.id_for_label }}" class="col-md-2 control-label">{{ form.name.label }}</label>
+                <div class=" col-md-8">
+                    {{ form.name }}
+                    <div id="error_title" class="col-md-12" style="margin-top:10px"></div>
                 </div>
             </div>
             <br/>
-            <div class="col-sm-11 col-sm-offset-1 text-center">
-                    <h2><small>가게 코멘트를 바꿔보세요</small></h2>
-                </div>
-            <div class="col-sm-12">
-                {{ form.comment }}
+
+            <div class="col-sm-12 text-center">
+                <h2><small>가게 프로필 사진을 바꿔보세요</small></h2>
             </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">{{ form.photo.label }}</label>
+                <div class=" col-md-8">
+                    <small class="img-help text-right"></small>
+                    <label for="{{ form.photo.id_for_label }}" id="dropZone" class="thumbnail well text-muted text-center col-xs-12" style="padding-top: 4rem; padding-bottom: 4rem; background:#dddddd;">
+                        <div class="fileList"></div>
+                        <div id="upload_help">
+                            <i class="fas fa-arrow-alt-circle-down fa-5x"></i>
+                            <h4>이미지를 드래그 하거나 파일을 불러오세요</h4>
+                        </div>
+                    </label>
+                    <div>
+                    <p class="help-block">사진을 빼려면 사진을 클릭하세요 :)</p>
+                    </div>
+                    <div style="display: none" >{{ form.photo }}</div>
+                    <div id="error_photo" class="col-md-12"></div>
+                </div>
+            </div>
+            <br/>
+            
+            <div class="col-sm-12 text-center">
+                <h2><small>가게 코멘트를 바꿔보세요</small></h2>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">{{ form.comment.label }}</label>
+                <div class="col-sm-8">
+                    {{ form.comment }}
+                </div>
+            </div>
+
         </div>
-    </div>
-    <br/>
+        <br/>
 
-    <div class="text-center">
-        <input type="submit" class="btn btn-primary btn-lg" value="등록하기">
-    </div>
+        <div class="text-center">
+            <button type="button" class="btn btn-primary btn-lg" onclick="uploadFile(); return false;" >등록하기</button>
+        </div>
 
-</form>
-
+    </form>
+</div>
+</div>
 {% endblock %}
 {% block extra_content %}
-<script src="https://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript">
-
-
-    //이미지 파일 변수
-    var file = null;
 
     // 파일 리스트 번호
     var fileIndex = 0;
@@ -84,9 +102,9 @@
     // 파일 사이즈 리스트
     var fileSizeList = new Array();
     // 등록 가능한 파일 사이즈 MB
-    var uploadSize = 5;
+    var uploadSize = 3;
     // 등록 가능한 총 파일 사이즈 MB
-    var maxUploadSize = 5;
+    var maxUploadSize = 10;
     // 등록 가능한 총 파일 개수
     var maxUploadLength = 1;
 
@@ -154,43 +172,38 @@
 
         // 다중파일 등록
         if(files != null){
-            for(var i = 0; i < 1; i++){
-                if(fileList.length < 1){
-                    // 파일 이름
-                    var fileName = files[0].name;
-                    var fileNameArr = fileName.split("\.");
-                    // 확장자
-                    var ext = fileNameArr[fileNameArr.length - 1];
-                    // 파일 사이즈(단위 :MB)
-                    var fileSize = files[0].size / 1024 / 1024;
+            for(var i = 0; i < files.length; i++){
+                // 파일 이름
+                var fileName = files[i].name;
+                var fileNameArr = fileName.split("\.");
+                // 확장자
+                var ext = fileNameArr[fileNameArr.length - 1];
+                // 파일 사이즈(단위 :MB)
+                var fileSize = files[i].size / 1024 / 1024;
 
-                    if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
-                        // 확장자 체크
-                        $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">image 파일만 올려주세요.</div>');
-                        break;
-                    }else if(fileSize > uploadSize){
-                        // 파일 사이즈 체크
-                        $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">파일당 업로드 가능 용량 '+ uploadSize +' MB를 초과하였습니다.</div>');
-                        break;
-                    }else{
-                        // 전체 파일 사이즈
-                        totalFileSize += fileSize;
-
-                        // 파일 배열에 넣기
-                        fileList[fileIndex] = files[0];
-
-                        // 파일 사이즈 배열에 넣기
-                        fileSizeList[fileIndex] = fileSize;
-
-                        // 업로드 파일 목록 생성
-                        addFileList(fileIndex, fileName, fileSize, files[0]);
-
-                        // 파일 번호 증가
-                        fileIndex++;
-                    }
+                if($.inArray(ext, ['exe', 'bat', 'sh', 'java', 'jsp', 'html', 'js', 'css', 'xml']) >= 0){
+                    // 확장자 체크
+                    $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">image 파일만 올려주세요.</div>');
+                    break;
+                }else if(fileSize > uploadSize){
+                    // 파일 사이즈 체크
+                    $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">파일당 업로드 가능 용량 '+ uploadSize +' MB를 초과하였습니다.</div>');
+                    break;
                 }else{
-                    alert('프로필 이미지는 한 개만 업로드 가능합니다.');
-                    fileList
+                    // 전체 파일 사이즈
+                    totalFileSize += fileSize;
+
+                    // 파일 배열에 넣기
+                    fileList[fileIndex] = files[i];
+
+                    // 파일 사이즈 배열에 넣기
+                    fileSizeList[fileIndex] = fileSize;
+
+                    // 업로드 파일 목록 생성
+                    addFileList(fileIndex, fileName, fileSize, files[i]);
+
+                    // 파일 번호 증가
+                    fileIndex++;
                 }
             }
         }else{
@@ -199,8 +212,8 @@
 
 
         var html = "";
-        html += '개수: <b>' + Object.keys(fileList).length + '</b> / ' + maxUploadLength + ' &nbsp&nbsp';
-        html += '용량: <b>' + totalFileSize.toFixed(2) + '</b> / ' + maxUploadSize + ' MB';
+        html += '개수: <a>' + Object.keys(fileList).length + '</a> / ' + maxUploadLength + ' &nbsp&nbsp';
+        html += '용량: <a>' + totalFileSize.toFixed(2) + '</a> / ' + maxUploadSize + ' MB';
 
         $('.img-help').html(html);
     }
@@ -253,13 +266,34 @@
     function uploadFile(){
         // 등록할 파일 리스트
         var uploadFileList = Object.keys(fileList);
-       // 등록할 파일 리스트를 formData로 데이터 입력
+
+        // 파일이 있는지 체크
+        if(uploadFileList.length == 0){
+            // 파일등록 경고창
+            $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">최소 하나 이상의 이미지를 업로드해야 합니다</div>');
+            return;
+        }
+
+        // 용량을 넘을 경우 업로드 불가
+        if(totalFileSize > maxUploadSize){
+            // 파일 사이즈 초과 경고창
+            $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">총 업로드 가능 용량 '+ maxUploadSize +' MB를 초과하였습니다.</div>');
+            return;
+        }
+
+        if(uploadFileList.length > maxUploadLength){
+            // 파일 사이즈 초과 경고창
+            $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">총 업로드 가능 개수 '+ maxUploadLength +' 개를 초과하였습니다.</div>');
+            return;
+        }
+
+        // 등록할 파일 리스트를 formData로 데이터 입력
         var form = $('#uploadForm')[0];
         var formData = new FormData(form);
         formData.delete('{{ form.photo.name }}');
-        for(var i = 0; i < uploadFileList.length; i++){
-            formData.append('{{ form.photo.name }}', fileList[uploadFileList[0]]);
-        }
+        formData.append('{{ form.photo.name }}', fileList[uploadFileList[0]]);
+        var loader = $("#loading");
+        var container = $("#body");
 
         $.ajax({
             url:"{{ request.path }}",
@@ -271,15 +305,20 @@
             dataType:'json',
             cache:false,
             success:function(result){
-                if(result.is_valid){
+                console.log(result)
+                if(result.is_vaild){
                     window.location.href = '{% url "store:store_sell_list" request.user.storeprofile.id %}';
                 }else{
                     for (var key in result.error){
                         $('#error_'+key).html('<div class="text-center alert alert-warning alert-dismissible" role="alert">' + result.error[key][0] + '</div>');
                     }
                 }
-            }
+            },
+            beforeSend:function(){
+                loader.css("display","block");
+            },
         });
     }
 </script>
+
 {% endblock %}

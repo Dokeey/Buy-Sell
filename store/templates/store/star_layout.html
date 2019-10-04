@@ -1,0 +1,197 @@
+{% extends "layout.html" %}
+{% load store.store_tags %}
+{% load hitcount_tags %}
+{% load trade_tags %}
+
+{% block head %}
+    {% block share_head %}
+    <script>
+            $(document).ready(function () {
+                $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
+            });
+        </script>
+    <!--Facebook 공유 기능-->
+      <meta property="og:url"           content="{{ request.META.HTTP_HOST }}{{ request.path }}" />
+      <meta property="og:type"          content="website" />
+      <meta property="og:title"         content="{{ stores.0.store_info.name }}" />
+      <meta property="og:description"   content="{{ stores.0.store_info.comment|linebreaks }}" />
+      <meta property="og:image"         content="{{ stores.0.store_info.photo.url }}" />
+
+        <script>
+        function sharefacebook(url) {
+            window.open("http://www.facebook.com/sharer/sharer.php?u=" + url);
+        }
+        </script>
+    <!--Kakao Talk 공유 기능-->
+            <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+            <script>
+                Kakao.init('43b0c47e22303f599cf49a0f42e75f86');
+                function sendLink() {
+                    Kakao.Link.sendDefault({
+                      objectType: 'feed',
+                      content: {
+                       title: '{{ stores.0.store_info.name }}',
+                        description: 'Buy & Sell의 인기 가게!',
+                        imageUrl: 'http://{{ stores.0.store_info.photo.url }}',
+                        link: {
+                          webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                          mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                        }
+                      },
+                    social: {
+                      viewCount: {% get_hit_count for stores.0.store_info %},
+                      commentCount: {{ stores.0.store_info.storegrade_set.all.count }},
+                      subscriberCount: {{ stores.0.store_info.follow_set.all.count }}
+                    },
+                      buttons: [
+                        {
+                           title: '인기 가게 구경가자!',
+                          link: {
+                            mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                            webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                          }
+                        }
+                      ]
+                    });
+                 }
+            </script>
+    {% endblock %}
+    <style>
+    .nav-tabs > li > a:hover,
+        .nav-tabs > .active a {
+            background-color: #F768FF !important;
+            border-radius: 5px;
+            color:#fff !important;
+        }
+    .gold { font-weight: bold; color:#747474; }
+    .fa-star {color: #FFF612}
+    .fa-star-half-alt {color: #FFF612}
+
+    .relative {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      text-align:center;
+    }
+    .album_img {
+        position: absolute;
+        top:1%; left: 0;
+        z-index:-1;
+        width: 300px;
+        height: 300px;
+    }
+    .rank_music {
+        position: absolute;
+        border-radius: 20px;
+        top:1%; left: 0;
+        width: 300px;
+        height: 300px;
+        max-height:300px;
+        max-width:300px;
+        padding: 30px;
+        background: url(//cdnimg.melon.co.kr/resource/image/web/chart/rank_bg_album.png) repeat;
+        z-index: 0;
+
+    }
+    .btn-yellow {
+    background-color: #ffd700;
+    }
+    .white {
+    color: white;
+    }
+    </style>
+    
+    {% block star_head %}
+    {% endblock %}
+
+{% endblock %}
+
+{% block content %}
+    <br/>
+        <nav class="navbar-default">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            </div>
+        
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding:10px;">
+                <ul class="nav nav-tabs nav-justified gold" >
+                <li role="presentation"><a href="{% url 'store:star_store_hit' %}">방문 순위</a></li>
+                <li role="presentation"><a href="{% url 'store:star_store_sell' %}">판매 순위</a></li>
+                <li role="presentation"><a href="{% url 'store:star_store_grade' %}">평점 순위</a></li>
+                <li role="presentation"><a href="{% url 'store:star_store_follow' %}">팔로워 순위</a> </li>
+                </ul><br/>
+    
+                <div class="row" style="padding:5px;">
+                    <div align="center">
+                        <form style="width:66%;" action="{% url "store:star_store_search" %}">
+                                {% csrf_token %}
+                            <div class="input-group">
+                            <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid #F768FF;" placeholder="가게 찾기" >
+                            <span class="input-group-btn">
+                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <button class="btn btn-warning" type="submit" style="border:1px solid #F768FF;">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </nav>
+<!-- 페이지마다 바뀔 content -->
+    {% block star_content %}
+    {% endblock %}
+
+<!-- 1등 가게 물품 -->
+
+    {% block bottom %}
+        <div class="row">
+            <hr/>
+        <div class="col-sm-offset-2 col-sm-8 col-xs-offset-1 col-xs-10">
+            <h2 class="gold text-center">1등 가게 물품</h2><hr/>
+        </div>
+        </div>
+        <div class="row">
+            {% for store in stores %}
+                {% if store.rank == 1 %}
+                    <div class="col-sm-offset-1 col-sm-10 col-xs-offset-1 col-xs-10">
+
+                <div class="text-center">
+                    <a href="{% url 'store:store_sell_list' store.store_info.pk %}"> <h3 style="padding:0px;"><i class="fas fa-trophy" style="color:#FFD700;"></i> <span style="color:#EDA900">1위</span> {{ store.store_info.name }}</h3>
+                    </a></div>
+                <div class="row">
+
+                    {% for item in store.store_info.user.item_set.all|slice:"4" %}
+                        <div class="col-sm-3 col-xs-6" style="padding:10px">
+                                {% item_block item %}
+                        </div>
+                    {% empty %}
+                        <h4 class="text-center">물품이 없습니다</h4>
+
+                    {% endfor %}
+                </div>
+                {% if store.store_info.user.item_set.all.count > 4 %}
+                <div align="center">
+                    <a href="{% url 'store:store_sell_list' store.store_info.pk %}">남은 <span style="color:red;font-weight:bold"> {{ store.store_info.user.item_set.count|add:"-4" }}개</span> 물품 보러가기</a>
+                </div>
+                {% else %}
+                <div align="center">
+                    <a href="{% url 'store:store_sell_list' store.store_info.pk %}">가게 구경 가기</a>
+                </div>
+                {% endif %}
+                <hr/>
+            </div>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+    {% endblock %}
+
+{% endblock %}

@@ -62,12 +62,17 @@
 {% endblock %}
 {% block content %}
 <div class="row text-center">
+    <div class="col-xs-12">
+        <div class="col-sm-3 col-xs-offset-1 col-xs-10 text-center">
+            <h2>구매 정보</h2>
+        </div>
+        </div>
 
     <div class="col-sm-3  col-xs-offset-1 col-xs-10">
-        <h2>구매 정보</h2>
+
             {% item_block items %}
     </div>
-    <div class="col-sm-9 col-xs-12">
+    <div class="col-sm-8 col-xs-12">
         <form action="" method="POST" enctype="multipart/form-data">
      <div class="well">
      {% csrf_token %}
@@ -90,7 +95,6 @@
 </form>
     </div>
 </div>
-<hr/>
 
 
 {% endblock content %}

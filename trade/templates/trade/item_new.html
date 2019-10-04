@@ -26,11 +26,9 @@
     <form class="form-horizontal" id="uploadForm" action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
-            <div class="form-group">
                 <div class="col-md-11 col-md-offset-1 text-center">
                     <h2><small>물품을 등록하시면 내 가게에 물품이 진열되고, 해당 카테고리에 광고가 됩니다.</small></h2>
                 </div>
-            </div>
         </div>
           <div class="form-group">
             <label class="col-md-1 control-label">{{ form.photo.label }}</label>
