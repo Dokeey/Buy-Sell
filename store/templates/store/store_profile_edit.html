@@ -83,7 +83,7 @@
         <br/>
 
         <div class="text-center">
-            <button type="button" class="btn btn-primary btn-lg" onclick="uploadFile(); return false;" >등록하기</button>
+            <button type="button" class="btn btn-primary btn-lg" onclick="uploadFile(); return false;" >수정하기</button>
         </div>
 
     </form>
@@ -266,13 +266,6 @@
     function uploadFile(){
         // 등록할 파일 리스트
         var uploadFileList = Object.keys(fileList);
-
-        // 파일이 있는지 체크
-        if(uploadFileList.length == 0){
-            // 파일등록 경고창
-            $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">최소 하나 이상의 이미지를 업로드해야 합니다</div>');
-            return;
-        }
 
         // 용량을 넘을 경우 업로드 불가
         if(totalFileSize > maxUploadSize){
