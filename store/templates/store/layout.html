@@ -14,7 +14,7 @@
       <meta property="og:type"          content="website" />
       <meta property="og:title"         content="{{ stores.name }}" />
       <meta property="og:description"   content="{{ stores.comment|linebreaks }}" />
-      <meta property="og:image"         content="{{ request.META.HTTP_HOST }}{{ stores.photo.url }}" />
+      <meta property="og:image"         content="{{ stores.photo.url }}" />
 
         <script>
         function sharefacebook(url) {
@@ -32,7 +32,7 @@
                   content: {
                    title: '{{ stores.name }}',
                     description: 'Buy & Sell 가게 공유',
-                    imageUrl: 'https://{{ request.META.HTTP_HOST }}{{ stores.photo.url }}',
+                    imageUrl: '{{ stores.photo.url }}',
                     link: {
                       webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
                       mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'

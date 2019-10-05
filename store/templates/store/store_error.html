@@ -1,7 +1,22 @@
-{% extends "customer/layout.html" %}
+{% extends "store/star_layout.html" %}
 
-{% block content %}
-<a class="nav-link" href="{% url "customer:customer_notice" %}">공지사항</a>
-<a class="nav-link" href="{% url "customer:customer_faq" %}">faq</a>
-<a class="nav-link" href="{% url "customer:customer_ask" %}">1:1문의</a>
+{% block share_head %}
+{% endblock %}
+
+{% block star_content %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div align="center">
+                <br><br><br><br><br>
+                <h3><i class="far fa-smile-wink"></i> 아직 순위가 없습니다. 1위를 노려보세요!</h3>
+                1위 가게의 상품은 하단에 광고됩니다.
+                <br>
+                <br><br><br><br>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom %}
 {% endblock %}

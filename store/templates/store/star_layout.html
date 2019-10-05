@@ -32,7 +32,7 @@
                       content: {
                        title: '{{ stores.0.store_info.name }}',
                         description: 'Buy & Sell의 인기 가게!',
-                        imageUrl: 'http://{{ stores.0.store_info.photo.url }}',
+                        imageUrl: '{{ stores.0.store_info.photo.url }}',
                         link: {
                           webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
                           mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'

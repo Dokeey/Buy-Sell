@@ -44,7 +44,7 @@ class StarStoreSearchList(ListView):
 
     def get(self, request, *args, **kwargs):
         self.query = self.request.GET.get('query', '')
-        
+
         if self.query == '':
             messages.info(self.request, '검색어를 입력해주세요')
             url = self.request.GET.get('next')
@@ -87,6 +87,14 @@ class StarStoreHitListView(ListView):
     template_name = 'store/star_store_hit.html'
     model = StoreProfile
 
+    def get(self, request, *args, **kwargs):
+        ctype = ContentType.objects.get_for_model(StoreProfile)
+        search_hit = HitCount.objects.filter(content_type=ctype).values('object_pk')
+        if not search_hit:
+            url = 'store:store_error'
+            return redirect(url)
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ctype = ContentType.objects.get_for_model(StoreProfile)
@@ -107,6 +115,13 @@ class StarStoreHitListView(ListView):
 class StarStoreGradeListView(ListView):
     template_name = 'store/star_store_grade.html'
     model = StoreProfile
+
+    def get(self, request, *args, **kwargs):
+        search_grade = StoreGrade.objects.values('store_profile')
+        if not search_grade:
+            url = 'store:store_error'
+            return redirect(url)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -129,24 +144,27 @@ class StarStoreSellListView(ListView):
     template_name = 'store/star_store_sell.html'
     model = StoreProfile
 
+    def get(self, request, *args, **kwargs):
+        search_sell = Order.objects.filter(status='success').values('item__user')
+        if not search_sell:
+            url = 'store:store_error'
+            return redirect(url)
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
-        try:
-            context = super().get_context_data(**kwargs)
-            search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),rank=DenseRank('count')).order_by('user')         
-            context['my_sell'] = ''
-            for i in search_sell:
-                if i['rank']:
-                    i['store_info'] = StoreProfile.objects.get(user_id=i['item__user'])
-                if self.request.user.is_active:
-                    if i['item__user'] == self.request.user.pk:
-                        context['my_sell'] = i['rank']
-            if context['my_sell'] == '':
-                context['my_sell'] = '-'
-            context['stores'] = search_sell
-        except:
-            return HttpResponseRedirect(reverse('store:store_error'))
-        else:
-            return context
+        context = super().get_context_data(**kwargs)
+        search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),rank=DenseRank('count')).order_by('user')         
+        context['my_sell'] = ''
+        for i in search_sell:
+            if i['rank']:
+                i['store_info'] = StoreProfile.objects.get(user_id=i['item__user'])
+            if self.request.user.is_active:
+                if i['item__user'] == self.request.user.pk:
+                    context['my_sell'] = i['rank']
+        if context['my_sell'] == '':
+            context['my_sell'] = '-'
+        context['stores'] = search_sell
+        return context
     
     # def render_to_response(self, context, **response_kwargs):
     #     if context['stores'] == '<QuerySet []>':
@@ -155,9 +173,17 @@ class StarStoreSellListView(ListView):
     #     return super().render_to_response(
     #             context, **response_kwargs
     #         )
+
 class StarStoreFollowListView(ListView):
     template_name = 'store/star_store_follow.html'
     model = StoreProfile
+
+    def get(self, request, *args, **kwargs):
+        search_follow = Follow.objects.values('store')
+        if not search_follow:
+            url = 'store:store_error'
+            return redirect(url)
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
