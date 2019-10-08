@@ -23,7 +23,7 @@ class DefaultStaticImageFieldFile(ProcessedImageFieldFile):
         except ValueError:
             # 파일이 없다면 ValueError가 발생합니다.
             from django.contrib.staticfiles.storage import staticfiles_storage
-            from django.contrib.staticfiles import finders
+            # from django.contrib.staticfiles import finders
             # staticfiles app의 finders를 사용해 FieldFile에 연결된 field의
             # static_image_path값에 해당하는 파일이 있는지 검사합니다.
             # if finders.find(self.field.static_image_path):
@@ -32,10 +32,10 @@ class DefaultStaticImageFieldFile(ProcessedImageFieldFile):
             #     return staticfiles_storage.url(self.field.static_image_path)
             # static_image_path값에 해당하는 경로에 파일이 없다면
             # DEFAULT_IMAGE_PATH 경로의 파일을 사용합니다.
-
             img_path = get_random()
-            res = requests.get(staticfiles_storage.url(img_path), stream=True)
-            self.save(self.field.name, ContentFile(res.content))
+            if self:
+                res = requests.get(staticfiles_storage.url(img_path), stream=True)
+                self.save("default_image", ContentFile(res.content))
             # if not self.DEFAULT_IMAGE_PATH:
             #     self.DEFAULT_IMAGE_PATH = get_random()
             return staticfiles_storage.url(img_path)
