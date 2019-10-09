@@ -194,8 +194,6 @@
                             {% url "policy:policy_service" %}
                         {% elif choice.id_for_label == 'id_policy_check_1' %}
                             {% url "policy:policy_privacy" %}
-                        {% else %}
-                            {% url "policy:policy_location" %}
                         {% endif %}">약관보기</a>
                         <div id="error_{{ choice.id_for_label }}" class="col-md-12"></div>
                     </div>

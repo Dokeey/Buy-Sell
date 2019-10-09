@@ -29,12 +29,8 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 #     stores = get_object_or_404(StoreProfile, user=request.user)
 #     return render(request, 'store/layout.html',{'stores': stores})
 
-# class StoreError(TemplateView):
-#     template_name = 'store/store_error.html'
-
-
-def StoreError(request):
-    return render(request, 'store/store_error.html')
+class StoreError(TemplateView):
+    template_name = 'store/store_error.html'
 
 class StarStoreSearchList(ListView):
     model = StoreProfile

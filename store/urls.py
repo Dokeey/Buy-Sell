@@ -26,5 +26,5 @@ urlpatterns = [
 
     path('star/store/search/', views.StarStoreSearchList.as_view(), name='star_store_search'),
 
-    path('store/error/', views.StoreError, name='store_error'),
+    path('store/error/', views.StoreError.as_view(), name='store_error'),
 ]
