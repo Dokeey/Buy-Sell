@@ -23,7 +23,7 @@ from time import time
 
 def test(request):
     return render(request, 'trade/test.html', {
-        'item': get_object_or_404(Item, id=5000)
+        'items': Item.objects.all()
     })
 # @login_required
 # def item_new(request):
