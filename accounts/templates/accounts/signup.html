@@ -190,7 +190,7 @@
                   {% for choice in form.policy_check %}
                     <div class="radio col-xs-12">
                         <h5>{{ choice }}</h5>
-                        <a href="{% if choice.id_for_label == 'id_policy_check_0' %}
+                        <a target="_blank" href="{% if choice.id_for_label == 'id_policy_check_0' %}
                             {% url "policy:policy_service" %}
                         {% elif choice.id_for_label == 'id_policy_check_1' %}
                             {% url "policy:policy_privacy" %}
