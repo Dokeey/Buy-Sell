@@ -1,178 +1,361 @@
 {% extends "policy/layout.html" %}
 
-{% block content %}
-    {{ block.super }}
-<pre>
-    < Buy and Sell 개인정보처리방침 >
-Buy and Sell(이하 “회사” 또는 “Buy and Sell”라 함)는 개인정보 보호법에 따라 이용자의 개인정보 보호 및 권익을 보호하고 개인정보와 관련한 이용자의 고충을 원활하게 처리할 수 있도록 다음과 같은 처리방침을 두고 있습니다.
+{% block policy_head %}
+<style type="text/css">
+    h3.head {
+        font-weight: bold;
+        color: rgb(87, 87, 84);
+    }
+    .edge {
+        border: 3px solid rgb(197, 191, 191);
+    }
+    .back{
+        background-color: rgb(182, 105, 103); 
+        color:white; 
+        padding:10px;
+    }
+</style>
 
-1. 개인정보의 처리 목적
-Buy and Sell는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보 보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.
+{% endblock %}
 
-가. 홈페이지 회원 가입 및 관리
-회원 가입의사 확인, 회원제 서비스 제공에 따른 본인 식별 〮인증, 회원자격 유지 〮관리, 제한적 본인확인제 시행에 따른 본인확인, 서비스 부정이용 방지, 만 14세 미만 아동의 개인정보 처리시 법정대리인의 동의여부 확인, 각종 고지 〮통지 등을 목적으로 개인정보를 처리합니다.
+{% block policy_content %}
+<div class="row" style="padding: 20px;"> 
+        
+    <h3 class="head">Buy and Sell 개인정보처리방침</h3><br/>
+    <div class="back">
+        Buy and Sell(이하 “회사” 또는 “Buy and Sell”라 함)는 개인정보 보호법에 따라 이용자의 개인정보 보호 및 권익을 보호하고 
+        <br>개인정보와 관련한 이용자의 고충을 원활하게 처리할 수 있도록 다음과 같은 처리방침을 두고 있습니다. 
+    </div>
+    <br>
+    <div class="col-sm-12 edge">
+        <div style="padding: 13px 0px 0px 0px">본 개인정보처리방침의 목차는 아래와 같습니다.
+                일부는 관계법령이 개인정보처리방침의 작성에 있어 요구하는 필수 사항을 포함하였고, 
+                <br>나머지는 buy and sell가 자체적으로 이용자의 개인정보 보호에 있어 중요하다 판단하는 내용을 추가하였습니다.
+        </div>
+        <hr>
+        <div class="row col-sm-offset-1">
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy1">1. 개인정보의 처리 목적</a></div>
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy2">2. 개인정보 처리 및 보유기간</a></div>
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy3">3. 개인정보의 제3자 제공</a></div>
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy4">4. 개인정보처리의 위탁</a></div>
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy5">5. 정보주체의 권리∙의무 및 행사방법</a></div>
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy6">6. 처리하는 개인정보의 항목</a></div>
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy7">7. 개인정보 파기절차 및 방법</a></div>
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy8">8. 개인정보의 안전성 확보조치</a></div>
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy9">9. 개인정보 보호책임자 지정</a></div>
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy10">10. 권익침해 구제방법</a></div>
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy11">11. 개인정보 자동 수집 장치의 설치 및 운영 및 그 거부에 관한 사항</a></div>
+            <div class="col-xs-12 col-sm-6"><a style="font-size:20px" href="#privacy12">12. 개인정보 처리방침 변경</a></div>
+        </div>
+    <br>
+    </div>
+</div>
 
-나. 재화 또는 서비스 제공
-물품배송, 서비스 제공, 콘텐츠 제공, 맞춤서비스 제공, 본인인증, 연령인증, 요금결제 〮정산 등을 목적으로 개인정보를 처리합니다.
+<div id="privacy1" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">1. 개인정보의 처리 목적</h3><br>
+    <div class="back">
+        Buy and Sell는 다음의 목적을 위하여 개인정보를 처리합니다. <br>
+        처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, <br>
+        이용 목적이 변경되는 경우에는 개인정보 보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.
+    </div><br>
+    <div class="edge" style="padding:15px;">
+            <h4 style="font-weight:bold;">가. 홈페이지 회원 가입 및 관리</h4>
+            회원 가입의사 확인, 회원제 서비스 제공에 따른 본인 식별 및 인증, 회원자격 유지 및 관리, 제한적 본인확인제 시행에 따른 본인확인, 서비스 부정이용 방지, 만 14세 미만 아동의 개인정보 처리시 법정대리인의 동의여부 확인, 각종 고지 및 통지 등을 목적으로 개인정보를 처리합니다.
+            <br><br>
+            <h4 style="font-weight:bold;">나. 재화 또는 서비스 제공</h4>
+            물품배송, 서비스 제공, 콘텐츠 제공, 맞춤서비스 제공, 본인인증, 연령인증, 요금결제 및 정산 등을 목적으로 개인정보를 처리합니다.
+            <br><br>
+            <h4 style="font-weight:bold;">다. 마케팅 및 광고에의 활용</h4>
+            신규 서비스(제품) 개발 및 맞춤 서비스 제공, 이벤트 및 광고성 정보 제공 및 참여기회 제공, 접속빈도 파악 또는 회원의 서비스 이용에 대한 통계 등을 목적으로 개인정보를 처리합니다.
+            <br><br>
+            <h4 style="font-weight:bold;">라. 회원간의 사기 및 분쟁 방지</h4>
+            거래관련 사기 및 분쟁 방지, 발생된 거래관련 사기 및 분쟁에 대한 대응 등을 목적으로 개인정보를 처리합니다.
+    </div>
+</div>
 
-다. 마케팅 및 광고에의 활용
-신규 서비스(제품) 개발 및 맞춤 서비스 제공, 이벤트 및 광고성 정보 제공 및 참여기회 제공, 접속빈도 파악 또는 회원의 서비스 이용에 대한 통계 등을 목적으로 개인정보를 처리합니다.
+<div id="privacy2" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">2. 개인정보 처리 및 보유기간</h3><br>
+    <table border="3px" style="border-color: rgb(197, 191, 191);">
+        <tr style="background-color: rgb(182, 105, 103); padding:10px;">
+            <th style="color:white; text-align:center; padding:10px;">해당 개인정보</th>
+            <th style="color:white; text-align:center; padding:10px;">보존기간</th>
+            <th style="color:white; text-align:center; padding:10px;">보존사유(관련 법률)</th>
+        </tr>
+        <tr>
+            <td style="padding:10px;">Buy and Sell 서비스 부정이용 기록</td>
+            <td style="text-align:center; padding:10px;">5년</td>
+            <td style="padding:10px;">내부 운영정책</td>
+        </tr>
+        <tr>
+            <td style="padding:10px;">계약 또는 청약철회 등에 관한 기록</td>
+            <td style="text-align:center; padding:10px;">5년</td>
+            <td style="padding:10px;">전자상거래 등에서의 소비자 보호에 관한 법률</td>
+        </tr>
+        <tr>
+            <td style="padding:10px;">대금결제 및 재화 등의 공급에 관한 기록</td>
+            <td style="text-align:center; padding:10px;">5년</td>
+            <td style="padding:10px;">전자상거래 등에서의 소비자 보호에 관한 법률</td>
+        </tr>
+        <tr>
+            <td style="padding:10px;">소비자 불만 및 분쟁처리에 관한 기록</td>
+            <td style="text-align:center; padding:10px;">3년</td>
+            <td style="padding:10px;">전자상거래 등에서의 소비자 보호에 관한 법률</td>
+        </tr>
+        <tr>
+            <td style="padding:10px;">전자금융 거래에 관한 기록</td>
+            <td style="text-align:center; padding:10px;">5년</td>
+            <td style="padding:10px;">전자금융거래법</td>
+        </tr>
+        <tr>
+            <td style="padding:10px;">본인확인에 관한 기록</td>
+            <td style="text-align:center; padding:10px;">6개월</td>
+            <td style="padding:10px;">정보통신망 이용촉진 및 정보보호 등에 관한 법률</td>
+        </tr>
+        <tr>
+            <td style="padding:10px;">웹사이트 방문에 관한 기록</td>
+            <td style="text-align:center; padding:10px;">3개월</td>
+            <td style="padding:10px;">통신비밀보호법</td>
+        </tr>
+    </table>
+</div>
 
-라. 회원간의 사기 및 분쟁 방지
-거래관련 사기 및 분쟁 방지, 발생된 거래관련 사기 및 분쟁에 대한 대응 등을 목적으로 개인정보를 처리합니다.
+<div id="privacy3" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">3. 개인정보의 제3자 제공</h3><br>
+    <div class="back">
+        Buy and Sell는 고객의 개인정보를 서비스이용약관, 개인정보처리방침의 개인정보의 처리 목적에서 알린 범위 내에서 사용하며, <br>
+        이 범위를 초과하여 이용하거나 타인 또는 다른 기업 및 기관에 제공하지 않습니다. <br>
+        단, 고객의 동의가 있거나 법령에 의하여 정해진 절차에 따라 정보를 요청받은 경우는 예외로 하며, <br>
+        이 경우 주의를 기울여 개인정보를 이용 및 제공할 수 있습니다.
+    </div><br>
+    <div class="edge" style="padding:15px;">
+        <h4 style="font-weight:bold;">- 제3자 제공 업무 발생 시, 필요시점에 고객에게 별도로 알리고 동의받는 절차가 진행됩니다.</h4>
+        <h4 style="font-weight:bold;">- 제3자 제공 동의를 거부하실 수 있으며, 동의 거부는 회원가입과 서비스 사용에 영향을 미치지 않습니다.</h4>
+        <h4 style="font-weight:bold;">- Buy and Sell가 제공하는 서비스를 통해 거래가 성사되었을 때에는 쌍방 당사자간의 물품거래와 배송과 관련한 정보를 필요한 범위 내에서 쌍방당사자에게 제공합니다.</h4>
+        <h4 style="font-weight:bold;">- 개인정보 제공 현황은 제휴관계의 개시 또는 종료에 따라 변동될 수 있으며 개인정보 제공과 함께 목록에 게시됩니다. 제휴관계가 종료되면 개인정보의 파기와 함께 목록에서 삭제 됩니다.</h4>  
+    </div>
+</div>
 
-2. 개인정보 처리 및 보유기간
-해당 개인정보	보존기간	보존사유(관련 법률)
-Buy and Sell 서비스 부정이용 기록	5년	내부 운영정책
-(서비스 부정이용 방지)
-톡 채팅을 이용한 채팅내용	5년	내부 운영정책
-(거래관련 사기 및 분쟁 방지)
-계약 또는 청약철회 등에 관한 기록	5년	전자상거래 등에서의 소비자 보호에 관한 법률
-대금결제 및 재화 등의 공급에 관한 기록	5년	전자상거래 등에서의 소비자 보호에 관한 법률
-소비자 불만 및 분쟁처리에 관한 기록	3년	전자상거래 등에서의 소비자 보호에 관한 법률
-전자금융 거래에 관한 기록	5년	전자금융거래법
-본인확인에 관한 기록	6개월	정보통신망 이용촉진 및 정보보호 등에 관한 법률
-웹사이트 방문에 관한 기록	3개월	통신비밀보호법
-3. 개인정보의 제3자 제공
-Buy and Sell는 고객의 개인정보를 서비스이용약관, 개인정보처리방침의 개인정보의 처리 목적에서 알린 범위 내에서 사용하며, 이 범위를 초과하여 이용하거나 타인 또는 다른 기업 〮기관에 제공하지 않습니다. 단, 고객의 동의가 있거나 법령에 의하여 정해진 절차에 따라 정보를 요청받은 경우는 예외로 하며, 이 경우 주의를 기울여 개인정보를 이용 및 제공할 수 있습니다.
+<div id="privacy4" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">4. 개인정보처리의 위탁</h3><br>
+    <div class="back">
+        buy and sell는 업무위탁계약서 등을 통하여 위탁업무 수행목적 외 개인정보의 처리 금지에 관한 사항, 개인정보의 기술적, 관리적 보호조치에 관한 사항, 위탁업무의 목적 및 범위, 재위탁 제한에 관한 사항, 개인정보에 대한 접근 제한 등 안전성 확보 조치에 관한 사항, 위탁업무와 관련하여 보유하고 있는 개인정보의 관리현황 점검 등 감독에 관한 사항, 개인정보 사고시의 책임부담, 처리 종료 후의 개인정보의 반환 또는 파기 의무 등을 규정하고, 이를 준수하도록 관리하고 있습니다.
+        <br><br>
+        buy and sell는 보다 나은 서비스 제공, 고객편의 제공 등 원활한 업무 수행을 위하여 다음과 같이 개인정보 처리 업무를 외부 전문업체에 위탁하여 운영하고 있습니다.
+        <br><br>
+        수탁업체 리스트는 해당 서비스 변경 및 계약기간에 따라 변경될 수 있으며 변경 시 개인정보처리방침을 통해 공지합니다.
+    </div><br>
+    <table border="3px" style="border-color: rgb(197, 191, 191);">
+        <tr style="background-color: rgb(182, 105, 103); padding:10px;">
+            <th style="color:white; text-align:center; padding:10px;">수탁자</th>
+            <th style="color:white; text-align:center; padding:10px;">위탁업무</th>
+            <th style="color:white; text-align:center; padding:10px;">보유 및 이용기간</th>
+        </tr>
+        <tr>
+            <td style="padding:10px;">Microsoft Azure</td>
+            <td style="text-align:center; padding:10px;">클라우드 서버 이용</td>
+            <td style="padding:10px;">회원탈퇴 또는 위탁계약 종료시</td>
+        </tr>
+        
+    </table>
+</div>
 
-제공받는 자	개인정보 이용목적	개인정보의 항목	보유 및 이용기간
-- 이름, 전화번호, 생년월일, 성별	수집·이용 동의일로부터 거래종료 후 5년까지
-- 제3자 제공 업무 발생 시, 필요시점에 고객에게 별도로 알리고 동의받는 절차가 진행됩니다.
-- 제3자 제공 동의를 거부하실 수 있으며, 동의 거부는 회원가입과 서비스 사용에 영향을 미치지 않습니다.
-- Buy and Sell가 제공하는 서비스를 통해 거래가 성사되었을 때에는 쌍방 당사자간의 물품거래와 배송과 관련한 정보를 필요한 범위 내에서 쌍방당사자에게 제공합니다.
-- 개인정보 제공 현황은 제휴관계의 개시 또는 종료에 따라 변동될 수 있으며 개인정보 제공과 함께 목록에 게시됩니다. 제휴관계가 종료되면 개인정보의 파기와 함께 목록에서 삭제 됩니다.
+<div id="privacy5" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">5. 정보주체의 권리∙의무 및 행사방법</h3><br>
+    <div class="edge" style="padding:15px;">
+        <h4 style="font-weight:bold;">가. 정보주체는 Buy and Sell에 언제든지 개인정보 열람, 정정, 삭제, 처리정지 요구 등의 권리를 행사할 수있습니다.</h4>
+        <h4 style="font-weight:bold;">나. ‘가’항에 따른 권리 행사는 Buy and Sell에 대해 개인정보 보호법 시행령 제41조제1항에 따라 서면, 전자우편, 모사전송(FAX)등을 통하여 하실수 있으며 Buy and Sell는 이에 대해 지체없이 조치하겠습니다.</h4>
+        <h4 style="font-weight:bold;">다. ‘가’항에 따른 권리 행사는 정보주체의 법정대리인이나 위임을 받은 자 등 대리인을 통하여 하실 수 있습니다. 이 경우 개인정보 보호법 시행규칙 별지 제11호 서식에 따른 위임장을 제출하셔야 합니다.</h4>
+        <h4 style="font-weight:bold;">라. 개인정보 열람 및 처리정지 요구는 개인정보 보호법 제35조제5항, 제37조제2항에 의하여 정보주체의 권리가 제한될 수 있습니다.</h4>
+        <h4 style="font-weight:bold;">마. 개인정보의 정정 및 삭제 요구는 다른 법령에서 그 개인정보가 수집 대상으로 명시 되어 있는 경우에는 그 삭제를 요구할 수 있습니다.</h4>
+        <h4 style="font-weight:bold;">바. Buy and Sell는 정보주체 권리에 따른 열람의 요구, 정정 및 삭제의 요구, 처리정지의 요구 시 열람 등 요구를 한 자가 본인이거나 정당한 대리인인지를 확인합니다.</h4>
+    </div>
+</div>
 
-4. 정보주체의 권리∙의무 및 행사방법
-가. 정보주체는 Buy and Sell에 언제든지 개인정보 열람, 정정, 삭제, 처리정지 요구 등의 권리를 행사할 수있습니다.
+<div id="privacy6" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">6. 처리하는 개인정보의 항목</h3><br>
+    <div class="back">
+        Buy and Sell는 서비스 이용에 반드시 필요한 개인정보를 다음과 같은 목적을 위하여 처리합니다.<br>
+        처리하는 개인정보는 다음의 목적 이외의 용도로는 처리되지 않으며, 처리 목적과 항목이 변경되는 경우에는 필요한 조치를 이행할 것입니다.
+    </div><br>
+    <table border="3px" style="border-color: rgb(197, 191, 191);">
+        <tr style="background-color: rgb(182, 105, 103); padding:10px;">
+            <th style="color:white; text-align:center; padding:10px;">처리목적</th>
+            <th style="color:white; text-align:center; padding:10px;">처리항목</th>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding:10px;">회원가입</td>
+            <td style="padding:10px;">필수: 이메일, 전화번호, 주소, 계좌번호</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding:10px;">아이디/비밀번호 찾기</td>
+            <td style="padding:10px;">필수: 이메일</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding:10px;">이니페이 구매</td>
+            <td style="padding:10px;">필수: 이메일, 주소</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding:10px;">계좌로 구매</td>
+            <td style="padding:10px;">필수: 이름, 계좌번호, 주소</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; padding:10px;">판매하기</td>
+            <td style="padding:10px;">필수: 이름, 계좌번호, 주소, 전화번호</td>
+        </tr>
+ 
+    </table><br>
+    <div class="back">서비스 이용과정이나 개인정보 처리과정에서 다음과 같은 정보들이 자동생성/수집되고 다음의 목적으로 이용될 수 있습니다.</div>
+    <div class="edge" style="padding:15px;">
+        <h4 style="font-weight:bold;">가. 서비스 이용내역, 결제내역, 불량이용기록, 접속로그 : 서비스 제공 관련 고객상담 등의 목적</h4>
+        <h4 style="font-weight:bold;">나. 접속 IP 주소 : 의심거래 이용자에 대한 수사협조 목적과 위치기반서비스 제공</h4>
+    </div>
 
-나. ‘가’항에 따른 권리 행사는 Buy and Sell에 대해 개인정보 보호법 시행령 제41조제1항에 따라 서면, 전자우편, 모사전송(FAX)등을 통하여 하실수 있으며 Buy and Sell는 이에 대해 지체없이 조치하겠습니다.
+</div>
 
-다. ‘가’항에 따른 권리 행사는 정보주체의 법정대리인이나 위임을 받은 자 등 대리인을 통하여 하실 수 있습니다. 이 경우 개인정보 보호법 시행규칙 별지 제11호 서식에 따른 위임장을 제출하셔야 합니다.
+<div id="privacy7" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">7. 개인정보 파기절차 및 방법</h3><br>
+    <div class="back">
+        Buy and Sell는 원칙적으로 개인정보 처리목적이 달성된 경우에는 지체없이 해당 개인정보를 파기합니다. <br>
+        파기의 절차, 기한, 방법은 다음과 같습니다.
+    </div><br>
+    <div class="edge" style="padding:15px;">
+            <h4 style="font-weight:bold;">가. 파기절차</h4>
+            이용자가 입력한 정보는 목적 달성 후 별도의 DB에 옮겨져(종이의 경우 별도의 서류) 내부 방침 및 기타 관련 법령에 따라 일정기간 저장된 후 혹은 즉시 파기됩니다. 이 때, DB로 옮겨진 개인정보는 법률에 의한 경우가 아니고서는 다른 목적으로 이용되지 않습니다.
+            <br><br>
+            <h4 style="font-weight:bold;">나. 파기기한</h4>
+            이용자의 개인정보는 그 보유기간이 경과된 경우에는 보유기간의 종료일로부터 5일 이내에, 개인정보의 처리 목적 달성, 해당 서비스의 폐지, 사업의 종료 등 그 개인정보가 불필요하게 되었을 때에는 개인정보의 처리가 불필요한 것으로 인정되는 날로부터 5일 이내에 그 개인정보를 파기합니다.
+            <br><br>
+            <h4 style="font-weight:bold;">다. 파기방법</h4>
+            전자적 파일 형태의 정보는 기록을 재생할수 없는 기술적 방법을 사용합니다.
+            종이에 출력된 개인정보는 분쇄기로 분쇄하거나 소각을 통하여 피기합니다.
+    </div>
+</div>
 
-라. 개인정보 열람 및 처리정지 요구는 개인정보 보호법 제35조제5항, 제37조제2항에 의하여 정보주체의 권리가 제한될 수 있습니다.
+<div id="privacy8" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">8. 개인정보의 안전성 확보조치</h3><br>
+    <div class="back">
+        Buy and Sell는 개인정보 보호법 제29조에 따라 다음과 같이 안전성 확보에 필요한 기술적/관리적 및 물리적 조치를 하고 있습니다.
+    </div><br>
+    <div class="edge" style="padding:15px;">
+            <h4 style="font-weight:bold;">가. 정기적인 자체 감사 실시</h4>
+                개인정보 취급 관련 안정성 확보를 위해 정기적(분기1회)으로 자체 감사를 실시하고 있습니다.
+            <br><br>
+            <h4 style="font-weight:bold;">나. 개인정보 취급 직원의 최소화 및 교육</h4>
+                개인정보를 취급하는 직원을 지정하고 담당자에 한정시켜 최소화 하여 개인정보를 관리하는 대책을 지행하고 있습니다.
+            <br><br>
+            <h4 style="font-weight:bold;">다. 내부관리계획의 수립 및 시행</h4>
+                개인정보의 안전한 처리를 위하여 내부관리계획을 수립하고 시행하고 있습니다.
+                <br><br>
+            <h4 style="font-weight:bold;">라. 해킹 등에 대비한 기술적 대책</h4>
+                Buy and Sell는 해킹이나 컴퓨터 바이러스 등에 의한 개인정보 유출 및 훼손을 막기 위하여 보안프로그램을 설치하고 주기적인 갱신 및 점검을하며 외부로부터 접근이 통제된 구역에 시스템을 설치하고 기술적/물리적으로 감시 및 차단하고 있습니다.
+                <br><br>
+            <h4 style="font-weight:bold;">마. 개인정보의 암호화</h4>
+                이용자의 개인정보 및 비밀번호는 암호화 되어 저장 및 관리되고 있어 본인만이 알 수 있으며 중요한 데이터는 파일 및 전송 데이터를 암호화 하거나 파일 잠금 기능을 사용하는 등 별도 보안기능을 사용하고 있습니다.
+                <br><br>
+            <h4 style="font-weight:bold;">바. 접속기록의 보관 및 위변조 방지</h4>
+                개인정보처리시스템에 접속한 기록을 최소 6개월이상 보관, 관리하고 있으며, 접속 기록이 위변조 및 도난, 분실되지 않도록 보안기능을 사용하고 있습니다.
+                <br><br>
+            <h4 style="font-weight:bold;">사. 개인정보에 대한 접근제한</h4>
+                개인정보를 처리하는 데이터베이스시스템에 대한 접근권한 부여, 변경, 말소를 통하여 개인정보에 대한 접근통제를 위하여 필요한 조치를 하고 있으며 침입차단시스템을 이용하여 외부로부터의 무단 접근을 통제하고 있습니다.
+                <br><br>
+            <h4 style="font-weight:bold;">아. 문서보안을 위한 잠금장치 사용</h4>
+                개인정보가 포함된 서류, 보조저장매체 등을 잠금장치가 있는 안전한 장소에 보관하고 있습니다.
+                <br><br>
+            <h4 style="font-weight:bold;">자. 비인가자에 대한 출입 통제</h4>
+                개인정보를 보관하고 있는 물리적 보관 장소를 별도로 두고 이에 대해 출입통제 절차를 수립, 운영하고 있습니다.
+    </div>
+</div>
 
-마. 개인정보의 정정 및 삭제 요구는 다른 법령에서 그 개인정보가 수집 대상으로 명시 되어 있는 경우에는 그 삭제를 요구할 수 있습니다.
+<div id="privacy9" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">9. 개인정보 보호책임자 지정</h3><br>
+    <table border="3px" style="border-color: rgb(197, 191, 191);">
+        <tr style="background-color: rgb(182, 105, 103); padding:10px;">
+            <th style="color:white; text-align:center; padding:10px;">구분</th>
+            <th style="color:white; text-align:center; padding:10px;">개인정보보호 책임자</th>
+            <th style="color:white; text-align:center; padding:10px;">개인정보보호 관리자</th>
+        </tr>
+        <tr>
+            <td style="padding:10px;">이름</td>
+            <td style="text-align:center; padding:10px;">설기</td>
+            <td style="text-align:center; padding:10px;">폰은정</td>
+        </tr>
+        <tr>
+            <td style="padding:10px;">전화</td>
+            <td style="text-align:center; padding:10px;">010-왈왈왈왈-bark</td>
+            <td style="text-align:center; padding:10px;">010-0000-0000</td>
+        </tr>
+        <tr>
+            <td style="padding:10px;">메일</td>
+            <td style="text-align:center; padding:10px;">seolgi@bark.com</td>
+            <td style="text-align:center; padding:10px;">phone@love.sang</td>
+        </tr>        
+    </table>
+</div>
 
-바. Buy and Sell는 정보주체 권리에 따른 열람의 요구, 정정 〮삭제의 요구, 처리정지의 요구 시 열람 등 요구를 한 자가 본인이거나 정당한 대리인인지를 확인합니다.
+<div id="privacy10" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">10. 권익침해 구제방법</h3><br>
+    <div class="back">
+        아래의 기관은 별개의 기관으로서, Buy and Sell의 자체적인 개인정보 불만처리, 피해구제 결과에 만족하지 못하시거나 보다 자세한 도움이 필요하시면 문의하여 주시기 바랍니다.
+    </div><br>
+    <div class="edge" style="padding:15px;">
+            <h4 style="font-weight:bold;">가. 개인정보 침해신고센터 (한국인터넷진흥원 운영)</h4>
+            - 소관업무 : 개인정보 침해사실 신고, 상담 신청<br>
+            - 홈페이지 : http://privacy.kisa.or.kr<br>
+            - 전화 : (국번없이) 118<br><br>
+            <h4 style="font-weight:bold;">나. 개인정보 분쟁조정위원회</h4>
+            - 소관업무 : 개인정보 분쟁조정신청, 집단분쟁조정 (민사적 해결)<br>
+            - 홈페이지 : http://www.kopico.go.kr<br>
+            - 전화 : (국번없이) 1833-6972<br>
+            - 주소 : (03171) 서울특별시 종로구 세종대로 209 정부서울청사 4층
+            <br><br>
+            <h4 style="font-weight:bold;">다. 대검찰청 사이버범죄 수사단 : 02-3480-3573, www.spo.go.kr</h4>
+            <h4 style="font-weight:bold;">라. 경찰청 사이버안전국 : (국번없이) 182, http://cyberbureau.police.go.kr</h4>
+    </div>
+</div>
 
-5. 처리하는 개인정보의 항목
-Buy and Sell는 서비스 이용에 반드시 필요한 개인정보를 다음과 같은 목적을 위하여 처리합니다. 처리하는 개인정보는 다음의 목적 이외의 용도로는 처리되지 않으며, 처리 목적과 항목이 변경되는 경우에는 필요한 조치를 이행할 것입니다.
+<div id="privacy11" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">11. 개인정보 자동 수집 장치의 설치 및 운영 및 그 거부에 관한 사항</h3><br>
+    <div class="back">
+        Buy and Sell는 개별적인 맞춤서비스를 제공하기 위해 이용정보를 저장하고 수시로 불러오는 '쿠키(cookie)'를 사용합니다.
+        <br><br>
+        쿠키는 웹사이트를 운영하는데 이용되는 서버(https)가 이용자의 컴퓨터 브라우저에게 보내는 소량의 정보이며 이용자들의 PC내의 하드디스크에 저장되기도 합니다.<br> 
+        이용자가 웹사이트에 접속을 하면 buy and sell의 서버는 이용자들의 쿠키의 내용을 읽고, 
+        이용자의 추가정보를 귀하의 컴퓨터에서 찾아 접속에 따른 성명 등의 추가 입력 없이 서비스를 제공할 수 있습니다.
+        <br><br>
+        쿠키는 이용자의 컴퓨터는 식별하지만 귀하를 개인적으로 식별하지는 않습니다.<br> 
+        또한, 이용자는 쿠키 설치에 대한 선택권을 가지고 있습니다. 따라서, 이용자는 웹 브라우저에서 옵션을 설정함으로써 모든 쿠키를 허용하거나, 쿠키가 저장될 때마다 확인을 거치거나, 모든 쿠키의 저장을 거부할 수도 있습니다. 
+        <br>다만, 쿠키 설치를 거부할 경우 웹 사용이 불편해지며 로그인이 필요한 일부 서비스 이용에 어려움이 있을 수 있습니다. 
+    </div><br>
+    <div class="edge" style="padding:15px;">
+        <h4 style="font-weight:bold;">가. 설정 방법의 예</h4>
+        1). 인터넷 익스플로러(Internet Explorer)의 경우<br>
+        - 도구 메뉴 ▷ 인터넷 옵션 ▷ 개인정보 ▷ 쿠키 차단 수준 설정
+        <br><br>
+        2). 크롬(Chrome)의 경우<br>
+        - 설정 메뉴 ▷ 고급 설정 표시 ▷ 개인정보의 콘텐츠 설정 ▷ 쿠키 차단 수준 설정
+    </div>
+</div>
 
-처리목적	처리항목
-회원가입	필수 : 이메일, 전화번호, 주소, 계좌번호
-선택 :
-SNS 회원가입 (네이버)	필수 : 이름, 이메일, 별명, 프로필사진, 성별, 연령대
-선택 : 블로그 글쓰기, 카페가입 글쓰기
-SNS 회원가입 (카카오)	필수 : 닉네임, 프로필사진, 이메일
-SNS 회원가입 (페이스북)	필수 : 이름, 프로필사진, 이메일주소
-본인인증 (성인)	필수 : 전화번호
-본인인증 (아동)	필수 : 보호자 전화번호, 이름
-상품등록	필수 : 위치정보
-비밀번호찾기	필수 : 이메일
-SMS 초대 메시지 보내기 필수 : 본인 전화번호, 상대방 전화번호, 본인이름
-페이 구매 필수 : 배송주소, 이름, 카드회사 이름, 은행명(가상계좌 결제시)
-송금	필수 : 이메일, 수령인, 연락처, 배송지
-정산	필수 : 은행명, 계좌번호, 이름
-환불	필수 : 은행명, 계좌번호, 이름
-사용자 선호지역 설정	필수 : 주소
-서비스 이용과정이나 개인정보 처리과정에서 다음과 같은 정보들이 자동생성/수집되고 다음의 목적으로 이용될 수 있습니다.
-
-가. 서비스 이용내역, 결제내역, 불량이용기록, 접속로그 : 서비스 제공 관련 고객상담 등의 목적
-
-나. 접속 IP 주소 : 의심거래 이용자에 대한 수사협조 목적과 위치기반서비스 제공
-
-다. 위치정보 : 위치기반서비스 이용약관에 명시된 목적과 부정이용 방지 목적
-※ 안내 : 위치기반서비스는 단말기의 설정을 변경함으로써 위치정보의 수집을 차단할 수 있습니다.
-
-7. 개인정보 파기절차 및 방법
-Buy and Sell는 원칙적으로 개인정보 처리목적이 달성된 경우에는 지체없이 해당 개인정보를 파기합니다. 파기의 절차, 기한, 방법은 다음과 같습니다.
-
-가. 파기절차
-이용자가 입력한 정보는 목적 달성 후 별도의 DB에 옮겨져(종이의 경우 별도의 서류) 내부 방침 및 기타 관련 법령에 따라 일정기간 저장된 후 혹은 즉시 파기됩니다. 이 때, DB로 옮겨진 개인정보는 법률에 의한 경우가 아니고서는 다른 목적으로 이용되지 않습니다.
-
-나. 파기기한
-이용자의 개인정보는 그 보유기간이 경과된 경우에는 보유기간의 종료일로부터 5일 이내에, 개인정보의 처리 목적 달성, 해당 서비스의 폐지, 사업의 종료 등 그 개인정보가 불필요하게 되었을 때에는 개인정보의 처리가 불필요한 것으로 인정되는 날로부터 5일 이내에 그 개인정보를 파기합니다.
-
-다. 파기방법
-전자적 파일 형태의 정보는 기록을 재생할수 없는 기술적 방법을 사용합니다.
-종이에 출력된 개인정보는 분쇄기로 분쇄하거나 소각을 통하여 피기합니다.
-
-8. 개인정보의 안전성 확보조치
-Buy and Sell는 개인정보 보호법 제29조에 따라 다음과 같이 안전성 확보에 필요한 기술적/관리적 및 물리적 조치를 하고 있습니다.
-
-가. 정기적인 자체 감사 실시
-개인정보 취급 관련 안정성 확보를 위해 정기적(분기1회)으로 자체 감사를 실시하고 있습니다.
-
-나. 개인정보 취급 직원의 최소화 및 교육
-개인정보를 취급하는 직원을 지정하고 담당자에 한정시켜 최소화 하여 개인정보를 관리하는 대책을 지행하고 있습니다.
-
-다. 내부관리계획의 수립 및 시행
-개인정보의 안전한 처리를 위하여 내부관리계획을 수립하고 시행하고 있습니다.
-
-라. 해킹 등에 대비한 기술적 대책
-Buy and Sell는 해킹이나 컴퓨터 바이러스 등에 의한 개인정보 유출 및 훼손을 막기 위하여 보안프로그램을 설치하고 주기적인 갱신 〮점검을하며 외부로부터 접근이 통제된 구역에 시스템을 설치하고 기술적/물리적으로 감시 및 차단하고 있습니다.
-
-마. 개인정보의 암호화
-이용자의 개인정보 및 비밀번호는 암호화 되어 저장 및 관리되고 있어 본인만이 알 수 있으며 중요한 데이터는 파일 및 전송 데이터를 암호화 하거나 파일 잠금 기능을 사용하는 등 별도 보안기능을 사용하고 있습니다.
-
-바. 접속기록의 보관 및 위변조 방지
-개인정보처리시스템에 접속한 기록을 최소 6개월이상 보관, 관리하고 있으며, 접속 기록이 위변조 및 도난, 분실되지 않도록 보안기능을 사용하고 있습니다.
-
-사. 개인정보에 대한 접근제한
-개인정보를 처리하는 데이터베이스시스템에 대한 접근권한 부여, 변경, 말소를 통하여 개인정보에 대한 접근통제를 위하여 필요한 조치를 하고 있으며 침입차단시스템을 이용하여 외부로부터의 무단 접근을 통제하고 있습니다.
-
-아. 문서보안을 위한 잠금장치 사용
-개인정보가 포함된 서류, 보조저장매체 등을 잠금장치가 있는 안전한 장소에 보관하고 있습니다.
-
-자. 비인가자에 대한 출입 통제
-개인정보를 보관하고 있는 물리적 보관 장소를 별도로 두고 이에 대해 출입통제 절차를 수립, 운영하고 있습니다.
-
-9. 개인정보 보호책임자 지정
-구분	개인정보보호 책임자	개인정보보호 관리자
-이름	김예동               김설기
-소속 정보보안팀
-직위	노예                 감시자
-전화	01234               01234
-메일
-10. 권익침해 구제방법
-아래의 기관은 별개의 기관으로서, Buy and Sell의 자체적인 개인정보 불만처리, 피해구제 결과에 만족하지 못하시거나 보다 자세한 도움이 필요하시면 문의하여 주시기 바랍니다.
-
-가. 개인정보 침해신고센터 (한국인터넷진흥원 운영)
-- 소관업무 : 개인정보 침해사실 신고, 상담 신청
-- 홈페이지 : https://privacy.kisa.or.kr
-- 전화 : (국번없이) 118
-- 주소 : (58324) 전남 나주시 진흥길 9 3층 개인정보침해신고센터
-
-나. 개인정보 분쟁조정위원회
-- 소관업무 : 개인정보 분쟁조정신청, 집단분쟁조정 (민사적 해결)
-- 홈페이지 : https://www.kopico.go.kr
-- 전화 : (국번없이) 1833-6972
-- 주소 : (03171) 서울특별시 종로구 세종대로 209 정부서울청사 4층
-
-다. 대검찰청 사이버범죄 수사단 : 02-3480-3573, www.spo.go.kr
-
-라. 경찰청 사이버안전국 : (국번없이) 182, https://cyberbureau.police.go.kr
-
-11. 개인정보 자동 수집 장치의 설치 〮운영 및 그 거부에 관한 사항
-Buy and Sell는 개별적인 맞춤서비스를 제공하기 위해 이용정보를 저장하고 수시로 불러오는 '쿠키(cookie)'를 사용합니다.
-
-쿠키는 웹사이트를 운영하는데 이용되는 서버(https)가 이용자의 컴퓨터 브라우저에게 보내는 소량의 정보이며 이용자들의 PC내의 하드디스크에 저장되기도 합니다. 이용자가 웹사이트에 접속을 하면 번개장터의 서버는 이용자들의 쿠키의 내용을 읽고, 이용자의 추가정보를 귀하의 컴퓨터에서 찾아 접속에 따른 성명 등의 추가 입력 없이 서비스를 제공할 수 있습니다.
-
-쿠키는 이용자의 컴퓨터는 식별하지만 귀하를 개인적으로 식별하지는 않습니다. 또한, 이용자는 쿠키 설치에 대한 선택권을 가지고 있습니다. 따라서, 이용자는 웹 브라우저에서 옵션을 설정함으로써 모든 쿠키를 허용하거나, 쿠키가 저장될 때마다 확인을 거치거나, 모든 쿠키의 저장을 거부할 수도 있습니다. 다만, 쿠키 설치를 거부할 경우 웹 사용이 불편해지며 로그인이 필요한 일부 서비스 이용에 어려움이 있을 수 있습니다.
-
-가. 설정 방법의 예
-1). 인터넷 익스플로러(Internet Explorer)의 경우
-- 도구 메뉴 ▷ 인터넷 옵션 ▷ 개인정보 ▷ 쿠키 차단 수준 설정
-
-2). 크롬(Chrome)의 경우
-- 설정 메뉴 ▷ 고급 설정 표시 ▷ 개인정보의 콘텐츠 설정 ▷ 쿠키 차단 수준 설정
-
-12. 개인정보 처리방침 변경
-Buy and Sell는 개인정보처리방침을 개정하는 경우 웹사이트 공지사항을 통하여 공지할 것입니다.
-
-가. 공지일자 : 2019년 6월 10일
-
-나. 시행일자 : 2019년 6월 10일
-</pre>
+<div id="privacy12" style="font-size: 16px; padding:10px;">
+<hr><br>
+    <h3 class="head">12. 개인정보 처리방침 변경</h3><br>
+    <div class="back">
+        Buy and Sell는 개인정보처리방침을 개정하는 경우 웹사이트 공지사항을 통하여 공지할 것입니다.
+        </div><br>
+    <div class="edge" style="padding:15px;">
+        <h4 style="font-weight:bold;">가. 공지일자 : 2019년 6월 10일</h4>
+        <h4 style="font-weight:bold;">나. 시행일자 : 2019년 6월 10일</h4>
+    </div>
+</div>
 {% endblock %}

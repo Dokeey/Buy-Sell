@@ -30,7 +30,7 @@ class SignupForm(UserCreationForm):
     CHOICE = (
         ("policy1", "(필수)Buy&Sell 이용약관 동의"),
         ("policy2", "(필수)개인정보 처리방침 동의"),
-        ("policy3", "(선택)위치기반 서비스 이용약관 동의"),
+        # ("policy3", "(선택)위치기반 서비스 이용약관 동의"),
         # ("policy3", "(선택)SNS, 이메일 마케팅 동의"),
     )
     policy_check = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=CHOICE)

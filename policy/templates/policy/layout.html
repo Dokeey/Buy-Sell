@@ -1,9 +1,23 @@
 {% extends "layout.html" %}
 
+{% block head %}
+    <script>
+        $(document).ready(function () {
+            $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
+        });
+    </script>
+    {% block policy_head %}
+    {% endblock %}
+{% endblock %}
 
 {% block content %}
-<a href="{% url "policy:policy_service" %}">이용약관</a>/
-<a href="{% url "policy:policy_privacy" %}">개인정보처리방침</a>/
-<a href="{% url "policy:policy_location" %}">위치기반 서비스 이용악관</a>
-<hr/>
+    <div class="row" style="padding:10px">
+        <ul class="nav nav-tabs nav-justified" role="tablist">
+            <li role="presentation" ><a href="{% url "policy:policy_service" %}">이용약관</a></li>
+            <li role="presentation" ><a href="{% url "policy:policy_privacy" %}">개인정보처리방침</a></li>
+        </ul>
+    </div>
+
+    {% block policy_content %}
+    {% endblock %}
 {% endblock %}
