@@ -26,11 +26,9 @@
     <form class="form-horizontal" id="uploadForm" action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
-            <div class="form-group">
                 <div class="col-md-11 col-md-offset-1 text-center">
                     <h2><small>물품을 등록하시면 내 가게에 물품이 진열되고, 해당 카테고리에 광고가 됩니다.</small></h2>
                 </div>
-            </div>
         </div>
           <div class="form-group">
             <label class="col-md-1 control-label">{{ form.photo.label }}</label>
@@ -94,7 +92,6 @@
 {% endblock %}
 
 {% block extra_content %}
-<script src="http://code.jquery.com/jquery-latest.js"></script>
 <script type="text/javascript">
 
     // 파일 리스트 번호
@@ -299,6 +296,9 @@
             formData.append('{{ form.photo.name }}', fileList[uploadFileList[i]]);
         }
 
+        var loader = $("#loading");
+        var container = $("#body");
+
         $.ajax({
             url:"{{ request.path }}",
             data:formData,
@@ -316,7 +316,10 @@
                         $('#error_'+key).html('<div class="text-center alert alert-warning alert-dismissible" role="alert">' + result.error[key][0] + '</div>');
                     }
                 }
-            }
+            },
+            beforeSend:function(){
+                loader.css("display","block");
+            },
         });
     }
 </script>

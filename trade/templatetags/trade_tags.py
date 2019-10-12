@@ -54,7 +54,7 @@ def photos(item):
             ht += '<div class="item">'
         ht += """
                 <a href="{0}">
-                    <img class="img-responsive" style="margin:0 auth;height:auto; max-height:150px;border:1px solid #ededed;" src="{1}"/>
+                    <img class="lazy img-responsive" height="150" width="150" style="margin:0 auth;border:1px solid #ededed;" data-src="{1}"/>
                 </a>
             </div>
         """.format(resolve_url('trade:item_detail', item.id), item_image.photo.url)
@@ -94,10 +94,10 @@ def item_block(item):
             </div>
             <h4 id="thumbnail-label">{amount}<small> 원</small></h4><hr style="margin:5px">
             <div class="thumbnail-description smaller text-center">
-                <b>{title}</b>
+                <b style="min-height: 38px;">{title}</b>
                 <hr style="margin:5px">
                 <i class="far fa-clock"></i>&nbsp;{time}<hr style="margin:5px">
-                <ul class="list-inline">
+                <ul class="list-inline" style="min-height: 30px;">
                   <li class="col-sm-6 col-xs-12"><a href="{user_link}"><b><i class="fas fa-user light-red lighter bigger-120"></i>&nbsp;{user}</b></a></li>
                   <li class="pay-status col-sm-6 col-xs-12"><b>{pay_status}</b></li>
                 </ul>
@@ -116,7 +116,7 @@ def item_block(item):
                updated_at=updated_at,
                created_at=created_at,
                updated_str=updated_str,
-               user=item.user.profile.nick_name,
+               user=item.user.storeprofile.name,
                user_link=user_link,
                wishlist_link=wishlist_link,
                )

@@ -101,7 +101,7 @@ class PayForm(forms.ModelForm):
         # IMP.request_pay의 인자로 넘길 인자 목록
         fields = {
             'merchant_uid': str(self.instance.merchant_uid),
-            'name': self.instance.name,
+            'name': self.instance.item.title,
             'amount': self.instance.amount,
             'buyer_email': self.instance.email,
             'buyer_name': self.instance.username,
@@ -133,9 +133,7 @@ class OrderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(OrderForm, self).__init__(*args, **kwargs)
         self.fields['pay_choice'].label = '거래방식'
-        self.fields['pay_choice'].widget.attrs.update({
-            # 'class': 'col-sm-10',
-        })
+
         self.fields['username'].label = '수령인'
         self.fields['username'].widget.attrs.update({
             'class': 'form-control col-sm-10',

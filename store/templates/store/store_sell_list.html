@@ -2,18 +2,18 @@
 {% load trade_tags %}
 
 {% block store_content %}
-<div>
-
-  <!-- Nav tabs -->
-  <ul class="nav nav-tabs nav-justified" role="tablist">
-    <li role="presentation" class="active"><a href="{% url "store:store_sell_list" stores.pk %}" aria-controls="home" role="tab" >물품들<span class="badge"> {{ stores.user.item_set.all.count }}</span></a></li>
-    <li role="presentation"><a href="{% url "store:store_grade" stores.pk %}" aria-controls="profile" role="tab" >가게 평점<span class="badge">{{ stores.storegrade_set.all.count }}</span></a></li>
-    <li role="presentation"><a href="{% url "store:store_question" stores.pk %}" aria-controls="messages" role="tab" >가게 문의<span class="badge">{{ stores.questioncomment_set.all.count }}</span></a></li>
-  </ul>
-
-</div>
 
 <div class="container-fluid text-center">
+    <div class="row">
+        <div class="col-xs-12 vcenter" style="vertical-align: bottom;">
+            <h6 class="sort text-right" >
+                <a class="active" href="{% url "store:store_sell_list" stores.pk %}">최신순</a><small style="padding:8px;"> | </small>
+                <a href="{% url "store:store_sell_list" stores.pk %}?sort=looks">조회순</a><small style="padding:8px;"> | </small>
+                <a href="{% url "store:store_sell_list" stores.pk %}?sort=hprice">높은가격순</a><small style="padding:8px;"> | </small>
+                <a href="{% url "store:store_sell_list" stores.pk %}?sort=lprice">낮은가격순</a>
+            </h6>
+        </div>
+    </div>
     <div class="row">
     {% for item in items %}
         <div class="col-sm-4 col-md-3 col-xs-6" style="padding:10px">
@@ -28,7 +28,7 @@
             {% endif %}
         </div>
     {% empty %}
-        <h4 class="text-center">물품이 없습니다</h4>
+        <h4 class="text-center"><i class="far fa-tired"></i>판매 물품이 없습니다</h4>
 
     {% endfor %}
 
@@ -92,6 +92,11 @@
 
 
 {% block store_extra_content %}
+<style>
+    a.active{
+        color:#0fd9a6;
+    }
+</style>
 <script>
     var edit_url = '';
 
@@ -122,5 +127,15 @@
         });
         return false;
     }
+</script>
+
+<script>
+    $(document).ready(function() {
+      $('a.active').removeClass('active');
+      if ('{{ sort }}' == '-created_at'){
+          $('a[href="' + location.pathname + '"]').addClass('active');
+      }
+      $('a[href="' + location.pathname + '?sort={{ sort }}"]').addClass('active');
+    });
 </script>
 {% endblock %}

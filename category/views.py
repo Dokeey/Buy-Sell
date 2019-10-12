@@ -78,15 +78,18 @@ class BaseItemList(ListView):
 class SearchItemList(BaseItemList):
     template_name = 'category/search_item.html'
 
-    def get_queryset(self):
-        self.query = self.request.GET.get('query','')
-        self.cate = self.request.GET.get('cate','')
-        self.qs = super().get_queryset()
+    def get(self, request, *args, **kwargs):
+        self.query = self.request.GET.get('query', '')
 
         if self.query == '':
-            messages.error(self.request, '잘못된 접근 입니다.')
+            messages.info(self.request, '검색어를 입력해주세요')
             url = self.request.GET.get('next') or 'root'
-            redirect(url)
+            return redirect(url)
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        self.cate = self.request.GET.get('cate','')
+        self.qs = super().get_queryset()
 
         if self.query:
             self.qs = self.qs.filter(Q(title__icontains=self.query) | Q(desc__icontains=self.query)).distinct()
@@ -114,13 +117,15 @@ class CategoryItemList(BaseItemList):
 
     def get_queryset(self):
         category = get_object_or_404(Category, pk=self.kwargs.get('pk'))
-        categories_items = []
-        for item in category.item_set.all():
-            categories_items.append(item.id)
+        self.flag = self.request.GET.get('parent','')
+        if self.flag:
+            self.queryset = category.item_set.all()
+            return super().get_queryset()
 
-        for children in category.get_children():
-            for item in children.item_set.all():
-                categories_items.append(item.id)
+        categories_items = []
+
+        for cate in category.get_descendants(include_self=True):
+            [categories_items.append(item.id) for item in cate.item_set.all()]
 
         self.queryset = Item.objects.filter(id__in=categories_items)
 
@@ -133,5 +138,6 @@ class CategoryItemList(BaseItemList):
 
         context['category'] = category
         context['parent_category'] = category.get_ancestors()
+        context['flag'] = self.flag
 
         return context

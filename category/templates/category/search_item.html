@@ -38,9 +38,9 @@
         $(document).ready(function() {
           $('a.active').removeClass('active');
           if ('{{ sort }}' == '-created_at'){
-              $('a[href="' + location.pathname + '?query={{ query }}"]').addClass('active');
+              $('a[href="' + location.pathname + '?query={{ query }}&cate={{ cate }}"]').addClass('active');
           }
-          $('a[href="' + location.pathname + '?query={{ query }}&sort={{ sort }}"]').addClass('active');
+          $('a[href="' + location.pathname + '?query={{ query }}&cate={{ cate }}&sort={{ sort }}"]').addClass('active');
         });
     </script>
 {% endblock %}

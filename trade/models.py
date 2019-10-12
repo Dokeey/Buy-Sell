@@ -29,6 +29,12 @@ def named_property(name):
         return property(fn)
     return wrap
 
+def order_property(order):
+    def wrap(fn):
+        fn.admin_order_field = order
+        return fn
+    return wrap
+
 def timestamp_to_datetime(timestamp):
     if timestamp:
         tz = pytz.timezone(settings.TIME_ZONE)
@@ -37,12 +43,13 @@ def timestamp_to_datetime(timestamp):
 
 
 class Item(models.Model, HitCountMixin):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    title = models.CharField(max_length=50)
-    desc = models.TextField(blank=True)
-    amount = models.PositiveIntegerField()
-    category = TreeForeignKey(Category, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="물품 주인", on_delete=models.CASCADE)
+    title = models.CharField(verbose_name="물품명", max_length=50)
+    desc = models.TextField(verbose_name="설명", blank=True)
+    amount = models.PositiveIntegerField(verbose_name="가격")
+    category = TreeForeignKey(Category, verbose_name="카테고리", on_delete=models.CASCADE)
     item_status = models.CharField(
+        verbose_name="물품 상태",
         max_length=3,
         choices=(
             ('c', 'C급 이하'),
@@ -53,6 +60,7 @@ class Item(models.Model, HitCountMixin):
         default='a',
     )
     pay_status = models.CharField(
+        verbose_name="재고 상태",
         max_length=15,
         choices=(
             ('ready', '재고있음'),
@@ -62,8 +70,8 @@ class Item(models.Model, HitCountMixin):
         default='ready',
         db_index=True
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(verbose_name="등록일", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="최근 업데이트", auto_now=True)
 
     hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
 
@@ -72,55 +80,74 @@ class Item(models.Model, HitCountMixin):
 
     class Meta:
         ordering = ["-created_at"]
+        verbose_name = "물품"
+        verbose_name_plural = "물품"
 
 
 class ItemImage(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE)
     photo = ProcessedImageField(
+            verbose_name="물품 사진",
             upload_to = 'item_img/{0}'.format(datetime.now().strftime("%Y-%m-%d")),
             processors = [ResizeToFill(640, 640)],
-            format='PNG',
-            options = {'quality': 100}
+            format='JPEG',
+            options = {'quality': 70}
         )
+    class Meta:
+        verbose_name = "물품 사진"
+        verbose_name_plural = "물품 사진"
 
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
-user_pk = User.objects.get(username='deleteuser').id
+try:
+    user_pk = User.objects.get(username='deleteuser').id
+except:
+    user_pk = None
 
 class ItemComment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_DEFAULT, default=user_pk)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    message = models.TextField()
-    secret = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.CASCADE)
+
+    if user_pk:
+        user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자",
+                                 on_delete=models.SET_DEFAULT, default=user_pk)
+
+    item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE)
+    message = models.TextField(verbose_name="내용")
+    secret = models.BooleanField(verbose_name="비밀글", default=True)
+    created_at = models.DateTimeField(verbose_name="작성일", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="최근 업데이트", auto_now=True)
+    parent = models.ForeignKey('self', verbose_name="상위 댓글", on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
 
     class Meta:
         # sort comments in chronological order by default
         ordering = ('-created_at',)
+        verbose_name = "물품 문의"
+        verbose_name_plural = "물품 문의"
 
+    def __str__(self):
+        return self.message
 
 from accounts.validators import phone_validate
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="구매자", on_delete=models.CASCADE)
 
-    email = models.EmailField(blank=True)
-    username = models.CharField(max_length=10)
-    phone = models.CharField(max_length=11, validators=[phone_validate])
-    post_code = models.CharField(max_length=10)
-    address = models.CharField(max_length=100)
-    detail_address = models.CharField(max_length=20)
-    requirement = models.TextField(max_length=30, blank=True)
+    email = models.EmailField(verbose_name="구매자 이메일", blank=True)
+    username = models.CharField(verbose_name="구매자 성명", max_length=10)
+    phone = models.CharField(verbose_name="구매자 연락처", max_length=11, validators=[phone_validate])
+    post_code = models.CharField(verbose_name="구매자 우편번호", max_length=10)
+    address = models.CharField(verbose_name="구매자 주소", max_length=100)
+    detail_address = models.CharField(verbose_name="구매자 상세주소", max_length=20)
+    requirement = models.TextField(verbose_name="배송 요청사항", max_length=30, blank=True)
 
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE)
     merchant_uid = models.UUIDField(default=uuid4, editable=False)
-    imp_uid = models.CharField(max_length=100, blank=True)
-    name = models.CharField(max_length=100, verbose_name='상품명')
+    imp_uid = models.CharField(verbose_name="이니페이 UID",max_length=100, blank=True)
+    # name = models.CharField(max_length=100, verbose_name='상품명')
     amount = models.PositiveIntegerField(verbose_name='결제금액')
     pay_choice = models.CharField(
+        verbose_name='결제 방식',
         max_length=15,
         default='import',
         choices=(
@@ -129,6 +156,7 @@ class Order(models.Model):
         )
     )
     status = models.CharField(
+        verbose_name='처리 결과',
         max_length=9,
         choices=(
             ('ready', '미결제'),
@@ -142,9 +170,9 @@ class Order(models.Model):
         db_index=True
     )
     meta = JSONField(blank=True, default={})
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(verbose_name="거래 일시", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="최근 업데이트", auto_now=True)
+    is_active = models.BooleanField(verbose_name="계좌 결제 여부", default=True)
 
     is_ready = property(lambda self: self.status == 'ready')
     is_paid = property(lambda self: self.status == 'paid')
@@ -176,8 +204,13 @@ class Order(models.Model):
 
     # receipt_url = named_property('영수증')(lambda self: self.meta.get('receipt_url'))
 
+    def __str__(self):
+        return self.item.title
+
     class Meta:
         ordering = ('-id',)
+        verbose_name = "주문 내역"
+        verbose_name_plural = "주문 내역"
 
     @property
     def api(self):
@@ -218,7 +251,7 @@ class Order(models.Model):
 
     @named_property('영수증 링크')
     def receipt_link(self):
-        if self.is_paid_ok and self.receipt_url:
+        if self.is_success and self.receipt_url:
             return mark_safe('<a href="{0}" target="_blank">영수증</a>'.format(self.receipt_url))
 
     def update(self, commit=True, meta=None):
@@ -262,3 +295,12 @@ class Order(models.Model):
             self.update(commit=commit)
         if commit:
             self.save()
+
+
+from category.models import Category
+
+class ProxyCategory(Category):
+    class Meta:
+        proxy = True
+        verbose_name = "카테고리"
+        verbose_name_plural = "카테고리"

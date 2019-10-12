@@ -1,36 +1,40 @@
 {% extends "trade/layout.html" %}
+{% load static %}
 {% load humanize %}
 {% load trade_tags %}
 {% load hitcount_tags %}
 
 {% block head %}
-    <meta property="fb:app_id"        content="642307389514788"/>
+
+    <!--Facebook 공유 기능-->
+    <meta property="fb:app_id"        content="{{ facebook_key }}"/>
     <meta property="og:type"          content="website"/>
-    <meta property="og:url"           content="http://{{ request.META.HTTP_HOST }}{{ request.path }}" />
+    <meta property="og:url"           content="https://{{ request.META.HTTP_HOST }}{{ request.path }}" />
     <meta property="og:title"         content="{{ item.title }} {{ item.amount|intcomma }}원" />
     <meta property="og:description"   content="{{ item.desc|default:'-'|linebreaks }}" />
-    <meta property="og:image"         content="http://{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}" />
+    <meta property="og:image"         content="{{ item.itemimage_set.first.photo.url }}" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
 
 	<script>
 	function sharefacebook(url) {
-		window.open("http://www.facebook.com/sharer/sharer.php?u=" + url);
+		window.open("https://www.facebook.com/sharer/sharer.php?u=" + url);
 	}
 	</script>
 
-    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <!--Kakao Talk 공유 기능-->
+    <script src="{% static 'js/kakao.min.js' %}"></script> <!-- Kakao Talk -->
     <script>
-        Kakao.init('43b0c47e22303f599cf49a0f42e75f86');
+        Kakao.init('{{ kakao_key }}');
         function sendLink() {
             Kakao.Link.sendDefault({
               objectType: 'feed',
               content: {
                 title: '{{ item.title }} {{ item.amount|intcomma }}원',
                 description: 'Buy & Sell에서 싸게 사자!',
-                imageUrl: 'http://{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}',
+                imageUrl: '{{ item.itemimage_set.first.photo.url }}',
                 link: {
-                  webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                  mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                  webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                  mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
                 }
               },
             social: {
@@ -42,14 +46,84 @@
                 {
                   title: '빨리 사러가자!',
                   link: {
-                    mobileWebUrl: 'http://http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                    webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                    mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                    webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
                   }
                 }
               ]
             });
          }
     </script>
+
+    <!--Image 미리보기 기능-->
+    <script>
+        jQuery(document).ready(function($) {
+            $('#myCarousel').carousel({
+                    interval: 7000
+            });
+
+            //Handles the carousel s
+            $('[id^=carousel-selector-]').click( function(){
+                    var id_selector = $(this).attr("id");
+                    var id = id_selector.substr(id_selector.length -1);
+                    var id = parseInt(id);
+                    $('#myCarousel').carousel(id);
+            });
+
+            // When the carousel slides, auto update the text
+            $('#myCarousel').on('slid', function (e) {
+                    var id = $('.item.active').data('slide-number');
+            });
+        });
+    </script>
+
+    <!--말풍선-->
+    <style>
+        .bubble
+        {
+            position: relative;
+            padding: 0px;
+            background: #ededed;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+        }
+        .bubble:after
+        {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 14px 23px 14px 0;
+            border-color: transparent #ededed;
+            display: block;
+            width: 0;
+            z-index: 1;
+            left: -23px;
+            top: 18px;
+        }
+    </style>
+
+    <!-- 댓글 더보기 기능 -->
+    <script src="{% static "js/readmore-2.2.1.min.js" %}"></script> <!-- Readmore.js -->
+    <script>
+        jQuery(document).ready(function() {
+
+        jQuery('.more').readmore({
+            speed: 300,
+            collapsedHeight: 67,
+            heightMargin: 16,
+            moreLink: '<a href="#">더 보기</a>',
+            lessLink: '<a href="#">다시 닫기</a>',
+        });
+
+    });
+    </script>
+    <style>
+        .more {
+            overflow: hidden;
+        }
+    </style>
+
 {% endblock %}
 
 {% block content %}
@@ -91,9 +165,18 @@
                         <!--이전, 다음 버튼-->
                         <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon-chevron-left fas fa-angle-left"></span></a>
                         <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon-chevron-left fas fa-angle-right"></span></a>
-                    </div>
-
                 </div>
+                <ul class="list-inline" id="slider-thumbs">
+                    <!-- Bottom switcher of slider -->
+                        {% for item_image in item.itemimage_set.all %}
+                        <li style="padding:0px;padding-top:20px;">
+                            <a id="carousel-selector-{{ forloop.counter|add:"-1" }}">
+                            <img class="img-responsive " style="margin: 0 auto; height:70px;padding:0px;border:1px solid #ededed" src="{{ item_image.photo.url }}"/></a>
+                        </li>
+                        {% endfor %}
+                </ul>
+
+            </div>
         </div><div class="col-md-6 col-xs-12 vcenter">
             <div class="row" style="padding-left:30px">
                 <h2>{{ item.title }}</h2>
@@ -133,7 +216,7 @@
                     </button>
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
+                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="javascript:sharefacebook('https://{{ request.META.HTTP_HOST }}{{ request.path }}')">
                         <i class="fab fa-facebook-square"></i> 공유하기
                     </button>
                 </div>
@@ -188,7 +271,7 @@
                     <hr style="border-top: 1px solid #bbbbbb;">
                     <table class="table table-hover table-borderless">
                         <tr class="active">
-                            <td style="min-width:120px">{{ item.user.profile.nick_name }}님의 말</td> <td>{{ item.desc|default:"-"|linebreaks }}</td>
+                            <td style="min-width:120px">{{ item.user.storeprofile.name }}의 말</td> <td>{{ item.desc|default:"-"|linebreaks }}</td>
                         </tr>
                         <tr>
                             <td>상태</td> <td>{{ item.get_item_status_display }}</td>
@@ -228,74 +311,83 @@
 
                     {% for comment in comments %}
                     <div class="container-fluid" id="block-{{ comment.id }}" style="padding:0px;">
-                        <div class="row">
-                            <div class="col-sm-2 col-xs-3 profile-img vcenter">
-                                <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
-                                    <img class="img-rounded img-thumbnail img-responsive" src="{{ comment.user.storeprofile.photo.url }}"/>
-                                </a>
-                            </div><div class="col-sm-10 col-xs-9 clearfix vcenter" style="padding:10px;">
-                                <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
-                                    <div class="pull-left" ><b class="info">{{ comment.user.profile.nick_name }}</b></div>
-                                </a>
-                                <div class="pull-right">{% simple_time comment.updated_at %}</div>
-                                <br><div id="cmt-{{ comment.id }}" style="padding-top:10px">{{ comment.message|linebreaks }}</div>
-                                {% if comment.user == request.user %}
-                                    <div class="text-right">
-                                        <a class="edit" href="#" data-form="{% url "trade:comment_update" item.id comment.id %}" title="Edit">
-                                            <i class="fas fa-edit" style="margin-right:10px"></i></a>
-                                        <a class="del" href="#" data-form="{% url "trade:comment_delete" item.id comment.id %}" title="Del">
-                                            <i class="fas fa-trash-alt" style="margin-right:10px"></i></a>
+                        <div class="col-xs-12" style="padding:5px;">
+                            <div class="row">
+                                <div class="col-sm-2 col-xs-3 profile-img" style="margin-top:5px">
+                                    <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
+                                        <img style="padding:0px" class="img-rounded img-thumbnail img-responsive" src="{{ comment.user.storeprofile.photo.url }}"/>
+                                    </a>
+                                </div><div class="col-xs-9 col-sm-10 vcenter ">
+                                <div class="col-sm-12 col-xs-12 clearfix bubble" style="margin:5px;padding:10px;">
+                                        <a href="{% url "store:store_sell_list" comment.user.storeprofile.id %}">
+                                            <div class="pull-left" ><b>{{ comment.user.storeprofile.name }}{% if item.user == comment.user %} (주인장){% endif %}</b></div>
+                                        </a>
+                                        <div class="pull-right">{% simple_time comment.updated_at %}</div>
+                                        <br><div id="cmt-{{ comment.id }}" class="more" style="padding-top:10px;">{{ comment.message|linebreaks }}</div>
+                                        {% if comment.user == request.user %}
+                                            <div class="text-right">
+                                                <a class="edit" href="#" data-form="{% url "trade:comment_update" item.id comment.id %}" title="Edit">
+                                                    <i class="fas fa-edit" style="margin-right:10px"></i></a>
+                                                <a class="del" href="#" data-form="{% url "trade:comment_delete" item.id comment.id %}" title="Del">
+                                                    <i class="fas fa-trash-alt" style="margin-right:10px"></i></a>
+                                            </div>
+                                        {% endif %}
                                     </div>
-                                {% endif %}
-                            </div>
-                            <div class="col-xs-offset-2 col-xs-10">
-                                <hr>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row col-xs-offset-2">
+                        <div class="col-xs-2 text-center" style="padding:0px;">
+                            <i class="fas fa-reply fa-rotate-180 fa-2x"></i>
+                        </div>
+                        <div class="col-xs-10" style="padding:0px;">
                             {% for replay in comment.replies.all|dictsort:"created_at" %}
                             <div class="container-fluid" id="block-{{ replay.id }}" style="padding:0px;">
-                                <div class="col-sm-2 col-xs-3 profile-img vcenter">
-                                    <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
-                                        <img class="img-rounded img-thumbnail img-responsive" src="{{ replay.user.storeprofile.photo.url }}"/>
-                                    </a>
-                                </div><div class="col-sm-10 col-xs-9 clearfix vcenter" style="padding:10px;">
-                                    <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
-                                        <div class="pull-left"><b class="info">{{ replay.user.profile.nick_name }}</b></div>
-                                    </a>
-                                    <div class="pull-right">{% simple_time replay.updated_at %}</div>
-                                    <br><div id="cmt-{{ replay.id }}" style="padding-top:10px;">{{ replay.message }}</div>
-                                    {% if replay.user == request.user %}
-                                        <div class="text-right">
-                                            <a class="edit" href="#" data-form="{% url "trade:comment_update" item.id replay.id %}" title="Edit">
-                                                <i class="fas fa-edit" data-toggle="modal" data-target="#edit-modal"  style="margin-right:10px"></i></a>
-                                            <a class="del" href="#" data-form="{% url "trade:comment_delete" item.id replay.id %}" title="Del">
-                                                <i class="fas fa-trash-alt" data-toggle="modal" data-target="#del-modal"  style="margin-right:10px"></i></a>
+                                <div class="col-xs-12" style="padding-right:10px;">
+                                    <div class="row">
+                                        <div class="col-sm-2 col-xs-3 profile-img" style="margin-top:15px">
+                                            <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
+                                                <img style="padding:0px" class="img-rounded img-thumbnail img-responsive" src="{{ replay.user.storeprofile.photo.url }}"/>
+                                            </a>
+                                        </div><div class="col-xs-9 col-sm-10 vcenter ">
+                                            <div class="col-sm-12 col-xs-12 clearfix bubble" style="margin:10px;padding:10px;">
+                                                <a href="{% url "store:store_sell_list" replay.user.storeprofile.id %}">
+                                                    <div class="pull-left"><b>{{ replay.user.storeprofile.name }}{% if item.user == replay.user %} (주인장){% endif %}</b></div>
+                                                </a>
+                                                <div class="pull-right">{% simple_time replay.updated_at %}</div>
+                                                <br><div id="cmt-{{ replay.id }}" class="more" style="padding-top:10px;">{{ replay.message|linebreaks }}</div>
+                                                {% if replay.user == request.user %}
+                                                    <div class="text-right">
+                                                        <a class="edit" href="#" data-form="{% url "trade:comment_update" item.id replay.id %}" title="Edit">
+                                                            <i class="fas fa-edit" data-toggle="modal" data-target="#edit-modal"  style="margin-right:10px"></i></a>
+                                                        <a class="del" href="#" data-form="{% url "trade:comment_delete" item.id replay.id %}" title="Del">
+                                                            <i class="fas fa-trash-alt" data-toggle="modal" data-target="#del-modal"  style="margin-right:10px"></i></a>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
                                         </div>
-                                    {% endif %}
-                                </div>
-                                <div class="col-xs-offset-2 col-xs-10">
-                                    <hr>
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}
-                            <div class="col-xs-12">
-                                <form class="form-horizontal" action="" method="POST">
-                                    {% csrf_token %}
-                                      <div class="form-group">
-                                          <div class=" col-xs-12">
-                                            {{ form.message }}
+                            <div class="container-fluid" style="padding:0px;">
+                                <div class="col-xs-12" style="padding:0px;">
+                                    <form class="form-horizontal" action="" method="POST">
+                                        {% csrf_token %}
+                                          <div class="form-group">
+                                              <div class=" col-xs-12">
+                                                {{ form.message }}
+                                              </div>
                                           </div>
-                                      </div>
 
-                                    <div class="form-group">
-                                        <div class="text-right col-xs-12">
-                                            <input type="hidden" name="parent_id" value="{{ comment.id }}">
-                                            <button type="submit" class="btn btn-default"><i class="fas fa-comment-dots"></i> 댓글달기</button>
+                                        <div class="form-group">
+                                            <div class="text-right col-xs-12">
+                                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                                <button type="submit" class="btn btn-default"><i class="fas fa-comment-dots"></i> 댓글달기</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -303,6 +395,58 @@
                     {% empty %}
                     <h2 class="text-center"><small><i class="far fa-meh"></i> 문의가 없습니다</small></h2>
                     {% endfor %}
+                    <!-- pagination -->
+                    <div class="container-fluid text-center">
+                    {% if is_paginated %}
+                      <nav>
+                        <ul class="pagination">
+                            <li>
+                              <a href="?query={{ query }}&sort={{ sort }}&page=1">
+                                <span><i class="fas fa-angle-double-left"></i></span>
+                              </a>
+                            </li>
+                          {% if page_obj.has_previous %}
+                            <li>
+                              <a href="?query={{ query }}&sort={{ sort }}&page={% if prev >= 1 %}{{ prev }}{% else %}1{% endif %}">
+                                <span><i class="fas fa-angle-left"></i></span>
+                              </a>
+                            </li>
+                          {% else %}
+                            <li class="disabled">
+                              <a href="#">
+                                <span><i class="fas fa-angle-left"></i></span>
+                              </a>
+                            </li>
+                          {% endif %}
+
+                          {% for page in page_range %}
+                            <li {% if page == page_obj.number %}class="active"{% endif %}>
+                              <a href="?query={{ query }}&sort={{ sort }}&page={{ page }}">{{ page }}</a>
+                            </li>
+                          {% endfor %}
+
+                          {% if page_obj.has_next %}
+                            <li>
+                              <a href="?query={{ query }}&sort={{ sort }}&page={% if last_page >= next %}{{ next }}{% else %}{{ last_page }}{% endif %}">
+                                <span><i class="fas fa-angle-right"></i></span>
+                              </a>
+                            </li>
+                          {% else %}
+                            <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+                              <a href="#">
+                                <span><i class="fas fa-angle-right"></i></span>
+                              </a>
+                            </li>
+                          {% endif %}
+                            <li>
+                              <a href="?query={{ query }}&sort={{ sort }}&page={{ last_page }}">
+                                <span><i class="fas fa-angle-double-right"></i></span>
+                              </a>
+                            </li>
+                        </ul>
+                      </nav>
+                    {% endif %}
+                    </div>
 
                 </div>
 
@@ -322,7 +466,7 @@
                         <img class="img-rounded img-thumbnail img-responsive" src="{{ item.user.storeprofile.photo.url }}"/>
                     </a>
                 </div><div class="col-xs-8 vcenter" style="padding:10px;">
-                    <a href="{% url "store:store_sell_list" item.user.storeprofile.id %}">{{ item.user.profile.nick_name }}</a> <br><br>
+                    <a href="{% url "store:store_sell_list" item.user.storeprofile.id %}">{{ item.user.storeprofile.name }}</a> <br><br>
                     물품 {{ item.user.item_set.count }} <small style="padding:8px;"> | </small> 팔로워 {{ follow_ctn }}
                 </div>
             </div>
@@ -383,7 +527,7 @@
                         </div><div class="col-xs-8 vcenter">
                             <a href="{% url "store:store_grade" item.user.storeprofile.id %}">
                                 <div class="clearfix">
-                                    <div class="pull-left"><b>{{ grade.author.profile.nick_name }}</b></div>
+                                    <div class="pull-left"><b>{{ grade.author.storeprofile.name }}</b></div>
                                     <div class="pull-right">{% simple_time grade.updated_at %}</div>
                                     <br>
                                     {{ grade.get_rating_display }}<br>
@@ -419,6 +563,7 @@
 {% endblock %}
 
 {% block extra_content %}
+<!--comment modal-->
 <style>
     pre{
         padding: 0px;
@@ -449,7 +594,13 @@
             url: edit_url,
             data: params,
             success: function(data) {
-                $('#cmt-'+data.id).html('<pre>'+data.msg+'</pre>');
+                $('#cmt-'+data.id).html('<pre>'+data.msg+'</pre>').readmore({
+                    speed: 300,
+                    collapsedHeight: 67,
+                    heightMargin: 16,
+                    moreLink: '<a href="#">더 보기</a>',
+                    lessLink: '<a href="#">다시 닫기</a>',
+                });
             }
         });
         return false;

@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block head %}
+<style>
+    .error-content {
+        padding: 40px 0 70px;
+    }
+    .error-text{
+        text-align: center;
+    }
+    .error {
+        font-size: 50px;
+        font-weight: 100;
+    }
+    @keyframes bob {
+        0% {
+            top: 0;
+        }
+        50% {
+            top: 0.2em;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="error-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 ">
+                <div class="error-text">
+                    <h1 class="error">403 Forbidden</h1>
+                    <h4>접근 권한이 없습니다.</h4>
+                    <p>궁금하신 사항은 1:1 문의를 통해 제보해 주시길 바랍니다.</p>
+                    <a href="{% url "root" %}" class="btn btn-primary btn-round">바이엔셀 홈으로 가기</a>
+                    <a href="{% url "customer:customer_ask" %}" class="btn btn-default btn-round" ><i class="fas fa-comment-dots" style="color:#0fd9a6"></i> 문의 하기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

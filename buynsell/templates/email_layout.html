@@ -1,0 +1,239 @@
+{% load staticfiles %}
+
+
+<!------ Include the above in your HEAD tag ---------->
+
+<!--
+Responsive Email Template by @keenthemes
+A component of Metronic Theme - #1 Selling Bootstrap 3 Admin Theme in Themeforest: https://j.mp/metronictheme
+Licensed under MIT
+-->
+<style>
+body {
+    padding: 0;
+    margin: 0;
+}
+
+html { -webkit-text-size-adjust:none; -ms-text-size-adjust: none;}
+@media only screen and (max-device-width: 680px), only screen and (max-width: 680px) {
+    *[class="table_width_100"] {
+		width: 96% !important;
+	}
+	*[class="border-right_mob"] {
+		border-right: 1px solid #dddddd;
+	}
+	*[class="mob_100"] {
+		width: 100% !important;
+	}
+	*[class="mob_center"] {
+		text-align: center !important;
+	}
+	*[class="mob_center_bl"] {
+		float: none !important;
+		display: block !important;
+		margin: 0px auto;
+	}
+	.iage_footer a {
+		text-decoration: none;
+		color: #929ca8;
+	}
+	img.mob_display_none {
+		width: 0px !important;
+		height: 0px !important;
+		display: none !important;
+	}
+	img.mob_width_50 {
+		width: 40% !important;
+		height: auto !important;
+	}
+}
+.table_width_100 {
+	width: 680px;
+}
+
+    .thumbnail {
+       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+       transition: 0.3s;
+       min-width: 40%;
+       border-radius: 5px;
+     }
+     .thumbnail-description {
+       min-height: 90px;
+     }
+     .thumbnail:hover {
+       cursor: auto;
+       box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 1);
+     }
+     .thumbnail-description > b,
+     .thumbnail-description > .list-inline b{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        max-width: 100%;
+     }
+    .btn {
+        border:none;
+    }
+    .btn:hover {
+        border:none;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
+    }
+
+</style>
+<div id="mailsub" class="notification" align="center">
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" style="min-width: 320px;"><tr><td align="center" bgcolor="#eff3f8">
+
+
+<!--[if gte mso 10]-->
+<table width="680" border="0" cellspacing="0" cellpadding="0">
+<tr><td>
+<!--[endif]-->
+
+<table border="0" cellspacing="0" cellpadding="0" class="table_width_100" width="100%" style="max-width: 680px; min-width: 300px;">
+    <tr><td>
+	<!-- padding --><div style="height: 80px; line-height: 80px; font-size: 10px;"> </div>
+	</td></tr>
+	<!--header -->
+	<tr><td align="center" bgcolor="#ffffff">
+		<!-- padding --><div style="height: 30px; line-height: 30px; font-size: 10px;"> </div>
+		<table width="90%" border="0" cellspacing="0" cellpadding="0">
+			<tr><td align="left"><!--
+
+				Item --><div class="mob_center_bl" style="float: left; display: inline-block; width: 115px;">
+					<table class="mob_center" width="115" border="0" cellspacing="0" cellpadding="0" align="left" style="border-collapse: collapse;">
+						<tr><td align="left" valign="middle">
+							<!-- padding --><div style="height: 20px; line-height: 20px; font-size: 10px;"> </div>
+							<table width="150" border="0" cellspacing="0" cellpadding="0" >
+								<tr><td align="left" valign="top" class="mob_center">
+									<a href="https://{{ domain }}{% url "root" %}" target="_blank" style="color: #596167; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">
+									<img class="img-responsive" style="height: 20px;"  src="{% static "img/logo.jpg" %}"></a>
+								</td></tr>
+							</table>
+						</td></tr>
+					</table></div><!-- Item END--><!--[if gte mso 10] -->
+					</td>
+					<td align="right">
+				<!--[endif]--></td>
+			</tr>
+		</table>
+		<!-- padding --><div style="height: 50px; line-height: 50px; font-size: 10px;"> </div>
+	</td></tr>
+	<!--header END-->
+
+	<!--content 1 -->
+	<tr><td align="center" bgcolor="#fbfcfd">
+		<table width="90%" border="0" cellspacing="0" cellpadding="0">
+			{% block content %}
+            {% endblock %}
+		</table>
+	</td></tr>
+	<!--content 1 END-->
+
+	<!--content 2 -->
+	<tr><td align="center" bgcolor="#ffffff" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #eff2f4;">
+		<table width="94%" border="0" cellspacing="0" cellpadding="0">
+			<tr><td align="center">
+				<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
+
+				<div class="mob_100" style="float: left; display: inline-block; width: 33%;">
+					<table class="mob_100" width="100%" border="0" cellspacing="0" cellpadding="0" align="left" style="border-collapse: collapse;">
+						<tr><td align="center" style="line-height: 14px; padding: 0 27px;">
+							<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
+							<div style="line-height: 14px;">
+								<font face="Arial, Helvetica, sans-serif" size="3" color="#4db3a4" style="font-size: 14px;">
+								<strong style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #4db3a4;">
+									<a href="https://{{ domain }}{% url "root" %}" target="_blank" style="color: #4db3a4; text-decoration: none;">간편하게 결제하세요</a>
+								</strong></font>
+							</div>
+							<!-- padding --><div style="height: 18px; line-height: 18px; font-size: 10px;"> </div>
+							<div style="line-height: 21px;">
+								<font face="Arial, Helvetica, sans-serif" size="3" color="#98a7b9" style="font-size: 14px;">
+								<span style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #98a7b9;">
+                                    불안한 중고거래는 이제 그만하셔도 됩니다.<br>
+                                    <br>
+                                    저희가 도와드리겠습니다.
+                                    간편한 <span style="font-weight:bold">카드결제</span>와 <span style="font-weight:bold">계좌이체</span> 거래로 편리하게 거래하세요.
+								</span></font>
+							</div>
+						</td></tr>
+					</table>
+				</div>
+				<div class="mob_100" style="float: left; display: inline-block; width: 33%;">
+					<table class="mob_100" width="100%" border="0" cellspacing="0" cellpadding="0" align="left" style="border-collapse: collapse;">
+						<tr><td align="center" style="line-height: 14px; padding: 0 27px;">
+							<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
+							<div style="line-height: 14px;">
+								<font face="Arial, Helvetica, sans-serif" size="3" color="#4db3a4" style="font-size: 14px;">
+								<strong style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #4db3a4;">
+									<a href="https://{{ domain }}{% url "root" %}" target="_blank" style="color: #4db3a4; text-decoration: none;">편리하게 관리하세요</a>
+								</strong></font>
+							</div>
+							<!-- padding --><div style="height: 18px; line-height: 18px; font-size: 10px;"> </div>
+							<div style="line-height: 21px;">
+								<font face="Arial, Helvetica, sans-serif" size="3" color="#98a7b9" style="font-size: 14px;">
+								<span style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #98a7b9;">
+                                    <span style="font-weight:bold">MY PAGE</span>에서 물품을 등록, 거래 내역 관리, 프로필 관리, 찜 목록, 팔로워 등을 관리해보세요<br><br>
+                                    <span style="font-weight:bold">내 가게</span>에서 등록한 물품을 확인하고 관리하며 내 가게의 평판이나 문의사항들을 확인하세요
+								</span></font>
+							</div>
+						</td></tr>
+					</table>
+				</div>
+				<div class="mob_100" style="float: left; display: inline-block; width: 33%;">
+					<table class="mob_100" width="100%" border="0" cellspacing="0" cellpadding="0" align="left" style="border-collapse: collapse;">
+						<tr><td align="center" style="line-height: 14px; padding: 0 27px;">
+							<!-- padding --><div style="height: 40px; line-height: 40px; font-size: 10px;"> </div>
+							<div style="line-height: 14px;">
+								<font face="Arial, Helvetica, sans-serif" size="3" color="#4db3a4" style="font-size: 14px;">
+								<strong style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #4db3a4;">
+									<a href="https://{{ domain }}{% url "root" %}" target="_blank" style="color: #4db3a4; text-decoration: none;">순위를 확인하세요</a>
+								</strong></font>
+							</div>
+							<!-- padding --><div style="height: 18px; line-height: 18px; font-size: 10px;"> </div>
+							<div style="line-height: 21px;">
+								<font face="Arial, Helvetica, sans-serif" size="3" color="#98a7b9" style="font-size: 14px;">
+								<span style="font-family: Arial, Helvetica, sans-serif; font-size: 14px; color: #98a7b9;">
+                                    각 분야에서 자신과 사람들의 명성을 떨치고있는 가게들을 확인해보세요.
+                                    <br><br>어쩌면 가게를 <span style="font-weight:bold">신뢰</span>하는데 도움이 될수도 있습니다.<br>
+								</span></font>
+							</div>
+						</td></tr>
+					</table>
+				</div>
+			</td></tr>
+			<tr><td><!-- padding --><div style="height: 80px; line-height: 80px; font-size: 10px;"> </div></td></tr>
+		</table>
+	</td></tr>
+	<!--content 2 END-->
+
+	<!--footer -->
+	<tr><td class="iage_footer" align="center" bgcolor="#ffffff">
+		<!-- padding --><div style="height: 80px; line-height: 80px; font-size: 10px;"> </div>
+
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr><td align="center">
+				<font face="Arial, Helvetica, sans-serif" size="3" color="#96a5b5" style="font-size: 13px;">
+				<span style="font-family: Arial, Helvetica, sans-serif; font-size: 13px; color: #96a5b5;">
+					2019 © Buy&Sell
+				</span></font>
+			</td></tr>
+		</table>
+
+		<!-- padding --><div style="height: 30px; line-height: 30px; font-size: 10px;"> </div>
+	</td></tr>
+	<!--footer END-->
+	<tr><td>
+	<!-- padding --><div style="height: 80px; line-height: 80px; font-size: 10px;"> </div>
+	</td></tr>
+</table>
+<!--[if gte mso 10]-->
+</td></tr>
+</table>
+<!--[endif]-->
+
+</td></tr>
+</table>
+
+</div>

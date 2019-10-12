@@ -10,13 +10,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="{% static "css/theme.css" %}">
-    <script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <link rel="stylesheet" href="{% static "css/theme.css" %}"> <!-- Custom bootstrap -->
+    <script src="{% static 'js/jquery-2.2.4.min.js' %}"></script> <!-- Jquery -->
+    <script src="{% static 'js/bootstrap.js' %}"></script> <!-- Custom bootstrap JS -->
 
-    <link rel="stylesheet" href="{% static "css/all.css" %}">
-    <script src="{% static 'js/all.js' %}"></script>
-    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static "css/all.css" %}"> <!-- Font Awesome -->
+    <script src="{% static 'js/all.js' %}"></script> <!-- Font Awesome JS -->
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"> <!-- Favicon -->
 
     <title>Buy & Sell</title>
     <style>
@@ -111,13 +111,19 @@
            border-radius: 5px;
          }
          .thumbnail-description {
-           min-height: 90px;
+           <!--min-height: 90px;-->
          }
          .thumbnail:hover {
            cursor: auto;
            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 1);
          }
-         .thumbnail-description > b,
+         .thumbnail-description > b {
+             display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+         }
          .thumbnail-description > .list-inline b{
             white-space: nowrap;
             overflow: hidden;
@@ -141,13 +147,23 @@
         img {
             border-radius: 5px;
         }
+        input[readonly] {
+          background-color:transparent !important;
+        }
+        .main-footer a:hover {
+            box-shadow: none;
+            background-color: #0fd9a6 !important;
+            border-radius: 5px;
+            color:#fff !important;
+        }
+        .main-footer > a {
+            margin:5px 0 5px 0;
+        }
 
     </style>
 
     {% block head %}
     {% endblock %}
-
-    <title>AskDjango Blog</title>
 </head>
 <body>
 
@@ -164,7 +180,7 @@
                           {% if user.is_authenticated %}
 
                             <li class="dropdown">
-                              <a href="{% url "mypage:root" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ request.user.profile.nick_name }} PAGE<span class="caret"></span></a>
+                              <a href="{% url "mypage:root" %}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">MY PAGE<span class="caret"></span></a>
                               <ul class="dropdown-menu">
                                 <li><a href="{% url "trade:order_history" %}">구매 내역</a></li>
                                 <li><a href="{% url "trade:seller_history" %}">판매 내역</a></li>
@@ -194,8 +210,8 @@
 
                           {% else %}
 
-                            <li><a href="{% url "accounts:login" %}">로그인</a></li>
-                            <li><a href="{% url "accounts:signup" %}">회원가입</a></li>
+                            <li><a href="{% url "accounts:login" %}?next={{ request.path }}">로그인</a></li>
+                            <li><a href="{% url "accounts:signup" %}?next={{ request.path }}">회원가입</a></li>
 
                           {% endif %}
 
@@ -211,20 +227,22 @@
 
     <nav class="navbar navbar-default header" id="myHeader" style="border-bottom: 1px solid #bbbbbb; ">
         <div class="container-fluid">
-            <div class="container-fluid col-sm-3 col-xs-5" name="menu-collaps" >
-                <div class="row"  style=" " >
-                    <a class="navbar-brand" style="color: #0fd9a6" href="{% url "category:search_item" %}">Buy & Sell</a>
+            <div class="container-fluid col-sm-3 col-xs-4" name="menu-collaps" >
+                <div class="row">
+                    <a style="color: #0fd9a6;font-family: Stencil" href="{% url "root" %}">
+                        <img class="img-responsive" style="height:35px;padding-top:5px;" src="{% static "img/logo.jpg" %}">
+                    </a>
                 </div>
             </div>
 
 
-              <div class="container-fluid col-sm-6 col-xs-7"style="" name="menu-layout">
+              <div class="container-fluid col-sm-6 col-xs-8"style="" name="menu-layout">
 
                 <div class="row"  >
 
                   <form class="navbar-form" action="{% url "category:search_item" %}" style="left: 50%; transform: translatex(3%); padding-right: 30px;padding-bottom: 1px; padding-top: 1px; border:none" >
                     <div class="input-group">
-                      <input name="query" value="{{ query }}" type="search" size="60" class="form-control" placeholder="어떤 물품을 찾고계세요?">
+                      <input name="query" value="{{ query }}" type="search" size="60" class="form-control" placeholder="{% if user.is_authenticated %}{{ user }}님 {% endif %}어떤 물품을 찾고계세요?">
                       <span class="input-group-btn">
                         <button class="btn btn-primary" type="submit" style="border:1px solid #0fd9a6;">
                             <i class="fa fa-search"></i>
@@ -269,7 +287,7 @@
                           </ul>
                     </li>
 
-                    <li><a href="{% url 'store:star_store' %}">인기 가게</a></li>
+                  <li><a href="{% url 'store:star_store_hit' %}">인기 가게</a></li>
 
                   </ul>
 
@@ -299,13 +317,23 @@
 </div>
 
 <div class="container">
+    <div id="loading">
+        <div id="loading-image" class="sk-folding-cube">
+          <div class="sk-cube1 sk-cube"></div>
+          <div class="sk-cube2 sk-cube"></div>
+          <div class="sk-cube4 sk-cube"></div>
+          <div class="sk-cube3 sk-cube"></div>
+        </div>
+    </div>
     <div class="container-fluid" name="content" style="padding: 0px;">
 
         {% if messages %}                            <!-- message -->
             {% for message in messages %}
+            <div class="col-xs-12" style="padding-top: 20px;">
                 <div class="text-center alert alert-{{ message.tags }} alert-dismissible" role="alert">
                   {{ message }}
                 </div>
+            </div>
             {% endfor %}
         {% endif %}
 
@@ -320,16 +348,188 @@
 
 
 <div style="position:fixed; bottom:30px; right:30px;">
-    <a class="top" href="#"><i class="fas fa-angle-double-up fa-5x" style="color:#368AFF"></i></a>
+    <a class="top" href="#"><i class="fas fa-angle-double-up fa-5x" style="color:#0fd9a6"></i></a>
 </div>
-
-<hr style="border-top: 1px solid #bbbbbb;"/>
+<style>
+</style>
+<hr style="border-top: 1px solid #bbbbbb;margin-bottom:0px"/>
+<div class="main-footer" align="center">
+    <a class="btn" href="{% url "policy:policy_service" %}">이용 약관</a>
+    <a class="btn" href="{% url "policy:policy_privacy" %}">개인정보 처리방침</a>
+    <a class="btn" href="{% url "customer:customer_notice" %}">공지사항</a>
+    <a class="btn" href="{% url "customer:customer_faq" %}">자주 묻는 질문</a>
+    <a class="btn" href="{% url "customer:customer_ask" %}">1:1 문의</a>
+</div>
+<hr style="border-top: 1px solid #bbbbbb;margin-top:0px"/>
 <div class="container">
     <div class="container-fluid" name="footer" style="padding:15px;">
+        <h3><img class="img-responsive" style="height:20px;" src="{% static "img/logo.jpg" %}"><small>안전하고 아름다운 중고거래를 만들어 가고자 합니다.</small></h3><br>
+
+대표이사 : 예진이 개인정보보호담당자 : 황예진 사업자등록정보 : 123-45-67890 통신판매업신고 : 1111-서울-2222<br>
+주소 : 서울특별시 관악구 신림동 TEL/FAX 02-123-4567/010-123-1234 <br>
+BuynSell㈜는 통신판매중개자로서 중고거래마켓 BuynSell의 거래 당사자가 아니며, 입점판매가 등록한 상품정보 및 거래에 대해 책임을 지지 않습니다.<br><br>
+
         &copy; 2019. yejin & donghoo
     </div>
 </div>
 
+<!-- lazy load -->
+<style>
+img {
+  display: block;
+}
+</style>
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+  var lazyloadImages = document.querySelectorAll("img.lazy");
+  var lazyloadThrottleTimeout;
+
+  function lazyload () {
+    if(lazyloadThrottleTimeout) {
+      clearTimeout(lazyloadThrottleTimeout);
+    }
+
+    lazyloadThrottleTimeout = setTimeout(function() {
+        var scrollTop = window.pageYOffset;
+        lazyloadImages.forEach(function(img) {
+            if(img.offsetTop < (window.innerHeight + scrollTop)) {
+              img.src = img.dataset.src;
+              img.classList.remove('lazy');
+            }
+        });
+        if(lazyloadImages.length == 0) {
+          document.removeEventListener("scroll", lazyload);
+          window.removeEventListener("resize", lazyload);
+          window.removeEventListener("orientationChange", lazyload);
+        }
+    }, 20);
+  }
+
+  document.addEventListener("scroll", lazyload);
+  window.addEventListener("resize", lazyload);
+  window.addEventListener("orientationChange", lazyload);
+});
+</script>
+
+<!-- Page Loading Image -->
+<style>
+    .sk-folding-cube {
+      margin: 20px auto;
+      margin-top: 200px;
+      width: 40px;
+      height: 40px;
+      position: relative;
+      -webkit-transform: rotateZ(45deg);
+              transform: rotateZ(45deg);
+    }
+
+    .sk-folding-cube .sk-cube {
+      float: left;
+      width: 50%;
+      height: 50%;
+      position: relative;
+      -webkit-transform: scale(1.1);
+          -ms-transform: scale(1.1);
+              transform: scale(1.1);
+    }
+    .sk-folding-cube .sk-cube:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #0fd9a6;
+      -webkit-animation: sk-foldCubeAngle 2.4s infinite linear both;
+              animation: sk-foldCubeAngle 2.4s infinite linear both;
+      -webkit-transform-origin: 100% 100%;
+          -ms-transform-origin: 100% 100%;
+              transform-origin: 100% 100%;
+    }
+    .sk-folding-cube .sk-cube2 {
+      -webkit-transform: scale(1.1) rotateZ(90deg);
+              transform: scale(1.1) rotateZ(90deg);
+    }
+    .sk-folding-cube .sk-cube3 {
+      -webkit-transform: scale(1.1) rotateZ(180deg);
+              transform: scale(1.1) rotateZ(180deg);
+    }
+    .sk-folding-cube .sk-cube4 {
+      -webkit-transform: scale(1.1) rotateZ(270deg);
+              transform: scale(1.1) rotateZ(270deg);
+    }
+    .sk-folding-cube .sk-cube2:before {
+      -webkit-animation-delay: 0.3s;
+              animation-delay: 0.3s;
+    }
+    .sk-folding-cube .sk-cube3:before {
+      -webkit-animation-delay: 0.6s;
+              animation-delay: 0.6s;
+    }
+    .sk-folding-cube .sk-cube4:before {
+      -webkit-animation-delay: 0.9s;
+              animation-delay: 0.9s;
+    }
+    @-webkit-keyframes sk-foldCubeAngle {
+      0%, 10% {
+        -webkit-transform: perspective(140px) rotateX(-180deg);
+                transform: perspective(140px) rotateX(-180deg);
+        opacity: 0;
+      } 25%, 75% {
+        -webkit-transform: perspective(140px) rotateX(0deg);
+                transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
+      } 90%, 100% {
+        -webkit-transform: perspective(140px) rotateY(180deg);
+                transform: perspective(140px) rotateY(180deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes sk-foldCubeAngle {
+      0%, 10% {
+        -webkit-transform: perspective(140px) rotateX(-180deg);
+                transform: perspective(140px) rotateX(-180deg);
+        opacity: 0;
+      } 25%, 75% {
+        -webkit-transform: perspective(140px) rotateX(0deg);
+                transform: perspective(140px) rotateX(0deg);
+        opacity: 1;
+      } 90%, 100% {
+        -webkit-transform: perspective(140px) rotateY(180deg);
+                transform: perspective(140px) rotateY(180deg);
+        opacity: 0;
+      }
+    }
+</style>
+
+<!-- Page Loading Action -->
+<style>
+#loading {
+ width: 100%;
+ height: 100%;
+ top: 0px;
+ left: 0px;
+ position: fixed;
+ display: block;
+ opacity: 0.7;
+ background-color: #fff;
+ z-index: 99;
+ text-align: center; }
+
+#loading-image {
+ position: absolute;
+ top: 25%;
+ left: 50%;
+ z-index: 100; }
+</style>
+<script>
+$(window).load(function() {
+     $('#loading').hide();
+    });
+</script>
+
+<!-- Navbar fixed -->
 <script>
 window.onscroll = function() {myFunction()};
 
@@ -345,7 +545,7 @@ function myFunction() {
 }
 </script>
 
-
+<!-- SideBar -->
 <style>
   a.top {
     position: fixed;

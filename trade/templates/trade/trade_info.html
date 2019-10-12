@@ -27,7 +27,7 @@
             </div>
             <div class="col-sm-8 col-md-9" style="padding:10px;">
                 <div class="col-xs-12" style="padding:0px;">
-                    <b class="col-xs-8" style="padding:0px;">{{ order.name }}</b><b class="col-xs-4 text-right pull-right" style="color:orange;padding:0px;">{{ order.amount_html }}</b>
+                    <b class="col-xs-8" style="padding:0px;">{{ order.item }}</b><b class="col-xs-4 text-right pull-right" style="color:orange;padding:0px;">{{ order.amount_html }}</b>
                 </div>
                 <div class="col-xs-12" style="padding:0px;">
                     <hr>
@@ -40,7 +40,7 @@
         <div class="col-sm-3 text-center" style="padding:5px;">
             {% if user == order.user %}
                 <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.item.user.storeprofile.pk %}">
-                    <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.item.user.profile.nick_name }}</button></a>
+                    <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.item.user.storeprofile.name }}</button></a>
                 </div>
                 {% if order.status == 'paid' or order.status == 'reserv' and order.is_active %}
                 <div class="row" style="margin:5px">
@@ -60,7 +60,7 @@
             {% endif %}
             {% if user == order.item.user %}
                 <div class="row" style="margin:5px"><a href="{% url "store:store_sell_list" order.user.storeprofile.pk %}">
-                    <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.user.profile.nick_name }}</button></a>
+                    <button class="btn btn-default col-xs-12"><i class="fas fa-user"></i> {{ order.user.storeprofile.name }}</button></a>
                 </div>
                 {% if not order.is_active and order.status == 'reserv' %}
                 <div class="row" style="margin:5px">
@@ -74,9 +74,11 @@
                 {% endif %}
             {% endif %}
         </div>
+        {% if order.pay_choice == 'bank_trans' %}
         <div class="row col-xs-12 text-center">
                 <h4>결제일 <b style="color:red">{{ order.created_at }}</b> 로부터 <b style="color:red">2일</b> 전까지 입금이 <b style="color:#368AFF">확인</b> 되어야합니다.</h4>
         </div>
+        {% endif %}
     </div>
 <div class="thumbnail" style="padding:20px">
 <form class="form-horizontal">
@@ -108,7 +110,7 @@
           <div class="form-group">
               <label class="col-sm-2 control-label">배송지</label>
               <div class=" col-sm-10">
-                <input type="text" class="form-control col-sm-10" readonly required value="{{ order.post_code }}{{ order.address }}{{ order.detail_address }}">
+                <input type="text" class="form-control col-sm-10" readonly required value="{{ order.post_code }} {{ order.address }} {{ order.detail_address }}">
               </div>
           </div>
             <div class="form-group">
@@ -137,13 +139,13 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">판매자</label>
               <div class=" col-sm-10">
-                <input type="text" class="form-control col-sm-10" readonly required value="{{ order.item.user.profile.nick_name }}">
+                <input type="text" class="form-control col-sm-10" readonly required value="{{ order.item.user.storeprofile.name }}">
               </div>
           </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">이메일</label>
               <div class=" col-sm-10">
-                <input type="text" class="form-control col-sm-10" readonly required value="{{ order.item.user.profile.email }}">
+                <input type="text" class="form-control col-sm-10" readonly required value="{{ order.item.user.email }}">
               </div>
             </div>
             <div class="form-group">
@@ -155,11 +157,11 @@
           <div class="form-group">
               <label class="col-sm-2 control-label">주소</label>
               <div class=" col-sm-10">
-                <input type="text" class="form-control col-sm-10" readonly required value="{{ order.item.user.profile.post_code }}{{ order.item.user.profile.address }}{{ order.item.user.profile.detail_address }}">
+                <input type="text" class="form-control col-sm-10" readonly required value="{{ order.item.user.profile.post_code }} {{ order.item.user.profile.address }} {{ order.item.user.profile.detail_address }}">
               </div>
           </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">계좌번호</label>
+                <label class="col-sm-2 control-label"><b style="color:red;">계좌번호</b></label>
               <div class=" col-sm-10">
                 <input type="text" class="form-control col-sm-10" readonly required value="{{ order.item.user.profile.account_num }}">
               </div>

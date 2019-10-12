@@ -38,7 +38,7 @@ def main(query):
         try:
             user = userlist[randint(0, count - 1)]  # Index of User
             status = item_status[randint(0, 3)] # item_status
-            name = trim(item_tag.select('a.tit')[0].text)[0:50]  # title
+            name = trim(item_tag.select('.tit')[0].text)[0:50]  # title
             price = trim(item_tag.select('.price .num')[0].text).replace(',', '').replace('$','').replace('.','')  # amount
             img_url = item_tag.select('img[data-original]')[0]['data-original']
             res = requests.get(img_url, stream=True)
@@ -64,7 +64,7 @@ def main(query):
         item_image.save()
 
         ctn += 1
-        if ctn > 10:
+        if ctn > 19:
             break
 
 

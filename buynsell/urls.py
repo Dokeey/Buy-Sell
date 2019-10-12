@@ -18,6 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import path, include
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,8 +29,11 @@ urlpatterns = [
     path('mypage/', include('mypage.urls')),
     path('customer/', include('customer.urls')),
     path('policy/', include('policy.urls')),
-    path('', lambda req: redirect('accounts:profile'), name='root'),
+    path('', TemplateView.as_view(template_name = 'base.html'), name='root'),
 ]
 
+admin.site.site_header = "Buy & Sell 관리자"
+admin.site.site_title = "B&S 관리자 페이지"
+admin.site.index_title = "아름다운 관리자가 되어보아요"
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

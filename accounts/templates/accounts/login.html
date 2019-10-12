@@ -1,12 +1,41 @@
-{% extends "accounts/layout.html" %}
+{% extends "accounts/login_layout.html" %}
 
-{% block content %}
+{% block login_content %}
 <form action="" method="POST">
     {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit" value="login">
+    <h4>LOGIN</h4>
+    {{ form.username }}
+    {% if form.username.errors %}
+        {% for error in form.username.errors %}
+    <div class="col-xs-12 text-center" style="padding-top: 10px;">
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    </div>
+        {% endfor %}
+    {% endif %}
+    </br>
+    {{ form.password }}
+    {% if form.password.errors %}
+        {% for error in form.password.errors %}
+    <div class="col-xs-12 text-center" style="padding-top: 10px;">
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    </div>
+        {% endfor %}
+    {% endif %}
+    </br>
+    <div class="wrapper">
+        <button class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> 로그인</button>
+        <a href="{% url "accounts:signup" %}">
+            <button type="button" class="btn btn-danger"><i class="fas fa-user-plus"></i> 회원가입</button>
+        </a>
+    </div>
 </form>
-    <a href="{% url "accounts:id_find" %}">아이디</a>/<a href="{% url "accounts:password_reset" %}">비밀번호 찾기</a>
+<hr class="login">
+<div class="text-center">
+    <a href="{% url "accounts:id_find" %}"><button class="btn btn-info">아이디 찾기 </button></a>
+    <a href="{% url "accounts:password_reset" %}"><button class="btn btn-info">비밀번호 찾기</button></a>
+</div>
 {% endblock %}
