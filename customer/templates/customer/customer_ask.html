@@ -1,18 +1,64 @@
 {% extends "mypage/layout.html" %}
 
+{% block mypage_head %}
+<style>
+    .answer_ok{
+        font-weight:bold; 
+        color:rgb(58, 224, 175); 
+        background-color: white; 
+        border: 2px solid rgb(60, 245, 189); 
+        border-radius: 15px; 
+        padding: 7px;
+    }
+    .answer_ready{
+        font-weight:bold; 
+        color:rgb(172, 165, 165); 
+        background-color: white; 
+        border: 2px solid rgb(172, 165, 165); 
+        border-radius: 15px; 
+        padding: 7px;
+    }
+    .write{
+        font-weight:bold; 
+        font-size: 25px;
+        color:rgb(172, 165, 165); 
+        border-radius: 15px; 
+        padding: 7px;
+    }
+</style>
+
+{% endblock %}
+
 {% block mypage_content %}
-<a href="{% url "customer:customer_ask_new" %}">1:1문의하기</a><br>
-{% for ask in asks %}
-<a href="{% url "customer:customer_ask_detail" ask.pk %}">제목 : {{ ask.ask_title }}({{ ask.get_ask_going_display }})</a>
-<br>
-{% if ask.ask_going == 'ready' %}
-<a href="{% url "customer:customer_ask_edit" ask.pk %}">수정</a>
-{% endif %}
-<br>
-{% empty %}
-<h2 class="text-center"><small><i class="far fa-meh"></i> 문의글이 없습니다</small></h2>
 
-{% endfor %}
 
+    <a class="write" href="{% url "customer:customer_ask_new" %}">
+        문의 글 쓰러가기 
+        <i class="fas fa-angle-right"></i></a>
+    <br><hr>
+
+    {% for ask in asks %}
+    
+        <a href="{% url "customer:customer_ask_detail" ask.pk %}"> 
+            <div class="well col-sm-10 col-sm-offset-1" style="background-color: white; padding:20px; border-radius:15px;" >
+                <div class="col-sm-3">
+                    {% if ask.ask_going == 'ok' %}
+                        <button class="answer_ok">답변 완료</button>
+                    {% else %}
+                        <button class="answer_ready">답변 대기</button>
+                    {% endif %}
+                </div>
+                <div class="col-sm-6" style="padding:10px;">
+                    {{ ask.ask_title }}
+                </div>
+                <div class="col-sm-3" style="padding:10px;">
+                    {{ ask.created_at | date:'Y-M-d일' }}
+                </div>
+            </div>
+        </a>
+    {% empty %}
+    <h2 class="text-center"><small><i class="far fa-meh"></i> 문의글이 없습니다</small></h2>
+
+    {% endfor %}
 
 {% endblock %}

@@ -1,11 +1,47 @@
 {% extends "customer/layout.html" %}
-{% block content %}
-<form action="" method="POST">
-     {% csrf_token %}
-    <table>
-        {{ form.as_table }}
 
-    </table>
-    <input type="submit" value="등록하기">
+{% block content %}
+
+<form action="" method="post">
+  {% csrf_token %}
+  <div class="row">
+    <br><br>
+    <h2 style="font-weight: bold; color:gray">1:1 문의</h2>
+    <hr>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <div class=" col-md-8 col-md-offset-2">
+          {{ form.ask_category }}
+          <div id="error_title" class="col-md-12" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <div class="form-group">
+        <label for="{{ form.title.id_for_label }}" class="col-md-2 control-label"></label>
+        <div class=" col-md-8 col-md-offset-2">
+            {{ form.ask_title }}
+            <div id="error_title" class="col-md-12" style="margin-top:10px"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="{{ form.title.id_for_label }}" class="col-md-2 control-label"></label>
+        <div class=" col-md-8 col-md-offset-2">
+            {{ form.ask_post}}
+            <div id="error_title" class="col-md-12" style="margin-top:10px"></div>
+        </div>
+    </div>
+  </div>
+  <div class="row">
+      <div class="form-group">
+        <div class=" col-md-8 col-md-offset-2">
+          <div></div>
+            <button type="button" onclick="history.back(-1);" class="btn btn-default btn-lg" >취소</button>
+            <input type="submit" class="btn btn-primary btn-lg" value="등록하기">
+        </div>
+      </div>
+
+  </div>
 </form>
+
 {% endblock %}

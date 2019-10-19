@@ -95,6 +95,14 @@ class CustomerAskEditView(UpdateView):
     template_name = "customer/customer_ask_new.html"
     pk_url_kwarg = 'ask_id'
     context_object_name = "ask"
+
+    def get(self, request, *args, **kwargs):
+        self.objects = self.get_object()
+        status = self.model.objects.get(pk=kwargs['ask_id'])
+        if status.ask_going == "ok":
+            return redirect("customer:customer_ask")
+        else:
+            return super().get(request, *args, **kwargs)
     def form_valid(self, form):
         ask_form = form.save(commit=False)
         ask_form.author = self.request.user

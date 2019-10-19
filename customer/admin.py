@@ -15,7 +15,7 @@ class CustomerAskAdmin(admin.ModelAdmin):
 
 @admin.register(CustomerCategory)
 class CustomerCategoryAdmin(admin.ModelAdmin):
-    list_display = ['pk', 'customer_category']
+    list_display = ['name', 'parent']
 
 @admin.register(CustomerNotice)
 class CustomerNoticeAdmin(admin.ModelAdmin):

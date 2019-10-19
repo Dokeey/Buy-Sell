@@ -342,7 +342,6 @@ class StoreQuestionEditView(UpdateView):
         self.object = form.save()
 
         data = {'id':comm.id, 'msg':form.cleaned_data['comment']}
-        print(data)
         return JsonResponse(data)
 
 @method_decorator(login_required, name='dispatch')
