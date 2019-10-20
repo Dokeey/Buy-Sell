@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django_extensions', # models relation graph
     'django_cleanup', # django delete media file
     # 'sslserver', # django SSL server module
+    'django_summernote',
 
 ]
 
@@ -225,3 +226,8 @@ FACEBOOK_KEY = '642307389514788'
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000
+
+# summernote conf
+SUMMERNOTE_CONFIG  = {
+    ' lang ' : ' ko-KR ' ,
+}

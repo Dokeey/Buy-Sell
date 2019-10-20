@@ -1,10 +1,99 @@
 {% extends "customer/layout.html" %}
 {% load hitcount_tags %}
-{% block content %}
-{% for list in notice_list %}
 
-{{ list.pk }}.  제목 : <a href="{% url "customer:notice_detail" list.pk %}"> {{ list.notice_title }}</a> 조회수:{% get_hit_count for list %} <br/>
-{% empty %}
-<h1>공지사항이 없습니다.</h1>
-{% endfor %}
+{% block head %}
+
+<script>
+    function more_button(id){
+        var x = document.getElementsByClassName("tab-pane");
+        var i;
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = 'none';
+        }
+        if( document.getElementById(id).style.display != '')
+        {
+            document.getElementById(id).style.display = '';
+        }else{
+            document.getElementById(id).style.display = 'none';
+        }
+    }
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+<h1 class="text-center" style="padding:10px">공지사항</h1>
+<hr>
+<div>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs nav-stacked" role="tablist">
+    {% for list in notice_list %}
+      <a onclick="more_button('{{ list.pk }}')" href="#{{ list.pk }}" role="tab" data-toggle="tab">
+          <div class="thumbnail row" style="padding:20px">
+            <div role="presentation">
+                    <div class="col-xs-12 col-sm-8 col-md-9 text-center">{{ list.notice_title }}</div>
+                    <div class="col-xs-12 col-sm-4 col-md-3 text-right"><i class="far fa-clock"></i> {{ list.created_at|date:"Y년 m월 d일" }}</div>
+            </div>
+          </div>
+      </a>
+        <div role="tabpanel" class="tab-pane fade" id="{{ list.pk }}" style="display:none; padding:20px; margin-bottom:15px; background-color:#eeeeee;">
+            {{ list.notice_content|safe }}</div>
+    {% endfor %}
+  </ul>
+
+</div>
+
+<!-- pagination -->
+<div class="container-fluid text-center">
+{% if is_paginated %}
+  <nav>
+    <ul class="pagination">
+        <li>
+          <a href="?page=1">
+            <span><i class="fas fa-angle-double-left"></i></span>
+          </a>
+        </li>
+      {% if page_obj.has_previous %}
+        <li>
+          <a href="?page={% if prev >= 1 %}{{ prev }}{% else %}1{% endif %}">
+            <span><i class="fas fa-angle-left"></i></span>
+          </a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href="#">
+            <span><i class="fas fa-angle-left"></i></span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% for page in page_range %}
+        <li {% if page == page_obj.number %}class="active"{% endif %}>
+          <a href="?page={{ page }}">{{ page }}</a>
+        </li>
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li>
+          <a href="?page={% if last_page >= next %}{{ next }}{% else %}{{ last_page }}{% endif %}">
+            <span><i class="fas fa-angle-right"></i></span>
+          </a>
+        </li>
+      {% else %}
+        <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+          <a href="#">
+            <span><i class="fas fa-angle-right"></i></span>
+          </a>
+        </li>
+      {% endif %}
+        <li>
+          <a href="?page={{ last_page }}">
+            <span><i class="fas fa-angle-double-right"></i></span>
+          </a>
+        </li>
+    </ul>
+  </nav>
+{% endif %}
+</div>
 {% endblock %}

@@ -29,6 +29,7 @@ urlpatterns = [
     path('mypage/', include('mypage.urls')),
     path('customer/', include('customer.urls')),
     path('policy/', include('policy.urls')),
+    path('summernote/', include('django_summernote.urls')),
     path('', TemplateView.as_view(template_name = 'base.html'), name='root'),
 ]
 
