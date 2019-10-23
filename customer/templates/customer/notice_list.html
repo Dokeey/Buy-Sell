@@ -23,6 +23,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="container-fluid">
 <h1 class="text-center" style="padding:10px">공지사항</h1>
 <hr>
 <div>
@@ -37,11 +38,12 @@
             </div>
           </div>
       </a>
-        <div role="tabpanel" class="tab-pane fade" id="{{ list.pk }}" style="display:none; padding:20px; margin-bottom:15px; background-color:#eeeeee;">
+        <div role="tabpanel" class="tab-pane fade thumbnail" id="{{ list.pk }}" style="box-shadow:none; display:none; padding:20px; margin-bottom:15px; background-color:#eeeeee;">
             {{ list.notice_content|safe }}</div>
     {% endfor %}
   </ul>
 
+</div>
 </div>
 
 <!-- pagination -->

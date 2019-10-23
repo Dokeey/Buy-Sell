@@ -170,10 +170,11 @@
 {% category_menu as categories %}
 
 
+<div class="container">
 <div class="container-fluid" name="menu" style="padding-left: 0px; padding-right: 0px;">
-    <nav class="navbar navbar-default top-container" style="padding-right: 40px;">
+    <nav class="navbar navbar-default top-container" style="padding-right: 0px;">
 
-              <div class="container-fluid col-sm-12" >
+              <div class="container-fluid col-sm-12">
                 <!-- Collect the nav links, forms, and other content for toggling -->
                   <div class="row">
                       <ul class="nav navbar-nav navbar-right collaps-block">
@@ -218,16 +219,15 @@
                       </ul>
 
 
-                      <button type="button" class="btn btn-primary navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-2" aria-expanded="false" style="float: left; margin-left: 30px; margin-top: 5px;">
+                      <button type="button" class="btn btn-primary navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-2" aria-expanded="false" style="float: left; margin-left: 15px; margin-top: 5px;">
                         <i class="fas fa-bars"></i>
                       </button>
                   </div>
               </div>
     </nav>
-
-    <nav class="navbar navbar-default header" id="myHeader" style="border-bottom: 1px solid #bbbbbb; ">
-        <div class="container-fluid">
-            <div class="container-fluid col-sm-3 col-xs-4" name="menu-collaps" >
+    <nav class="navbar navbar-default header " style="padding-left:0;" id="myHeader"> <!-- style="border-bottom: 1px solid #bbbbbb;--> <!-- check line-->
+        <div class="container-fluid" style="padding-left:10px">
+            <div class="container-fluid col-sm-3 col-xs-4" name="menu-collaps" style="padding-left:5">
                 <div class="row">
                     <a style="color: #0fd9a6;font-family: Stencil" href="{% url "root" %}">
                         <img class="img-responsive" style="height:35px;padding-top:5px;" src="{% static "img/logo.jpg" %}">
@@ -236,11 +236,11 @@
             </div>
 
 
-              <div class="container-fluid col-sm-6 col-xs-8"style="" name="menu-layout">
+              <div class="container-fluid col-sm-6 col-xs-8" style="" name="menu-layout">
 
                 <div class="row"  >
 
-                  <form class="navbar-form" action="{% url "category:search_item" %}" style="left: 50%; transform: translatex(3%); padding-right: 30px;padding-bottom: 1px; padding-top: 1px; border:none" >
+                  <form class="navbar-form" action="{% url "category:search_item" %}" style="left: 50%; transform: translatex(3%); padding-right: 20px;padding-bottom: 1px; padding-top: 1px; border:none" >
                     <div class="input-group">
                       <input name="query" value="{{ query }}" type="search" size="60" class="form-control" placeholder="{% if user.is_authenticated %}{{ user }}님 {% endif %}어떤 물품을 찾고계세요?">
                       <span class="input-group-btn">
@@ -255,8 +255,8 @@
               </div>
         </div>
     </nav>
-
-    <nav class="nav navbar-default content" style="padding-left: 30px; padding-right: 30px; border-bottom:1px solid #bbbbbb;">
+    <nav class="nav navbar-default content" style="border-bottom:none"><!-- check line -->
+        <hr style="padding:0px; margin:0px;width: 175.1%;margin-left: -50%;border-top: 1px solid #bbbbbb;">
         <div class="container-fluid " style="margin-left: 0px; margin-right: 0px;">
               <div class="collapse navbar-collapse" id="navbar-collapse-2">
 
@@ -315,7 +315,8 @@
       </div><!-- /.navbar-collapse -->
     </nav>
 </div>
-
+</div>
+<hr style="padding:0px; margin:0px;border-top: 1px solid #bbbbbb;">
 <div class="container">
     <div id="loading">
         <div id="loading-image" class="sk-folding-cube">
@@ -555,12 +556,15 @@ window.onscroll = function() {myFunction()};
 
 var header = document.getElementById("myHeader");
 var sticky = header.offsetTop;
+var h_padding = (document.body.offsetWidth - header.offsetWidth) / 2
 
 function myFunction() {
   if (window.pageYOffset > sticky) {
     header.classList.add("navbar-fixed-top");
+    header.style.paddingLeft = h_padding.toString() + "px";
   } else {
     header.classList.remove("navbar-fixed-top");
+    header.style.paddingLeft = "0px";
   }
 }
 </script>
