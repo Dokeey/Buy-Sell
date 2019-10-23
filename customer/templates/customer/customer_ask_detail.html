@@ -1,15 +1,70 @@
 {% extends "customer/layout.html" %}
 
-{% block content %}
+{% block customer_head %}
+  <style>
+    .c_title{
+        font-weight: bold;
+        color: rgb(150, 153, 153);
+        text-align: center;
+    }
 
-제목 : {{ ask.ask_title }}<br>
-작성자 : {{ ask.author }}  질문 날짜 : {{ ask.created_at }}<br>
-질문 내용 : {{ ask.ask_post }}
-<hr/>
-{% if ask.ask_going == 'ok' %}
-답변 : {{ ask.ask_comment }}
-<br/> 답변 날짜 : {{ ask.updated_at }}
-{% endif %}
-<br/> {{ hitcount }}
-<a href="{% url "customer:customer_ask" %}">목록으로</a>
+  </style>
+
+{% endblock %}
+{% block content %}
+<br>
+<div class=" col-md-10 col-md-offset-1">
+    <div class="row panel panel-default">
+        <div class="panel-heading">
+            <div class="col-sm-2 col-xs-12 c_title">제목</div>
+            <div class="col-sm-8" style="text-align: center;">{{ ask.ask_title }} </div> 
+                {% if ask.ask_going == 'ready' %}
+                <a href="{% url "customer:customer_ask_edit" ask.pk %}">
+                    <i class="fas fa-edit" style="color: black;"></i>
+                    <span class="c_title">수정</span>
+                </a>
+                {% endif %}
+            &nbsp;
+        </div>
+        <div class="panel-body">
+            <div class=" col-md-10 col-md-offset-1">
+                <div class="col-sm-12" style="font-weight: bold;color:gray;text-align:center">
+                        질문 내용 <hr/>
+                </div>
+                <div class="col-sm-10 col-sm-offset-1" style="min-height: 100px;">
+                        {{ ask.ask_post|safe }}
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer" style="text-align: right;">
+                {{ ask.created_at }}
+        </div>
+   </div>
+
+
+   
+   {% if ask.ask_going == 'ok' %}
+
+   <div class="row panel panel-primary">
+        <div class="panel-heading">
+                <i class="fas fa-reply fa-rotate-180"></i> 문의 답변
+        </div>
+        <div class="panel-body">
+            <div class=" col-md-10 col-md-offset-1">
+                <div class="col-sm-10 col-sm-offset-1" style="min-height: 100px;">
+                        {{ ask.ask_comment|safe }}
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer" style="text-align: right;">
+                {{ ask.updated_at }}
+        </div>
+   </div>
+   {% endif %}
+   <div style="text-align: center;">
+        <button class="btn btn-default" onclick="location.href='{% url 'customer:customer_ask' %}'">목록으로</button>
+   </div>
+   
+</div>
+
 {% endblock %}
