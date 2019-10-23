@@ -1,14 +1,245 @@
 {% extends "customer/layout.html" %}
 
+{% block  customer_head %}
+<script>
+    var elements = document.getElementsByClassName("actives");
+    
+    $(function(){
+        var sBtn = $("div");    //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
+        sBtn.find("a").click(function(){   // sBtn에 속해 있는  a 찾아 클릭 하면.
+         sBtn.removeClass("actives");     // sBtn 속에 (active) 클래스를 삭제 한다.
+         $(this).children().addClass("actives"); // 클릭한 a에 (active)클래스를 넣는다.
+        })
+    })
+</script>
+<style>
+    .title_box{
+        margin: 10px 5px 10px 10px;
+        padding: 10px;
+        border: 1px solid rgb(204, 195, 195);
+        width: 80%;
+        height: 100%;
+        text-align: center;
+    }.title_box:hover{
+        background-color: rgb(60, 245, 189);
+        color: white;
+        border: 2px solid white;
+    }.actives{
+        background-color: rgb(60, 245, 189);
+        color: white;
+        border: 2px solid white;
+    }
+    .in_box_icon{
+        font-size: 500%;
+    }
+    .in_box_font{
+        font-weight: bold;
+        font-size:250%;
+        padding: 10px;
+    }
+    .fass{
+        color: rgb(60, 245, 189);
+    }
+    .button_title{
+        border: 2px solid rgb(129, 92, 50); 
+        color:rgb(24, 3, 44); 
+        background-color:white; 
+        height: 50px;
+        width: 300px;
+        font-weight: bold;
+        font-size: 17px;
+    } .button_title:hover{
+        border: 2px solid rgb(129, 92, 50); 
+        color:white; 
+        background-color:rgb(129, 92, 50); 
+        height: 50px;
+        width: 300px;
+        font-weight: bold;
+        font-size: 17px;
+    }
+    .button_in{
+        margin:10px 17px 0px 5px; 
+        padding:15px; 
+        border: 1px solid rgb(233, 126, 64)
+    }
+</style>
+<script>
+    function more_button(id){
+        var x = document.getElementsByClassName("fades");
+        console.log(x.length)
+        var i;
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = 'none';
+        }
+        if( document.getElementById(id).style.display != '')
+        {
+            document.getElementById(id).style.display = '';
+        }else{
+            document.getElementById(id).style.display = 'none';
+        }
+    }
+    function more_button2(id){
+        var x = document.getElementsByClassName("fade_in");
+        var i;
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = 'none';
+        }
+        if( document.getElementById(id).style.display != '')
+        {
+            document.getElementById(id).style.display = '';
+        }else{
+            document.getElementById(id).style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}
 {% block content %}
-<h1>자주 묻는 질문</h1>
+<h2><i class="fass fas fa-question"></i><i class="fass fas fa-question fa-rotate-180"></i><i class="fass fas fa-question"></i> 자주 묻는 질문</h2>
 <hr/>
+<nav class="navbar-default">
+        <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+    </div>
+    
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding:10px;">
+        <div class="row" style="padding:5px;">
+            <div align="center">
+                <form style="width:58%;" action="{% url "customer:customer_faq_search" %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                    <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid rgb(129, 92, 50);" placeholder="무엇이 궁금하세요?" >
+                    <span class="input-group-btn">
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button class="btn" type="submit" style="background-color:rgb(129, 92, 50); color:white; border:1px solid rgb(129, 92, 50); ">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br/>
+
+        <ul class="nav nav-tabs nav-justified gold" >
+
+            <li role="presentation">
+                <div class="col-sm-12 col-xs-4">
+                    <a onclick="more_button('8_main')" href="#사용하기">
+                        <div class="title_box actives">
+                            <i class="fas fa-search in_box_icon"></i><br>
+                            <div class="in_box_font">사용하기</div>
+                        </div>
+                    </a>
+                </div>
+            </li>
+            <li role="presentation">
+                <div class="col-sm-12 col-xs-4">
+                    <a onclick="more_button('9_main')" href="#거래하기">
+                        <div class="title_box">
+                            <i class="far fa-handshake in_box_icon"></i>
+                            <div class="in_box_font">거래하기</div>
+                        </div>
+                    </a>
+                </div>
+            </li>
+            <li role="presentation">    
+                <div class="col-sm-12 col-xs-4">
+                    <a onclick="more_button('6_main')" href="#물건받기">
+                        <div class="title_box">
+                            <i class="fas fa-gift in_box_icon"></i>
+                            <div class="in_box_font">물건받기 </div>
+                        </div>
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <br/>
+    </div>
+</nav>
+
+<hr style="border: 1px solid rgb(204, 195, 195);">
+<div class="fades" id="8_main" style="text-align:center;">
+    <ul class="nav nav-tabs" style="color: white; border: 0px;">
+        {% for faq in faqs %}
+        {% if faq.faq_category.pk == 8 %}
+            <button class="button_title" style="margin: 5px;" onclick="more_button2('{{ faq.pk }}')" href="#{{ faq.pk }}" role="tab" data-toggle="tab">
+                {{ faq.faq_title }}
+            </button>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="fades" id="9_main" style="display:none; text-align:center;">
+    <ul class="nav nav-tabs" style="color: white; border: 0px;">
+        {% for faq in faqs %}
+        {% if faq.faq_category.pk == 9 %}
+            <button class="button_title" style="margin: 5px;" onclick="more_button2('{{ faq.pk }}')" href="#{{ faq.pk }}" role="tab" data-toggle="tab">
+                {{ faq.faq_title }}
+            </button>
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+<div class="fades" id="6_main" style="display:none; text-align:center;"">
+    <ul class="nav nav-tabs" style="color: white; border: 0px;">
+        {% for faq in faqs %}
+        {% if faq.faq_category.pk == 6 %}
+            <button class="button_title" style="margin: 5px;" onclick="more_button2('{{ faq.pk }}')" href="#{{ faq.pk }}" role="tab" data-toggle="tab">
+                {{ faq.faq_title }}
+            </button>
+        {% endif %}
+        {% endfor %}
+    </ul>
+
+</div> 
+<hr style="border: 0.5px solid rgb(204, 195, 195);">
 {% for faq in faqs %}
-
-<h2>{{ faq.faq_title }}</h2>
-{{ faq.faq_content }}
-
-<hr/>
-
+    <div role="tabpanel" class="tab-pane fade button_in fade_in" id="{{ faq.pk }}" style="display:none;">
+            {{ faq.faq_content }}
+    </div>
 {% endfor %}
+
+<!-- <div class="fades" id="use">
+    {% for faq in faqs %}
+        {% if faq.faq_category.pk == 8 %}
+        <div style="padding: 5px;">
+            <button class="button_title" onclick="more_button2('{{ faq.pk }}')">{{ faq.faq_title }}</button>
+            <div class="fade_in button_in" id="{{ faq.pk }}"  style="display:none;">{{ faq.faq_content }}</div>
+        </div>
+
+        {% endif %}
+
+    {% endfor %}
+</div>
+
+<div class="fades" id="trade" style="display:none;">
+    {% for faq in faqs %}
+        {% if faq.faq_category.pk == 9 %}
+        <div style="padding: 5px;">
+            <button class="button_title" onclick="more_button2('{{ faq.pk }}')">{{ faq.faq_title }}</button>
+            <div class="fade_in button_in" id="{{ faq.pk }}"  style="display:none;">{{ faq.faq_content }}</div>
+        </div>
+
+        {% endif %}
+
+    {% endfor %}
+</div>
+<div class="fades" id="get" style="display:none;">
+    {% for faq in faqs %}
+        {% if faq.faq_category.pk == 6 %}
+        <div style="padding: 5px;">
+            <button class="button_title" onclick="more_button2('{{ faq.pk }}')">{{ faq.faq_title }}</button>
+            <div class="fade_in button_in" id="{{ faq.pk }}"  style="display:none;">{{ faq.faq_content }}</div>
+        </div>
+        {% endif %}
+
+    {% endfor %}
+</div> -->
 {% endblock %}

@@ -7,7 +7,7 @@ from .models import CustomerFAQ, CustomerAsk, CustomerCategory, CustomerNotice
 
 @admin.register(CustomerFAQ)
 class CustomerFAQAdmin(admin.ModelAdmin):
-    list_display = [ 'faq_title']
+    list_display = [ 'faq_category' , 'faq_title']
 
 @admin.register(CustomerAsk)
 class CustomerAskAdmin(admin.ModelAdmin):
@@ -15,7 +15,7 @@ class CustomerAskAdmin(admin.ModelAdmin):
 
 @admin.register(CustomerCategory)
 class CustomerCategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'parent']
+    list_display = ['pk','name', 'parent']
 
 @admin.register(CustomerNotice)
 class CustomerNoticeAdmin(admin.ModelAdmin):

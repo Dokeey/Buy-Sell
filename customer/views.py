@@ -24,6 +24,35 @@ class CustomerFAQView(ListView):
     model = CustomerFAQ
     context_object_name = "faqs"
 
+class CustomerFAQSearch(ListView):
+    model = CustomerFAQ
+    template_name = 'customer/customer_faq_search.html'
+    context_object_name = 'faq_search'
+
+    def get(self, request, *args, **kwargs):
+        self.query = self.request.GET.get('query', '')
+
+        if self.query == '':
+            messages.info(self.request, '검색어를 입력해주세요')
+            url = self.request.GET.get('next')
+            return redirect(url)
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        self.qs = super().get_queryset()
+        
+        if self.query:
+            qs = self.qs.filter(faq_title__icontains=self.query)
+        return qs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+
+        if self.query:
+            context['query'] = self.query
+
+        return context
+
 
 # @login_required
 # def customer_ask(request):
