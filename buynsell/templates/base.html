@@ -235,7 +235,7 @@ background: #0fd9a6;
 <div class="container-fluid" style="margin-top:20px;">
     <div class="row">
         {% child_category_items node as items %}
-        <h2>{{ node.name }} <small><a href="{% url "category:category_item" node.id %}">{{ items.count }}개 보러가기</a></small></h2>
+        <h2>{{ node.name }} <small><a href="{% url "category:category_item" node.id %}"><font color="red">{{ items.count }}</font>개 보러가기</a></small></h2>
         <hr>
     </div>
     <div class="row">
@@ -260,7 +260,7 @@ background: #0fd9a6;
                           <div class="col-sm-3 col-xs-6">
                               {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
                               <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                  <img src="{{ thumb.url }}" alt="Image" width="{{ thumb.width }}" height="{{ thumb.height }}">
+                                  <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
                                   <br>
                                   <b>{{ item.title }}</b><br>
                                   {{ item.amount|intcomma }} 원
@@ -270,7 +270,7 @@ background: #0fd9a6;
                           <div class="col-sm-3 col-xs-6">
                               {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
                               <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                  <img src="{{ thumb.url }}" alt="Image" width="{{ thumb.width }}" height="{{ thumb.height }}">
+                                  <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
                                   <br>
                                   <b>{{ item.title }}</b><br>
                                   {{ item.amount|intcomma }} 원
@@ -282,7 +282,7 @@ background: #0fd9a6;
                           <div class="col-sm-3 col-xs-6">
                               {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
                               <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                  <img src="{{ thumb.url }}" alt="Image" width="{{ thumb.width }}" height="{{ thumb.height }}">
+                                  <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
                                   <br>
                                   <b>{{ item.title }}</b><br>
                                   {{ item.amount|intcomma }} 원

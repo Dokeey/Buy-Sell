@@ -1,11 +1,87 @@
 {% extends "customer/layout.html" %}
-{% block content %}
-<form action="" method="POST">
-     {% csrf_token %}
-    <table>
-        {{ form.as_table }}
+{% block customer_head %}
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js"></script>
 
-    </table>
-    <input type="submit" value="등록하기">
+{% endblock %}
+{% block content %}
+
+<form action="" method="post" name="ask_form">
+  {% csrf_token %}
+  <div class="row">
+ 
+    <h2 style="font-weight: bold; color:gray">1:1 문의</h2>
+    <hr>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <div class=" col-md-8 col-md-offset-2" style="margin-bottom:10px;">
+          {{ form.ask_category }}
+          {% if form.ask_category.errors %}
+            {% for error in form.ask_category.errors %}
+              <div class="col-md-12 text-center" style="margin-top:10px;">
+                <div class=" alert alert-warning">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+      </div>
+    </div>
+    <div class="form-group">
+        <label for="{{ form.title.id_for_label }}" class="col-md-2 control-label"></label>
+        <div class=" col-md-8 col-md-offset-2" style="margin-bottom:10px;">
+            {{ form.ask_title }}
+            {% if form.ask_title.errors %}
+            {% for error in form.ask_title.errors %}
+              <div class="col-md-12 text-center" style="margin-top:10px;">
+                <div class=" alert alert-warning">
+                  <strong>{{ error|escape }}</strong>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="{{ form.title.id_for_label }}" class="col-md-2 control-label"></label>
+        <div class=" col-md-8 col-md-offset-2">
+            {{ form.ask_post}}
+            <div id="error_post" class="col-md-12" style="margin-top:10px"></div>
+        </div>
+    </div>
+  </div>
+  <div class="row">
+      <div class="form-group">
+        <div class=" col-md-8 col-md-offset-2">
+          <div></div>
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button type="button" onclick="location.href='{% url "customer:customer_ask" %}'" class="btn btn-default btn-lg" >취소</button>
+            <input type="button" class="btn btn-primary btn-lg" value="등록하기" onclick="formChk();">
+        </div>
+      </div>
+
+  </div>
 </form>
+
+
+
+{% endblock %}
+
+{% block extra_content %}
+<script>
+
+  function formChk(){
+    if (document.ask_form.ask_post.value == "") {
+        $('#error_post').html('<div class="text-center alert alert-warning">내용을 입력해 주세요</div>');
+        console.log('hi3')
+    }
+    else{
+      document.ask_form.submit();
+      return true;
+    }
+      
+  }
+      
+</script>
 {% endblock %}

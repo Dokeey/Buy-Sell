@@ -6,6 +6,8 @@
             $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
         });
     </script>
+    {% block mypage_head %}
+    {% endblock %}
 {% endblock %}
 
 {% block content %}

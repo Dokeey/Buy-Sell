@@ -18,7 +18,7 @@
 
         <script>
         function sharefacebook(url) {
-            window.open("http://www.facebook.com/sharer/sharer.php?u=" + url);
+            window.open("https://www.facebook.com/sharer/sharer.php?u=" + url);
         }
         </script>
 
@@ -32,10 +32,10 @@
                   content: {
                    title: '{{ stores.name }}',
                     description: 'Buy & Sell 가게 공유',
-                    imageUrl: 'http://{{ stores.photo.url }}',
+                    imageUrl: '{{ stores.photo.url }}',
                     link: {
-                      webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                      mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                      webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                      mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
                     }
                   },
                 social: {
@@ -47,8 +47,8 @@
                     {
                        title: 'Buy & Sell로!',
                       link: {
-                        mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                        webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                        mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                        webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
                       }
                     }
                   ]

@@ -54,7 +54,7 @@ def photos(item):
             ht += '<div class="item">'
         ht += """
                 <a href="{0}">
-                    <img class="img-responsive" height="150" width="150" style="margin:0 auth;border:1px solid #ededed;" src="{1}"/>
+                    <img class="lazy img-responsive" height="150" width="150" style="margin:0 auth;border:1px solid #ededed;" data-src="{1}"/>
                 </a>
             </div>
         """.format(resolve_url('trade:item_detail', item.id), item_image.photo.url)

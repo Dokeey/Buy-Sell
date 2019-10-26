@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django_extensions', # models relation graph
     'django_cleanup', # django delete media file
     # 'sslserver', # django SSL server module
+    'django_summernote',
 
 ]
 
@@ -173,7 +174,7 @@ EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'buysell0503@gmail.com' # ex) bum752@gmail.com
-EMAIL_HOST_PASSWORD = 'wjdqhqhdks' # ex) P@ssw0rd
+EMAIL_HOST_PASSWORD = 'wjdqhqhdks1!' # ex) P@ssw0rd
 SERVER_EMAIL = 'buysell0503@gmail.com' # ex) bum752@gmail.com
 DEFAULT_FROM_MAIL = 'BuynSell' # ex) bum752
 
@@ -225,3 +226,8 @@ FACEBOOK_KEY = '642307389514788'
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000
+
+# summernote conf
+SUMMERNOTE_CONFIG  = {
+    ' lang ' : ' ko-KR ' ,
+}

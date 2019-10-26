@@ -9,15 +9,15 @@
     <!--Facebook 공유 기능-->
     <meta property="fb:app_id"        content="{{ facebook_key }}"/>
     <meta property="og:type"          content="website"/>
-    <meta property="og:url"           content="http://{{ request.META.HTTP_HOST }}{{ request.path }}" />
+    <meta property="og:url"           content="https://{{ request.META.HTTP_HOST }}{{ request.path }}" />
     <meta property="og:title"         content="{{ item.title }} {{ item.amount|intcomma }}원" />
     <meta property="og:description"   content="{{ item.desc|default:'-'|linebreaks }}" />
-    <meta property="og:image"         content="http://{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}" />
+    <meta property="og:image"         content="{{ item.itemimage_set.first.photo.url }}" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
 
 	<script>
 	function sharefacebook(url) {
-		window.open("http://www.facebook.com/sharer/sharer.php?u=" + url);
+		window.open("https://www.facebook.com/sharer/sharer.php?u=" + url);
 	}
 	</script>
 
@@ -31,10 +31,10 @@
               content: {
                 title: '{{ item.title }} {{ item.amount|intcomma }}원',
                 description: 'Buy & Sell에서 싸게 사자!',
-                imageUrl: 'http://{{ request.META.HTTP_HOST }}{{ item.itemimage_set.first.photo.url }}',
+                imageUrl: '{{ item.itemimage_set.first.photo.url }}',
                 link: {
-                  webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                  mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                  webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                  mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
                 }
               },
             social: {
@@ -46,8 +46,8 @@
                 {
                   title: '빨리 사러가자!',
                   link: {
-                    mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                    webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                    mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
+                    webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
                   }
                 }
               ]
@@ -111,9 +111,9 @@
         jQuery('.more').readmore({
             speed: 300,
             collapsedHeight: 67,
+            heightMargin: 16,
             moreLink: '<a href="#">더 보기</a>',
             lessLink: '<a href="#">다시 닫기</a>',
-            heightMargin: 16
         });
 
     });
@@ -216,7 +216,7 @@
                     </button>
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="javascript:sharefacebook('http://{{ request.META.HTTP_HOST }}{{ request.path }}')">
+                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="javascript:sharefacebook('https://{{ request.META.HTTP_HOST }}{{ request.path }}')">
                         <i class="fab fa-facebook-square"></i> 공유하기
                     </button>
                 </div>
@@ -589,13 +589,18 @@
 
     function editSubmit(){
         var params = jQuery("#edit-form").serialize();
-        console.log(params)
         $.ajax({
             type: 'POST',
             url: edit_url,
             data: params,
             success: function(data) {
-                $('#cmt-'+data.id).html('<pre>'+data.msg+'</pre>');
+                $('#cmt-'+data.id).html('<pre>'+data.msg+'</pre>').readmore({
+                    speed: 300,
+                    collapsedHeight: 67,
+                    heightMargin: 16,
+                    moreLink: '<a href="#">더 보기</a>',
+                    lessLink: '<a href="#">다시 닫기</a>',
+                });
             }
         });
         return false;
