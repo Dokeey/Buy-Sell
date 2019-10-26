@@ -319,7 +319,10 @@
             },
             beforeSend:function(){
                 loader.css("display","block");
-            },
+            }
+            ,complete:function(){
+                loader.css("display","none");
+            }
         });
     }
 </script>

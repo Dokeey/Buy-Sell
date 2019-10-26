@@ -15,7 +15,6 @@ class CustomerAskForm(forms.ModelForm):
         self.fields['ask_title'].widget.attrs.update({
             'class': 'form-control col-sm-10',
             'placeholder': "문의 제목",
-            'maxlength':"30"
         })
         self.fields['ask_post'].widget.attrs.update({
             'class': 'form-control col-sm-10',
