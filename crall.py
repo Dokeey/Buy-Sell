@@ -16,6 +16,7 @@ from django.contrib.auth import get_user_model
 from django.db.models.aggregates import Count
 from random import randint
 
+from category.models import Category
 User = get_user_model()
 
 
@@ -28,7 +29,7 @@ def main(query):
 
     ctn = 0
     userlist = User.objects.filter(is_active=True)
-    count = User.objects.filter(is_active=True).aggregate(count=Count('id'))['count']
+    count = userlist.aggregate(count=Count('id'))['count']
     item_status = ['a', 'b', 'c', 's']
 
     def trim(s):
@@ -38,7 +39,7 @@ def main(query):
         try:
             user = userlist[randint(0, count - 1)]  # Index of User
             status = item_status[randint(0, 3)] # item_status
-            name = trim(item_tag.select('.tit')[0].text)[0:50]  # title
+            name = trim(item_tag.select('.tit a')[0].text)[0:50]  # title
             price = trim(item_tag.select('.price .num')[0].text).replace(',', '').replace('$','').replace('.','')  # amount
             img_url = item_tag.select('img[data-original]')[0]['data-original']
             res = requests.get(img_url, stream=True)
@@ -67,9 +68,7 @@ def main(query):
         if ctn > 19:
             break
 
-
-from category.models import Category
-
-cate = Category.objects.all()
-for cat in cate:
-    main(cat)
+if __name__ == '__main__':
+    cate = Category.objects.all()
+    for cat in cate:
+        main(cat)

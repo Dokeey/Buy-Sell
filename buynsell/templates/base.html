@@ -155,17 +155,17 @@ background: #0fd9a6;
             </ol>
             <!-- Carousel items -->
             <div class="carousel-inner" style="margin:0; padding:0">
-                <div class="active item">
-                <img class="img-responsive" src="{% static "img/iphone_banner.jpg" %}" style="width:979px;height:auto;"></div>
+                <div class="active item"><a href="{% url "store:store_sell_list" 50 %}">
+                <img class="img-responsive" src="{% static "img/iphone_banner.jpg" %}" style="width:979px;height:auto;"></a></div>
 
-                <div class="item">
-                <img class="img-responsive" src="{% static "img/switch_banner.jpg" %}" style="width:979px;height:auto;"></div>
+                <div class="item"><a href="{% url "trade:item_detail" 1408 %}">
+                <img class="img-responsive" src="{% static "img/switch_banner.jpg" %}" style="width:979px;height:auto;"></a></div>
 
-                <div class="item">
-                <img class="img-responsive" src="{% static "img/apple_banner.jpg" %}" style="width:979px;height:auto;"></div>
+                <div class="item"><a href="{% url "store:store_sell_list" 49 %}">
+                <img class="img-responsive" src="{% static "img/apple_banner.jpg" %}" style="width:979px;height:auto;"></a></div>
 
-                <div class="item">
-                <img class="img-responsive" src="{% static "img/dog_banner.jpg" %}" style="width:979px;height:auto;"></div>
+                <div class="item"><a href="{% url "trade:item_detail" 1409 %}">
+                <img class="img-responsive" src="{% static "img/dog_banner.jpg" %}" style="width:979px;height:auto;"></a></div>
             </div><!-- Carousel nav -->
             <!--<a class="carousel-control left" data-slide="prev" href="#EventCarousel" style="font-size:10px;"><div style="margin-top:6px;"><i class="fas fa-angle-left fa-2x"></i></div></a>-->
             <!--<a class="carousel-control right" data-slide="next" href="#EventCarousel" style="font-size:10px;"><div style="margin-top:6px;"><i class="fas fa-angle-right fa-2x"></i></div></a>-->
