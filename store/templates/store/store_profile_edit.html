@@ -30,7 +30,7 @@
 <div class="row" style="padding:30px">
 <div class="container-fluid thumbnail" style="box-shadow:none; padding:20px;">
 
-    <form class="form-horizontal" id="uploadForm" action="" method="POST" enctype="multipart/form-data">
+    <form class="form-horizontal" name="uploadForm" id="uploadForm" action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="row">
 
@@ -277,6 +277,11 @@
         if(uploadFileList.length > maxUploadLength){
             // 파일 사이즈 초과 경고창
             $('#error_photo').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">총 업로드 가능 개수 '+ maxUploadLength +' 개를 초과하였습니다.</div>');
+            return;
+        }
+        
+        if(document.uploadForm.name.value == ""){
+            $('#error_title').html('<div class="text-center alert alert-warning alert-dismissible" role="alert">가게 이름을 정해주세요</div>');
             return;
         }
 
