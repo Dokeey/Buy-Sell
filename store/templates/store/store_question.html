@@ -111,7 +111,7 @@
 
             <div class="col-md-8 col-xs-8" >
                 <div class="bubble" >
-                    <a href="{% url 'store:store_sell_list' comm.author.storeprofile.pk %}">{{ comm.author }}</a>   
+                    <a href="{% url 'store:store_sell_list' comm.author.storeprofile.pk %}">{{ comm.author.storeprofile.name }}</a>   
                     &nbsp;&nbsp;  
                     <i class="far fa-clock"></i>{% simple_time comm.updated_at %}
 
@@ -144,7 +144,7 @@
 
                 <div class="col-md-8 col-xs-7">
                     <div class="bubble" >
-                        {{ replay.author }}  
+                        {{ replay.author.storeprofile.name }}  
                         &nbsp;&nbsp;  
                         <i class="far fa-clock"></i> {% simple_time replay.updated_at %}
 
