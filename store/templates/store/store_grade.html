@@ -164,7 +164,7 @@
     {% for grade in grades %}
 
          <div class="well">
-             <h4><a href="{% url 'store:store_sell_list' grade.author.storeprofile.pk %}">{{ grade.author }}</a></h4>
+             <h4><a href="{% url 'store:store_sell_list' grade.author.storeprofile.pk %}">{{ grade.author.storeprofile.name }}</a></h4>
              <div align="right" style="display: inline;float: right;" >
                 {% if request.user.pk == grade.author.pk %}
                   <a href="{% url "store:store_grade_edit" pk=stores.pk gid=grade.pk  %}"><i class="fas fa-edit" style="margin-right:10px"></i></a>
