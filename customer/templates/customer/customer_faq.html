@@ -6,28 +6,29 @@
     
     $(function(){
         var sBtn = $("div");    //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
-        sBtn.find("a").click(function(){   // sBtn에 속해 있는  a 찾아 클릭 하면.
-         sBtn.removeClass("actives");     // sBtn 속에 (active) 클래스를 삭제 한다.
-         $(this).children().addClass("actives"); // 클릭한 a에 (active)클래스를 넣는다.
+        sBtn.find("button").click(function(){   // sBtn에 속해 있는  a 찾아 클릭 하면.
+         sBtn.children().removeClass("actives");     // sBtn 속에 (active) 클래스를 삭제 한다.
+         $(this).addClass("actives"); // 클릭한 a에 (active)클래스를 넣는다.
         })
     })
 </script>
 <style>
     .title_box{
+        background-color: white;
         margin: 10px 5px 10px 10px;
         padding: 10px;
         border: 1px solid rgb(204, 195, 195);
-        width: 80%;
-        height: 100%;
+        width: 250px;
+        height: 150px;
         text-align: center;
     }.title_box:hover{
-        background-color: rgb(60, 245, 189);
+        background-color: #0fd9a6;
+        border: 1px solid rgb(204, 195, 195);
         color: white;
-        border: 2px solid white;
     }.actives{
-        background-color: rgb(60, 245, 189);
+        background-color: #0fd9a6;
+        border: 1px solid rgb(204, 195, 195);
         color: white;
-        border: 2px solid white;
     }
     .in_box_icon{
         font-size: 500%;
@@ -38,7 +39,7 @@
         padding: 10px;
     }
     .fass{
-        color: rgb(60, 245, 189);
+        color: #0fd9a6;
     }
     .button_title{
         border: 2px solid rgb(129, 92, 50); 
@@ -94,74 +95,48 @@
 </script>
 {% endblock %}
 {% block content %}
+
 <h2 class="text-center" style="padding:10px"><i class="fass fas fa-question"></i><i class="fass fas fa-question fa-rotate-180"></i><i class="fass fas fa-question"></i> 자주 묻는 질문</h2>
 <hr/>
-<nav class="navbar-default">
-        <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-    </button>
+
+    <div class="row">
+            <form style="width:58%; float: none; margin: 0 auto;" action="{% url "customer:customer_faq_search" %}">
+                {% csrf_token %}
+                <div class="input-group">
+                <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid rgb(129, 92, 50);" placeholder="무엇이 궁금하세요?" >
+                <span class="input-group-btn">
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="btn" type="submit" style="background-color:rgb(129, 92, 50); color:white; border:1px solid rgb(129, 92, 50); ">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+                </div>
+            </form>
     </div>
-    
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="padding:10px;">
-        <div class="row" style="padding:5px;">
-            <div align="center">
-                <form style="width:58%;" action="{% url "customer:customer_faq_search" %}">
-                    {% csrf_token %}
-                    <div class="input-group">
-                    <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid rgb(129, 92, 50);" placeholder="무엇이 궁금하세요?" >
-                    <span class="input-group-btn">
-                        <input type="hidden" name="next" value="{{ request.path }}">
-                        <button class="btn" type="submit" style="background-color:rgb(129, 92, 50); color:white; border:1px solid rgb(129, 92, 50); ">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <br/>
-
-        <ul class="nav nav-tabs nav-justified gold" >
-
-            <li role="presentation">
-                <div class="col-sm-12 col-xs-4">
-                    <a onclick="more_button('8_main')" href="#사용하기">
-                        <div class="title_box actives">
+    <br/>
+    <div class="row" style="align-items:center;">
+        <div class="container" style="text-align:center;">
+            <div class="col-sm-4 col-xs-12">
+                    <button class="title_box actives" onclick="more_button('8_main')" href="#사용하기">
                             <i class="fas fa-search in_box_icon"></i><br>
                             <div class="in_box_font">사용하기</div>
-                        </div>
-                    </a>
-                </div>
-            </li>
-            <li role="presentation">
-                <div class="col-sm-12 col-xs-4">
-                    <a onclick="more_button('9_main')" href="#거래하기">
-                        <div class="title_box">
-                            <i class="far fa-handshake in_box_icon"></i>
-                            <div class="in_box_font">거래하기</div>
-                        </div>
-                    </a>
-                </div>
-            </li>
-            <li role="presentation">    
-                <div class="col-sm-12 col-xs-4">
-                    <a onclick="more_button('6_main')" href="#물건받기">
-                        <div class="title_box">
-                            <i class="fas fa-gift in_box_icon"></i>
-                            <div class="in_box_font">물건받기 </div>
-                        </div>
-                    </a>
-                </div>
-            </li>
-        </ul>
-        <br/>
+                    </button>
+            </div>
+            <div class="col-sm-4 col-xs-12">
+                <button class="title_box" onclick="more_button('9_main')" href="#거래하기">
+                        <i class="far fa-handshake in_box_icon"></i>
+                        <div class="in_box_font">거래하기</div>
+                </button>
+            </div>  
+            <div class="col-sm-4 col-xs-12">
+                <button class="title_box" onclick="more_button('6_main')" href="#물건받기">
+                        <i class="fas fa-gift in_box_icon"></i>
+                        <div class="in_box_font">물건받기 </div>
+                </button>
+            </div>
+        </div>
+ 
     </div>
-</nav>
 
 <hr style="border: 1px solid rgb(204, 195, 195);">
 <div class="fades" id="8_main" style="text-align:center;">
@@ -202,7 +177,7 @@
 <hr style="border: 0.5px solid rgb(204, 195, 195);">
 {% for faq in faqs %}
     <div role="tabpanel" class="tab-pane fade button_in fade_in" id="{{ faq.pk }}" style="display:none;">
-            {{ faq.faq_content }}
+            {{ faq.faq_content|safe }}
     </div>
 {% endfor %}
 
