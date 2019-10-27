@@ -106,7 +106,7 @@ class StoreProfileInline(admin.StackedInline):
 @admin.register(get_user_model())
 class AdminUser(AuthUserAdmin):
     save_on_top = True
-    list_display = ('id', store_image,'username','email','user_phone', 'is_active', 'is_staff','item_ctn', 'hit_count', 'follow_count')
+    list_display = ('id', store_image, 'username','email','user_phone', 'is_active', 'is_staff','item_ctn', 'hit_count', 'follow_count')
     list_display_links = ['username']
     list_editable = ('is_active', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'date_joined')

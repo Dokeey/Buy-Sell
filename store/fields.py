@@ -32,8 +32,10 @@ class DefaultStaticImageFieldFile(ProcessedImageFieldFile):
             #     return staticfiles_storage.url(self.field.static_image_path)
             # static_image_path값에 해당하는 경로에 파일이 없다면
             # DEFAULT_IMAGE_PATH 경로의 파일을 사용합니다.
+            # print(self.field.static_image_path)
             img_path = get_random()
-            if self:
+            if not self.field.static_image_path:
+                self.field.static_image_path = img_path
                 res = requests.get(staticfiles_storage.url(img_path), stream=True)
                 self.save("default_image", ContentFile(res.content))
             # if not self.DEFAULT_IMAGE_PATH:
@@ -43,6 +45,7 @@ class DefaultStaticImageFieldFile(ProcessedImageFieldFile):
 class DefaultStaticProcessedImageField(ProcessedImageField):
     # field에 접근 시 프록시로 사용할 필드파일 클래스를 지정합니다.
     attr_class = DefaultStaticImageFieldFile
+    static_image_path = ''
 
     # def __init__(self, *args, **kwargs):
     #     # 필드의 속성중 'default_image_path'키로 주어진 값을 가져와 인스턴스의 static_image_path값으로 할당합니다.
