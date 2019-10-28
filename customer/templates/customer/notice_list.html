@@ -16,10 +16,17 @@
         }else{
             document.getElementById(id).style.display = 'none';
         }
+
+        jQuery('.note-video-clip').each(function(){
+            var tmp = jQuery(this).wrap('<p/>').parent().html();
+            jQuery(this).parent().html('<div class="embed-responsive embed-responsive-16by9">'+tmp+'</div>');
+          });
+
+        jQuery('img').each(function(){
+          jQuery(this).css('width', '100%');
+        });
     }
-
 </script>
-
 {% endblock %}
 
 {% block content %}
