@@ -34,7 +34,7 @@
 <hr style="border: 0.5px solid rgb(204, 195, 195);">
 {% for search in faq_search %}
     <div class="button_in fade_in" id="{{ search.pk }}" style="display:none;">
-            {{ search.faq_content }}
+            {{ search.faq_content|safe }}
     </div>
 
 {% empty %}
