@@ -13,18 +13,19 @@
         if( document.getElementById(id).style.display != '')
         {
             document.getElementById(id).style.display = '';
+
+            $('.note-video-clip').each(function(){
+                var tmp = jQuery(this).wrap('<p/>').parent().html();
+                $(this).parent().html('<div class="embed-responsive embed-responsive-16by9">'+tmp+'</div>');
+              });
+
+            $('.summer-content').each(function(){
+              $(this).children('p').children('img').css('width', '100%');
+            });
         }else{
             document.getElementById(id).style.display = 'none';
         }
 
-        jQuery('.note-video-clip').each(function(){
-            var tmp = jQuery(this).wrap('<p/>').parent().html();
-            jQuery(this).parent().html('<div class="embed-responsive embed-responsive-16by9">'+tmp+'</div>');
-          });
-
-        jQuery('img').each(function(){
-          jQuery(this).css('width', '100%');
-        });
     }
 </script>
 {% endblock %}
@@ -45,7 +46,7 @@
             </div>
           </div>
       </a>
-        <div role="tabpanel" class="tab-pane fade thumbnail" id="{{ list.pk }}" style="box-shadow:none; display:none; padding:20px; margin-bottom:15px; background-color:#eeeeee;">
+        <div role="tabpanel" class="tab-pane fade thumbnail summer-content" id="{{ list.pk }}" style="box-shadow:none; display:none; padding:20px; margin-bottom:15px; background-color:#eeeeee;">
             {{ list.notice_content|safe }}</div>
     {% endfor %}
   </ul>

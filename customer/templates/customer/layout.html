@@ -3,13 +3,13 @@
 {% block head %}
 <script>
     $(document).ready(function(){
-        jQuery('.note-video-clip').each(function(){
+        $('.note-video-clip').each(function(){
             var tmp = jQuery(this).wrap('<p/>').parent().html();
-            jQuery(this).parent().html('<div class="embed-responsive embed-responsive-16by9">'+tmp+'</div>');
+            $(this).parent().html('<div class="embed-responsive embed-responsive-16by9">'+tmp+'</div>');
           });
 
-        jQuery('img').each(function(){
-          jQuery(this).css('width', '100%');
+        $('.summer-content').each(function(){
+          $(this).children('p').children('img').css('width', '100%');
         });
     });
 
