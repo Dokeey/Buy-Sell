@@ -229,5 +229,11 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000
 
 # summernote conf
 SUMMERNOTE_CONFIG  = {
-    ' lang ' : ' ko-KR ' ,
+'summernote': {
+
+        # Change editor size
+        'width': '100%',
+        'height': '480',
+       ' lang ' : 'ko-KR',
+}
 }
