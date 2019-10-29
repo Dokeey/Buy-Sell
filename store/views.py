@@ -41,9 +41,15 @@ class StarStoreSearchList(ListView):
     def get(self, request, *args, **kwargs):
         self.query = self.request.GET.get('query', '')
 
+        if self.query.replace(' ', '') == '':
+            self.query = ''
+
         if self.query == '':
             messages.info(self.request, '검색어를 입력해주세요')
-            url = self.request.GET.get('next')
+            if self.request.GET.get('next'):
+                url = self.request.GET.get('next')
+            else:
+                url = "store:star_store_hit"
             return redirect(url)
         return super().get(request, *args, **kwargs)
 

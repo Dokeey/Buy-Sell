@@ -5,39 +5,49 @@
 <h2 class="text-center" style="padding:10px"><i class="fass fas fa-question"></i><i class="fass fas fa-question fa-rotate-180"></i><i class="fass fas fa-question"></i> 자주 묻는 질문</h2>
 <hr/>
 <div class="row" style="padding:20px 10px 0px 10px;">
-        <div align="center">
-            <form style="width:58%;" action="{% url "customer:customer_faq_search" %}">
-                {% csrf_token %}
-                <div class="input-group">
-                <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid rgb(129, 92, 50);" placeholder="무엇이 궁금하세요?" >
-                <span class="input-group-btn">
-                    <input type="hidden" name="next" value="{{ request.path }}">
-                    <button class="btn" type="submit" style="background-color:rgb(129, 92, 50); color:white; border:1px solid rgb(129, 92, 50); ">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </span>
-                </div>
-            </form>
-        </div>
+    <div align="center">
+        <form style="width:58%;" action="{% url "customer:customer_faq_search" %}">
+            {% csrf_token %}
+            <div class="input-group">
+            <input name="query" value="{{ query }}" type="search" class="form-control" style="border:1px solid rgb(129, 92, 50);" placeholder="무엇이 궁금하세요?" >
+            <span class="input-group-btn">
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button class="btn" type="submit" style="background-color:rgb(129, 92, 50); color:white; border:1px solid rgb(129, 92, 50); ">
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+            </div>
+        </form>
     </div>
-    <hr>
-<h2><span style="color:red">'{{ query }}'</span> 에 해당하는 질문</h2><hr/>
-<div>
+</div>
+<hr>
+
+<div class="row">
+    <h2><span style="color:red">'{{ query }}'</span> 에 해당하는 질문</h2><hr/>
+</div>
+
+<div class="row text-center">
 
     {% for search in faq_search %}
-        <button class="button_title" style="margin: 5px;" onclick="more_button2('{{ search.pk }}')" href="#{{ faq.pk }}" role="tab" data-toggle="tab">
+    <a href="#{{ search.pk }}">
+        <button class="btn button_title" style="margin: 5px;" onclick="more_button2('{{ search.pk }}')">
             {{ search.faq_title }}
         </button>
+    </a>
     {% endfor %}
   
 </div> 
-<hr style="border: 0.5px solid rgb(204, 195, 195);">
-{% for search in faq_search %}
-    <div class="button_in fade_in" id="{{ search.pk }}" style="display:none;">
-            {{ search.faq_content|safe }}
-    </div>
 
-{% empty %}
-<h2 align="center"><i class="far fa-flushed"></i>해당하는 질문을 찾을 수 없습니다.</h2>
-{% endfor %}
+<div class="row">
+    <hr style="border: 0.5px solid rgb(204, 195, 195);">
+    {% for search in faq_search %}
+        <div class="button_in fade_in" id="{{ search.pk }}" style="display:none;">
+                {{ search.faq_content|safe }}
+        </div>
+    
+    {% empty %}
+    <h2 align="center"><i class="far fa-flushed"></i>해당하는 질문을 찾을 수 없습니다.</h2>
+    {% endfor %}
+</div>
+
 {% endblock %}
