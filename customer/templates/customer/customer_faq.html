@@ -11,6 +11,14 @@
         });
         
     });
+    $(document).ready(function(){
+        var sBtn = $("a");
+        sBtn.find("button").click(function(){   // sBtn에 속해 있는  button 찾아 클릭 하면.
+            sBtn.children().removeClass("actives_in");
+            $(this).addClass("actives_in"); // 클릭한 a에 (active)클래스를 넣는다.
+        });
+        
+    });
 </script>
 
 <style>
@@ -43,21 +51,21 @@
         color: #0fd9a6;
     }
     .button_title{
+        white-space:normal;
         border: 2px solid rgb(129, 92, 50); 
         color:rgb(24, 3, 44); 
         background-color:white; 
-        height: 50px;
-        width: 300px;
+        min-height: 50px;
         font-weight: bold;
         font-size: 17px;
     } .button_title:hover{
-        border: 2px solid rgb(129, 92, 50); 
+        border: 2px solid rgb(129, 92, 50);
         color:white; 
         background-color:rgb(129, 92, 50); 
-        height: 50px;
-        width: 300px;
-        font-weight: bold;
-        font-size: 17px;
+    }.actives_in{ 
+        border: 2px solid rgb(129, 92, 50);
+        color:white; 
+        background-color:rgb(129, 92, 50); 
     }
     .button_in{
         margin:10px 17px 0px 5px; 
@@ -121,7 +129,7 @@
     <div class="container" style="text-align:center;">
         <div class="col-sm-4 col-xs-12">
             <ul class="nav nav-tabs" style="border: 0px;">
-                <button class="title_box actives" onclick="more_button('8_main')" >
+                <button class="btn title_box actives" onclick="more_button('8_main')" >
                         <i class="fas fa-search in_box_icon"></i><br>
                         <div class="in_box_font">사용하기</div>
                 </button>
@@ -129,7 +137,7 @@
         </div>
         <div class="col-sm-4 col-xs-12">
             <ul class="nav nav-tabs" style="border: 0px;">
-                <button class="title_box" onclick="more_button('9_main')" >
+                <button class="btn title_box" onclick="more_button('9_main')" >
                         <i class="far fa-handshake in_box_icon"></i>
                         <div class="in_box_font">거래하기</div>
                 </button>
@@ -137,7 +145,7 @@
         </div>  
         <div class="col-sm-4 col-xs-12">
             <ul class="nav nav-tabs" style="border: 0px;">
-                <button class="title_box" onclick="more_button('6_main')" >
+                <button class="btn title_box" onclick="more_button('6_main')" >
                         <i class="fas fa-gift in_box_icon"></i>
                         <div class="in_box_font">물건받기 </div>
                 </button>
@@ -150,41 +158,41 @@
 <hr style="border: 0.5px solid rgb(204, 195, 195);">
 
 <div class="row">
-        <div class="fades" id="8_main" style="text-align:center;">
-                {% for faq in faqs %}
-                {% if faq.faq_category.pk == 8 %}
+    <div class="fades" id="8_main" style="text-align:center;">
+        {% for faq in faqs %}
+            {% if faq.faq_category.pk == 8 %}
                 <a href="#{{ faq.faq_category.pk }}/{{ faq.pk }}">
-                    <button class="button_title " style="margin: 5px;" onclick="more_button2('{{ faq.faq_category.pk }}/{{ faq.pk }}')">
+                    <button class="btn button_title" style="margin: 5px;" onclick="more_button2('{{ faq.faq_category.pk }}/{{ faq.pk }}')">
                         {{ faq.faq_title }}
                     </button>
                 </a>
-                {% endif %}
-                {% endfor %}
-        </div>
-        
-        <div class="fades" id="9_main" style="display:none; text-align:center;">
-                {% for faq in faqs %}
-                {% if faq.faq_category.pk == 9 %}
+            {% endif %}
+        {% endfor %}
+    </div>
+    
+    <div class="fades" id="9_main" style="display:none; text-align:center;">
+        {% for faq in faqs %}
+            {% if faq.faq_category.pk == 9 %}
                 <a href="#{{ faq.faq_category.pk }}/{{ faq.pk }}">
-                    <button class="button_title" style="margin: 5px;" onclick="more_button2('{{ faq.faq_category.pk }}/{{ faq.pk }}')">
+                    <button class="btn button_title" style="margin: 5px;" onclick="more_button2('{{ faq.faq_category.pk }}/{{ faq.pk }}')">
                         {{ faq.faq_title }}
                     </button>
                 </a>
-                {% endif %}
-                {% endfor %}
-        </div>
-        
-        <div class="fades" id="6_main" style="display:none; text-align:center;">
-            {% for faq in faqs %}
-                {% if faq.faq_category.pk == 6 %}
-                    <a href="#{{ faq.faq_category.pk }}/{{ faq.pk }}">
-                        <button class="button_title" style="margin: 5px;" onclick="more_button2('{{ faq.faq_category.pk }}/{{ faq.pk }}')">
-                            {{ faq.faq_title }}
-                        </button>
-                    </a>
-                {% endif %}
-            {% endfor %}
-        </div> 
+            {% endif %}
+        {% endfor %}
+    </div>
+    
+    <div class="fades" id="6_main" style="display:none; text-align:center;">
+        {% for faq in faqs %}
+            {% if faq.faq_category.pk == 6 %}
+                <a href="#{{ faq.faq_category.pk }}/{{ faq.pk }}">
+                    <button class="btn button_title" style="margin: 5px;" onclick="more_button2('{{ faq.faq_category.pk }}/{{ faq.pk }}')">
+                        {{ faq.faq_title }}
+                    </button>
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div> 
 </div>
 
 <hr style="border: 0.5px solid rgb(204, 195, 195);">
