@@ -269,7 +269,11 @@ class Order(models.Model):
             # if self.amount != self.meta['amount']:
             #     pass
             self.status = self.meta['status']
+            if not commit:
+                self.status = 'cancelled'
+                self.meta['cancelled_at'] = int(time())
 
+        commit = True
         if self.status in ('reserv','paid'):
             self.item.pay_status = 'reservation'
             self.meta['paid_at'] = int(time())
@@ -287,6 +291,7 @@ class Order(models.Model):
             self.status = 'cancelled'
             self.meta['cancelled_at'] = int(time())
         try:
+            commit = False
             meta = self.api.cancel(reason, imp_uid=self.imp_uid)
             assert str(self.merchant_uid) == self.meta['merchant_uid']
             self.update(commit=commit, meta=meta)

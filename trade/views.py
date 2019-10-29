@@ -690,7 +690,7 @@ class TradeInfo(TemplateView):
             messages.error(self.request, '잘못된 접근입니다.')
             return redirect('root')
 
-        if not self.order.status in ('reserv','success'):
+        if not self.order.status in ('paid', 'reserv','success'):
             messages.error(self.request, '잘못된 접근입니다.')
             return redirect('root')
 

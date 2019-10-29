@@ -81,6 +81,9 @@ class SearchItemList(BaseItemList):
     def get(self, request, *args, **kwargs):
         self.query = self.request.GET.get('query', '')
 
+        if self.query.replace(' ','') == '':
+            self.query = ''
+
         if self.query == '':
             messages.info(self.request, '검색어를 입력해주세요')
             url = self.request.GET.get('next') or 'root'

@@ -28,6 +28,7 @@ class CustomerFAQ(models.Model):
     class Meta:
         verbose_name = "FAQ"
         verbose_name_plural = "FAQ"
+        ordering = ['faq_title']
 
 
 class CustomerAsk(models.Model):
