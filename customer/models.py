@@ -13,6 +13,11 @@ class CustomerCategory(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['name']
 
+
+    class Meta:
+        verbose_name = "1:1 카테고리"
+        verbose_name_plural = "1:1 카테고리"
+
 class CustomerFAQ(models.Model):
     faq_title = models.CharField(verbose_name="FAQ 제목", max_length=40)
     faq_category = TreeForeignKey(CustomerCategory, verbose_name="FAQ 카테고리", on_delete=models.CASCADE)
