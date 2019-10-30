@@ -70,7 +70,6 @@
     .button_in{
         margin:10px 17px 0px 5px; 
         padding:15px; 
-        border: 1px solid rgb(233, 126, 64)
     }
 </style>
 <script>
@@ -157,7 +156,9 @@
 
 <hr style="border: 0.5px solid rgb(204, 195, 195);">
 
-<div class="row">
+<div class="row" style="
+        border-left: 1px solid  rgb(204, 195, 195);
+        border-right: 1px solid  rgb(204, 195, 195);">
     <div class="fades" id="8_main" style="text-align:center;">
         {% for faq in faqs %}
             {% if faq.faq_category.pk == 8 %}
@@ -195,11 +196,14 @@
     </div> 
 </div>
 
-<hr style="border: 0.5px solid rgb(204, 195, 195);">
 
-<div class="row">
+<div class="row" style="
+        border-left: 1px solid  rgb(204, 195, 195);
+        border-right: 1px solid  rgb(204, 195, 195);
+        border-bottom: 1px solid  rgb(204, 195, 195);">
         {% for faq in faqs %}
-            <div class="button_in fade_in" id="{{ faq.faq_category.pk }}/{{ faq.pk }}" style="display:none;">
+            <div class="button_in fade_in summer-content" id="{{ faq.faq_category.pk }}/{{ faq.pk }}" style="display:none;">
+                <hr style="border-top: 0.5px solid rgb(233, 126, 64);padding:40px 0 0 0;">
                     {{ faq.faq_content|safe }}
             </div>
         {% endfor %}

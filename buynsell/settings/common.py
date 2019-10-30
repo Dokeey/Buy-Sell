@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 SECRET_KEY = '_ve!tya9hxp$#n$md(#@11o_x%de8dagvbm9j$+5z)$%&l%utx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -229,5 +229,11 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000
 
 # summernote conf
 SUMMERNOTE_CONFIG  = {
-    ' lang ' : ' ko-KR ' ,
+'summernote': {
+
+        # Change editor size
+        'width': '100%',
+        'height': '480',
+       ' lang ' : 'ko-KR',
+}
 }

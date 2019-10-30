@@ -56,6 +56,9 @@ def get_user_link(obj):
     ))
 get_user_link.short_description = ("사용자 자세히 보기")
 
+def store_id(obj=None):
+    return obj.pk
+store_id.short_description = '가게 ID'
 
 class QuestionCommentAdmin(admin.StackedInline):
     model = QuestionComment
@@ -86,8 +89,8 @@ class ProfileInline(admin.StackedInline):
 
 class StoreProfileInline(admin.StackedInline):
     model = StoreProfile
-    fields = ['name', store_image, 'photo', 'comment', store_follow_count, 'get_edit_link']
-    readonly_fields = [store_image,'get_edit_link', store_follow_count]
+    fields = [store_id, 'name', store_image, 'photo', 'comment', store_follow_count, 'get_edit_link']
+    readonly_fields = [store_id, store_image,'get_edit_link', store_follow_count]
 
     def get_edit_link(self, obj=None):
         if obj.pk:  # if object has already been saved and has a primary key, show link to it
@@ -103,7 +106,7 @@ class StoreProfileInline(admin.StackedInline):
 @admin.register(get_user_model())
 class AdminUser(AuthUserAdmin):
     save_on_top = True
-    list_display = ('id', store_image,'username','email','user_phone', 'is_active', 'is_staff','item_ctn', 'hit_count', 'follow_count')
+    list_display = ('id', store_image, 'username','email','user_phone', 'is_active', 'is_staff','item_ctn', 'hit_count', 'follow_count')
     list_display_links = ['username']
     list_editable = ('is_active', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'date_joined')
@@ -186,10 +189,10 @@ class AdminUser(AuthUserAdmin):
 @admin.register(ProxyStoreProfile)
 class StoreProfileAdmin(admin.ModelAdmin):
     save_on_top = True
-    list_display = ['user', 'name', 'hit_count']
+    list_display = ['id', 'user', 'name', 'hit_count']
     list_display_links = ['user', 'name']
-    fields = ['name', store_image, 'photo', 'comment', store_follow_count]
-    readonly_fields = [store_image, store_follow_count]
+    fields = [store_id, 'name', store_image, 'photo', 'comment', store_follow_count]
+    readonly_fields = [store_id, store_image, store_follow_count]
     inlines = [QuestionCommentAdmin, StoreGradeAdmin]
 
 

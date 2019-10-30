@@ -26,7 +26,9 @@
     <h2><span style="color:red">'{{ query }}'</span> 에 해당하는 질문</h2><hr/>
 </div>
 
-<div class="row text-center">
+<div class="row text-center" style="
+        border-left: 1px solid  rgb(204, 195, 195);
+        border-right: 1px solid  rgb(204, 195, 195);">
 
     {% for search in faq_search %}
     <a href="#{{ search.pk }}">
@@ -36,12 +38,15 @@
     </a>
     {% endfor %}
   
-</div> 
+</div>
 
-<div class="row">
-    <hr style="border: 0.5px solid rgb(204, 195, 195);">
+<div class="row" style="
+        border-left: 1px solid  rgb(204, 195, 195);
+        border-right: 1px solid  rgb(204, 195, 195);
+        border-bottom: 1px solid  rgb(204, 195, 195);">
     {% for search in faq_search %}
-        <div class="button_in fade_in" id="{{ search.pk }}" style="display:none;">
+        <div class="button_in fade_in summer-content" id="{{ search.pk }}" style="display:none;">
+            <hr style="border-top: 0.5px solid rgb(233, 126, 64);padding:40px 0 0 0;">
                 {{ search.faq_content|safe }}
         </div>
     

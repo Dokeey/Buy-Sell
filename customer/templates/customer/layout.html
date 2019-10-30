@@ -1,7 +1,19 @@
 {% extends "layout.html" %}
 
 {% block head %}
+<script>
+    $(document).ready(function(){
+        $('.note-video-clip').each(function(){
+            var tmp = jQuery(this).wrap('<p/>').parent().html();
+            $(this).parent().html('<div class="embed-responsive embed-responsive-16by9">'+tmp+'</div>');
+          });
 
+        $('.summer-content').each(function(){
+          $(this).children('p').children('img').css('width', '100%');
+        });
+    });
+
+</script>
     {% block customer_head %}
     {% endblock %}
 {% endblock %}
