@@ -31,7 +31,7 @@
                              </a><br/><br/>
                             <div class="row">
                                 <div class="col-xs-4" >
-                                    <a class="white" onclick="javascript:sharefacebook('{{ request.META.HTTP_HOST }}{{ request.path }}')">
+                                    <a class="white" onclick="javascript:sharefacebook('{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' stores.0.store_info.pk %}')">
                                         <i class="fab fa-facebook"></i>
                                     </a>
                                 </div>

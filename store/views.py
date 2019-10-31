@@ -111,7 +111,7 @@ class StarStoreHitListView(ListView):
         if context['my_hit'] == '':
             context['my_hit'] = '-'
         context['stores'] = search_hit
-
+        context['kakao_key'] = settings.KAKAO_KEY_JS
         return context
 
 class StarStoreGradeListView(ListView):
@@ -140,6 +140,7 @@ class StarStoreGradeListView(ListView):
         if context['my_grade'] == '':
             context['my_grade'] = '-'
         context['stores'] = search_grade
+        context['kakao_key'] = settings.KAKAO_KEY_JS
         return context
 
 class StarStoreSellListView(ListView):
@@ -167,6 +168,8 @@ class StarStoreSellListView(ListView):
         if context['my_sell'] == '':
             context['my_sell'] = '-'
         context['stores'] = search_sell
+        
+        context['kakao_key'] = settings.KAKAO_KEY_JS
         return context
     
     # def render_to_response(self, context, **response_kwargs):
@@ -203,7 +206,7 @@ class StarStoreFollowListView(ListView):
 
         if context['my_follow'] == '':
             context['my_follow'] = '-'
-
+        
         context['stores'] = search_follow
         # follow = Follow.objects.values_list('store',flat=True).annotate(foll_count=Count('store')).order_by('-foll_count')
         # print(follow)
@@ -217,6 +220,8 @@ class StarStoreFollowListView(ListView):
         #         context['my_follow'] = follow_list.index(self.request.user.storeprofile) + 1
         #     else:
         #         context['my_follow'] = '-'
+
+        context['kakao_key'] = settings.KAKAO_KEY_JS
         return context
 
 
@@ -260,11 +265,12 @@ class StoreSellListView(ListView):
         context['next'] = end_index + 1
         context['last_page'] = max_index
         context['page_range'] = page_range
-        context['kakao_key'] = settings.KAKAO_KEY_JS
         context['stores'] = self.store
         hit_count = HitCount.objects.get_for_object(context['stores'])
         context['hit_count_response'] = HitCountMixin.hit_count(self.request, hit_count)
         context['sort'] = self.request.GET.get('sort','-created_at')
+
+        context['kakao_key'] = settings.KAKAO_KEY_JS
         return context
 
     def get_queryset(self):
@@ -343,7 +349,7 @@ class StoreQuestionLCView(CreateView):
         elif self.sort == 'my':
             context['comms'] = self.model.objects.filter(author=self.request.user,store_profile_id=self.kwargs['pk'], parent__isnull=True)
         context['stores'] = get_object_or_404(StoreProfile, pk=self.kwargs['pk'])
-
+        context['kakao_key'] = settings.KAKAO_KEY_JS
         return context
         
     def get_success_url(self):
@@ -443,6 +449,8 @@ class StoreGradeListView(ListView):
 
         context['stores'] = StoreProfile.objects.get(pk=self.kwargs['pk'])
         context['sort'] = self.request.GET.get('sort','recent')
+
+        context['kakao_key'] = settings.KAKAO_KEY_JS
         return context
 
 @method_decorator(login_required, name='dispatch')

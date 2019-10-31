@@ -6,36 +6,36 @@
 {% block head %}
     {% block share_head %}
     <script>
-            $(document).ready(function () {
-                $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
-            });
-        </script>
-    <!--Facebook 공유 기능-->
+        $(document).ready(function () {
+            $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
+        });
+    </script>
+
       <meta property="og:url"           content="{{ request.META.HTTP_HOST }}{{ request.path }}" />
       <meta property="og:type"          content="website" />
       <meta property="og:title"         content="{{ stores.0.store_info.name }}" />
-      <meta property="og:description"   content="{{ stores.0.store_info.comment|linebreaks }}" />
+      <meta property="og:description"   content="인기가게를 소개합니다!!" />
       <meta property="og:image"         content="{{ stores.0.store_info.photo.url }}" />
-
-        <script>
+    <!--Facebook 공유 기능-->
+    <script>
         function sharefacebook(url) {
-            window.open("http://www.facebook.com/sharer/sharer.php?u=" + url);
+            window.open("https://www.facebook.com/sharer/sharer.php?u=" + url);
         }
-        </script>
+    </script>
     <!--Kakao Talk 공유 기능-->
             <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
             <script>
-                Kakao.init('43b0c47e22303f599cf49a0f42e75f86');
+                Kakao.init('{{ kakao_key }}');
                 function sendLink() {
                     Kakao.Link.sendDefault({
                       objectType: 'feed',
                       content: {
                        title: '{{ stores.0.store_info.name }}',
-                        description: 'Buy & Sell의 인기 가게!',
+                        description: '인기가게를 소개합니다!!',
                         imageUrl: '{{ stores.0.store_info.photo.url }}',
                         link: {
-                          webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                          mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                          webUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' stores.0.store_info.pk %}',
+                          mobileWebUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' stores.0.store_info.pk %}'
                         }
                       },
                     social: {
@@ -47,8 +47,8 @@
                         {
                            title: '인기 가게 구경가자!',
                           link: {
-                            mobileWebUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                            webUrl: 'http://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                            mobileWebUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' stores.0.store_info.pk %}',
+                            webUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' stores.0.store_info.pk %}'
                           }
                         }
                       ]

@@ -9,13 +9,13 @@
                 $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
             });
         </script>
-    <!--Facebook 공유 기능-->
+
       <meta property="og:url"           content="{{ request.META.HTTP_HOST }}{{ request.path }}" />
       <meta property="og:type"          content="website" />
       <meta property="og:title"         content="{{ stores.name }}" />
-      <meta property="og:description"   content="{{ stores.comment|linebreaks }}" />
+      <meta property="og:description"   content="Buy&Sell의 가게를 소개합니다." />
       <meta property="og:image"         content="{{ stores.photo.url }}" />
-
+    <!--Facebook 공유 기능-->
         <script>
         function sharefacebook(url) {
             window.open("https://www.facebook.com/sharer/sharer.php?u=" + url);
@@ -25,17 +25,17 @@
       <!--Kakao Talk 공유 기능-->
         <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
         <script>
-            Kakao.init('{{ kakao_key }}');
+                Kakao.init('{{ kakao_key }}');
             function sendLink() {
                 Kakao.Link.sendDefault({
                   objectType: 'feed',
                   content: {
                    title: '{{ stores.name }}',
-                    description: 'Buy & Sell 가게 공유',
+                    description: 'Buy&Sell의 가게를 소개합니다.',
                     imageUrl: '{{ stores.photo.url }}',
                     link: {
-                      webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                      mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                      webUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}',
+                      mobileWebUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}'
                     }
                   },
                 social: {
@@ -45,10 +45,10 @@
                 },
                   buttons: [
                     {
-                       title: 'Buy & Sell로!',
+                       title: 'Buy&Sell 가게 보러가기!',
                       link: {
-                        mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                        webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                        mobileWebUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}',
+                        webUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}'
                       }
                     }
                   ]
@@ -444,7 +444,7 @@
                 </div>
                 <br/>
                 <div class="col-md-12 col-xs-12" style="padding:10px">
-                    <div class="more">{{ stores.comment | linebreaks }}</div>
+                    <div class="more">{{ stores.comment | linebreaks | safe }}</div>
                 </div>
             </div> <hr/>
 

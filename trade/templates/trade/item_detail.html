@@ -9,7 +9,7 @@
     <!--Facebook 공유 기능-->
     <meta property="fb:app_id"        content="{{ facebook_key }}"/>
     <meta property="og:type"          content="website"/>
-    <meta property="og:url"           content="https://{{ request.META.HTTP_HOST }}{{ request.path }}" />
+    <meta property="og:url"           content="{{ request.META.HTTP_HOST }}{{ request.path }}" />
     <meta property="og:title"         content="{{ item.title }} {{ item.amount|intcomma }}원" />
     <meta property="og:description"   content="{{ item.desc|default:'-'|linebreaks }}" />
     <meta property="og:image"         content="{{ item.itemimage_set.first.photo.url }}" />
@@ -33,8 +33,8 @@
                 description: 'Buy & Sell에서 싸게 사자!',
                 imageUrl: '{{ item.itemimage_set.first.photo.url }}',
                 link: {
-                  webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                  mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                  webUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}',
+                  mobileWebUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}'
                 }
               },
             social: {
@@ -46,8 +46,8 @@
                 {
                   title: '빨리 사러가자!',
                   link: {
-                    mobileWebUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}',
-                    webUrl: 'https://{{ request.META.HTTP_HOST }}{{ request.path }}'
+                    mobileWebUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}',
+                    webUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}'
                   }
                 }
               ]
@@ -216,7 +216,7 @@
                     </button>
                 </div>
                 <div class="col-md-3">
-                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="javascript:sharefacebook('https://{{ request.META.HTTP_HOST }}{{ request.path }}')">
+                    <button class="btn btn-info col-md-12 col-xs-12" style="margin-bottom:10px" onclick="javascript:sharefacebook('{{ request.META.HTTP_HOST }}{{ request.path }}')">
                         <i class="fab fa-facebook-square"></i> 공유하기
                     </button>
                 </div>
