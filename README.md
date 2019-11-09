@@ -5,7 +5,7 @@
 
 ![image](https://img.shields.io/github/repo-size/Dokeey/Buy-Sell?color=yellow&label=Repo%20size&style=plastic)
 [![image](https://img.shields.io/website?down_color=red&down_message=down&label=website&style=plastic&up_color=green&up_message=up&url=https%3A%2F%2Fbuynsell.azurewebsites.net%2F)](https://buynsell.azurewebsites.net/)
-![image](https://img.shields.io/github/contributors/Dokeey/Buy-Sell?style=plastic)
+![image](https://img.shields.io/github/contributors-anon/Dokeey/Buy-Sell?style=plastic)
 
 ### 목적
 1. 기존 웹 중고거래의 불편함을 해소한 차별화된 중고거래 사이트를 만들기 위해 제작
@@ -27,5 +27,5 @@ PostgreSQL 11
 ### API
 Import 결제 API, 카카오 링크, 페이스북 Accounts Kit, 다음 주소 API
 
-## Contributors
+## Collaborator
 - [@thflthdi](https://github.com/thflthdi)
