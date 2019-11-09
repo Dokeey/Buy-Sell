@@ -3,9 +3,12 @@
 ## 소개
 > 편하고 안전한 중고거래를 위한 프로젝트
 
-![image](https://img.shields.io/github/repo-size/Dokeey/Buy-Sell?color=yellow&label=Repo%20size&style=plastic)
+![image](https://img.shields.io/github/contributors-anon/Dokeey/Buy-Sell?style=plastic&color=purple)
+![image](https://img.shields.io/github/v/release/Dokeey/Buy-Sell?color=orange&style=plastic)
+![image](https://img.shields.io/github/license/Dokeey/Buy-Sell?color=blue&style=plastic)
+![image](https://img.shields.io/github/repo-size/Dokeey/Buy-Sell?color=hotpink&label=Repo%20size&style=plastic)
 [![image](https://img.shields.io/website?down_color=red&down_message=down&label=website&style=plastic&up_color=green&up_message=up&url=https%3A%2F%2Fbuynsell.azurewebsites.net%2F)](https://buynsell.azurewebsites.net/)
-![image](https://img.shields.io/github/contributors-anon/Dokeey/Buy-Sell?style=plastic)
+![image](https://img.shields.io/github/stars/Dokeey/Buy-Sell?style=social)
 
 ### 목적
 1. 기존 웹 중고거래의 불편함을 해소한 차별화된 중고거래 사이트를 만들기 위해 제작
@@ -27,5 +30,13 @@ PostgreSQL 11
 ### API
 Import 결제 API, 카카오 링크, 페이스북 Accounts Kit, 다음 주소 API
 
-## Collaborator
+## Collaborators
+- [@hugo](https://github.com/Dokeey)
+  - Email : ehdgnv@naver.com
+  - role : Accounts, Mypage, Trade, Category, Admin page
 - [@thflthdi](https://github.com/thflthdi)
+  - Email : thflthdi@naver.com
+  - role : Store, Customer, Policy
+
+## License
+- MIT License
