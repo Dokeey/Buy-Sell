@@ -15,7 +15,7 @@ def get_random():
     rand = randrange(1,10)
     return '/static/profile/{}.png'.format(rand)
 
-@cleanup.ignore
+# @cleanup.ignore
 class StoreProfile(models.Model, HitCountMixin):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="유저", on_delete=models.CASCADE)
     name = models.CharField(max_length=20, verbose_name="가게명", unique=True)
