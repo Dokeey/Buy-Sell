@@ -106,11 +106,12 @@ except:
     user_pk = None
 
 class ItemComment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.CASCADE)
 
     if user_pk:
         user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자",
                                  on_delete=models.SET_DEFAULT, default=user_pk)
+    else:
+        user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.CASCADE)
 
     item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE)
     message = models.TextField(verbose_name="내용")

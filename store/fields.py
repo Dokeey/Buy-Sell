@@ -28,7 +28,7 @@ class DefaultStaticImageFieldFile(ProcessedImageFieldFile):
             from django.contrib.staticfiles import finders
 
             img_path = get_random()
-            self.static_image_path = img_path
+            # self.static_image_path = img_path
             if os.environ.get('DJANGO_SETTINGS_MODULE') == 'buynsell.settings.dev':
                 url = finders.find(img_path)
                 self.save(
@@ -47,4 +47,4 @@ class DefaultStaticImageFieldFile(ProcessedImageFieldFile):
 class DefaultStaticProcessedImageField(ProcessedImageField):
     # field에 접근 시 프록시로 사용할 필드파일 클래스를 지정합니다.
     attr_class = DefaultStaticImageFieldFile
-    static_image_path = ''
+    # static_image_path = ''

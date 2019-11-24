@@ -49,9 +49,10 @@ except:
 
 class QuestionComment(models.Model):
     store_profile = models.ForeignKey(StoreProfile, verbose_name="가게", on_delete=models.CASCADE)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.CASCADE)
     if user_pk:
         author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.SET_DEFAULT, default=user_pk)
+    else:
+        author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.CASCADE)
     comment = models.TextField(verbose_name="문의글", max_length=1000)
     created_at = models.DateTimeField(verbose_name="작성일", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="최근 업데이트", auto_now=True)
@@ -72,9 +73,10 @@ from trade.models import Item
 
 class StoreGrade(models.Model):
     store_profile = models.ForeignKey(StoreProfile, verbose_name="가게", on_delete=models.CASCADE)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.CASCADE)
     if user_pk:
         author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.SET_DEFAULT ,default=user_pk)
+    else:
+        author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.CASCADE)
     store_item = models.ForeignKey(Item, verbose_name="구매한 물품", on_delete=models.SET_NULL, null=True)
     grade_comment = models.TextField(verbose_name="물품평", max_length=250)
     rating = models.PositiveIntegerField(
