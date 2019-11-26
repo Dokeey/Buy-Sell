@@ -278,6 +278,9 @@ class Order(models.Model):
         if self.status in ('reserv','paid'):
             self.item.pay_status = 'reservation'
             self.meta['paid_at'] = int(time())
+        elif self.status == 'success':
+            self.item.pay_status = 'sale_complete'
+            self.meta['paid_at'] = int(time())
         else:
             self.item.pay_status = 'ready'
         self.item.save()

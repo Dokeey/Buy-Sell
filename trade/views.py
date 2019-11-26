@@ -425,12 +425,9 @@ class OrderNew(FormView):
         if form.cleaned_data['pay_choice'] == 'import':
             return redirect('trade:order_pay', self.kwargs.get('item_id'), str(order.merchant_uid))
         elif form.cleaned_data['pay_choice'] == 'bank_trans':
-            Order.objects.filter(user=self.request.user,
-                                 merchant_uid=order.merchant_uid,
-                                 status='ready'
-                                 ).update(status='reserv', is_active=False)
-            reserv_order = Order.objects.get(user=self.request.user, merchant_uid=order.merchant_uid, status='reserv')
-            reserv_order.update()
+            order.status = 'reserv'
+            order.is_active = False
+            order.update()
 
             # 물품 주문알림 메일 발송
             send_mail(
@@ -443,7 +440,7 @@ class OrderNew(FormView):
                 }),
             )
 
-            return redirect('trade:trade_info', reserv_order.id)
+            return redirect('trade:trade_info', order.id)
 
     def get_success_url(self):
         next_url = self.request.GET.get('next') or 'mypage:root'  # next get인자가 있으면 넣고 없으면 'profile' 넣기
@@ -561,10 +558,7 @@ class OrderConfirm(RedirectView):
 
             elif queryset.status in ('reserv','paid'):
                 queryset.status = 'success'
-                queryset.meta['paid_at'] = int(time())
-                queryset.item.pay_status = 'sale_complete'
-                queryset.item.save()
-                queryset.save()
+                queryset.update()
 
                 messages.info(self.request, '구매를 축하드립니다!!')
         except:
