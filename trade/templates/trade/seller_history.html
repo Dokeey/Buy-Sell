@@ -55,7 +55,7 @@
                     <a href="{% url "trade:seller_confirm" order.id %}"><button class="btn btn-primary col-xs-12"><i class="fa fa-check-circle"></i> 입금 확인</button></a><br>
                 </div>
                 {% endif %}
-                {% if order.status == 'paid' or order.status == 'reserv' %}
+                {% if order.status == 'paid' or order.status == 'reserv' and not order.is_active %}
                 <div class="row" style="margin:5px">
                     <a href="{% url "trade:order_cancle" order.id %}"><button class="btn btn-danger col-xs-12"><i class="fa fa-times"></i> 주문 취소</button></a>
                 </div>

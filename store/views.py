@@ -157,7 +157,6 @@ class StarStoreSellListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),rank=DenseRank('count')).order_by('rank')         
-        print(search_sell)
         context['my_sell'] = ''
         for i in search_sell:
             if i['rank']:

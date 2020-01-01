@@ -1,6 +1,6 @@
 
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count,F
 from django.shortcuts import get_object_or_404
 from hitcount.models import HitCount
 from rank import DenseRank
@@ -26,14 +26,23 @@ def store_rating(pk):
 
 @register.simple_tag
 def store_sell_list(pk):
-    stores = get_object_or_404(StoreProfile, pk=pk)
-    orders = Item.objects.filter(user=stores.user)
-    items = []
-    for order in orders:
-        item = len(order.order_set.filter(status='success'))
-        if item == 1:
-            items.append(item)
-    order = len(items)
+    order=0
+    search_sell = Order.objects.filter(status='success').values('item__user')
+    if not search_sell:
+        order = 0
+    else:
+        order1 =  Order.objects.filter(status='success').values('item__user').annotate(count=Count('item__user')).order_by('count')
+        for orders in order1:
+            if orders['item__user'] == pk :
+                order = orders['count']
+    # stores = get_object_or_404(StoreProfile, pk=pk)
+    # orders = Item.objects.filter(user=stores.user)
+    # items = []
+    # for order in orders:
+    #     item = len(order.order_set.filter(status='success'))
+    #     if item == 1:
+    #         items.append(item)
+    # order = len(items)
 
     return order
 

@@ -98,7 +98,7 @@ def item_block(item):
                 <hr style="margin:5px">
                 <i class="far fa-clock"></i>&nbsp;{time}<hr style="margin:5px">
                 <ul class="list-inline" style="min-height: 30px;">
-                  <li class="col-sm-6 col-xs-12"><a href="{user_link}"><b><i class="fas fa-user light-red lighter bigger-120"></i>&nbsp;{user}</b></a></li>
+                  <li class="col-sm-6 col-xs-12"><a href="{user_link}"><b><i class="fas fa-user light-red lighter bigger-120"></i> {user}</b></a></li>
                   <li class="pay-status col-sm-6 col-xs-12"><b>{pay_status}</b></li>
                 </ul>
             </div>

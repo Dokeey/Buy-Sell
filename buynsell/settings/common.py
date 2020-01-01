@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 SECRET_KEY = '_ve!tya9hxp$#n$md(#@11o_x%de8dagvbm9j$+5z)$%&l%utx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', False)
 
 ALLOWED_HOSTS = ['*']
 
@@ -101,11 +101,11 @@ DATABASES = {
     'default': {
         # Database 엔진으로 postgresql을 사용
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DJANGO_DB_NAME', 'buynselldb'),
-        'USER': os.environ.get('DJANGO_DB_USERNAME', 'bns'),
-        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD', 'wjdqhqhdks'),
-        'HOST': os.environ.get('DJANGO_DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DJANGO_DB_PORT', '5432'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
@@ -151,9 +151,9 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
 ]
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Media
 MEDIA_URL = '/media/' # 업로드 할 경로
@@ -173,10 +173,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'buysell0503@gmail.com' # ex) bum752@gmail.com
-EMAIL_HOST_PASSWORD = 'wjdqhqhdks1!' # ex) P@ssw0rd
-SERVER_EMAIL = 'buysell0503@gmail.com' # ex) bum752@gmail.com
-DEFAULT_FROM_MAIL = 'BuynSell' # ex) bum752
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+SERVER_EMAIL = os.environ.get('SERVER_EMAIL')
+DEFAULT_FROM_MAIL = 'BuynSell'
 
 
 from django.utils.translation import ugettext_lazy as _
@@ -214,10 +214,10 @@ SESSION_COOKIE_AGE = 3600   # 1시간
 SESSION_SAVE_EVERY_REQUEST = True   # 리퀘스트시 세션 정보 갱신 허용
 
 # KAKAO TALK API
-KAKAO_KEY_JS = '43b0c47e22303f599cf49a0f42e75f86'
+KAKAO_KEY_JS = os.environ.get('KAKAO_KEY_JS')
 
 # FACEBOOK API
-FACEBOOK_KEY = '642307389514788'
+FACEBOOK_KEY = os.environ.get('FACEBOOK_KEY')
 
 # Django SSL 통신 관련 설정
 # SECURE_SSL_REDIRECT = True

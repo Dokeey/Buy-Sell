@@ -22,7 +22,7 @@ admin.site.unregister(BlacklistUserAgent)
 admin.site.register(Permission)
 
 
-def store_image(obj):
+def store_image(obj=None):
 
     if type(obj) == get_user_model():
         link = reverse('admin:accounts_proxystoreprofile_change', args=[force_text(obj.storeprofile.pk)])
@@ -33,6 +33,8 @@ def store_image(obj):
             height=100,
         ))
     else:
+        if obj.name == '':
+            return 0
         link = reverse('admin:accounts_proxystoreprofile_change', args=[force_text(obj.pk)])
         return mark_safe('<a href="{link}"><img src="{url}" width="{width}" height={height} /></a>'.format(
             link=link,
