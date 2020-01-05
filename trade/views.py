@@ -64,9 +64,9 @@ class ItemNew(CreateView):
         data = {'is_valid': False, 'error':error}
         return JsonResponse(data)
 
-    def get_success_url(self):
-        self.success_url = reverse_lazy('store:store_sell_list', kwargs={'pk': self.request.user.storeprofile.id})
-        return super().get_success_url()
+    # def get_success_url(self):
+    #     self.success_url = reverse_lazy('store:store_sell_list', kwargs={'pk': self.request.user.storeprofile.id})
+    #     return super().get_success_url()
 
 
 # def item_detail(request, pk):
