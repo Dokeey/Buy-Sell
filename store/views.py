@@ -105,7 +105,7 @@ class StarStoreHitListView(ListView):
         for i in search_hit:
             if i['object_pk']:
                 i['store_info'] = StoreProfile.objects.get(pk=i['object_pk'])
-            if self.request.user.is_active:
+            if self.request.user.is_authenticated:
                 if i['object_pk'] == self.request.user.storeprofile.pk:
                     context['my_hit'] = i['rank']
         if context['my_hit'] == '':
@@ -133,7 +133,7 @@ class StarStoreGradeListView(ListView):
         for i in search_grade:
             if i['store_profile']:
                 i['store_info'] = StoreProfile.objects.get(pk=i['store_profile'])
-            if self.request.user.is_active:
+            if self.request.user.is_authenticated:
                 if i['store_profile'] == self.request.user.storeprofile.pk:
                     context['my_grade'] = i['rank']
 
@@ -161,7 +161,7 @@ class StarStoreSellListView(ListView):
         for i in search_sell:
             if i['rank']:
                 i['store_info'] = StoreProfile.objects.get(user_id=i['item__user'])
-            if self.request.user.is_active:
+            if self.request.user.is_authenticated:
                 if i['item__user'] == self.request.user.pk:
                     context['my_sell'] = i['rank']
         if context['my_sell'] == '':
@@ -173,7 +173,7 @@ class StarStoreSellListView(ListView):
     
     # def render_to_response(self, context, **response_kwargs):
     #     if context['stores'] == '<QuerySet []>':
-    #         print('nono')
+    #      
     #         return redirect('store:store_error')
     #     return super().render_to_response(
     #             context, **response_kwargs
@@ -199,7 +199,7 @@ class StarStoreFollowListView(ListView):
             if i['store']:
                 i['store_info'] = StoreProfile.objects.get(pk=i['store'])
 
-            if self.request.user.is_active:
+            if self.request.user.is_authenticated:
                 if self.request.user.storeprofile.pk == i['store']:
                     context['my_follow'] = i['rank']
 
@@ -208,7 +208,7 @@ class StarStoreFollowListView(ListView):
         
         context['stores'] = search_follow
         # follow = Follow.objects.values_list('store',flat=True).annotate(foll_count=Count('store')).order_by('-foll_count')
-        # print(follow)
+        
         # follow_list = []
         # for i in range(0, follow.count()):
         #     follow_list.append(StoreProfile.objects.get(pk=(follow[i])))
@@ -493,7 +493,6 @@ class StoreGradeEditView(UpdateView):
 
     def form_valid(self, form):
         gradeform = form.save(commit=False)
-        print(self.request.POST.get('rating'))
         gradeform.rating = self.request.POST.get('rating')
         gradeform.save()
         return redirect('store:store_grade', self.kwargs['pk'])

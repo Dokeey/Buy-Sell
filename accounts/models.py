@@ -88,3 +88,4 @@ class ProxyStoreProfile(StoreProfile):
         proxy = True
         verbose_name = "가게"
         verbose_name_plural = "가게"
+        ordering = ['-id']      

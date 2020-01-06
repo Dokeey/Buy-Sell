@@ -39,6 +39,7 @@ class StoreProfile(models.Model, HitCountMixin):
     class Meta:
         verbose_name = "가게"
         verbose_name_plural = "가게"
+        ordering = ['-id']
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -52,7 +53,6 @@ class QuestionComment(models.Model):
     if user_pk:
         author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.SET_DEFAULT, default=user_pk)
     else:
-        print(get_user_model().objects.all())
         author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자", on_delete=models.CASCADE)
     comment = models.TextField(verbose_name="문의글", max_length=1000)
     created_at = models.DateTimeField(verbose_name="작성일", auto_now_add=True)

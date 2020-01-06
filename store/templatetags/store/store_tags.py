@@ -70,7 +70,6 @@ search_follow = Follow.objects.values('store').annotate(foll_count=Count('store'
 @register.simple_tag
 def star_grade(pk):
     context={}
-    print(search_follow)
     #hit rank
     for i in search_hit:
         if i['object_pk'] == pk.pk:
