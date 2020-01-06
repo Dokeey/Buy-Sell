@@ -254,40 +254,42 @@ background: #0fd9a6;
                 <!-- Carousel items -->
                 <div class="carousel-inner text-center">
                     {% for item in items|slice:"12" %}
-                        {% if forloop.counter0|divisibleby:4 %}
-                    <div class="item {% if forloop.counter == 1 %}active{% endif %}">
-                        <div class="row">
-                          <div class="col-sm-3 col-xs-6">
-                              {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
-                              <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                  <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
-                                  <br>
-                                  <b>{{ item.title }}</b><br>
-                                  {{ item.amount|intcomma }} 원
-                              </a>
-                          </div>
-                        {% elif forloop.counter|divisibleby:4 or forloop.last %}
-                          <div class="col-sm-3 col-xs-6">
-                              {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
-                              <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                  <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
-                                  <br>
-                                  <b>{{ item.title }}</b><br>
-                                  {{ item.amount|intcomma }} 원
-                              </a>
-                          </div>
-                        </div><!--.row-->
-                    </div><!--.item-->
-                        {% else %}
-                          <div class="col-sm-3 col-xs-6">
-                              {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
-                              <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                  <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
-                                  <br>
-                                  <b>{{ item.title }}</b><br>
-                                  {{ item.amount|intcomma }} 원
-                              </a>
-                          </div>
+                        {% if item.itemimage_set.first.photo %}
+                            {% if forloop.counter0|divisibleby:4 %}
+                        <div class="item {% if forloop.counter == 1 %}active{% endif %}">
+                            <div class="row">
+                              <div class="col-sm-3 col-xs-6">
+                                  {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
+                                  <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
+                                      <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
+                                      <br>
+                                      <b>{{ item.title }}</b><br>
+                                      {{ item.amount|intcomma }} 원
+                                  </a>
+                              </div>
+                            {% elif forloop.counter|divisibleby:4 or forloop.last %}
+                              <div class="col-sm-3 col-xs-6">
+                                  {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
+                                  <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
+                                      <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
+                                      <br>
+                                      <b>{{ item.title }}</b><br>
+                                      {{ item.amount|intcomma }} 원
+                                  </a>
+                              </div>
+                            </div><!--.row-->
+                        </div><!--.item-->
+                            {% else %}
+                              <div class="col-sm-3 col-xs-6">
+                                  {% thumbnail "167x167" item.itemimage_set.first.photo as thumb %}
+                                  <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
+                                      <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
+                                      <br>
+                                      <b>{{ item.title }}</b><br>
+                                      {{ item.amount|intcomma }} 원
+                                  </a>
+                              </div>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
 

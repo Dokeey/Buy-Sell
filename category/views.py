@@ -79,7 +79,7 @@ class SearchItemList(BaseItemList):
     template_name = 'category/search_item.html'
 
     def get(self, request, *args, **kwargs):
-        self.query = self.request.GET.get('query', '')
+        self.query = self.request.GET.get('query', '').strip()
 
         if self.query.replace(' ','') == '':
             self.query = ''

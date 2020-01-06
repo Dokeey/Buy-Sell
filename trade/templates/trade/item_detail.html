@@ -507,10 +507,10 @@
             {% endfor %}
             </div>
 
-            {% if items_ctn > 4 %}
+            {% if items_ctn > 3 %}
                 <div class="row text-center" style="margin-bottom:50px">
                     <a class="col-xs-12" style="height:40px;" href="{% url "store:store_sell_list" item.user.storeprofile.id %}">
-                        남은 <b style="color:red;">{{ items_ctn|add:"-4" }}개</b> 물품 보러가기
+                        남은 <b style="color:red;">{{ items_ctn|add:"-3" }}개</b> 물품 보러가기
                         <hr>
                     </a>
                 </div>

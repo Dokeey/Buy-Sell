@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
@@ -146,15 +147,8 @@ class ItemDetail(MultipleObjectMixin, CreateView):
         context['wish_ctn'] = WishList.objects.filter(item=context['item']).count()
         context['follow_ctn'] = Follow.objects.filter(store=context['item'].user.storeprofile).count()
 
-        items = context['item'].user.item_set.filter(pay_status='ready')
-        item_list = []
-        for item in items:
-            if item == context['item']: continue
-            if len(item_list) == 3: break
-            item_list.append(item)
-
-        context['items'] = item_list
-        context['items_ctn'] = items.count()
+        context['items'] = context['item'].user.item_set.filter(~Q(id=context['item'].id), pay_status='ready')[:3]
+        context['items_ctn'] = context['items'].count()
         context['kakao_key'] = settings.KAKAO_KEY_JS
         context['facebook_key'] = settings.FACEBOOK_KEY
         return context
@@ -175,6 +169,7 @@ class ItemDetail(MultipleObjectMixin, CreateView):
         item = get_object_or_404(Item, pk=self.kwargs.get('pk'))
         form.instance.item = item
         self.object = form.save()
+
         # 물품 문의알림 메일 발송
         if item.itemcomment_set.all().count() % 5 == 1:
             send_mail(
@@ -296,7 +291,7 @@ class CommentUpdate(UpdateView):
         comment = get_object_or_404(ItemComment, pk=self.kwargs.get(self.pk_url_kwarg))
         self.object = form.save()
 
-        data = {'id':comment.id, 'msg':form.cleaned_data['message']}
+        data = {'id': comment.id, 'msg': form.cleaned_data['message']}
         return JsonResponse(data)
 
 # def comment_delete(reuqest, pk, cid):
@@ -324,7 +319,7 @@ class CommentDelete(DeleteView):
         self.object.delete()
 
         cmt_ctn = item.itemcomment_set.all().count()
-        data = {'id':id,'cmt_ctn':cmt_ctn}
+        data = {'id': id, 'cmt_ctn': cmt_ctn}
         return JsonResponse(data)
 
 # def order_new(request, item_id):
