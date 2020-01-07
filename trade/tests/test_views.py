@@ -9,7 +9,7 @@ from django.urls import reverse
 
 # 물품 모델 테스트
 from trade.forms import PayForm
-
+from accounts.models import Profile
 from category.models import Category
 from trade.models import Item, Order, ItemImage, ItemComment
 from store.models import StoreProfile
@@ -367,3 +367,95 @@ class CommentDeleteTest(TestCase):
         self.assertTrue(Item.objects.filter(id=self.item.id).exists())
         self.assertFalse(ItemComment.objects.filter(id=self.cmt.id).exists())
         self.assertEquals(response.status_code, 200)
+
+
+
+class OrderNewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # 구매자
+        cls.order = get_user_model().objects.create_user(username='order', email='order@test.com', password='1234')
+        StoreProfile.objects.create(user=cls.order, name='order가게')
+        Profile.objects.create(
+            user=cls.order,
+            phone='0123456789',
+            post_code='111',
+            address='상암동',
+            detail_address='101호',
+            account_num='123'
+        )
+        # 판매자
+        cls.seller = get_user_model().objects.create_user(username='seller', email='seller@test.com', password='1234')
+        StoreProfile.objects.create(user=cls.seller, name='seller가게')
+        Profile.objects.create(
+            user=cls.seller,
+            phone='0122222222',
+            post_code='13321',
+            address='둔촌동',
+            detail_address='301호',
+            account_num='321'
+        )
+        # 판매자 물품
+        cls.cate = Category.objects.create(name='전자제품')
+        cls.item = Item.objects.create(user=cls.seller, category=cls.cate, title='[중고]닌텐도셋트', amount=100000)
+
+    # 비회원 접근
+    def test_view_url_name(self):
+        response = self.client.get(reverse('trade:order_new', kwargs={'item_id': self.item.id}))
+        self.assertRedirects(response, '/accounts/login/?next=/trade/order/new/{}/'.format(self.item.id))
+
+    # 본인 물품 접근
+    def test_get_seller_login(self):
+        self.client.login(username='seller', password='1234')
+        response = self.client.get(reverse('trade:order_new', kwargs={'item_id': self.item.id}), follow=True)
+        self.assertEquals(list(response.context.get('messages'))[0].message, '자신의 물품은 구매할수 없습니다.')
+        self.assertEquals(response.status_code, 200)
+
+    # 예약 or 판매완료 물품 접근
+    def test_get_sells_item(self):
+        self.client.login(username='order', password='1234')
+        item = Item.objects.create(user=self.seller, category=self.cate, title='[중고]맥북', amount=100000, pay_status='reservation')
+        response = self.client.get(reverse('trade:order_new', kwargs={'item_id': item.id}), follow=True)
+        self.assertEquals(list(response.context.get('messages'))[0].message, '이미 예약이 되었거나 판매완료 상품입니다.')
+        self.assertEquals(response.status_code, 200)
+
+    # 회원 접근 (정상)
+    def test_get_order_item(self):
+        self.client.login(username='order', password='1234')
+        response = self.client.get(reverse('trade:order_new', kwargs={'item_id': self.item.id}))
+        self.assertEquals(response.status_code, 200)
+
+
+    def test_post_order_item_import(self):
+        self.client.login(username='order', password='1234')
+        response = self.client.post(reverse('trade:order_new', kwargs={'item_id': self.item.id}), {
+            'username': '홍길동',
+            'phone': '0123456789',
+            'post_code': '111',
+            'address': '상암동',
+            'detail_address': '101호',
+            'email': 'order@aaa.com',
+            'pay_choice': 'import'
+        })
+
+        order = Order.objects.get(item=self.item, user=self.order)
+        self.assertTrue('/trade/order/{}/pay/'.format(self.item.id) in response['Location'])
+        self.assertRedirects(response, '/trade/order/{}/pay/{}/'.format(self.item.id, str(order.merchant_uid)))
+
+
+    def test_post_order_item_banktrans(self):
+        self.client.login(username='order', password='1234')
+        response = self.client.post(reverse('trade:order_new', kwargs={'item_id': self.item.id}), {
+            'username': '홍길동',
+            'phone': '0123456789',
+            'post_code': '111',
+            'address': '상암동',
+            'detail_address': '101호',
+            'email': 'order@aaa.com',
+            'pay_choice': 'bank_trans'
+        }, HTTP_HOST='example.com')
+
+        order = Order.objects.get(item=self.item, user=self.order)
+        self.assertRedirects(response, '/trade/info/{}/'.format(order.id))
+        self.assertEquals(order.status, 'reserv')
+        self.assertEquals(order.is_active, False)

@@ -363,6 +363,7 @@ class CommentDelete(DeleteView):
 #     })
 
 
+# 물품 구매하기
 @method_decorator(login_required, name='dispatch')
 class OrderNew(FormView):
     form_class = OrderForm
@@ -389,7 +390,7 @@ class OrderNew(FormView):
 
 
     def get_initial(self):
-        self.initial = {'email':self.request.user.email}
+        self.initial = {'email': self.request.user.email}
         return super().get_initial()
 
 
@@ -458,6 +459,7 @@ class OrderNew(FormView):
 #     })
 
 
+# Import 연동
 @method_decorator(login_required, name='dispatch')
 class OrderPay(CreateView):
     model = Order
@@ -503,6 +505,7 @@ class OrderPay(CreateView):
 #     return redirect('trade:trade_history')
 
 
+# 구매취소
 @method_decorator(login_required, name='dispatch')
 class OrderCancle(RedirectView):
     url = 'trade:order_history'
@@ -531,6 +534,7 @@ class OrderCancle(RedirectView):
         return redirect(self.url)
 
 
+# 구매확정
 @method_decorator(login_required, name='dispatch')
 class OrderConfirm(RedirectView):
     url = 'trade:order_history'
@@ -562,6 +566,7 @@ class OrderConfirm(RedirectView):
         return redirect(self.url)
 
 
+# 입금확인
 @method_decorator(login_required, name='dispatch')
 class SellerConfirm(RedirectView):
     url = 'trade:seller_history'
@@ -604,6 +609,7 @@ class SellerConfirm(RedirectView):
 #     })
 
 
+# 거래내역
 class BaseHistory(ListView):
     model = Order
     template_name = 'trade/order_history.html'
@@ -633,6 +639,7 @@ class BaseHistory(ListView):
         return context
 
 
+# 구매내역
 @method_decorator(login_required, name='dispatch')
 class OrderHistory(BaseHistory):
     context_object_name = 'order_list'
@@ -648,6 +655,7 @@ class OrderHistory(BaseHistory):
 
 
 
+# 판매내역
 @method_decorator(login_required, name='dispatch')
 class SellerHistory(BaseHistory):
     template_name = 'trade/seller_history.html'
@@ -669,6 +677,7 @@ class SellerHistory(BaseHistory):
         return context
 
 
+# 거래에 필요한 구매자, 판매자 정보
 @method_decorator(login_required, name='dispatch')
 class TradeInfo(TemplateView):
     template_name = 'trade/trade_info.html'

@@ -9,12 +9,14 @@ class WishList(models.Model):
     item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE)
 
     class Meta:
+        ordering = ('-id',)
         verbose_name = "찜 목록"
         verbose_name_plural = "찜 목록"
 
 class ProxyOrder(Order):
     class Meta:
         proxy = True
+        ordering = ('-id',)
         verbose_name = "거래 내역"
         verbose_name_plural = "거래 내역"
 
@@ -26,5 +28,6 @@ class Follow(models.Model):
     store = models.ForeignKey(StoreProfile, verbose_name="가게", on_delete=models.CASCADE)
 
     class Meta:
+        ordering = ('-id',)
         verbose_name = "팔로우"
         verbose_name_plural = "팔로우"
