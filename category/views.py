@@ -105,7 +105,7 @@ class SearchItemList(BaseItemList):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['all_category'] = self.qs.values('category__name','category__id').annotate(category_count = Count('id')).order_by('category__parent')
+        context['all_category'] = self.qs.values('category__name', 'category__id').annotate(category_count=Count('id')).order_by('category__parent')
 
         context['query'] = self.query
         context['cate'] = self.cate
@@ -120,13 +120,13 @@ class CategoryItemList(BaseItemList):
 
     def get_queryset(self):
         category = get_object_or_404(Category, pk=self.kwargs.get('pk'))
-        self.flag = self.request.GET.get('parent','')
+
+        self.flag = self.request.GET.get('parent', '')
         if self.flag:
             self.queryset = category.item_set.all()
             return super().get_queryset()
 
         categories_items = []
-
         for cate in category.get_descendants(include_self=True):
             [categories_items.append(item.id) for item in cate.item_set.all()]
 

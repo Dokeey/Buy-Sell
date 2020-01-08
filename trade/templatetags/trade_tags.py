@@ -77,7 +77,10 @@ def item_block(item):
     hit_count = item.hit_count.hits
     title = item.title
     amount = intcomma(item.amount)
-    photo_url = item.itemimage_set.first().photo.url
+    if item.itemimage_set.first():
+        photo_url = item.itemimage_set.first().photo.url
+    else:
+        photo_url = None
     item_status = item.get_item_status_display()
     pay_status = status_check(item.get_pay_status_display())
     updated_at = item.updated_at.strftime("%Y년 %m월 %d일")
@@ -108,7 +111,6 @@ def item_block(item):
                title=title,
                amount=amount,
                next_link=next_link,
-               photo_url=photo_url,
                photos=photos(item),
                item_status=item_status,
                pay_status=pay_status,
