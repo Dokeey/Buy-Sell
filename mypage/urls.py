@@ -6,6 +6,7 @@ app_name = 'mypage'
 
 urlpatterns = [
     path('', lambda req: redirect('mypage:wishlist'), name='root'),
+
     path('wishlist/', views.WishListLV.as_view(), name='wishlist'),
     path('wishlist/<int:item_id>/', views.WishListTV.as_view(), name='wishlist_action'),
 

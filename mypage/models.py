@@ -13,6 +13,10 @@ class WishList(models.Model):
         verbose_name = "찜 목록"
         verbose_name_plural = "찜 목록"
 
+    def __str__(self):
+        return self.item.title
+
+
 class ProxyOrder(Order):
     class Meta:
         proxy = True
@@ -31,3 +35,6 @@ class Follow(models.Model):
         ordering = ('-id',)
         verbose_name = "팔로우"
         verbose_name_plural = "팔로우"
+
+    def __str__(self):
+        return self.store.name
