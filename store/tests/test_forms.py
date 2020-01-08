@@ -38,7 +38,7 @@ class StoreProfileFormTest(TestCase):
         post_dict = {'name':'test', 'comment': 'hi'}
         file_dict = {'photo': SimpleUploadedFile(photo_file.name, photo_file.read())}
         form = StoreProfileForm(post_dict, file_dict)
-        # print(form)
+       
 
         self.assertTrue(form.is_valid())
         storeprofile = form.save(commit = False)
