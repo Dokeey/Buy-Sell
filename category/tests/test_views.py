@@ -21,14 +21,14 @@ class CategoryItemListTest(TestCase):
 
         item_ctn = 10
         for ctn in range(item_ctn):
-            Item.objects.create(user=seller, category=cls.cate, title='[중고]{}'.format(ctn), amount=100000)
-            Item.objects.create(user=seller, category=cls.sub_cate, title='[중고]모니터{}'.format(ctn), amount=50000)
+            Item.objects.create(user=seller, category=cls.cate, title='[중고]{}'.format(ctn), amount=100000+ctn)
+            Item.objects.create(user=seller, category=cls.sub_cate, title='[중고]모니터{}'.format(ctn), amount=50000+ctn)
 
 
     def test_parent_category(self):
-        response = self.client.get(reverse('category:category_item', kwargs={'pk': self.cate.id}))
+        response = self.client.get(reverse('category:category_item', kwargs={'pk': self.cate.id}), {'parent': True})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.context['items'].count(), 20)
+        self.assertEqual(response.context['items'].count(), 10)
         self.assertFalse(response.context['parent_category'].exists())
 
 
@@ -37,6 +37,13 @@ class CategoryItemListTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['items'].count(), 10)
         self.assertQuerysetEqual(response.context['parent_category'], ['<Category: 전자제품>'])
+
+
+    def test_ordering(self):
+        response = self.client.get(reverse('category:category_item', kwargs={'pk': self.cate.id}), {'sort': 'hprice'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['items'].first().amount, 100009)
+        # self.assertEqual(response.context['items'].last().amount, 50000)
 
 
 
@@ -51,8 +58,8 @@ class SearchItemListTest(TestCase):
 
         item_ctn = 10
         for ctn in range(item_ctn):
-            Item.objects.create(user=seller, category=cls.cate, title='[중고]{}'.format(ctn), desc='설명{}'.format(ctn+1), amount=100000)
-            Item.objects.create(user=seller, category=cls.sub_cate, title='[중고]모니터{}'.format(ctn), desc='sub설명{}'.format(ctn+1), amount=50000)
+            Item.objects.create(user=seller, category=cls.cate, title='[중고]{}'.format(ctn), desc='설명{}'.format(ctn+1), amount=100000+ctn)
+            Item.objects.create(user=seller, category=cls.sub_cate, title='[중고]모니터{}'.format(ctn), desc='sub설명{}'.format(ctn+1), amount=50000+ctn)
 
 
     def test_query(self):
@@ -73,3 +80,10 @@ class SearchItemListTest(TestCase):
         response = self.client.get(reverse('category:search_item'), {'query': ''}, follow=True)
         self.assertEqual(list(response.context.get('messages'))[0].message, '검색어를 입력해주세요')
         self.assertRedirects(response, '/')
+
+
+    def test_ordering(self):
+        response = self.client.get(reverse('category:search_item'), {'query': '3 ', 'cate': self.sub_cate.id, 'sort': 'hprice'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['items'].first().amount, 50003)
+        # self.assertEqual(response.context['items'].last().amount, 50000)
