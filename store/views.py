@@ -105,7 +105,7 @@ class StarStoreHitListView(ListView):
         for i in search_hit:
             if i['object_pk']:
                 i['store_info'] = StoreProfile.objects.get(pk=i['object_pk'])
-            if self.request.user.is_authenticated:
+            if self.request.user.is_active:
                 if i['object_pk'] == self.request.user.storeprofile.pk:
                     context['my_hit'] = i['rank']
         if context['my_hit'] == '':
@@ -127,7 +127,11 @@ class StarStoreGradeListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_grade = StoreGrade.objects.values('store_profile').annotate(count=Count('rating'), rating_sum=Cast(Sum('rating'),FloatField())/Cast( Count('rating'), FloatField()),rank=Cast(DenseRank('rating_sum'), IntegerField())).order_by('-rating_sum', '-count')
+        search_grade = StoreGrade.objects.values('store_profile').annotate(
+                count=Count('rating'), 
+                rating_sum=Cast(Sum('rating'), FloatField())/Cast(Count('rating'), FloatField()),
+                rank=Cast(DenseRank('rating_sum'), IntegerField())
+            ).order_by('-rating_sum', '-count')
 
         context['my_grade'] = ''
         for i in search_grade:

@@ -3,8 +3,10 @@ from django.urls import reverse
 
 from hitcount.models import HitCount
 from django.contrib.auth import get_user_model
-from store.models import StoreProfile
+from store.models import StoreProfile, StoreGrade
 from django.contrib.contenttypes.models import ContentType
+
+
 class StarStoreSearchListViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -37,19 +39,26 @@ class StarStoreSearchListViewTest(TestCase):
 class StarStoreHitListViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        #hit 인기순위 잘 나오는지
-        #마이 히트가 잘 나오는지
-        number_of_users = 3
+        # number_of_users = 3
 
-        for user_id in range(number_of_users):
-            users = get_user_model().objects.create(username=f'test{user_id}', email=f't{user_id}@test.com', is_active=True)
-            users.set_password('Test1234')
-            users.save()
-            StoreProfile.objects.create(user=users, name=f'test{user_id}')
-        
+        # for user_id in range(number_of_users):
+        #     users = get_user_model().objects.create_user(username=f'test{user_id}', email=f't{user_id}@test.com', password='Test1234')
+        #     stores = StoreProfile.objects.create(user=users, name=f'test{user_id}')
+
+        user0 = get_user_model().objects.create_user(username='test0', email='t00@test.com', password='Test1234')
+        store0 = StoreProfile.objects.create(user=user0, name='test0')
+        cls.store0 = store0
+
+        user1 = get_user_model().objects.create_user(username='test1', email='t01@test.com', password='Test1234')
+        store1 = StoreProfile.objects.create(user=user1, name='test1')    
+        cls.store1 = store1
+
+        user2 = get_user_model().objects.create_user(username='test2', email='t02@test.com', password='Test1234')
+        store2 = StoreProfile.objects.create(user=user2, name='test2')
+        cls.store2 = store2
+            
     def test_hit_count(self):
-
-        response = self.client.get(reverse('store:store_sell_list', args=['11']))
+        response = self.client.get(reverse('store:store_sell_list', args=[self.store0.pk]))
         self.assertEqual(response.status_code, 200)
 
         ctype = ContentType.objects.get_for_model(StoreProfile)
@@ -61,7 +70,7 @@ class StarStoreHitListViewTest(TestCase):
         # test1가 test0번의 가게만 방문
         self.login = self.client.login(username='test1', password='Test1234')
         self.assertEqual(self.login, True)
-        self.client.get(reverse('store:store_sell_list', args=['11']))
+        self.client.get(reverse('store:store_sell_list', args=[self.store0.pk]))
         
         self.client.logout()
 
@@ -69,8 +78,8 @@ class StarStoreHitListViewTest(TestCase):
         self.login = self.client.login(username='test2', password='Test1234')
         self.assertEqual(self.login, True)
         
-        self.client.get(reverse('store:store_sell_list', args=['11']))
-        self.client.get(reverse('store:store_sell_list', args=['12']))
+        self.client.get(reverse('store:store_sell_list', args=[self.store0.pk]))
+        self.client.get(reverse('store:store_sell_list', args=[self.store1.pk]))
 
         self.client.logout()
 
@@ -79,34 +88,24 @@ class StarStoreHitListViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
         for i in response.context['stores']:
-            if i['object_pk'] == 11:
+            if i['object_pk'] == self.store0.pk:
                 test0_rank = i['rank']
-            if i['object_pk'] == 12 :
-                test1_rank = i['rank']
+            if i['object_pk'] == self.store1.pk :
+                test1_rank = i['rank'] 
+        
 
         self.assertEqual(test0_rank, 1)
 
         self.assertEqual(test1_rank, 2)
         
-    
-    def test_star_store_hit_my_no_rank(self):
-
-        self.client.get(reverse('store:store_sell_list', args=['11']))
-        
-        self.login = self.client.login(username='test1', password='Test1234')
-        response = self.client.get(reverse('store:star_store_hit'))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(self.login, True)
-        
-        self.assertEqual(response.context['my_hit'], '-')
-        
-
     def test_star_store_hit_my_rank(self):
 
+        #test0의 hit 수 1 증가
         self.client.login(username='test1')
-        self.client.get(reverse('store:store_sell_list', args=['11']))
+        self.client.get(reverse('store:store_sell_list', args=[self.store0.pk]))
         self.client.logout()
 
+        #순위권인 유저의 my rank 확인
         self.login = self.client.login(username='test0', password='Test1234')
         response = self.client.get(reverse('store:star_store_hit'))
         self.assertEqual(response.status_code, 200)
@@ -114,3 +113,75 @@ class StarStoreHitListViewTest(TestCase):
         
         self.assertEqual(response.context['my_hit'], 1)
         self.client.logout()
+
+        #비순위권인 유저의 my rank 확인
+        self.login = self.client.login(username='test1', password='Test1234')
+        response = self.client.get(reverse('store:star_store_hit'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.login, True)
+        
+        self.assertEqual(response.context['my_hit'], '-')
+
+
+    def test_star_store_hit_no_rank(self):
+
+        response = self.client.get(reverse('store:star_store_hit'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('store:store_error'))
+
+class TestStarStoreGradeListView(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+
+        user0 = get_user_model().objects.create_user(username='test0', email='t00@test.com', password='Test1234')
+        store0 = StoreProfile.objects.create(user=user0, name='test0')
+        cls.store0 = store0
+
+        user1 = get_user_model().objects.create_user(username='test1', email='t01@test.com', password='Test1234')
+        store1 = StoreProfile.objects.create(user=user1, name='test1')    
+        cls.store1 = store1
+
+        user2 = get_user_model().objects.create_user(username='test2', email='t02@test.com', password='Test1234')
+        store2 = StoreProfile.objects.create(user=user2, name='test2')
+        cls.store2 = store2
+        
+
+    def test_star_store_grade_rank(self):
+        
+        make_rank1 = StoreGrade.objects.create(store_profile=self.store0, author=self.store1.user, grade_comment='test rank', rating=4)
+        make_rank2 = StoreGrade.objects.create(store_profile=self.store0, author=self.store1.user, grade_comment='test rank', rating=1)
+
+        make_rank3 = StoreGrade.objects.create(store_profile=self.store1, author=self.store0.user, grade_comment='test rank', rating=5)
+        
+        response = self.client.get(reverse('store:star_store_grade'))
+        
+        for store in response.context['stores'] :
+            if store['store_info'] == self.store0:
+                store0_rank = store['rank']
+            if store['store_info'] == self.store1:
+                store1_rank = store['rank']
+        
+        self.assertEqual(store0_rank, 2)
+        self.assertEqual(store1_rank, 1)
+
+    def test_star_store_grade_no_data(self):
+
+        response = self.client.get(reverse('store:star_store_grade'))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('store:store_error'))
+
+    def test_star_store_grade_my_rank(self):
+
+        #test0의 평점 생성
+        test_rank = StoreGrade.objects.create(store_profile=self.store0, author=self.store1.user, grade_comment='test rank', rating=5)
+
+        #순위권 유저의 my rank 확인
+        self.client.login(username='test0', password='Test1234')
+        response = self.client.get(reverse('store:star_store_grade'))
+        self.assertEqual(response.context['my_grade'], 1)
+        self.client.logout()
+
+        self.client.login(username='test1', password='Test1234')
+        response = self.client.get(reverse('store:star_store_grade'))
+        self.assertEqual(response.context['my_grade'], '-')
