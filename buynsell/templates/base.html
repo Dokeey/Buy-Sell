@@ -235,7 +235,7 @@ background: #0fd9a6;
 <div class="container-fluid" style="margin-top:20px;">
     <div class="row">
         {% child_category_items node as items %}
-        <h2>{{ node.name }} <small><a href="{% url "category:category_item" node.id %}"><font color="red">{{ items.count }}</font>개 보러가기</a></small></h2>
+        <h2>{{ node.name }} <small><a href="{% url "category:category_item" node.id %}"><font color="gray">구경하기</font></a></small></h2>
         <hr>
     </div>
     <div class="row">
@@ -244,7 +244,7 @@ background: #0fd9a6;
 
                 <ol class="carousel-indicators">
 
-                    {% for item in items|slice:"12" %}
+                    {% for cnt in "x"|rjust:"12" %}
                         {% if forloop.counter0|divisibleby:4 %}
                     <li data-target="#Carousel-{{ node.id }}" data-slide-to="{% div forloop.counter0 4 %}" {% if forloop.counter == 1 %}class="active"{% endif %}></li>
                         {% endif %}
@@ -253,8 +253,8 @@ background: #0fd9a6;
 
                 <!-- Carousel items -->
                 <div class="carousel-inner text-center">
-                    {% for item in items|slice:"12" %}
-                        {% if item.itemimage_set.first.photo %}
+                    {% for item in items %}
+                        {% if item.itemimage_set.exists %}
                             {% if forloop.counter0|divisibleby:4 %}
                         <div class="item {% if forloop.counter == 1 %}active{% endif %}">
                             <div class="row">

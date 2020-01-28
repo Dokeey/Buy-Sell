@@ -43,11 +43,11 @@ def timestamp_to_datetime(timestamp):
 
 
 class Item(models.Model, HitCountMixin):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="물품 주인", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="물품 주인", on_delete=models.CASCADE, db_index=True)
     title = models.CharField(verbose_name="물품명", max_length=50)
     desc = models.TextField(verbose_name="설명", blank=True)
     amount = models.PositiveIntegerField(verbose_name="가격")
-    category = TreeForeignKey(Category, verbose_name="카테고리", on_delete=models.CASCADE)
+    category = TreeForeignKey(Category, verbose_name="카테고리", on_delete=models.CASCADE, db_index=True)
     item_status = models.CharField(
         verbose_name="물품 상태",
         max_length=3,
@@ -67,8 +67,7 @@ class Item(models.Model, HitCountMixin):
             ('reservation', '예약'),
             ('sale_complete', '판매완료'),
         ),
-        default='ready',
-        db_index=True
+        default='ready'
     )
     created_at = models.DateTimeField(verbose_name="등록일", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="최근 업데이트", auto_now=True)
@@ -79,7 +78,7 @@ class Item(models.Model, HitCountMixin):
         return self.title
 
     class Meta:
-        ordering = ["-created_at"]
+        # ordering = ["-created_at"]
         verbose_name = "물품"
         verbose_name_plural = "물품"
 

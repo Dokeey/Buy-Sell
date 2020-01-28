@@ -2,7 +2,6 @@
 {% load static %}
 {% load humanize %}
 {% load trade_tags %}
-{% load hitcount_tags %}
 
 {% block head %}
 
@@ -12,7 +11,7 @@
     <meta property="og:url"           content="{{ request.META.HTTP_HOST }}{{ request.path }}" />
     <meta property="og:title"         content="{{ item.title }} {{ item.amount|intcomma }}원" />
     <meta property="og:description"   content="{{ item.desc|default:'-'|linebreaks }}" />
-    <meta property="og:image"         content="{{ item.itemimage_set.first.photo.url }}" />
+    <meta property="og:image"         content="{{ item_images_first_photo_url }}" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
 
 	<script>
@@ -31,14 +30,14 @@
               content: {
                 title: '{{ item.title }} {{ item.amount|intcomma }}원',
                 description: 'Buy & Sell에서 싸게 사자!',
-                imageUrl: '{{ item.itemimage_set.first.photo.url }}',
+                imageUrl: '{{ item_images_first_photo_url }}',
                 link: {
                   webUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}',
                   mobileWebUrl: '{{ request.META.HTTP_HOST }}{{ request.path }}'
                 }
               },
             social: {
-              viewCount: {% get_hit_count for item %},
+              viewCount: {{ hit_count }},
               commentCount: {{ item.itemcomment_set.all.count }},
               sharedCount: {{ wish_ctn }}
             },
@@ -186,7 +185,7 @@
 
             <table class="table table-hover table-borderless">
                 <tr>
-                    <td class="text-center"><i class="fas fa-eye"></i></td><td>{% get_hit_count for item %}</td>
+                    <td class="text-center"><i class="fas fa-eye"></i></td><td>{{ hit_count }}</td>
                 </tr>
                 <tr>
                     <td class="text-center"><i class="far fa-thumbs-up"></i></td><td>{{ item.get_item_status_display }}</td>
@@ -516,7 +515,7 @@
                 </div>
             {% endif %}
 
-            {% if item.user.storeprofile.storegrade_set.all.count > 0 %}
+            {% if item.user.storeprofile.storegrade_set.all.exists > 0 %}
                 <h4 class="text-center">가게 후기 <b style="color:red;">{{ item.user.storeprofile.storegrade_set.all.count }}개</b></h4>
                 <div class="row" style="margin-top:30px">
                     {% for grade in item.user.storeprofile.storegrade_set.all|slice:":2" %}

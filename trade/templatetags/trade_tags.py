@@ -74,10 +74,10 @@ def item_block(item):
     next_link = resolve_url('trade:item_detail', item.id)
     wishlist_link = resolve_url('mypage:wishlist_action', item.id)
     user_link = resolve_url('store:store_sell_list', item.user.storeprofile.id)
-    hit_count = item.hit_count.hits
+    # hit_count = item.hit_count.hits
     title = item.title
     amount = intcomma(item.amount)
-    if item.itemimage_set.first():
+    if item.itemimage_set.exists():
         photo_url = item.itemimage_set.first().photo.url
     else:
         photo_url = None
@@ -97,7 +97,7 @@ def item_block(item):
             </div>
             <h4 id="thumbnail-label">{amount}<small> 원</small></h4><hr style="margin:5px">
             <div class="thumbnail-description smaller text-center">
-                <b style="min-height: 38px;">{title}</b>
+                <b style="min-height: 38px;"><a href={link}>{title}</a></b>
                 <hr style="margin:5px">
                 <i class="far fa-clock"></i>&nbsp;{time}<hr style="margin:5px">
                 <ul class="list-inline" style="min-height: 30px;">
@@ -107,8 +107,9 @@ def item_block(item):
             </div>
           </div>
         </div>
-    """.format(hit_count=hit_count,
+    """.format(
                title=title,
+                link=resolve_url('trade:item_detail', item.id),
                amount=amount,
                next_link=next_link,
                photos=photos(item),

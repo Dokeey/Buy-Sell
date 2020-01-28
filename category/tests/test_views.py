@@ -87,3 +87,44 @@ class SearchItemListTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['items'].first().amount, 50003)
         # self.assertEqual(response.context['items'].last().amount, 50000)
+
+
+
+# 대용량 데이터베이스 검색 테스트
+# class BigSearchTest(TestCase):
+#
+#     # 테스트 물품 생성, 주문자 생성, 주문서 생성
+#     @classmethod
+#     def setUpTestData(cls):
+#         seller = get_user_model().objects.create_user(username='seller', email='seller@test.com', password='1234')
+#         StoreProfile.objects.create(user=seller, name='seller가게')
+#
+#         cate_ctn = 10
+#         sub_ctn = 100
+#         for cate in range(cate_ctn):
+#             category = Category.objects.create(name='Parent_{}'.format(cate))
+#             for sub in range(sub_ctn):
+#                 Category.objects.create(name='{}_{}'.format(cate, sub), parent=category)
+#
+#         item_ctn = 10000000
+#         ctn_by_cate = item_ctn//Category.objects.all().count()
+#         item_list = []
+#         for cate in Category.objects.all():
+#             for ctn in range(ctn_by_cate):
+#                 item = Item()
+#                 item.user = seller
+#                 item.category = cate
+#                 item.title = '[중고]{}'.format(ctn)
+#                 item.desc = '설명{}'.format(ctn+1)
+#                 item.amount = 100000+ctn
+#                 item_list.append(item)
+#             Item.objects.bulk_create(item_list)
+#             item_list = []
+#
+#
+#     def test_query(self):
+#         # self.assertEqual('hi', 'hi')
+#         response = self.client.get(reverse('category:search_item'), {'query': ' 3'})
+#         self.assertEqual(response.status_code, 200)
+#         self.assertEqual(response.context['items'].count(), 4)
+#         self.assertEqual(response.context['all_category'].count(), 2)

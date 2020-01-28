@@ -33,6 +33,12 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name = 'base.html'), name='root'),
 ]
 
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
+
 admin.site.site_header = "Buy & Sell 관리자"
 admin.site.site_title = "B&S 관리자 페이지"
 admin.site.index_title = "아름다운 관리자가 되어보아요"

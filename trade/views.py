@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -139,15 +140,29 @@ class ItemDetail(MultipleObjectMixin, CreateView):
         context['page_range'] = page_range
 
         self.pk = self.kwargs.get('pk')
-        context['item'] = self.item
+        items = Item.objects.filter(id=self.pk)
+        items = items.select_related('user__storeprofile')
+        items = items.prefetch_related('itemcomment_set')
+        items = items.prefetch_related('itemimage_set')
+        context['item'] = items[0]
+        # context['item_images'] = context['item'].itemimage_set.all()
+        if context['item'].itemimage_set.exists():
+            context['item_images_first_photo_url'] = context['item'].itemimage_set.first().photo.url
+        else:
+            context['item_images_first_photo_url'] = None
+        # context['item_comments_cnt'] = context['item'].itemcomment_set.all().count()
 
-        hit_count = HitCount.objects.get_for_object(context['item'])
-        context['hit_count_response'] = HitCountMixin.hit_count(self.request, hit_count)
+        context['hit_count'] = HitCount.objects.get_for_object(context['item']).hits
+        # context['hit_count_response'] = HitCountMixin.hit_count(self.request, hit_count)
+        # ctype = ContentType.objects.get_for_model(Item)
+        # context['hits'] = HitCount.objects.get(content_type=ctype, object_pk=context['item'].id).hits
 
         context['wish_ctn'] = WishList.objects.filter(item=context['item']).count()
         context['follow_ctn'] = Follow.objects.filter(store=context['item'].user.storeprofile).count()
 
-        context['items'] = context['item'].user.item_set.filter(~Q(id=context['item'].id), pay_status='ready')[:3]
+        # context['grades_cnt'] = context['item'].user.storeprofile.storegrade_set.all().count()
+        context['items'] = context['item'].user.item_set.filter(~Q(id=context['item'].id), pay_status='ready')
+        context['items'] = context['items'].prefetch_related('itemimage_set')[:3]
         context['items_ctn'] = context['items'].count()
         context['kakao_key'] = settings.KAKAO_KEY_JS
         context['facebook_key'] = settings.FACEBOOK_KEY

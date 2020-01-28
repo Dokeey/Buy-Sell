@@ -18,7 +18,7 @@ from random import randint
 
 from category.models import Category
 User = get_user_model()
-
+cate_cnt = 0
 
 def main(query):
     url = 'https://search.shopping.naver.com/search/all.nhn'
@@ -31,9 +31,16 @@ def main(query):
     userlist = User.objects.filter(is_active=True)
     count = userlist.aggregate(count=Count('id'))['count']
     item_status = ['a', 'b', 'c', 's']
+    item_list = []
+    item_image_list = []
 
     def trim(s):
         return ' '.join(s.split())
+
+    global cate_cnt
+    cate_cnt += 1
+    print("{} 카테고리 크롤링 진행중..".format(query))
+    print("     남은 카테고리 : {}".format(Category.objects.all().count()-cate_cnt))
 
     for item_tag in soup.select('#_search_list ._itemSection'):
         try:
@@ -53,10 +60,10 @@ def main(query):
             detest = ''
 
 
-        print(name, price, detest, img_name,img_url)
-        print('')
-        print(user, status)
-        print('')
+        # print(name, price, detest, img_name,img_url)
+        # print('')
+        # print(user, status)
+        # print('')
 
         item = Item(user=user, title=name, amount=price, desc=detest, category=query, item_status=status)
         item.save()
@@ -64,8 +71,21 @@ def main(query):
         item_image.photo.save(img_name, ContentFile(res.content))
         item_image.save()
 
+        # item = Item()
+        # item.user = user
+        # item.title = name
+        # item.amount = price
+        # item.desc = detest
+        # item.category = query
+        # item.item_status = status
+        # item_list.append(item)
+        #
+        # item_image = ItemImage(item=item)
+        # item_image.photo.save(img_name, ContentFile(res.content))
+        # item_image_list.append(item_image)
+
         ctn += 1
-        if ctn > 19:
+        if ctn > 150000:
             break
 
 if __name__ == '__main__':

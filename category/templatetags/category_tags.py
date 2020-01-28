@@ -1,4 +1,7 @@
+import itertools
+
 from django import template
+from django.db.models import Count
 
 from trade.models import Item
 from ..models import Category
@@ -13,15 +16,11 @@ def category_menu():
 
 @register.simple_tag
 def child_category_items(category):
-    categories_items = []
-    for item in category.item_set.all():
-        categories_items.append(item.id)
+    category_list = category.get_descendants(include_self=True)
 
-    for children in category.get_children():
-        for item in children.item_set.all():
-            categories_items.append(item.id)
+    items = Item.objects.prefetch_related('itemimage_set').all()
+    items = items.filter(category__in=category_list)[:12]
 
-    items = Item.objects.filter(id__in=categories_items)
     return items
 
 

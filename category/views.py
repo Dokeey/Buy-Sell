@@ -31,7 +31,6 @@ from trade.models import Item
 class BaseItemList(ListView):
     model = Item
     context_object_name = 'items'
-    ordering = '-created_at'
     paginate_by = 24
 
 
@@ -69,7 +68,7 @@ class BaseItemList(ListView):
         context['page_range'] = page_range
 
         context['sort'] = self.request.GET.get('sort','-created_at')
-        context['item_ctn'] = self.get_queryset().count()
+        context['item_ctn'] = paginator.count
 
         return context
 
@@ -93,9 +92,11 @@ class SearchItemList(BaseItemList):
     def get_queryset(self):
         self.cate = self.request.GET.get('cate','')
         self.qs = super().get_queryset()
+        self.qs = self.qs.prefetch_related("user__storeprofile")
+        self.qs = self.qs.prefetch_related("itemimage_set")
 
         if self.query:
-            self.qs = self.qs.filter(Q(title__icontains=self.query) | Q(desc__icontains=self.query)).distinct()
+            self.qs = self.qs.filter(Q(title__icontains=self.query))
 
         if self.cate:
             category = get_object_or_404(Category, id=self.cate)
@@ -118,29 +119,34 @@ class CategoryItemList(BaseItemList):
     template_name = 'category/category_item.html'
 
 
-    def get_queryset(self):
-        category = get_object_or_404(Category, pk=self.kwargs.get('pk'))
+    def get(self, request, *args, **kwargs):
+        self.category = get_object_or_404(Category, pk=self.kwargs.get('pk'))
+        return super().get(self, request, *args, **kwargs)
 
+
+    def get_queryset(self):
         self.flag = self.request.GET.get('parent', '')
+
+        items = Item.objects.prefetch_related("user__storeprofile")
+        items = items.prefetch_related("itemimage_set")
         if self.flag:
-            self.queryset = category.item_set.all()
+            self.queryset = items.filter(category=self.category)
             return super().get_queryset()
 
-        categories_items = []
-        for cate in category.get_descendants(include_self=True):
-            [categories_items.append(item.id) for item in cate.item_set.all()]
-
-        self.queryset = Item.objects.filter(id__in=categories_items)
+        self.category_list = self.category.get_descendants(include_self=True)
+        self.queryset = items.filter(category__in=self.category_list)
 
         return super().get_queryset()
 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        category = get_object_or_404(Category, pk=self.kwargs.get('pk'))
 
-        context['category'] = category
-        context['parent_category'] = category.get_ancestors()
+        categories = Item.objects.filter(category__in=self.category.get_descendants())
+        categories = categories.values("category").annotate(cnt=Count('*'))
+        context['children'] = categories.values_list('category', 'category__name', 'cnt')
+        context['category'] = self.category
+        context['parent_category'] = self.category.get_ancestors()
         context['flag'] = self.flag
 
         return context
