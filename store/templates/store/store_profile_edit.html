@@ -304,7 +304,7 @@
             cache:false,
             success:function(result){
                 console.log(result)
-                if(result.is_vaild){
+                if(result.is_valid){
                     window.location.href = '{% url "store:store_sell_list" request.user.storeprofile.id %}';
                 }else{
                     for (var key in result.error){

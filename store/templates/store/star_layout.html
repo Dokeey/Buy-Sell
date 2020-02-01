@@ -13,9 +13,9 @@
 
       <meta property="og:url"           content="{{ request.META.HTTP_HOST }}{{ request.path }}" />
       <meta property="og:type"          content="website" />
-      <meta property="og:title"         content="{{ stores.0.store_info.name }}" />
+      <meta property="og:title"         content="{{ first.name }}" />
       <meta property="og:description"   content="인기가게를 소개합니다!!" />
-      <meta property="og:image"         content="{{ stores.0.store_info.photo.url }}" />
+      <meta property="og:image"         content="{{ first.photo.url }}" />
     <!--Facebook 공유 기능-->
     <script>
         function sharefacebook(url) {
@@ -30,25 +30,24 @@
                     Kakao.Link.sendDefault({
                       objectType: 'feed',
                       content: {
-                       title: '{{ stores.0.store_info.name }}',
+                       title: '{{ first.name }}',
                         description: '인기가게를 소개합니다!!',
-                        imageUrl: '{{ stores.0.store_info.photo.url }}',
+                        imageUrl: '{{ first.photo.url }}',
                         link: {
-                          webUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' stores.0.store_info.pk %}',
-                          mobileWebUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' stores.0.store_info.pk %}'
+                          webUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' first.pk %}',
+                          mobileWebUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' first.pk %}'
                         }
                       },
                     social: {
-                      viewCount: {% get_hit_count for stores.0.store_info %},
-                      commentCount: {{ stores.0.store_info.storegrade_set.all.count }},
-                      subscriberCount: {{ stores.0.store_info.follow_set.all.count }}
+                      commentCount: {{ first.storegrade_set.all.count }},
+                      subscriberCount: {{ first.follow_set.all.count }}
                     },
                       buttons: [
                         {
                            title: '인기 가게 구경가자!',
                           link: {
-                            mobileWebUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' stores.0.store_info.pk %}',
-                            webUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' stores.0.store_info.pk %}'
+                            mobileWebUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' first.pk %}',
+                            webUrl: '{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' first.pk %}'
                           }
                         }
                       ]
@@ -165,11 +164,11 @@
                     <div class="col-sm-offset-1 col-sm-10 col-xs-offset-1 col-xs-10">
 
                 <div class="text-center">
-                    <a href="{% url 'store:store_sell_list' store.store_info.pk %}"> <h3 style="padding:0px;"><i class="fas fa-trophy" style="color:#FFD700;"></i> <span style="color:#EDA900">1위</span> {{ store.store_info.name }}</h3>
+                    <a href="{% url 'store:store_sell_list' store.pk %}"> <h3 style="padding:0px;"><i class="fas fa-trophy" style="color:#FFD700;"></i> <span style="color:#EDA900">1위</span> {{ store.name }}</h3>
                     </a></div>
                 <div class="row">
 
-                    {% for item in store.store_info.user.item_set.all|slice:"4" %}
+                    {% for item in store.store.user.item_set.all|slice:"4" %}
                         <div class="col-sm-3 col-xs-6" style="padding:10px">
                                 {% item_block item %}
                         </div>
@@ -178,13 +177,13 @@
 
                     {% endfor %}
                 </div>
-                {% if store.store_info.user.item_set.all.count > 4 %}
+                {% if store.store.user.item_set.all.count > 4 %}
                 <div align="center">
-                    <a href="{% url 'store:store_sell_list' store.store_info.pk %}">남은 <span style="color:red;font-weight:bold"> {{ store.store_info.user.item_set.count|add:"-4" }}개</span> 물품 보러가기</a>
+                    <a href="{% url 'store:store_sell_list' store.pk %}">남은 <span style="color:red;font-weight:bold"> {{ store.store.user.item_set.count|add:"-4" }}개</span> 물품 보러가기</a>
                 </div>
                 {% else %}
                 <div align="center">
-                    <a href="{% url 'store:store_sell_list' store.store_info.pk %}">가게 구경 가기</a>
+                    <a href="{% url 'store:store_sell_list' store.pk %}">가게 구경 가기</a>
                 </div>
                 {% endif %}
                 <hr/>

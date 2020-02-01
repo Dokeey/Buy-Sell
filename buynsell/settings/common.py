@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
-
+import socket
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     # 'sslserver', # django SSL server module
     'django_summernote',
 
+    'debug_toolbar',
+
 ]
 
 MIDDLEWARE = [
@@ -69,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'accounts.middleware.KickedMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'buynsell.urls'
@@ -237,3 +240,13 @@ SUMMERNOTE_CONFIG  = {
        ' lang ' : 'ko-KR',
 }
 }
+
+#debug_toolbar
+INTERNAL_IPS = ['127.0.0.1', '::1', 'localhost']
+
+# get ip address for docker host
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+for ip in ips:
+    # replace last octet in IP with .1
+    ip = '{}.1'.format(ip.rsplit('.', 1)[0])
+    INTERNAL_IPS.append(ip)

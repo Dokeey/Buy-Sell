@@ -38,3 +38,11 @@ admin.site.site_title = "B&S 관리자 페이지"
 admin.site.index_title = "아름다운 관리자가 되어보아요"
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+#debug toolbar
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns

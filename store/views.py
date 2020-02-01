@@ -13,7 +13,7 @@ from django.views.generic import ListView, DeleteView, UpdateView, CreateView, R
 from django.views.generic.list import MultipleObjectMixin
 from hitcount.models import HitCount
 from hitcount.views import HitCountMixin
-from rank import DenseRank
+from rank import DenseRank,UpperRank,Rank
 
 from trade.models import Item
 
@@ -24,6 +24,7 @@ from trade.models import Item, Order
 from .models import StoreProfile, QuestionComment, StoreGrade
 from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 
+from django.db.models.functions import Coalesce
 # @login_required
 # def my_store_profile(request):
 #     stores = get_object_or_404(StoreProfile, user=request.user)
@@ -31,6 +32,10 @@ from .forms import StoreProfileForm, StoreQuestionForm, StoreGradeForm
 
 class StoreError(TemplateView):
     template_name = 'store/store_error.html'
+
+
+
+#============= 인기가게 =============
 
 class StarStoreSearchList(ListView):
     model = StoreProfile
@@ -85,6 +90,7 @@ class StarStoreSearchList(ListView):
 
         return context
 
+
 class StarStoreHitListView(ListView):
     template_name = 'store/star_store_hit.html'
     model = StoreProfile
@@ -100,19 +106,31 @@ class StarStoreHitListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ctype = ContentType.objects.get_for_model(StoreProfile)
-        search_hit = HitCount.objects.filter(content_type=ctype).values('object_pk').annotate(rank=DenseRank('hits'))
-        context['my_hit'] = ''
-        for i in search_hit:
-            if i['object_pk']:
-                i['store_info'] = StoreProfile.objects.get(pk=i['object_pk'])
-            if self.request.user.is_active:
-                if i['object_pk'] == self.request.user.storeprofile.pk:
-                    context['my_hit'] = i['rank']
-        if context['my_hit'] == '':
-            context['my_hit'] = '-'
+        # search_hit = HitCount.objects.filter(content_type=ctype).values('object_pk','hits').annotate(rank=DenseRank('hits'))
+
+        search_hit = StoreProfile.objects.all()
+        if self.request.user.is_authenticated:
+            my_hits = HitCount.objects.get_for_object(self.request.user.storeprofile).hits
+            context['my_rank'] = search_hit.filter(hit_count_generic__hits__gt=my_hits).count() + 1
+        else:
+            context['my_rank'] = '-'
+        search_hit = search_hit.filter(hit_count_generic__content_type=ctype)
+        search_hit = search_hit.annotate(rank=DenseRank('hit_count_generic__hits'))
+        search_hit = search_hit.order_by('rank')[:5]
+        context['first'] = search_hit.first()
+
+        # for i in search_hit:
+        #     if i['object_pk']:
+        #         i['store'] = StoreProfile.objects.get(pk=i['object_pk'])
+        #     if self.request.user.is_active:
+        #         if i['object_pk'] == self.request.user.storeprofile.pk:
+        #             context['my_hit'] = i['rank']
+        #     if context['my_rank'] == '':
+        #         context['my_rank'] = '-'
         context['stores'] = search_hit
         context['kakao_key'] = settings.KAKAO_KEY_JS
         return context
+
 
 class StarStoreGradeListView(ListView):
     template_name = 'store/star_store_grade.html'
@@ -127,25 +145,38 @@ class StarStoreGradeListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_grade = StoreGrade.objects.values('store_profile').annotate(
-                count=Count('rating'), 
-                rating_sum=Cast(Sum('rating'), FloatField())/Cast(Count('rating'), FloatField()),
-                rank=Cast(DenseRank('rating_sum'), IntegerField())
-            ).order_by('-rating_sum', '-count')
+        # search_grade = StoreGrade.objects.values('pk','store_profile').annotate(
+        #         count=Count('rating'),
+        #         rating_sum=Cast(Sum('rating'), FloatField())/Cast(Count('rating'), FloatField()),
+        #         rank=Cast(DenseRank('rating_sum'), IntegerField())
+        #     ).order_by('-rating_sum', '-count')
+        search_grade = StoreProfile.objects.all()
+        search_grade = search_grade.annotate(
+            count=Count('storegrade__rating'),
+            rating_sum=Coalesce(Cast(Sum('storegrade__rating'), FloatField()) / Cast(Count('storegrade__rating'), FloatField()),0),
+            rank=Cast(DenseRank('rating_sum'), IntegerField())
+        )
 
-        context['my_grade'] = ''
-        for i in search_grade:
-            if i['store_profile']:
-                i['store_info'] = StoreProfile.objects.get(pk=i['store_profile'])
-            if self.request.user.is_authenticated:
-                if i['store_profile'] == self.request.user.storeprofile.pk:
-                    context['my_grade'] = i['rank']
+        if self.request.user.is_authenticated:
+            for my in search_grade :
+                if my == self.request.user.storeprofile:
+                    context['my_rank'] = my.rank
+        else:
+            context['my_rank'] = '-'
 
-        if context['my_grade'] == '':
-            context['my_grade'] = '-'
+        search_grade = search_grade.order_by('-rating_sum', '-count')[:5]
+        context['first'] = search_grade.first()
+
+        # for i in search_grade:
+        #     if i['store_profile']:
+        #         i['store'] = StoreProfile.objects.get(pk=i['store_profile'])
+        #     if self.request.user.is_authenticated:
+        #         if i['store_profile'] == self.request.user.storeprofile.pk:
+        #             context['my_grade'] = i['rank']
         context['stores'] = search_grade
         context['kakao_key'] = settings.KAKAO_KEY_JS
         return context
+
 
 class StarStoreSellListView(ListView):
     template_name = 'store/star_store_sell.html'
@@ -160,16 +191,30 @@ class StarStoreSellListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),rank=DenseRank('count')).order_by('rank')         
-        context['my_sell'] = ''
-        for i in search_sell:
-            if i['rank']:
-                i['store_info'] = StoreProfile.objects.get(user_id=i['item__user'])
-            if self.request.user.is_authenticated:
-                if i['item__user'] == self.request.user.pk:
-                    context['my_sell'] = i['rank']
-        if context['my_sell'] == '':
-            context['my_sell'] = '-'
+        # search_sell = Order.objects.filter(status='success').values('item__user').annotate(count=Count('status'),
+        #                                                                                    rank=DenseRank(
+        #                                                                                        'count')).order_by('rank')
+        search_sell = StoreProfile.objects.filter(user__item__order__status='success')
+        # search_sell=search_sell.values('pk','user__item')
+        search_sell=search_sell.annotate(count=Count('user__item__order__status'),rank=DenseRank('count'))
+        context['my_rank'] = ''
+        if self.request.user.is_authenticated:
+            for sell in search_sell :
+                if sell == self.request.user.storeprofile:
+                    context['my_rank'] = sell.rank
+            if context['my_rank'] == '' :
+                context['my_rank'] = '-'
+        else:
+            context['my_rank'] = '-'
+
+        search_sell=search_sell.order_by('rank')[:5]
+        context['first'] = search_sell.first()
+        # for i in search_sell:
+        #     if i['rank']:
+        #         i['store'] = StoreProfile.objects.get(user_id=i['item__user'])
+        #     if self.request.user.is_authenticated:
+        #         if i['item__user'] == self.request.user.pk:
+        #             context['my_sell'] = i['rank']
         context['stores'] = search_sell
         
         context['kakao_key'] = settings.KAKAO_KEY_JS
@@ -182,6 +227,7 @@ class StarStoreSellListView(ListView):
     #     return super().render_to_response(
     #             context, **response_kwargs
     #         )
+
 
 class StarStoreFollowListView(ListView):
     template_name = 'store/star_store_follow.html'
@@ -196,21 +242,32 @@ class StarStoreFollowListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_follow = Follow.objects.values('store').annotate(foll_count=Count('store'),
-                                                                rank=DenseRank('foll_count')).order_by('-foll_count')
-        context['my_follow'] = ''
-        for i in search_follow:
-            if i['store']:
-                i['store_info'] = StoreProfile.objects.get(pk=i['store'])
 
-            if self.request.user.is_authenticated:
-                if self.request.user.storeprofile.pk == i['store']:
-                    context['my_follow'] = i['rank']
 
-        if context['my_follow'] == '':
-            context['my_follow'] = '-'
-        
+        search_follow = StoreProfile.objects.select_related('user')
+        search_follow = search_follow.annotate(
+            count=Count('follow__store'),
+            rank=DenseRank('count')
+        )
+        # follow_dict = { follow.id:follow.rank for follow in search_follow }
+        if self.request.user.is_authenticated:
+            for foll in search_follow:
+                if foll.pk == self.request.user.storeprofile.pk :
+                    context['my_rank'] = foll.rank
+                    break
+            # context['my_rank'] = follow_dict[self.request.user.id]
+        else:
+            context['my_rank'] = '-'
+        search_follow = search_follow.order_by('-count')[:5]
+        # for i in search_follow:
+        #     if i['store']:
+        #         i['store'] = StoreProfile.objects.get(pk=i['store'])
+        #
+        context['first'] = search_follow.first()
+
+
         context['stores'] = search_follow
+
         # follow = Follow.objects.values_list('store',flat=True).annotate(foll_count=Count('store')).order_by('-foll_count')
         
         # follow_list = []
@@ -227,6 +284,9 @@ class StarStoreFollowListView(ListView):
         context['kakao_key'] = settings.KAKAO_KEY_JS
         return context
 
+
+
+#============= 스토어 프로필 =============
 
 class StoreSellListView(ListView):
     model = Item
@@ -268,6 +328,7 @@ class StoreSellListView(ListView):
         context['next'] = end_index + 1
         context['last_page'] = max_index
         context['page_range'] = page_range
+
         context['stores'] = self.store
         hit_count = HitCount.objects.get_for_object(context['stores'])
         context['hit_count_response'] = HitCountMixin.hit_count(self.request, hit_count)
@@ -294,10 +355,14 @@ class StoreProfileEditView(UpdateView):
     def form_valid(self, form):
         # 유효성 검사 항목 추가하기
         self.object = form.save()
-        return JsonResponse({'is_vaild' : True}, status=200)
+        return JsonResponse({'is_valid' : True}, status=200)
 
     def get_success_url(self, **kwargs):
         return reverse_lazy("store:store_sell_list", kwargs={'pk': self.request.user.storeprofile.pk})
+
+
+
+#============= Store Question ==============
 
 @method_decorator(login_required, name='dispatch')
 class StoreQuestionLCView(CreateView):
@@ -357,7 +422,8 @@ class StoreQuestionLCView(CreateView):
         
     def get_success_url(self):
         return reverse_lazy('store:store_question', kwargs={'pk': self.kwargs.get('pk')})
-  
+
+
 @method_decorator(login_required, name='dispatch')
 class StoreQuestionEditView(UpdateView):
     form_class = StoreQuestionForm
@@ -374,6 +440,7 @@ class StoreQuestionEditView(UpdateView):
 
         data = {'id':comm.id, 'msg':form.cleaned_data['comment']}
         return JsonResponse(data)
+
 
 @method_decorator(login_required, name='dispatch')
 class StoreQuestionDelView(DeleteView):
@@ -398,6 +465,9 @@ class StoreQuestionDelView(DeleteView):
     def get_success_url(self):
         return reverse_lazy("store:store_question", kwargs={'pk': self.kwargs['pk']})
 
+
+
+#=============Store Grade===============
 
 class StoreGradeListView(ListView):
     model = StoreGrade
@@ -456,6 +526,7 @@ class StoreGradeListView(ListView):
         context['kakao_key'] = settings.KAKAO_KEY_JS
         return context
 
+
 @method_decorator(login_required, name='dispatch')
 class StoreGradeCreateView(CreateView):
     model = StoreGrade
@@ -480,6 +551,7 @@ class StoreGradeCreateView(CreateView):
         gradeform.save()
         return redirect('store:store_grade', self.kwargs['pk'])
 
+
 @method_decorator(login_required, name='dispatch')
 class StoreGradeEditView(UpdateView):
     form_class = StoreGradeForm
@@ -502,6 +574,7 @@ class StoreGradeEditView(UpdateView):
         return redirect('store:store_grade', self.kwargs['pk'])
     def get_success_url(self, **kwargs):
         return reverse_lazy("store:store_grade", kwargs={'pk': self.kwargs['pk']})
+
 
 @method_decorator(login_required, name='dispatch')
 class StoreGradeDelView(DeleteView):
