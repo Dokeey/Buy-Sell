@@ -96,7 +96,7 @@ class SearchItemList(BaseItemList):
         self.qs = self.qs.prefetch_related("itemimage_set")
 
         if self.query:
-            self.qs = self.qs.filter(Q(title__icontains=self.query))
+            self.qs = self.qs.filter(Q(title__icontains=self.query) | Q(desc__icontains=self.query))
 
         if self.cate:
             category = get_object_or_404(Category, id=self.cate)

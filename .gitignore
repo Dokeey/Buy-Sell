@@ -197,3 +197,11 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/django,python
 .vscode
+
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+.ebignore
+.dockerignore
