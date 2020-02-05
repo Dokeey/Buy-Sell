@@ -85,7 +85,7 @@ def main(query):
         # item_image_list.append(item_image)
 
         ctn += 1
-        if ctn > 150000:
+        if ctn > 20:
             break
 
 if __name__ == '__main__':

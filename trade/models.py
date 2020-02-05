@@ -84,7 +84,7 @@ class Item(models.Model, HitCountMixin):
 
 
 class ItemImage(models.Model):
-    item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE, db_index=True)
     photo = ProcessedImageField(
             verbose_name="물품 사진",
             upload_to = 'item_img/{0}'.format(datetime.now().strftime("%Y-%m-%d")),

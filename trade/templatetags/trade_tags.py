@@ -78,7 +78,7 @@ def item_block(item):
     title = item.title
     amount = intcomma(item.amount)
     if item.itemimage_set.exists():
-        photo_url = item.itemimage_set.first().photo.url
+        photo_url = item.itemimage_set.all()[0].photo.url
     else:
         photo_url = None
     item_status = item.get_item_status_display()

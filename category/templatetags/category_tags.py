@@ -25,6 +25,11 @@ def child_category_items(category):
 
 
 @register.simple_tag
+def item_first_image(item):
+    return item.itemimage_set.all()[0].photo
+
+
+@register.simple_tag
 def div(value, num):
     result = int(value/num)
     return result
