@@ -1,4 +1,6 @@
-from django.core.mail import send_mail as core_send_mail
+# from multiprocessing import Process
+#
+# from django.core.mail import send_mail as core_send_mail
 from django.core.mail import EmailMultiAlternatives
 import threading
 
@@ -20,3 +22,14 @@ class EmailThread(threading.Thread):
 
 def send_mail(subject, recipient_list, body='', from_email='BuynSell', fail_silently=False, html=None, *args, **kwargs):
     EmailThread(subject, body, from_email, recipient_list, fail_silently, html).start()
+
+
+
+# def send_mail(subject, recipient_list, body='', from_email='BuynSell', fail_silently=False, html=None, *args, **kwargs):
+#     procs = []
+#     proc = Process(target=core_send_mail, args=(subject, body, from_email, recipient_list, fail_silently, html,))
+#     procs.append(proc)
+#     proc.start()
+#
+#     for proc in procs:
+#         proc.join()

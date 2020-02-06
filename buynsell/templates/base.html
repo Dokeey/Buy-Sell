@@ -260,9 +260,8 @@ background: #0fd9a6;
                             <div class="row">
                               <div class="col-sm-3 col-xs-6">
                                   {% item_first_image item as image %}
-                                  {% thumbnail "167x167" image as thumb %}
                                   <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                      <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
+                                      <img class="lazy" data-src="{{ image.url }}" alt="Image" width="167" height="167">
                                       <br>
                                       <b>{{ item.title }}</b><br>
                                       {{ item.amount|intcomma }} 원
@@ -271,9 +270,8 @@ background: #0fd9a6;
                             {% elif forloop.counter|divisibleby:4 or forloop.last %}
                               <div class="col-sm-3 col-xs-6">
                                   {% item_first_image item as image %}
-                                  {% thumbnail "167x167" image as thumb %}
                                   <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                      <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
+                                      <img class="lazy" data-src="{{ image.url }}" alt="Image" width="167" height="167">
                                       <br>
                                       <b>{{ item.title }}</b><br>
                                       {{ item.amount|intcomma }} 원
@@ -284,9 +282,8 @@ background: #0fd9a6;
                             {% else %}
                               <div class="col-sm-3 col-xs-6">
                                   {% item_first_image item as image %}
-                                  {% thumbnail "167x167" image as thumb %}
                                   <a href="{% url "trade:item_detail" item.id %}" class="thumbnail">
-                                      <img class="lazy" data-src="{{ thumb.url }}" alt="Image" >
+                                      <img class="lazy" data-src="{{ image.url }}" alt="Image" width="167" height="167">
                                       <br>
                                       <b>{{ item.title }}</b><br>
                                       {{ item.amount|intcomma }} 원
