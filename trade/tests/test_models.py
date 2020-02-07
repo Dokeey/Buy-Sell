@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles import finders
 from django.core.files import File
@@ -97,7 +98,6 @@ class ItemImageModelTest(TestCase):
     # 제대로 업로드 되었는지 테스트
     def test_image_upload(self):
         p = ItemImage.objects.get(id=self.IMG_ID).photo
-        self.failUnless(open(p.path), 'file not found')
 
         # 제대로된 날짜로 업로드 되었는지 테스트
         dirname = os.path.dirname(p.url).split('/')[-1]
@@ -109,19 +109,22 @@ class ItemImageModelTest(TestCase):
 
     # 테스트 종료후 이미지 삭제
     def tearDown(self):
-        img = ItemImage.objects.get(id=self.IMG_ID)
-        directory = os.path.dirname(img.photo.path)
-        if os.path.isfile(img.photo.path):
-            os.remove(img.photo.path)
+        if not settings.AWS_REGION:
+            img = ItemImage.objects.get(id=self.IMG_ID)
 
-        if len(os.listdir(directory)) == 0:
-            os.rmdir(directory)
+            directory = os.path.dirname(img.photo.path)
+            if os.path.isfile(img.photo.path):
+                os.remove(img.photo.path)
+
+            if len(os.listdir(directory)) == 0:
+                os.rmdir(directory)
 
         return super().tearDown()
 
 
 # 물품 댓글 모델 테스트
 class ItemCommentModelTest(TestCase):
+    DEL_ID = get_user_model().objects.get(username='deleteuser').id
 
     # 테스트 물품 생성, deleteuser 사용자 생성
     @classmethod
@@ -129,7 +132,7 @@ class ItemCommentModelTest(TestCase):
         cate = Category.objects.create(name='전자제품')
         seller = get_user_model().objects.create(username='seller', email='seller@test.com')
         cls.item = Item.objects.create(user=seller, category=cate, title='[중고]닌텐도셋트', amount=100000)
-        get_user_model().objects.create(id=15, username='deleteuser', email='deleteuser@test.com')
+        get_user_model().objects.create(id=cls.DEL_ID, username='deleteuser', email='deleteuser@test.com')
 
     # 댓글 사용자 생성, 댓글 생성
     def setUp(self):
@@ -140,9 +143,12 @@ class ItemCommentModelTest(TestCase):
     # 댓글 사용자 삭제시 deleteuser가 있다면 댓글내용이 삭제가 되었는지 테스트
     def test_exist_deleteuser(self):
         self.order.delete()
-        cmt = ItemComment.objects.get(id=self.CMT_ID)
-        self.assertIsNotNone(cmt)
-        self.assertEquals(cmt.user.username,'deleteuser')
+        cmt_flag = ItemComment.objects.filter(id=self.CMT_ID).exists()
+        self.assertTrue(cmt_flag)
+        if cmt_flag:
+            cmt = ItemComment.objects.get(id=self.CMT_ID)
+            self.assertIsNotNone(cmt)
+            self.assertEquals(cmt.user.username,'deleteuser')
 
 
 # 주문 모델 테스트

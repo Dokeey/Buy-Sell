@@ -20,7 +20,7 @@ script:
     -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
     -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
     --rm "$DOCKER_ID"/bns-relaese:$VERSION
-    python3.6 manage.py test category
+    python3.6 manage.py test
 
 after_success:
   - echo "$DOCKER_PASSWPRD" | docker login -u "$DOCKER_ID" --password-stdin
@@ -49,9 +49,10 @@ deploy:
   zip_file: archive.zip
   skip_cleanup: true
 
-after_deploy:
-  - echo "EB $VERSION버전 배포 진행중 ..."
-
 notifications:
   slack:
-    secure: $SLACK_ENV
+    secure: 0AeFs52dM8hxhzBVNDwLRyxNfUCV6aX5mQCWNA1UMXNFjHQd4ITqmqDnpNdnj+c007VLheTss+GpJQmhKHFrkvXgRTiVWcXrK3Og0MLG5R9dyCGWS5iI3xmkR+D4GRsV7J9jPRiKVV/7UimrR1co6FkK2xLqEbWUBjV3bH8kWb2JEqncHRMPVvox2DIOu/w2JEj9TfM8X601yOhRCeKDtW9ubx7ssuqO9CfcpZ3VHRyBwqB6UHzz7tWJiyLFVGNOBUxaNOY2Ik3JtVIWdkujmkBuelDOSjVGMAOziSRzIgB6hYdT8iRUMeSfgJLJ7pysLxIOaRFmx90r4WlKNpJy7drmk2F734cKuKrborBLCzg7P6ewbvsZCp/KP0je0fLIF2IEbO7UgiYzJGHOWQDuzmljk22c/5XMzqnGbUi8Wf+OWvUnL+sQZCPssTMeFUudolQlo4UvyNcb2WK+7i2mUaYMKRERv1pvCZB6H0Z2KS6l2EkTsP9ey6D4WQCIrPLFo+OgXBEtEw2/7DpzNXfpS+0VXSnI//Ds1yLuBntTVo8e2SqT/0dKJoD7m+LAQZgldnxscUyucVLUHXv3yeVlryCzGv/MgMaxssVxyjOErA3GR9eiPQJpEZhYCDIeS8xv5Qeti5nab5+dQfg9P1WYIqBXSJxKAEmMAFHC3z8EoLo=
+    template:
+        - "Repo `%{repository_slug}` *%{result}* build (<%{build_url}|#%{build_number}>) for commit (<%{compare_url}|%{commit}>) on branch `%{branch}`."
+        - "Execution time: *%{duration}*"
+        - "Message: %{message}"

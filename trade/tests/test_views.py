@@ -1,6 +1,7 @@
 import json
 import os
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles import finders
 from django.core.files import File
@@ -97,13 +98,14 @@ class ItemNewTest(TestCase):
         except:
             return super().tearDown()
 
-        for img in imgs:
-            directory = os.path.dirname(img.photo.path)
-            if os.path.isfile(img.photo.path):
-                os.remove(img.photo.path)
+        if not settings.AWS_REGION:
+            for img in imgs:
+                directory = os.path.dirname(img.photo.path)
+                if os.path.isfile(img.photo.path):
+                    os.remove(img.photo.path)
 
-            if len(os.listdir(directory)) == 0:
-                os.rmdir(directory)
+                if len(os.listdir(directory)) == 0:
+                    os.rmdir(directory)
 
         return super().tearDown()
 
