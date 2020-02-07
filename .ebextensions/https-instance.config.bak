@@ -1,0 +1,103 @@
+Resources:
+  sslSecurityGroupIngress: 
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: {"Fn::GetAtt" : ["AWSEBSecurityGroup", "GroupId"]}
+      IpProtocol: tcp
+      ToPort: 443
+      FromPort: 443
+      CidrIp: 0.0.0.0/0
+
+files:
+  /etc/nginx/conf.d/https.conf:
+    mode: "000644"
+    owner: root
+    group: root
+    content: |
+      # HTTPS Server
+      
+      server {
+        listen 443;
+        server_name localhost;
+        
+        ssl on;
+        ssl_certificate /etc/pki/tls/certs/server.crt;
+        ssl_certificate_key /etc/pki/tls/certs/server.key;
+        
+        ssl_session_timeout 5m;
+        
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+
+        location / {
+          proxy_pass http://docker;
+          proxy_http_version 1.1;
+          
+          proxy_set_header Connection "";
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto https;
+        }
+      }
+      
+  /etc/pki/tls/certs/server.crt:
+    mode: "000400"
+    owner: root
+    group: root
+    content: |
+      -----BEGIN CERTIFICATE-----
+      MIIDcDCCAlgCCQDeLJaNMLnRyjANBgkqhkiG9w0BAQsFADB6MQswCQYDVQQGEwJL
+      UjEOMAwGA1UEBwwFU2VvdWwxHDAaBgNVBAoME0RlZmF1bHQgQ29tcGFueSBMdGQx
+      HDAaBgNVBAMME3d3dy5idXluc2VsbC5rcm8ua3IxHzAdBgkqhkiG9w0BCQEWEGVo
+      ZGdudkBuYXZlci5jb20wHhcNMjAwMjA0MTI0OTM3WhcNMzAwMjAxMTI0OTM3WjB6
+      MQswCQYDVQQGEwJLUjEOMAwGA1UEBwwFU2VvdWwxHDAaBgNVBAoME0RlZmF1bHQg
+      Q29tcGFueSBMdGQxHDAaBgNVBAMME3d3dy5idXluc2VsbC5rcm8ua3IxHzAdBgkq
+      hkiG9w0BCQEWEGVoZGdudkBuYXZlci5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IB
+      DwAwggEKAoIBAQDPG0wVMVya53FOoR3P0tB/rllppssPtKjsegROXArrXMCrogF2
+      ALiZ07aeQdl8cB7ko1cR5G6EM9jqwH/MF/WEVomhBLk2tBmjEEKjRc2G0V5MZL7E
+      1BLUspnK2j5mFvwPnFv55YuyeAAgAFL7cGGmzl4Fjg/+eRl1FZKOC3x7amTCn7Ww
+      TK4phhWHxb+MLP0+cbnnOj13/GIasqxjH7YjnRCqTF/fUnM2IPyKlrJI+B8X2RCy
+      MsuzgOEP53fsyN0HZYmITj47gA0AvINH9CZYoLe+QmK826jl5Rh0wQMNp0kCI9Lf
+      47xUOluVZLPqFmDKS0hAcXSM3fmuxejD3FYxAgMBAAEwDQYJKoZIhvcNAQELBQAD
+      ggEBAMk0MyBUCJSYUUH1dBagYQFmhHA3qXPbzUilkBh1HTAWixvXvY1lzMV4yqzh
+      0G0NES2d5/KY+sb8v+5VO5SGGrYBQU2ol1/43Dw4KqAOLX5niA7Oyf5z/xBfKWB6
+      A4QZlCF7B7QRWfg4EOWIjgmkTq1THoDBdZmOWtsxy/YbIHNAMcY15/Z1AT+RNzPj
+      ucrIkr5TQ5/6CebjrVSvv8MC6KXL96JTm0qBeIy5GHiTcxYNWFRD1GUwxMjIn2jt
+      FAZi3AFRas+amQGrqrc3R/T3IeiT4gk+JDjcdYaj2Pu9fzKIIQInuaH+IuLuJ+WX
+      FJilQS/M5kf0FXxz2IU3Fj0xmbA=
+      -----END CERTIFICATE-----
+      
+  /etc/pki/tls/certs/server.key:
+    mode: "000400"
+    owner: root
+    group: root
+    content: |
+      -----BEGIN PRIVATE KEY-----
+      MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDPG0wVMVya53FO
+      oR3P0tB/rllppssPtKjsegROXArrXMCrogF2ALiZ07aeQdl8cB7ko1cR5G6EM9jq
+      wH/MF/WEVomhBLk2tBmjEEKjRc2G0V5MZL7E1BLUspnK2j5mFvwPnFv55YuyeAAg
+      AFL7cGGmzl4Fjg/+eRl1FZKOC3x7amTCn7WwTK4phhWHxb+MLP0+cbnnOj13/GIa
+      sqxjH7YjnRCqTF/fUnM2IPyKlrJI+B8X2RCyMsuzgOEP53fsyN0HZYmITj47gA0A
+      vINH9CZYoLe+QmK826jl5Rh0wQMNp0kCI9Lf47xUOluVZLPqFmDKS0hAcXSM3fmu
+      xejD3FYxAgMBAAECggEBAM3LkCSW8jAyvtKlIpx6HRhixRJI3Qp0OE8TR+gdafRK
+      LGHgD5eUS9r/Fz3WrSgLuYb0D/cFiBPx+R/7vIGvZRXlb8kCipCjEb6Iz86x8/J9
+      ZTh/+1hWa4fTGSMLDmofeMSCWJrOz6u9tlIWQF79Yut/sMnQSnBRIUzI7OIc48s1
+      OTgRSWKwTwGiPwaXJjJLJv4HLit3SVEbxW+0EqlZ7ihgj7TRN93inRE4eIaYmP6b
+      s9oGPOYhUa/yaeqKV1cu74SWekgRujFrRm0KAvt5cDKf9tFF64L0oKeRcWk6tTu7
+      r8wSmRIVwqyO3PD3WJTS8jqXhuNNXONGlD0I6O6LlkkCgYEA8wTQ40yZEyAdUDQV
+      1rGWSVbkqYmoCpAX7p9iB+1O18fmLCufF5izafeOIyFlkyiv/z/xAeuy88031psO
+      UwZDgBacUo4cEFADwe2fH7GEgkZRSjPAt9ba7uYnojVfiNPwEU/0kTV19/Oq34CN
+      uDH2O0aqMGgu9kAG4v1ykGEeaP8CgYEA2itliq3BrBcLkfHBXEnTPoaMBHmyOerW
+      H8R1a5JkfZTmp6bnaZlob/7oWe/5+FhcHba8UyCrcpkyRcXR1TIZT3+GDX6QO8K4
+      5z9cgaOMbPMazP2hGvRXxyrXEKxxvA27Ko0q/6L23VSYmVJMFYu4z1i9+xTqVYpI
+      /WDF7bjKkM8CgYEAqfYlTcMFj+228p/q4iODkzlVZQkkYHbUdgw8WITszlc9MIk1
+      lCA04pjDbOhvjNM4+9CxcwFwP7i4I7x/8SsBTHUD0W0YTYRYjGnvDxBtN1uMgNPf
+      JfP7XHfVIkonzZ9EWCdOSbxVDBv71qKm+zreFije4EoNBiZTaq+NT1LNHOsCgYAZ
+      CXvos1ITjr18LTNUhQBiH4y4AsNKVEHoeWJESxOPOeRSfxv1iW5r0+QUVi7oqjNA
+      EbWBELG8QAp96VrQTaSL9AWNTOX+hbU0jJfwJLW71xZPShgQANSF/cualT+kJitB
+      kdvKZIhSFCBDECe9HUDDQtrikp7l3C3OLinowxk0DwKBgAm4SHzf8M6DPTwiT3uC
+      fl2y0t2wLlq1O8zkgYubHzOdg2EEb5ZopetpfFbbzSBmfeyFozwed+s49Kw9Gc3N
+      VKoa+pF//7LfxP0u15tr72r9AG4thUtgWlG67qJ8iifSla05Tiz4As97x/jOWcAp
+      /fCcp976GZbuS3EvJiUSZRcQ
+      -----END PRIVATE KEY-----

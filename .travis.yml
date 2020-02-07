@@ -1,6 +1,57 @@
-language: python
-python:
-- 3.6.8
+env:
+  global:
+    - VERSION="1.0"
+    - BRANCH="bug_fixed"
+
+services:
+  - docker
+
+before_install:
+  - docker build -t "$DOCKER_ID"/bns-relaese:$VERSION .
+
+script:
+  - docker run
+    -e DB_HOST="$DB_HOST"
+    -e DB_NAME="$DB_NAME"
+    -e DB_USER="$DB_USER"
+    -e DB_PASSWORD="$DB_PASSWORD"
+    -e DB_PORT="$DB_PORT"
+    -e AWS_STORAGE_BUCKET_NAME="$AWS_STORAGE_BUCKET_NAME"
+    -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
+    -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
+    --rm "$DOCKER_ID"/bns-relaese:$VERSION
+    python3.6 manage.py test category
+
+after_success:
+  - echo "$DOCKER_PASSWPRD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push "$DOCKER_ID"/bns-relaese:$VERSION
+
+before_deploy:
+  - sed -i='' -e "s/<DOCKER_ID>/$DOCKER_ID/" -e "s/<TAG>/$VERSION/" Dockerrun.aws.json
+  - mkdir -p archive
+  - cp ./Dockerrun.aws.json ./archive/Dockerrun.aws.json
+  - cp -r ./.ebextensions archive/.ebextensions
+  - cd archive
+  - ls -al
+  - zip -r archive.zip Dockerrun.aws.json .ebextensions
+
+deploy:
+  provider: elasticbeanstalk
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  region: "ap-northeast-2"
+  app: "BuynSell"
+  env: "Buynsell-env"
+  bucket_name: "elasticbeanstalk-ap-northeast-2-109247251546"
+  bucket_path: "BuynSell-env"
+  on:
+    branch: $BRANCH
+  zip_file: archive.zip
+  skip_cleanup: true
+
+after_deploy:
+  - echo "EB $VERSION버전 배포 진행중 ..."
+
 notifications:
   slack:
-    secure: 0AeFs52dM8hxhzBVNDwLRyxNfUCV6aX5mQCWNA1UMXNFjHQd4ITqmqDnpNdnj+c007VLheTss+GpJQmhKHFrkvXgRTiVWcXrK3Og0MLG5R9dyCGWS5iI3xmkR+D4GRsV7J9jPRiKVV/7UimrR1co6FkK2xLqEbWUBjV3bH8kWb2JEqncHRMPVvox2DIOu/w2JEj9TfM8X601yOhRCeKDtW9ubx7ssuqO9CfcpZ3VHRyBwqB6UHzz7tWJiyLFVGNOBUxaNOY2Ik3JtVIWdkujmkBuelDOSjVGMAOziSRzIgB6hYdT8iRUMeSfgJLJ7pysLxIOaRFmx90r4WlKNpJy7drmk2F734cKuKrborBLCzg7P6ewbvsZCp/KP0je0fLIF2IEbO7UgiYzJGHOWQDuzmljk22c/5XMzqnGbUi8Wf+OWvUnL+sQZCPssTMeFUudolQlo4UvyNcb2WK+7i2mUaYMKRERv1pvCZB6H0Z2KS6l2EkTsP9ey6D4WQCIrPLFo+OgXBEtEw2/7DpzNXfpS+0VXSnI//Ds1yLuBntTVo8e2SqT/0dKJoD7m+LAQZgldnxscUyucVLUHXv3yeVlryCzGv/MgMaxssVxyjOErA3GR9eiPQJpEZhYCDIeS8xv5Qeti5nab5+dQfg9P1WYIqBXSJxKAEmMAFHC3z8EoLo=
+    secure: $SLACK_ENV

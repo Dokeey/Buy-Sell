@@ -1,0 +1,13 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "<DOCKER_ID>/bns-relaese:<TAG>",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+        "ContainerPort": "80"
+    }
+  ],
+  "Logging": "/var/log/nginx"
+}
