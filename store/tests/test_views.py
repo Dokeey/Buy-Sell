@@ -337,9 +337,6 @@ class StarStoreSellListViewTest(TestCase):
                 directory = os.path.dirname(img.path)
                 if os.path.isfile(img.path):
                     os.remove(img.path)
-
-
-
         super().tearDown()
 
 class StarStoreFollowListViewTest(TestCase):
