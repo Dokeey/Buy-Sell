@@ -1,5 +1,7 @@
 import os
 import json
+
+from django.conf import settings
 from django.test import TestCase
 from django.urls import reverse
 
@@ -44,16 +46,17 @@ class StarStoreSearchListViewTest(TestCase):
         self.assertQuerysetEqual(response.context['star_search'], ['<StoreProfile: test1>'] )
 
     def tearDown(self):
-        img = StoreProfile.objects.get(pk=self.store_id)
-        if img.photo:
-            directory = os.path.dirname(img.photo.path)
-            if os.path.isfile(img.photo.path):
-                os.remove(img.photo.path)
+        if not settings.USE_AWS:
+            img = StoreProfile.objects.get(pk=self.store_id)
+            if img.photo:
+                directory = os.path.dirname(img.photo.path)
+                if os.path.isfile(img.photo.path):
+                    os.remove(img.photo.path)
 
-            if len(os.listdir(directory)) == 0:
-                os.rmdir(directory)
+                if len(os.listdir(directory)) == 0:
+                    os.rmdir(directory)
 
-        super().tearDown()
+            super().tearDown()
 
 class StarStoreHitListViewTest(TestCase):
     @classmethod
@@ -150,18 +153,19 @@ class StarStoreHitListViewTest(TestCase):
         self.assertRedirects(response, reverse('store:store_error'))
 
     def tearDown(self):
-        stores = StoreProfile.objects.all()
-        for store in stores:
-            if store.photo:
-                img = store.photo
-                directory = os.path.dirname(img.path)
-                if os.path.isfile(img.path):
-                    os.remove(img.path)
+        if not settings.USE_AWS:
+            stores = StoreProfile.objects.all()
+            for store in stores:
+                if store.photo:
+                    img = store.photo
+                    directory = os.path.dirname(img.path)
+                    if os.path.isfile(img.path):
+                        os.remove(img.path)
 
-                if len(os.listdir(directory)) == 0:
-                    os.rmdir(directory)
+                    if len(os.listdir(directory)) == 0:
+                        os.rmdir(directory)
 
-        super().tearDown()
+            super().tearDown()
 
 class StarStoreGradeListViewTest(TestCase):
     @classmethod
@@ -218,13 +222,14 @@ class StarStoreGradeListViewTest(TestCase):
         # self.client.logout()
 
     def tearDown(self):
-        stores = StoreProfile.objects.all()
-        for store in stores:
-            if store.photo:
-                img = store.photo
-                if os.path.isfile(img.path):
-                    os.remove(img.path)
-        super().tearDown()
+        if not settings.USE_AWS:
+            stores = StoreProfile.objects.all()
+            for store in stores:
+                if store.photo:
+                    img = store.photo
+                    if os.path.isfile(img.path):
+                        os.remove(img.path)
+            super().tearDown()
 
 class StarStoreSellListViewTest(TestCase):
     @classmethod
@@ -314,29 +319,32 @@ class StarStoreSellListViewTest(TestCase):
         response = self.client.get(reverse('store:star_store_sell'))
         self.assertEqual(response.context['my_rank'], 1)
 
-        img = ItemImage.objects.get(pk=itemimage.pk)
-        directory = os.path.dirname(img.photo.path)
-        if os.path.isfile(img.photo.path):
-            os.remove(img.photo.path)
+        if not settings.USE_AWS:
+            img = ItemImage.objects.get(pk=itemimage.pk)
+            directory = os.path.dirname(img.photo.path)
+            if os.path.isfile(img.photo.path):
+                os.remove(img.photo.path)
 
-        if len(os.listdir(directory)) == 0:
-            os.rmdir(directory)
+            if len(os.listdir(directory)) == 0:
+                os.rmdir(directory)
+
     def tearDown(self):
-        items = ItemImage.objects.all()
-        for item in items:
-            if item.photo:
-                img = item.photo
-                directory = os.path.dirname(img.path)
-                if os.path.isfile(img.path):
-                    os.remove(img.path)
+        if not settings.USE_AWS:
+            items = ItemImage.objects.all()
+            for item in items:
+                if item.photo:
+                    img = item.photo
+                    directory = os.path.dirname(img.path)
+                    if os.path.isfile(img.path):
+                        os.remove(img.path)
 
-        stores = StoreProfile.objects.all()
-        for store in stores:
-            if store.photo:
-                img = store.photo
-                directory = os.path.dirname(img.path)
-                if os.path.isfile(img.path):
-                    os.remove(img.path)
+            stores = StoreProfile.objects.all()
+            for store in stores:
+                if store.photo:
+                    img = store.photo
+                    directory = os.path.dirname(img.path)
+                    if os.path.isfile(img.path):
+                        os.remove(img.path)
 
 
 
@@ -379,18 +387,19 @@ class StarStoreFollowListViewTest(TestCase):
         self.client.logout()
 
     def tearDown(self):
-        stores = StoreProfile.objects.all()
-        for store in stores:
-            if store.photo:
-                img = store.photo
-                directory = os.path.dirname(img.path)
-                if os.path.isfile(img.path):
-                    os.remove(img.path)
+        if not settings.USE_AWS:
+            stores = StoreProfile.objects.all()
+            for store in stores:
+                if store.photo:
+                    img = store.photo
+                    directory = os.path.dirname(img.path)
+                    if os.path.isfile(img.path):
+                        os.remove(img.path)
 
-                if len(os.listdir(directory)) == 0:
-                    os.rmdir(directory)
+                    if len(os.listdir(directory)) == 0:
+                        os.rmdir(directory)
 
-        super().tearDown()
+            super().tearDown()
 
 #========= 스토어 프로필 테스트 ==========
 
@@ -419,22 +428,23 @@ class StoreSellListViewTest(TestCase):
         self.assertQuerysetEqual(response.context['items'], ['<Item: testitem>'])
 
     def tearDown(self):
-        img = ItemImage.objects.get(pk=self.itemimg.pk)
-        directory = os.path.dirname(img.photo.path)
-        if os.path.isfile(img.photo.path):
-            os.remove(img.photo.path)
+        if not settings.USE_AWS:
+            img = ItemImage.objects.get(pk=self.itemimg.pk)
+            directory = os.path.dirname(img.photo.path)
+            if os.path.isfile(img.photo.path):
+                os.remove(img.photo.path)
 
-        if len(os.listdir(directory)) == 0:
-            os.rmdir(directory)
+            if len(os.listdir(directory)) == 0:
+                os.rmdir(directory)
 
-        img = StoreProfile.objects.get(pk=self.store0.pk)
-        directory = os.path.dirname(img.photo.path)
-        if os.path.isfile(img.photo.path):
-            os.remove(img.photo.path)
+            img = StoreProfile.objects.get(pk=self.store0.pk)
+            directory = os.path.dirname(img.photo.path)
+            if os.path.isfile(img.photo.path):
+                os.remove(img.photo.path)
 
-        if len(os.listdir(directory)) == 0:
-            os.rmdir(directory)
-        super().tearDown()
+            if len(os.listdir(directory)) == 0:
+                os.rmdir(directory)
+            super().tearDown()
 
 class StoreProfileEditViewTest(TestCase):
     @classmethod
@@ -467,17 +477,18 @@ class StoreProfileEditViewTest(TestCase):
         self.assertRedirects(response, '/accounts/login/?next=/store/profile/edit/')
 
     def tearDown(self):
-        for index in range(0,6):
-            img = StoreProfile.objects.get(pk=self.store0.pk)
-            if img.photo:
-                directory = os.path.dirname(img.photo.path)
-                if os.path.isfile(img.photo.path):
-                    os.remove(img.photo.path)
+        if not settings.USE_AWS:
+            for index in range(0,6):
+                img = StoreProfile.objects.get(pk=self.store0.pk)
+                if img.photo:
+                    directory = os.path.dirname(img.photo.path)
+                    if os.path.isfile(img.photo.path):
+                        os.remove(img.photo.path)
 
-                if len(os.listdir(directory)) == 0:
-                    os.rmdir(directory)
+                    if len(os.listdir(directory)) == 0:
+                        os.rmdir(directory)
 
-        super().tearDown()
+            super().tearDown()
 
 
 
