@@ -1,8 +1,4 @@
 {% extends "store/star_layout.html" %}
-{% load store.store_tags %}
-{% load hitcount_tags %}
-{% load trade_tags %}
-
 {% block star_head %}
 {% endblock %}
 
@@ -49,7 +45,7 @@
                         </div>
                     </div>
                 <hr/>
-                    <h2 align="center" style="font-weight:bold;color:white;">  {% get_hit_count for first %}명</h2>
+                    <h2 align="center" style="font-weight:bold;color:white;">  {{ first_rank }}명</h2>
                     <div align="right">
                         <a href="{% url 'store:store_sell_list' first.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
                     </div>
@@ -82,7 +78,7 @@
             <div class="row">
                 <br/>
             <div class="col-sm-5 col-xs-5" style="font-size:20px; font-weight:bold;">
-                {% get_hit_count for request.user.storeprofile %}명
+                {{ my_hits }}명
             </div>
             <div class="col-xs-7" align="center"> <a href="{% url 'store:store_sell_list' request.user.storeprofile.pk %}"  style="color:#C3C3C3;font-weight:bold;">내 가게로 가기 <i class="fas fa-angle-right"></i></a> </div>
         </div></div>
@@ -112,7 +108,7 @@
                 <div class="row">
                     <br/>
                 <div class="col-sm-5 col-xs-5" style="font-size:20px; font-weight:bold;">
-                    {% get_hit_count for store %}명
+                    {{ store.hit_count_generic.first.hits }}명
                 </div>
                     <div class="col-xs-7" align="center">
                         <a href="{% url 'store:store_sell_list' store.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>

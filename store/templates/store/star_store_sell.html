@@ -80,7 +80,7 @@
                 <div class="row">
                     <br/>
                 <div class="col-sm-5 col-xs-5" style="font-size:20px; font-weight:bold;">
-                    {% store_sell_list request.user.storeprofile.pk %}개
+                    {{ my_sell }}개
                 </div>
                 <div class="col-xs-7" align="center"> <a href="{% url 'store:store_sell_list' request.user.storeprofile.pk %}"  style="color:#C3C3C3;font-weight:bold;">내 가게로 가기 <i class="fas fa-angle-right"></i></a> </div>
              </div></div>

@@ -108,17 +108,19 @@ class StarStoreHitListView(ListView):
         ctype = ContentType.objects.get_for_model(StoreProfile)
         # search_hit = HitCount.objects.filter(content_type=ctype).values('object_pk','hits').annotate(rank=DenseRank('hits'))
 
-        search_hit = StoreProfile.objects.all()
+        search_hit = StoreProfile.objects.prefetch_related('hit_count_generic')
         if self.request.user.is_authenticated:
             my_hits = HitCount.objects.get_for_object(self.request.user.storeprofile).hits
+            context['my_hits'] = my_hits
             context['my_rank'] = search_hit.filter(hit_count_generic__hits__gt=my_hits).count() + 1
         else:
             context['my_rank'] = '-'
         search_hit = search_hit.filter(hit_count_generic__content_type=ctype)
         search_hit = search_hit.annotate(rank=DenseRank('hit_count_generic__hits'))
-        search_hit = search_hit.order_by('rank')[:5]
+        search_hit = search_hit.order_by('rank')
         context['first'] = search_hit.first()
-
+        context['first_rank'] = context['first'].hit_count_generic.first().hits
+        # context['hit_count'] = HitCount.objects.get_for_object().hits
         # for i in search_hit:
         #     if i['object_pk']:
         #         i['store'] = StoreProfile.objects.get(pk=i['object_pk'])
@@ -161,6 +163,8 @@ class StarStoreGradeListView(ListView):
             for my in search_grade :
                 if my == self.request.user.storeprofile:
                     context['my_rank'] = my.rank
+                    context['my_grade'] = my.rating_sum
+                    context['my_grade_count'] = my.count
         else:
             context['my_rank'] = '-'
 
@@ -202,6 +206,7 @@ class StarStoreSellListView(ListView):
             for sell in search_sell :
                 if sell == self.request.user.storeprofile:
                     context['my_rank'] = sell.rank
+                    context['my_sell'] = sell.count
             if context['my_rank'] == '' :
                 context['my_rank'] = '-'
         else:
@@ -254,6 +259,7 @@ class StarStoreFollowListView(ListView):
             for foll in search_follow:
                 if foll.pk == self.request.user.storeprofile.pk :
                     context['my_rank'] = foll.rank
+                    context['my_foll'] = foll.count
                     break
             # context['my_rank'] = follow_dict[self.request.user.id]
         else:

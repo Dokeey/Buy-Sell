@@ -36,6 +36,8 @@ class StoreProfileTest(TestCase):
     #     self.failUnless(open(image), 'file not found')
 
 class QuestionCommentTest(TestCase):
+    DEL_ID = get_user_model().objects.get(username='deleteuser').id
+
     @classmethod
     def setUpTestData(cls):
 
@@ -45,7 +47,7 @@ class QuestionCommentTest(TestCase):
         users2 = get_user_model().objects.create(username='testuser2', email='test2@test.com')
         store2 = StoreProfile.objects.create(user=users2 ,name='testuserstore2')
 
-        deluser = get_user_model().objects.create(id=3, username='deleteuser', email='del@del.com')
+        deluser = get_user_model().objects.create(id=cls.DEL_ID, username='deleteuser', email='del@del.com')
         delstore = StoreProfile.objects.create(user=deluser, name='deleteuser의 가게')
 
         #Comment 생성
@@ -75,6 +77,8 @@ class QuestionCommentTest(TestCase):
         self.assertEquals(delcomment.author.username, 'deleteuser')
 
 class StoreGradeTest(TestCase):
+    DEL_ID = get_user_model().objects.get(username='deleteuser').id
+
     @classmethod
     def setUpTestData(cls):
 
@@ -85,7 +89,7 @@ class StoreGradeTest(TestCase):
         users2 = get_user_model().objects.create(username='testuser2', email='test2@test.com')
         store2 = StoreProfile.objects.create(user=users2 ,name='testuserstore2')
 
-        deluser = get_user_model().objects.create(id=3, username='deleteuser', email='del@del.com')
+        deluser = get_user_model().objects.create(id=cls.DEL_ID, username='deleteuser', email='del@del.com')
         delstore = StoreProfile.objects.create(user=deluser, name='deleteuser의 가게')
  
         #grade 모델을 위한 생성

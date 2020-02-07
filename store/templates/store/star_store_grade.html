@@ -1,5 +1,4 @@
 {% extends "store/star_layout.html" %}
-{% load store.store_tags %}
 {% load trade_tags %}
 
 {% block star_head %}
@@ -110,29 +109,28 @@
                 <div class="row">
                     <br/>
                 <div class="col-xs-7" style="font-size:20px; font-weight:bold;" align="left">
-                     {% store_rating request.user.storeprofile.pk as end %}
-                                {% if request.user.storeprofile.storegrade_set.all.count == 0 %}
+                                {% if my_grade_count == 0 %}
                                 <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
                                 {% else %}
-                                    {% if end == 0 %}
+                                    {% if my_grade == 0 %}
                                     <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 1.5 %}
+                                    {% elif my_grade < 1.5 %}
                                     <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 2.0 %}
+                                    {% elif my_grade < 2.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 2.5 %}
+                                    {% elif my_grade < 2.5 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 3.0 %}
+                                    {% elif my_grade < 3.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 3.5 %}
+                                    {% elif my_grade < 3.5 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 4.0 %}
+                                    {% elif my_grade < 4.0 %}
                                     <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
-                                    {% elif end < 4.5 %}
+                                    {% elif my_grade < 4.5 %}
                                     <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 5.0 %}
+                                    {% elif my_grade < 5.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                                    {% elif end == 5.0 %}
+                                    {% elif my_grade == 5.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                                     {% endif %}
                                 {% endif %}

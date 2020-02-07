@@ -330,9 +330,6 @@ class StarStoreSellListViewTest(TestCase):
                 if os.path.isfile(img.path):
                     os.remove(img.path)
 
-                if len(os.listdir(directory)) == 0:
-                    os.rmdir(directory)
-
         stores = StoreProfile.objects.all()
         for store in stores:
             if store.photo:
