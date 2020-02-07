@@ -209,5 +209,5 @@ dmypy.json
 .dockerignore
 
 .DS_Store
-run_dev.*
+run_dev*
 staticfiles

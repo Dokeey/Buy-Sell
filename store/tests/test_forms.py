@@ -1,5 +1,6 @@
 import os
 
+from django.conf import settings
 from django.test import TestCase
 from store.models import StoreProfile
 from django.contrib.auth import get_user_model
@@ -33,7 +34,7 @@ class StoreProfileFormTest(TestCase):
         self.assertTrue(form.fields['comment'].label == '가게 소개')
 
     def test_storeprofile_data(self):
-        url = finders.find('profile/3.png')
+        url = finders.find('profile/4.png')
         photo_file = open(url, 'rb')
         post_dict = {'name':'test', 'comment': 'hi'}
         file_dict = {'photo': SimpleUploadedFile(photo_file.name, photo_file.read())}
@@ -45,7 +46,10 @@ class StoreProfileFormTest(TestCase):
         storeprofile.store_profile_id = self.store_id
 
         self.assertEqual(storeprofile.name, 'test')
-        self.assertEqual(storeprofile.photo.url, '/media/3.png')
+        if settings.USE_AWS:
+            self.assertEqual(storeprofile.photo.url, 'https://'+settings.AWS_S3_CUSTOM_DOMAIN+'/media/4.png')
+        else:
+            self.assertEqual(storeprofile.photo.url, '/media/4.png')
         self.assertEqual(storeprofile.comment, 'hi')
 
     def test_storeprofile_empty_data(self):
@@ -55,15 +59,16 @@ class StoreProfileFormTest(TestCase):
 
     #media storeprofile에 저장되는 test image 삭제
     def tearDown(self):
-        img = StoreProfile.objects.get(id=self.store_id)
-        directory = os.path.dirname(img.photo.path)
-        if os.path.isfile(img.photo.path):
-            os.remove(img.photo.path)
+        if not settings.USE_AWS:
+            img = StoreProfile.objects.get(id=self.store_id)
+            directory = os.path.dirname(img.photo.path)
+            if os.path.isfile(img.photo.path):
+                os.remove(img.photo.path)
 
-        if len(os.listdir(directory)) == 0:
-            os.rmdir(directory)
+            if len(os.listdir(directory)) == 0:
+                os.rmdir(directory)
 
-        super().tearDown()
+            super().tearDown()
 
 class StoreQuestionFormTest(TestCase):
     @classmethod
