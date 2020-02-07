@@ -235,3 +235,5 @@ SUMMERNOTE_CONFIG  = {
        ' lang ' : 'ko-KR',
 }
 }
+
+USE_AWS = False

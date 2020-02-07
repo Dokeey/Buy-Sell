@@ -2,6 +2,7 @@ from .common import *
 
 
 # AWS Setting
+USE_AWS = True
 AWS_REGION = 'ap-northeast-2'
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
 AWS_QUERYSTRING_AUTH = False

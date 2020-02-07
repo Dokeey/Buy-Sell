@@ -109,7 +109,7 @@ class ItemImageModelTest(TestCase):
 
     # 테스트 종료후 이미지 삭제
     def tearDown(self):
-        if not settings.AWS_REGION:
+        if not settings.USE_AWS:
             img = ItemImage.objects.get(id=self.IMG_ID)
 
             directory = os.path.dirname(img.photo.path)

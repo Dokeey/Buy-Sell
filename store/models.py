@@ -39,6 +39,7 @@ class StoreProfile(models.Model, HitCountMixin):
     class Meta:
         verbose_name = "가게"
         verbose_name_plural = "가게"
+        ordering = ['-id']
 
 from django.contrib.auth import get_user_model
 User = get_user_model()

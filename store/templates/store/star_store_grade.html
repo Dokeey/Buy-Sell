@@ -1,5 +1,4 @@
 {% extends "store/star_layout.html" %}
-{% load store.store_tags %}
 {% load trade_tags %}
 
 {% block star_head %}
@@ -14,24 +13,24 @@
             <div class="col-sm-offset-3 col-sm-9 col-xs-offset-1 col-xs-10">
                 <div class="relative"></div>
                 <div class="album_img">
-                    <img src="{{stores.0.store_info.photo.url }}" width="300", height="300", style="
+                    <img src="{{first.photo.url }}" width="300", height="300", style="
     border-radius: 20px;", class="img-responsive " />
                 </div>
                 <div class="rank_music">
                     <h4 style="color:white"><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
                     <div class="row">
                         <div class="col-xs-5">
-                             <a href="{% url 'store:store_sell_list' stores.0.store_info.pk %}">
-                                 <img src="{{ stores.0.store_info.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
+                             <a href="{% url 'store:store_sell_list' first.pk %}">
+                                 <img src="{{ first.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail ">
                              </a>
                         </div>
                         <div class="col-xs-7" style="font-weight:bold;color:white;">
-                             <a href="{% url 'store:store_sell_list' stores.0.store_info.pk %}" style="color:white;font-weight:bold;">
-                                 {{ stores.0.store_info.name }}
+                             <a href="{% url 'store:store_sell_list' first.pk %}" style="color:white;font-weight:bold;">
+                                 {{ first.name }}
                              </a><br/><br/>
                             <div class="row">
                                 <div class="col-xs-4" >
-                                    <a class="white" onclick="javascript:sharefacebook('{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' stores.0.store_info.pk %}')">
+                                    <a class="white" onclick="javascript:sharefacebook('{{ request.META.HTTP_HOST }}{% url 'store:store_sell_list' first.pk %}')">
                                         <i class="fab fa-facebook"></i>
                                     </a>
                                 </div>
@@ -41,7 +40,7 @@
                                     </a>
                                 </div>
                                 <div class="col-xs-4" >
-                                    <a class="white" onclick = "location.href ='{% url "mypage:follow_action" stores.0.store_info.pk %}?next={{ request.path }}'" >
+                                    <a class="white" onclick = "location.href ='{% url "mypage:follow_action" first.pk %}?next={{ request.path }}'" >
                                         <i class="fas fa-user-plus"></i>
                                      </a>
                                 </div>
@@ -50,37 +49,34 @@
                     </div>
 
                     <hr/>
-                    {% store_rating stores.0.store_info.pk as end %}
+
                     <div style="font-size:20px;text-align:center">
-                        {% if stores.0.store_info.storegrade_set.all.count == 0 %}
-                            <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                            {% else %}
-                                {% if end == 0 %}
-                                <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                {% elif end < 1.5 %}
-                                <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                {% elif end < 2.0 %}
-                                <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                {% elif end < 2.5 %}
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                {% elif end < 3.0 %}
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                {% elif end < 3.5 %}
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                {% elif end < 4.0 %}
-                                <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
-                                {% elif end < 4.5 %}
-                                <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                                {% elif end < 5.0 %}
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                                {% elif end == 5.0 %}
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                {% endif %}
-                            {% endif %}
+
+                        {% if first.rating_sum == 0 %}
+                        <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                        {% elif first.rating_sum < 1.5 %}
+                        <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                        {% elif first.rating_sum < 2.0 %}
+                        <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                        {% elif first.rating_sum < 2.5 %}
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                        {% elif first.rating_sum < 3.0 %}
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                        {% elif first.rating_sum < 3.5 %}
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                        {% elif first.rating_sum < 4.0 %}
+                        <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+                        {% elif first.rating_sum < 4.5 %}
+                        <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                        {% elif first.rating_sum < 5.0 %}
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                        {% elif first.rating_sum == 5.0 %}
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        {% endif %}
 
                     </div><br/>
                         <div align="right">
-                        <a href="{% url 'store:store_sell_list' stores.0.store_info.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
+                        <a href="{% url 'store:store_sell_list' first.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
                         </div>
                 </div>
 
@@ -93,14 +89,14 @@
              <div class="col-sm-2 col-xs-12">
                  <h4><span class="col-xs-12" style="color:#EDA900; padding:3px">나는</span>
 
-                 {% if my_grade == 1 %}
+                 {% if my_rank == 1 %}
                     <i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
-                 {% elif my_grade == 2 %}
+                 {% elif my_rank == 2 %}
                     <i class="fas fa-trophy" style="color:#C0C0C0;"></i> 2위</h4>
-                 {% elif my_grade == 3 %}
+                 {% elif my_rank == 3 %}
                     <i class="fas fa-trophy" style="color:#cd7f32;"></i> 3위</h4>
                  {% else %}
-                    {{ my_grade }} 위</h4>
+                    {{ my_rank }} 위</h4>
                  {% endif %}
              </div>
              <div class="col-sm-2 col-xs-3">
@@ -113,29 +109,28 @@
                 <div class="row">
                     <br/>
                 <div class="col-xs-7" style="font-size:20px; font-weight:bold;" align="left">
-                     {% store_rating request.user.storeprofile.pk as end %}
-                                {% if request.user.storeprofile.storegrade_set.all.count == 0 %}
+                                {% if my_grade_count == 0 %}
                                 <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
                                 {% else %}
-                                    {% if end == 0 %}
+                                    {% if my_grade == 0 %}
                                     <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 1.5 %}
+                                    {% elif my_grade < 1.5 %}
                                     <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 2.0 %}
+                                    {% elif my_grade < 2.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 2.5 %}
+                                    {% elif my_grade < 2.5 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 3.0 %}
+                                    {% elif my_grade < 3.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 3.5 %}
+                                    {% elif my_grade < 3.5 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 4.0 %}
+                                    {% elif my_grade < 4.0 %}
                                     <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
-                                    {% elif end < 4.5 %}
+                                    {% elif my_grade < 4.5 %}
                                     <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 5.0 %}
+                                    {% elif my_grade < 5.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                                    {% elif end == 5.0 %}
+                                    {% elif my_grade == 5.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                                     {% endif %}
                                 {% endif %}
@@ -146,59 +141,59 @@
 
             {% endif %}
 
-            {% for sto in stores|slice:"5" %}
+            {% for store in stores|slice:"5" %}
          <hr/>
                  <div class="row">
                      <div class="col-sm-2 col-xs-12">
-                         {% if sto.rank == 1 %}
+                         {% if store.rank == 1 %}
                             <h4 ><i class="fas fa-trophy" style="color:#FFD700;"></i> 1위</h4>
-                         {% elif sto.rank == 2 %}
+                         {% elif store.rank == 2 %}
                             <h4 ><i class="fas fa-trophy" style="color:#C0C0C0;"></i> 2위</h4>
-                         {% elif sto.rank == 3 %}
+                         {% elif store.rank == 3 %}
                             <h4 ><i class="fas fa-trophy" style="color:#cd7f32;"></i> 3위</h4>
                          {% else %}
-                            <h4 >{{ sto.rank }}위</h4>
+                            <h4 >{{ store.rank }}위</h4>
                          {% endif %}
                      </div>
                      <div class="col-sm-2 col-xs-3">
-                         <a href="{% url 'store:store_sell_list' sto.store_info.pk %}"><img src="{{ sto.store_info.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail "></a>
+                         <a href="{% url 'store:store_sell_list' store.pk %}"><img src="{{ store.photo.url }}" width="100%", height="100%", class="img-responsive img-thumbnail "></a>
                      </div>
                      <div class="col-sm-8 col-xs-9">
-                         <a href="{% url 'store:store_sell_list' sto.store_info.pk %}">{{ sto.store_info.name }}</a>
+                         <a href="{% url 'store:store_sell_list' store.pk %}">{{ store.name }}</a>
 
                         <div class="row">
                             <br/>
                         <div class="col-sm-7 col-xs-7" style="font-size:20px; font-weight:bold;" >
-                            {% store_rating sto.store_info.pk as end %}
-                                {% if sto.store_info.storegrade_set.all.count == 0 %}
+
+                                {% if store.count == 0 %}
                                 <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
                                 {% else %}
-                                    {% if end == 0 %}
+                                    {% if store.rating_sum == 0 %}
                                     <i class="far fa-star yellow"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 1.5 %}
+                                    {% elif store.rating_sum < 1.5 %}
                                     <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 2.0 %}
+                                    {% elif store.rating_sum < 2.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 2.5 %}
+                                    {% elif store.rating_sum < 2.5 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 3.0 %}
+                                    {% elif store.rating_sum < 3.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 3.5 %}
+                                    {% elif store.rating_sum < 3.5 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 4.0 %}
+                                    {% elif store.rating_sum < 4.0 %}
                                     <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
-                                    {% elif end < 4.5 %}
+                                    {% elif store.rating_sum < 4.5 %}
                                     <i class="fas fa-star yellow"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                                    {% elif end < 5.0 %}
+                                    {% elif store.rating_sum < 5.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                                    {% elif end == 5.0 %}
+                                    {% elif store.rating_sum == 5.0 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                                     {% endif %}
                                 {% endif %}
                         </div>
 
                         <div class="col-xs-5" align="center">
-                            <a href="{% url 'store:store_sell_list' sto.store_info.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
+                            <a href="{% url 'store:store_sell_list' store.pk %}" style="color:#C3C3C3;font-weight:bold;">가게 놀러가기 <i class="fas fa-angle-right"></i></a>
 
                         </div>
 

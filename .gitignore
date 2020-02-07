@@ -207,3 +207,7 @@ dmypy.json
 !Dockerfile
 .ebignore
 .dockerignore
+
+.DS_Store
+run_dev.*
+staticfiles

@@ -98,7 +98,7 @@ class ItemNewTest(TestCase):
         except:
             return super().tearDown()
 
-        if not settings.AWS_REGION:
+        if not settings.USE_AWS:
             for img in imgs:
                 directory = os.path.dirname(img.photo.path)
                 if os.path.isfile(img.photo.path):
