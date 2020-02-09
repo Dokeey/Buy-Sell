@@ -1,4 +1,7 @@
 import os
+from os import path
+import sys
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 from django.core.files.base import ContentFile
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'buynsell.settings')
@@ -6,7 +9,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'buynsell.settings')
 import django
 django.setup()
 
-import sys
 import requests
 from bs4 import BeautifulSoup
 

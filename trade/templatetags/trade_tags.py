@@ -81,7 +81,7 @@ def item_block(item):
         photo_url = item.itemimage_set.all()[0].photo.url
     else:
         photo_url = None
-    item_status = item.get_item_status_display()
+    # item_status = item.get_item_status_display()
     pay_status = status_check(item.get_pay_status_display())
     updated_at = item.updated_at.strftime("%Y년 %m월 %d일")
     created_at = item.created_at.strftime("%Y년 %m월 %d일 %H:%M")
@@ -113,7 +113,6 @@ def item_block(item):
                amount=amount,
                next_link=next_link,
                photos=photos(item),
-               item_status=item_status,
                pay_status=pay_status,
                time=created_str,
                updated_at=updated_at,

@@ -2,11 +2,13 @@ from time import time
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
+from django.core.files.storage import FileSystemStorage
 from django.db import models
 from category.models import Category
 
 # Create your models here.
 # from imagekit.generatorlibrary import Thumbnail
+from django.utils.crypto import get_random_string
 from hitcount.models import HitCountMixin, HitCount
 from imagekit.models import ProcessedImageField
 from mptt.fields import TreeForeignKey
@@ -83,11 +85,33 @@ class Item(models.Model, HitCountMixin):
         verbose_name_plural = "물품"
 
 
+
+def user_directory_path(instance, filename):
+    """
+    image upload directory setting
+    e.g)
+        item_img/{year}-{month}-{day}/{username}_{filename}_{randomstring}
+        images/2016-7-12/user_file_xfiwefu.jpg
+    """
+    now = datetime.now()
+
+    path = 'item_img/{year}-{month}-{day}/{username}_{randomstring}{filename}'.format(
+        year=now.year,
+        month=now.month,
+        day=now.day,
+        username=instance.item.user.username,
+        filename=filename,
+        randomstring=get_random_string(7),
+    )
+    return path
+
+
+
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE, db_index=True)
     photo = ProcessedImageField(
             verbose_name="물품 사진",
-            upload_to = 'item_img/{0}'.format(datetime.now().strftime("%Y-%m-%d")),
+            upload_to = user_directory_path,
             processors = [ResizeToFill(640, 640)],
             format='JPEG',
             options = {'quality': 70}
