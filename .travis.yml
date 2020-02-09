@@ -23,7 +23,7 @@ script:
     python3.6 manage.py test
 
 after_success:
-  - echo "$DOCKER_PASSWPRD" | docker login -u "$DOCKER_ID" --password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   - docker push "$DOCKER_ID"/bns-relaese:$VERSION
 
 before_deploy:
