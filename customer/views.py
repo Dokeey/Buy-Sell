@@ -30,7 +30,7 @@ class CustomerFAQSearch(ListView):
     context_object_name = 'faq_search'
 
     def get(self, request, *args, **kwargs):
-        self.query = self.request.GET.get('query', '')
+        self.query = self.request.GET.get('query', '').strip()
 
         if self.query.replace(' ', '') == '':
             self.query = ''
@@ -74,6 +74,10 @@ class CustomerAskListView(ListView):
     model = CustomerAsk
     context_object_name = "asks"
     template_name = "customer/customer_ask.html"
+
+    def get_queryset(self):
+        self.queryset = CustomerAsk.objects.filter(author=self.request.user)
+        return super().get_queryset()
 
 # @login_required
 # def customer_ask_new(request):

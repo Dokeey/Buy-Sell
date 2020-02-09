@@ -44,7 +44,7 @@ class StarStoreSearchList(ListView):
     paginate_by = 6
 
     def get(self, request, *args, **kwargs):
-        self.query = self.request.GET.get('query', '')
+        self.query = self.request.GET.get('query', '').strip()
 
         if self.query.replace(' ', '') == '':
             self.query = ''
