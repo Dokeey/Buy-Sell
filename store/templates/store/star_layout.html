@@ -166,7 +166,7 @@
                     </a></div>
                 <div class="row">
 
-                    {% for item in store.store.user.item_set.all|slice:"4" %}
+                    {% for item in store.user.item_set.all|slice:"4" %}
                         <div class="col-sm-3 col-xs-6" style="padding:10px">
                                 {% item_block item %}
                         </div>
@@ -187,9 +187,9 @@
                 <hr/>
             </div>
             {% endif %}
+        {% endfor %}
 
         </div>
-        {% endfor %}
     {% endblock %}
 
 {% endblock %}
