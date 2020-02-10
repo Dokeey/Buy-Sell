@@ -10,7 +10,7 @@ install:
   - docker build -t "$DOCKER_ID"/bns-relaese:$VERSION .
 
 script:
-  - docker run
+  if [ "$BRANCH" = "master" ]; then docker run
     -e DB_HOST="$DB_HOST"
     -e DB_NAME="$DB_NAME"
     -e DB_USER="$DB_USER"
@@ -20,7 +20,7 @@ script:
     -e AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
     -e AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
     --rm "$DOCKER_ID"/bns-relaese:$VERSION
-    python3.6 manage.py test
+    python3.6 manage.py test; fi
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
