@@ -223,7 +223,6 @@ class MyPasswordResetView(IdFindView):
     success_message = '비밀번호 찾기 메일을 보냈습니다.'
 
 
-
 class MyPasswordResetConfirmView(PasswordResetConfirmView):
     success_url = reverse_lazy('accounts:login')
     template_name = 'accounts/password_reset_confirm.html'

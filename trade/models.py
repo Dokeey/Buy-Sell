@@ -24,24 +24,31 @@ from django.http import Http404
 from uuid import uuid4
 
 
-
 def named_property(name):
     def wrap(fn):
         fn.short_description = name
         return property(fn)
+
     return wrap
+
 
 def order_property(order):
     def wrap(fn):
         fn.admin_order_field = order
         return fn
+
     return wrap
+
 
 def timestamp_to_datetime(timestamp):
     if timestamp:
         tz = pytz.timezone(settings.TIME_ZONE)
         return datetime.utcfromtimestamp(timestamp).replace(tzinfo=tz)
     return None
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=100)
 
 
 class Item(models.Model, HitCountMixin):
@@ -74,7 +81,10 @@ class Item(models.Model, HitCountMixin):
     created_at = models.DateTimeField(verbose_name="등록일", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="최근 업데이트", auto_now=True)
 
-    hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk', related_query_name='hit_count_generic_relation')
+    hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk',
+                                        related_query_name='hit_count_generic_relation')
+
+    tags = models.ManyToManyField(Tag)
 
     def __str__(self):
         return self.title
@@ -83,7 +93,6 @@ class Item(models.Model, HitCountMixin):
         # ordering = ["-created_at"]
         verbose_name = "물품"
         verbose_name_plural = "물품"
-
 
 
 def user_directory_path(instance, filename):
@@ -106,30 +115,31 @@ def user_directory_path(instance, filename):
     return path
 
 
-
 class ItemImage(models.Model):
     item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE, db_index=True)
     photo = ProcessedImageField(
-            verbose_name="물품 사진",
-            upload_to = user_directory_path,
-            processors = [ResizeToFill(640, 640)],
-            format='JPEG',
-            options = {'quality': 70}
-        )
+        verbose_name="물품 사진",
+        upload_to=user_directory_path,
+        processors=[ResizeToFill(640, 640)],
+        format='JPEG',
+        options={'quality': 70}
+    )
+
     class Meta:
         verbose_name = "물품 사진"
         verbose_name_plural = "물품 사진"
 
 
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
 try:
     user_pk = User.objects.get(username='deleteuser').id
 except:
     user_pk = None
 
-class ItemComment(models.Model):
 
+class ItemComment(models.Model):
     if user_pk:
         user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="작성자",
                                  on_delete=models.SET_DEFAULT, default=user_pk)
@@ -141,7 +151,8 @@ class ItemComment(models.Model):
     secret = models.BooleanField(verbose_name="비밀글", default=True)
     created_at = models.DateTimeField(verbose_name="작성일", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="최근 업데이트", auto_now=True)
-    parent = models.ForeignKey('self', verbose_name="상위 댓글", on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+    parent = models.ForeignKey('self', verbose_name="상위 댓글", on_delete=models.CASCADE, null=True, blank=True,
+                               related_name='replies')
 
     class Meta:
         # sort comments in chronological order by default
@@ -152,7 +163,9 @@ class ItemComment(models.Model):
     def __str__(self):
         return self.message
 
+
 from accounts.validators import phone_validate
+
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="구매자", on_delete=models.CASCADE)
@@ -167,7 +180,7 @@ class Order(models.Model):
 
     item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE)
     merchant_uid = models.UUIDField(default=uuid4, editable=False)
-    imp_uid = models.CharField(verbose_name="이니페이 UID",max_length=100, blank=True)
+    imp_uid = models.CharField(verbose_name="이니페이 UID", max_length=100, blank=True)
     # name = models.CharField(max_length=100, verbose_name='상품명')
     amount = models.PositiveIntegerField(verbose_name='결제금액')
     pay_choice = models.CharField(
@@ -224,7 +237,7 @@ class Order(models.Model):
     # def receipt_url(self):
     #     return self.meta.get('receipt_url')
     # receipt_url.short_description = '영수증'
-    #아래와 같은 말
+    # 아래와 같은 말
 
     # receipt_url = named_property('영수증')(lambda self: self.meta.get('receipt_url'))
 
@@ -298,7 +311,7 @@ class Order(models.Model):
                 self.meta['cancelled_at'] = int(time())
 
         commit = True
-        if self.status in ('reserv','paid'):
+        if self.status in ('reserv', 'paid'):
             self.item.pay_status = 'reservation'
             self.meta['paid_at'] = int(time())
         elif self.status == 'success':
@@ -310,7 +323,6 @@ class Order(models.Model):
 
         if commit:
             self.save()
-
 
     def cancel(self, reason=None, commit=True):
         '결제내역 취소'
@@ -330,6 +342,7 @@ class Order(models.Model):
 
 
 from category.models import Category
+
 
 class ProxyCategory(Category):
     class Meta:

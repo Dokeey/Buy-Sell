@@ -1,19 +1,19 @@
+from category.models import Category
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.db.models import Count, F
-
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
-
-from category.models import Category
 from mptt.admin import DraggableMPTTAdmin
 
-from .models import Item, ItemImage, ItemComment, ProxyCategory, Order
+from .models import Item, ItemImage, ItemComment, ProxyCategory, Tag
 
 
-
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    fields = ("name",)
 
 
 class InlineItemAdmin(admin.StackedInline):
@@ -34,6 +34,7 @@ class InlineItemAdmin(admin.StackedInline):
             )
             html = html + ht
         return mark_safe(html)
+
     item_photos.short_description = ("사진 자세히 보기")
 
     def get_edit_link(self, obj=None):
@@ -44,10 +45,12 @@ class InlineItemAdmin(admin.StackedInline):
                 text=("물품 상세 정보, 문의글 보러가기"),
             ))
         return "저장하시고 이용해주세요"
+
     get_edit_link.short_description = ("물품 자세히 보기")
 
     def has_add_permission(self, request, obj):
         return False
+
     def has_delete_permission(self, request, obj=None):
         return False
 
@@ -66,6 +69,7 @@ class CategoryFilter(SimpleListFilter):
         else:
             return queryset
 
+
 @admin.register(ProxyCategory)
 class CategoryAdmin(DraggableMPTTAdmin):
     # specify pixel amount for this ModelAdmin only:
@@ -73,7 +77,8 @@ class CategoryAdmin(DraggableMPTTAdmin):
     list_display = ('tree_actions', 'indented_title', 'item_count')  # Sane defaults.
     list_display_links = ('indented_title',)  # Sane defaults.
     inlines = [InlineItemAdmin]
-    list_filter =(CategoryFilter,)
+    list_filter = (CategoryFilter,)
+
     # ordering = ['indented_title']
 
     def get_queryset(self, request):
@@ -86,9 +91,9 @@ class CategoryAdmin(DraggableMPTTAdmin):
 
     def item_count(self, obj):
         return obj.item_set.all().count()
+
     item_count.short_description = '물품 개수'
     item_count.admin_order_field = '_item_ctn'
-
 
 
 class ItemImageAdmin(admin.TabularInline):
@@ -104,8 +109,8 @@ class ItemImageAdmin(admin.TabularInline):
             width=100,
             height=100,
         ))
-    item_iamge.short_description = ("사진 자세히 보기")
 
+    item_iamge.short_description = ("사진 자세히 보기")
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -116,14 +121,13 @@ class ItemCommentAdmin(admin.StackedInline):
     extra = 0
     ordering = ['parent']
     fields = ['user', 'parent', 'message', 'updated_at']
-    readonly_fields = ['user', 'parent', 'created_at','updated_at']
+    readonly_fields = ['user', 'parent', 'created_at', 'updated_at']
 
     def has_add_permission(self, request, obj=None):
         return False
 
     def has_delete_permission(self, request, obj=None):
         return False
-
 
 
 class CategoryItmeFilter(CategoryFilter):
@@ -144,18 +148,19 @@ class CategoryItmeFilter(CategoryFilter):
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
-
     save_on_top = True
-    list_display = ['hit_count', 'get_wishlist_count', 'pk','user','title','desc','amount', 'category', 'item_status','pay_status', 'updated_at']
-    list_display_links = ['user','amount', 'title', 'desc']
+    list_display = ['hit_count', 'get_wishlist_count', 'pk', 'user', 'title', 'desc', 'amount', 'category',
+                    'item_status', 'pay_status', 'updated_at']
+    list_display_links = ['user', 'amount', 'title', 'desc']
     # list_editable = ('title', 'desc')
-    list_filter = (CategoryItmeFilter,'item_status','pay_status', 'updated_at')
-    search_fields = ('_username', 'title','desc')
+    list_filter = (CategoryItmeFilter, 'item_status', 'pay_status', 'updated_at')
+    search_fields = ('_username', 'title', 'desc')
     list_per_page = 50
     inlines = [ItemImageAdmin, ItemCommentAdmin]
     date_hierarchy = 'created_at'
 
-    readonly_fields = ['hit_count', 'get_wishlist_count', 'get_user_link', 'amount', 'category', 'item_status', 'pay_status']
+    readonly_fields = ['hit_count', 'get_wishlist_count', 'get_user_link', 'amount', 'category', 'item_status',
+                       'pay_status']
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -172,17 +177,19 @@ class ItemAdmin(admin.ModelAdmin):
                 text=obj.user,
             ))
         return obj.user
+
     get_user_link.short_description = ("물품 주인")
 
     def hit_count(self, obj):
         return obj.hit_count.hits
+
     hit_count.short_description = '조회수'
     hit_count.admin_order_field = 'hit_count_generic'
 
     def get_wishlist_count(self, obj):
         return obj.wishlist_set.all().count()
+
     get_wishlist_count.short_description = '찜한 횟수'
 
     def has_add_permission(self, request, obj=None):
         return False
-
