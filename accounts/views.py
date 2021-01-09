@@ -7,29 +7,27 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView
 from django.core.exceptions import ValidationError
 from django.forms.utils import ErrorList
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text, force_bytes
-from django.views.generic import CreateView, TemplateView, UpdateView, DeleteView, FormView
+from django.views.generic import CreateView, TemplateView, UpdateView, FormView
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 from .supporter import send_mail
 from .models import Profile
 from .forms import SignupForm, AuthProfileForm, CustomPasswordChangeForm, CustomAuthenticationForm, CheckPasswordForm, \
-IdFindForm, CustomPasswordResetForm, CustomSetPasswordForm
+    IdFindForm, CustomPasswordResetForm, CustomSetPasswordForm
 
 User = get_user_model()
-
 
 
 class SignupView(CreateView):
     model = User
     template_name = 'accounts/signup.html'
     form_class = SignupForm
-
 
     def get(self, request, *args, **kwargs):
         url = settings.LOGIN_REDIRECT_URL
@@ -63,7 +61,6 @@ class SignupView(CreateView):
         return redirect(self.get_success_url())
 
 
-
 class SigninView(LoginView):
     template_name = 'accounts/login.html'
     form_class = CustomAuthenticationForm
@@ -79,8 +76,6 @@ class SigninView(LoginView):
         return super().dispatch(request, *args, **kwargs)
 
 
-
-
 @method_decorator(login_required, name='dispatch')
 class ProfileView(TemplateView):
     template_name = 'accounts/profile.html'
@@ -91,7 +86,6 @@ class ProfileView(TemplateView):
         return context
 
 
-
 @method_decorator(login_required, name='dispatch')
 class ProfileEditView(UpdateView):
     model = Profile
@@ -99,11 +93,9 @@ class ProfileEditView(UpdateView):
     form_class = AuthProfileForm
     success_url = reverse_lazy('accounts:profile')
 
-
     def dispatch(self, request, *args, **kwargs):
         self.kwargs['pk'] = request.user.profile.id
         return super().dispatch(request, *args, **kwargs)
-
 
     def form_valid(self, form):
         profile = get_object_or_404(Profile, user=self.request.user)
@@ -113,7 +105,6 @@ class ProfileEditView(UpdateView):
             errors = form._errors.setdefault("password", ErrorList())
             errors.append("패스워드를 확인해주세요 :(")
             return self.form_invalid(form)
-
 
 
 @method_decorator(login_required, name='dispatch')
@@ -145,14 +136,12 @@ class PasswordChange(PasswordChangeView):
         return redirect(self.get_success_url())
 
 
-
 @method_decorator(login_required, name='dispatch')
 class UserDeleteView(FormView):
     model = User
     form_class = CheckPasswordForm
     template_name = 'accounts/user_delete.html'
     success_url = reverse_lazy('root')
-
 
     def form_valid(self, form):
         user = get_object_or_404(User, id=self.request.user.id)
@@ -213,10 +202,10 @@ class IdFindView(PasswordResetView):
         return redirect(self.get_success_url())
 
 
-#비밀번호 찾기
+# 비밀번호 찾기
 class MyPasswordResetView(IdFindView):
     template_name = 'accounts/password_reset_form.html'
-    email_template_name='accounts/user_password_reset.html'
+    email_template_name = 'accounts/user_password_reset.html'
     form_class = CustomPasswordResetForm
     subject = '[Buy & Sell] 비밀번호 찾기 결과입니다.'
     error_message = 'ID 혹은 Email을 다시 한번 확인해주세요.'
