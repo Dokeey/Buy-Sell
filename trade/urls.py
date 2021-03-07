@@ -2,7 +2,7 @@ from django.shortcuts import redirect
 from django.urls import path
 from . import views
 
-app_name='trade'
+app_name = 'trade'
 
 urlpatterns = [
     path('', lambda req: redirect('mypage:root')),

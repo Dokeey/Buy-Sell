@@ -2,12 +2,9 @@ from time import time
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
-from django.core.files.storage import FileSystemStorage
 from django.db import models
 from category.models import Category
 
-# Create your models here.
-# from imagekit.generatorlibrary import Thumbnail
 from django.utils.crypto import get_random_string
 from hitcount.models import HitCountMixin, HitCount
 from imagekit.models import ProcessedImageField
@@ -90,7 +87,6 @@ class Item(models.Model, HitCountMixin):
         return self.title
 
     class Meta:
-        # ordering = ["-created_at"]
         verbose_name = "물품"
         verbose_name_plural = "물품"
 
@@ -155,7 +151,6 @@ class ItemComment(models.Model):
                                related_name='replies')
 
     class Meta:
-        # sort comments in chronological order by default
         ordering = ('-created_at',)
         verbose_name = "물품 문의"
         verbose_name_plural = "물품 문의"
@@ -181,7 +176,6 @@ class Order(models.Model):
     item = models.ForeignKey(Item, verbose_name="물품", on_delete=models.CASCADE)
     merchant_uid = models.UUIDField(default=uuid4, editable=False)
     imp_uid = models.CharField(verbose_name="이니페이 UID", max_length=100, blank=True)
-    # name = models.CharField(max_length=100, verbose_name='상품명')
     amount = models.PositiveIntegerField(verbose_name='결제금액')
     pay_choice = models.CharField(
         verbose_name='결제 방식',
@@ -226,21 +220,6 @@ class Order(models.Model):
     failed_at = named_property('실패일시')(lambda self: timestamp_to_datetime(self.meta.get('failed_at')))
     cancelled_at = named_property('취소일시')(lambda self: timestamp_to_datetime(self.meta.get('cancelled_at')))
 
-    # @property
-    # def is_ready(self):
-    #     return self.status == 'ready'
-    # is_ready = property(is_ready)
-
-    # is_ready = property(lambda self: self.status == 'ready')
-
-    # @property
-    # def receipt_url(self):
-    #     return self.meta.get('receipt_url')
-    # receipt_url.short_description = '영수증'
-    # 아래와 같은 말
-
-    # receipt_url = named_property('영수증')(lambda self: self.meta.get('receipt_url'))
-
     def __str__(self):
         return self.item.title
 
@@ -262,17 +241,14 @@ class Order(models.Model):
     def status_html(self):
         cls, text_color = '', ''
 
-        help_text = ''
         if self.is_ready:
             cls, text_color = 'fa fa-shopping-cart', '#ccc'
         elif self.is_paid_ok:
             cls, text_color = 'fas fa-dollar-sign', 'green'
         elif self.is_cancelled:
             cls, text_color = 'fa fa-times', 'gray'
-            help_text = self.cancel_reason
         elif self.is_failed:
             cls, text_color = 'fa fa-ban', 'red'
-            help_text = self.fail_reason
         elif self.is_reserv:
             cls, text_color = 'fas fa-dollar-sign', 'blue'
         elif self.is_success:
@@ -282,8 +258,6 @@ class Order(models.Model):
              <i class="{class_names}"></i>
              {label}
              </span>'''.format(class_names=cls, text_color=text_color, label=self.get_status_display())
-        # if help_text:
-        #     html += '<br/>' + help_text
         return mark_safe(html)
 
     @named_property('영수증 링크')
@@ -294,7 +268,6 @@ class Order(models.Model):
     def update(self, commit=True, meta=None):
         '결재내역 갱신'
         if self.imp_uid:
-            # self.meta = meta or self.api.find(imp_uid=self.imp_uid)
             try:
                 self.meta = meta or self.api.find(imp_uid=self.imp_uid)
             except Iamport.HttpError:
@@ -303,8 +276,6 @@ class Order(models.Model):
             # merchant_uid는 반드시 매칭되어야 합니다.
             assert str(self.merchant_uid) == self.meta['merchant_uid']
 
-            # if self.amount != self.meta['amount']:
-            #     pass
             self.status = self.meta['status']
             if not commit:
                 self.status = 'cancelled'

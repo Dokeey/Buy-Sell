@@ -23,7 +23,6 @@ admin.site.register(Permission)
 
 
 def store_image(obj=None):
-
     if type(obj) == get_user_model():
         link = reverse('admin:accounts_proxystoreprofile_change', args=[force_text(obj.storeprofile.pk)])
         return mark_safe('<a href="{link}"><img src="{url}" width="{width}" height={height} /></a>'.format(
@@ -42,11 +41,15 @@ def store_image(obj=None):
             width=100,
             height=100,
         ))
+
+
 store_image.short_description = '스토어 사진 뷰'
 
 
 def store_follow_count(obj=None):
     return obj.follow_set.count()
+
+
 store_follow_count.short_description = '팔로워 수'
 
 
@@ -56,11 +59,17 @@ def get_user_link(obj):
         url=url,
         text=obj.author.username,
     ))
+
+
 get_user_link.short_description = ("사용자 자세히 보기")
+
 
 def store_id(obj=None):
     return obj.pk
+
+
 store_id.short_description = '가게 ID'
+
 
 class QuestionCommentAdmin(admin.StackedInline):
     model = QuestionComment
@@ -74,6 +83,7 @@ class QuestionCommentAdmin(admin.StackedInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
+
 class StoreGradeAdmin(admin.StackedInline):
     model = StoreGrade
     extra = 0
@@ -86,13 +96,15 @@ class StoreGradeAdmin(admin.StackedInline):
     def has_delete_permission(self, request, obj=None):
         return False
 
+
 class ProfileInline(admin.StackedInline):
     model = Profile
+
 
 class StoreProfileInline(admin.StackedInline):
     model = StoreProfile
     fields = [store_id, 'name', store_image, 'photo', 'comment', store_follow_count, 'get_edit_link']
-    readonly_fields = [store_id, store_image,'get_edit_link', store_follow_count]
+    readonly_fields = [store_id, store_image, 'get_edit_link', store_follow_count]
 
     def get_edit_link(self, obj=None):
         if obj.pk:  # if object has already been saved and has a primary key, show link to it
@@ -102,18 +114,21 @@ class StoreProfileInline(admin.StackedInline):
                 text=("가게 평점, 문의글 보러가기"),
             ))
         return "저장하시고 이용해주세요"
+
     get_edit_link.short_description = ("가게 자세히 보기")
 
 
 @admin.register(get_user_model())
 class AdminUser(AuthUserAdmin):
     save_on_top = True
-    list_display = ('id', store_image, 'username','email','user_phone', 'is_active', 'is_staff','item_ctn', 'hit_count', 'follow_count')
+    list_display = (
+    'id', store_image, 'username', 'email', 'user_phone', 'is_active', 'is_staff', 'item_ctn', 'hit_count',
+    'follow_count')
     list_display_links = ['username']
     list_editable = ('is_active', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups', 'date_joined')
     search_fields = ('username', 'email')
-    actions = ('user_acitve','user_disable')
+    actions = ('user_acitve', 'user_disable')
     ordering = ('-is_superuser', '-is_staff', '-is_active')
     list_per_page = 20
     date_hierarchy = 'date_joined'
@@ -123,7 +138,7 @@ class AdminUser(AuthUserAdmin):
         # (('유저 프로필과 가게 프로필'),{'fields':(inlines)}),
         (('개인 정보'), {'fields': ('username', 'email')}),
         (('그룹과 권한'), {'fields': ('is_active', 'is_staff', 'is_superuser',
-                                       'groups', 'user_permissions')}),
+                                 'groups', 'user_permissions')}),
         (('시간 정보'), {'fields': ('date_joined', 'last_login')}),
     )
     add_fieldsets = (
@@ -132,7 +147,6 @@ class AdminUser(AuthUserAdmin):
             'fields': ('username', 'password1', 'password2'),
         }),
     )
-
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -149,39 +163,44 @@ class AdminUser(AuthUserAdmin):
         else:
             return []
 
-
     def hit_count(self, obj):
         return obj.storeprofile.hit_count.hits
+
     hit_count.short_description = '방문수'
     hit_count.admin_order_field = 'hit_count_generic'
 
     def follow_count(self, obj):
         return obj._follow_count
+
     follow_count.short_description = '팔로워 수'
     follow_count.admin_order_field = '_follow_count'
 
     def item_ctn(self, obj):
         return obj._item_count
+
     item_ctn.short_description = '물품 개수'
     item_ctn.admin_order_field = '_item_count'
 
     def user_phone(self, obj):
         return obj.profile.phone
+
     user_phone.short_description = '연락처'
 
     def user_acitve(self, request, queryset):
-        queryset.update(is_active = True)
+        queryset.update(is_active=True)
         # self.message_user(request, 'hello world')
+
     user_acitve.short_description = '유저 활성화'
 
     def user_disable(self, request, queryset):
-        queryset.update(is_active = False)
-    user_disable.short_description = '유저 비활성화'
+        queryset.update(is_active=False)
 
+    user_disable.short_description = '유저 비활성화'
 
     def create_storeprofile(self, request, queryset):
         for user in queryset:
             StoreProfile.objects.create(user=user, name=user.username + '의 가게')
+
     create_storeprofile.short_description = '스토어프로필 만들기'
 
     def has_add_permission(self, request):
@@ -197,9 +216,9 @@ class StoreProfileAdmin(admin.ModelAdmin):
     readonly_fields = [store_id, store_image, store_follow_count]
     inlines = [QuestionCommentAdmin, StoreGradeAdmin]
 
-
     def hit_count(self, obj):
         return obj.hit_count.hits
+
     hit_count.short_description = '방문수'
     hit_count.admin_order_field = 'hit_count_generic'
 

@@ -1,28 +1,17 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.forms.utils import ErrorList
-# Create your views here.
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView, DeleteView, CreateView
-from hitcount.views import HitCountDetailView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .forms import CustomerAskForm
 from .models import CustomerFAQ, CustomerAsk, CustomerNotice
-# def customer(request):
-#     return render(request, 'customer/customer.html')
 
-# def customer_faq(request):
-#     faqs = CustomerFAQ.objects.all()
-
-#     return render(request, 'customer/customer_faq.html', {
-#         'faqs': faqs
-#     })
 
 class CustomerFAQView(ListView):
     template_name = "customer/customer_faq.html"
     model = CustomerFAQ
     context_object_name = "faqs"
+
 
 class CustomerFAQSearch(ListView):
     model = CustomerFAQ
@@ -46,7 +35,7 @@ class CustomerFAQSearch(ListView):
 
     def get_queryset(self):
         self.qs = super().get_queryset()
-        
+
         if self.query:
             qs = self.qs.filter(faq_title__icontains=self.query)
         return qs
@@ -60,15 +49,6 @@ class CustomerFAQSearch(ListView):
         return context
 
 
-# @login_required
-# def customer_ask(request):
-
-#     asks = CustomerAsk.objects.filter(author=request.user)
-
-#     return render(request, 'customer/customer_ask.html', {
-#         'asks': asks
-#     })
-
 @method_decorator(login_required, name='dispatch')
 class CustomerAskListView(ListView):
     model = CustomerAsk
@@ -79,23 +59,6 @@ class CustomerAskListView(ListView):
         self.queryset = CustomerAsk.objects.filter(author=self.request.user)
         return super().get_queryset()
 
-# @login_required
-# def customer_ask_new(request):
-#     form_cls = CustomerAskForm
-
-#     if request.method == 'POST':
-#         form = form_cls(request.POST)
-
-#         if form.is_valid():
-#             ask_form = form.save(commit=False)
-#             ask_form.author = request.user
-#             ask_form.save()
-#         return redirect('customer:customer_ask')
-#     else :
-#         form = form_cls
-#     return render(request, 'customer/customer_ask_new.html', {
-#         'form':form
-#     })
 
 @method_decorator(login_required, name='dispatch')
 class CustomerAskCreateView(CreateView):
@@ -109,23 +72,6 @@ class CustomerAskCreateView(CreateView):
         ask_form.save()
         return redirect('customer:customer_ask')
 
-# @login_required
-# def customer_ask_edit(request, ask_id):
-#     form_cls = CustomerAskForm
-#     ask_post = get_object_or_404(CustomerAsk, pk=ask_id)
-#     if request.method == 'POST':
-#         form = form_cls(request.POST, instance=ask_post)
-
-#         if form.is_valid():
-#             ask_form = form.save(commit=False)
-#             ask_form.author = request.user
-#             ask_form.save()
-#         return redirect('customer:customer_ask')
-#     else :
-#         form = form_cls(instance=ask_post)
-#     return render(request, 'customer/customer_ask_new.html', {
-#         'form': form
-#     })
 
 @method_decorator(login_required, name='dispatch')
 class CustomerAskEditView(UpdateView):
@@ -142,18 +88,13 @@ class CustomerAskEditView(UpdateView):
             return redirect("customer:customer_ask")
         else:
             return super().get(request, *args, **kwargs)
+
     def form_valid(self, form):
         ask_form = form.save(commit=False)
         ask_form.author = self.request.user
         ask_form.save()
         return redirect('customer:customer_ask')
 
-# @login_required
-# def customer_ask_detail(request, ask_id):
-    # ask_post = get_object_or_404(CustomerAsk, pk=ask_id)
-    # return render(request, 'customer/customer_ask_detail.html', {
-    #     'ask': ask_post,
-    # })
 
 @method_decorator(login_required, name='dispatch')
 class CustomerAskDetailView(DetailView):
@@ -161,7 +102,6 @@ class CustomerAskDetailView(DetailView):
     model = CustomerAsk
     pk_url_kwarg = 'ask_id'
     context_object_name = "ask"
-
 
 
 class CustomerNoticeList(ListView):
@@ -193,11 +133,5 @@ class CustomerNoticeList(ListView):
 
         return context
 
-customer_notice = CustomerNoticeList.as_view()
 
-# class CustomerNoticeDetail(HitCountDetailView):
-#     model = CustomerNotice
-#     template_name = 'customer/notice_detail.html'
-#     count_hit = True
-#
-# notice_detail = CustomerNoticeDetail.as_view()
+customer_notice = CustomerNoticeList.as_view()

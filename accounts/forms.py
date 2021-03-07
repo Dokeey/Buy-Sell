@@ -18,9 +18,7 @@ from .models import Profile
 User = get_user_model()
 
 
-
 class SignupForm(UserCreationForm):
-
     phone = forms.CharField(validators=[phone_validate, MaxLengthValidator(11)])
     post_code = forms.CharField(validators=[MaxLengthValidator(10)])
     address = forms.CharField(validators=[MaxLengthValidator(100)])
@@ -30,8 +28,6 @@ class SignupForm(UserCreationForm):
     CHOICE = (
         ("policy1", "(필수)Buy&Sell 이용약관 동의"),
         ("policy2", "(필수)개인정보 처리방침 동의"),
-        # ("policy3", "(선택)위치기반 서비스 이용약관 동의"),
-        # ("policy3", "(선택)SNS, 이메일 마케팅 동의"),
     )
     policy_check = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=CHOICE)
 
@@ -73,7 +69,7 @@ class SignupForm(UserCreationForm):
         self.fields['address'].widget.attrs.update({
             'class': 'form-control col-sm-10',
             'placeholder': '주소',
-            'readonly':'readonly',
+            'readonly': 'readonly',
             'onclick': 'Postcode()',
             'rows': 1,
             'cols': 80,
@@ -90,13 +86,13 @@ class SignupForm(UserCreationForm):
         })
         self.fields['policy_check'].label = '약관 동의'
         self.fields['policy_check'].widget.attrs.update({
-            'required' : 'required',
+            'required': 'required',
         })
 
     class Meta:
         model = User
-        fields = UserCreationForm.Meta.fields + ('email', 'phone', 'post_code', 'address', 'detail_address', 'account_num', 'policy_check')
-
+        fields = UserCreationForm.Meta.fields + (
+        'email', 'phone', 'post_code', 'address', 'detail_address', 'account_num', 'policy_check')
 
     def save(self, commit=True):
         user = super(SignupForm, self).save(commit=False)
@@ -153,7 +149,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['phone', 'post_code', 'address', 'detail_address','account_num']
+        fields = ['phone', 'post_code', 'address', 'detail_address', 'account_num']
 
 
 class AuthProfileForm(ProfileForm):
@@ -236,7 +232,6 @@ class IdFindForm(PasswordResetForm):
             'placeholder': 'Email을 입력해주세요',
         })
 
-
     def save(self, domain_override=None, subject='[Buy & Sell] 아이디 찾기 결과입니다.',
              subject_template_name='registration/password_reset_subject.txt',
              email_template_name='registration/password_reset_email.html',
@@ -273,7 +268,6 @@ class IdFindForm(PasswordResetForm):
             )
 
         return user_flag
-
 
 
 class CustomPasswordResetForm(IdFindForm):

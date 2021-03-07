@@ -1,6 +1,4 @@
-from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
-from django.utils.translation import ugettext_lazy as _
 
 phone_validate = RegexValidator(
     regex=r'^0\d{8,10}$',

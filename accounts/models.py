@@ -2,12 +2,10 @@ from django.conf import settings
 from django.contrib.auth import user_logged_in
 from django.contrib.auth.models import AbstractUser, UserManager as AuthUserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.core.validators import RegexValidator, MaxLengthValidator
+from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.utils.crypto import get_random_string
 
-# Create your models here.
 from .validators import phone_validate
 
 
@@ -21,8 +19,8 @@ class UserManager(AuthUserManager):
         user.set_password(password)
         user.save(using=self._db)
 
-
-        Profile.objects.create(user=user, phone='0123456789', post_code='', address='', detail_address='',  account_num='0')
+        Profile.objects.create(user=user, phone='0123456789', post_code='', address='', detail_address='',
+                               account_num='0')
 
         from store.models import StoreProfile
         StoreProfile.objects.create(user=user, name=user.username + '의 가게')
@@ -50,6 +48,7 @@ class User(AbstractUser):
         verbose_name = "사용자"
         verbose_name_plural = "사용자"
 
+
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name="사용자", on_delete=models.CASCADE)
     phone = models.CharField(verbose_name="연락처", max_length=11, validators=[phone_validate])
@@ -67,6 +66,7 @@ class Profile(models.Model):
         verbose_name = "프로필"
         verbose_name_plural = "프로필"
 
+
 class UserSession(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, editable=False)
     session_key = models.CharField(verbose_name="세션키", max_length=40, editable=False)
@@ -76,12 +76,15 @@ class UserSession(models.Model):
         verbose_name = "유저 세션"
         verbose_name_plural = "유저 세션"
 
+
 def kicked_my_other_sessions(sender, request, user, **kwargs):
     user.is_user_logged_in = True
+
 
 user_logged_in.connect(kicked_my_other_sessions)
 
 from store.models import StoreProfile
+
 
 class ProxyStoreProfile(StoreProfile):
     class Meta:

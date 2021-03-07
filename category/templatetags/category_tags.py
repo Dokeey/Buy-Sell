@@ -1,12 +1,11 @@
 import itertools
 
 from django import template
-from django.db.models import Count
-
 from trade.models import Item
 from ..models import Category
 
 register = template.Library()
+
 
 @register.simple_tag
 def category_menu():
@@ -31,5 +30,5 @@ def item_first_image(item):
 
 @register.simple_tag
 def div(value, num):
-    result = int(value/num)
+    result = int(value / num)
     return result

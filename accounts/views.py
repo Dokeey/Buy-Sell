@@ -120,8 +120,6 @@ class PasswordChange(PasswordChangeView):
             return self.form_invalid(form)
 
         form.save()
-        # Updating the password logs out all other sessions for the user
-        # except the current one.
         update_session_auth_hash(self.request, form.user)
 
         # 패스워드 변경 알림 메일 발송

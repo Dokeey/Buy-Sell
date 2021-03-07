@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -12,7 +11,6 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView, RedirectView, TemplateView
 from django.views.generic.list import MultipleObjectMixin
 from hitcount.models import HitCount
-from hitcount.views import HitCountMixin
 
 from accounts.models import Profile
 from mypage.models import WishList, Follow
@@ -21,27 +19,12 @@ from accounts.supporter import send_mail
 from .models import Item, ItemImage, ItemComment, Order
 from .forms import ItemForm, ItemUpdateForm, ItemCommentForm, PayForm, OrderForm
 
-from time import time
 
 def test(request):
     return render(request, 'trade/test.html', {
         'items': Item.objects.all()
     })
-# @login_required
-# def item_new(request):
-#     if request.method == "POST":
-#         form = ItemForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             item = form.save(commit=False)
-#             item.user = request.user
-#             item.photo = form.cleaned_data['photo']
-#             form.save()
-#             return redirect('store:my_store_profile')
-#     else:
-#         form = ItemForm
-#     return render(request, 'trade/item_new.html', {
-#         'form': form
-#     })
+
 
 @method_decorator(login_required, name='dispatch')
 class ItemNew(CreateView):
@@ -63,45 +46,9 @@ class ItemNew(CreateView):
 
     def form_invalid(self, form):
         error = form.errors
-        data = {'is_valid': False, 'error':error}
+        data = {'is_valid': False, 'error': error}
         return JsonResponse(data)
 
-    # def get_success_url(self):
-    #     self.success_url = reverse_lazy('store:store_sell_list', kwargs={'pk': self.request.user.storeprofile.id})
-    #     return super().get_success_url()
-
-
-# def item_detail(request, pk):
-#     item = get_object_or_404(Item, pk=pk)
-#     comments = ItemComment.objects.filter(item=item, parent=None)
-#     hit_count = HitCount.objects.get_for_object(item)
-#     hit_count_response = HitCountMixin.hit_count(request, hit_count)
-#     form = ItemCommentForm
-#     if request.method == "POST":
-#         if not request.user.is_authenticated:
-#             return redirect('accounts:login')
-#         form = ItemCommentForm(request.POST)
-#         if form.is_valid():
-#             parent_obj = None
-#             try:
-#                 parent_id = int(request.POST.get('parent_id'))
-#             except:
-#                 parent_id = None
-#             if parent_id:
-#                 parent_obj = ItemComment.objects.get(id=parent_id)
-#                 if parent_obj:
-#                     replay_comment = form.save(commit=False)
-#                     replay_comment.parent = parent_obj
-#             new_comment = form.save(commit=False)
-#             new_comment.user = request.user
-#             new_comment.item = item
-#             new_comment.save()
-#         return redirect('trade:item_detail', pk)
-#     return render(request, 'trade/item_detail.html', {
-#         'item': item,
-#         'comments': comments,
-#         'form': form,
-#     })
 
 @method_decorator(login_required, name='post')
 class ItemDetail(MultipleObjectMixin, CreateView):
@@ -111,18 +58,16 @@ class ItemDetail(MultipleObjectMixin, CreateView):
     paginate_by = 5
     context_object_name = 'comments'
 
-
     def get(self, request, *args, **kwargs):
         self.item = get_object_or_404(Item, pk=self.kwargs.get('pk'))
         self.queryset = self.model.objects.filter(item=self.item, parent=None)
         self.object_list = self.queryset
         return super().get(request, *args, **kwargs)
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
-        page_numbers_range = 5  # Display only 5 page numbers
+        page_numbers_range = 5
         max_index = len(paginator.page_range)
 
         page = self.request.GET.get('page')
@@ -145,29 +90,20 @@ class ItemDetail(MultipleObjectMixin, CreateView):
         items = items.prefetch_related('itemcomment_set')
         items = items.prefetch_related('itemimage_set')
         context['item'] = items[0]
-        # context['item_images'] = context['item'].itemimage_set.all()
         if context['item'].itemimage_set.exists():
             context['item_images_first_photo_url'] = context['item'].itemimage_set.first().photo.url
         else:
             context['item_images_first_photo_url'] = None
-        # context['item_comments_cnt'] = context['item'].itemcomment_set.all().count()
 
         context['hit_count'] = HitCount.objects.get_for_object(context['item']).hits
-        # context['hit_count_response'] = HitCountMixin.hit_count(self.request, hit_count)
-        # ctype = ContentType.objects.get_for_model(Item)
-        # context['hits'] = HitCount.objects.get(content_type=ctype, object_pk=context['item'].id).hits
-
         context['wish_ctn'] = WishList.objects.filter(item=context['item']).count()
         context['follow_ctn'] = Follow.objects.filter(store=context['item'].user.storeprofile).count()
-
-        # context['grades_cnt'] = context['item'].user.storeprofile.storegrade_set.all().count()
         context['items'] = context['item'].user.item_set.filter(~Q(id=context['item'].id), pay_status='ready')
         context['items'] = context['items'].prefetch_related('itemimage_set')[:3]
         context['items_ctn'] = context['items'].count()
         context['kakao_key'] = settings.KAKAO_KEY_JS
         context['facebook_key'] = settings.FACEBOOK_KEY
         return context
-
 
     def form_valid(self, form):
         try:
@@ -198,30 +134,9 @@ class ItemDetail(MultipleObjectMixin, CreateView):
             )
         return redirect(self.get_success_url())
 
-
     def get_success_url(self):
         return reverse_lazy('trade:item_detail', kwargs={'pk': self.kwargs.get('pk')})
 
-
-# def item_update(request, pk):
-#     item = get_object_or_404(Item, pk=pk)
-#     if request.method == "POST":
-#         form = ItemUpdateForm(request.POST, request.FILES, instance=item)
-#         if form.is_valid():
-#             item = form.save(commit=False)
-#             if item.order_set.filter(status='reserv'):
-#                 messages.error(request, '예약중인 상품은 변경할 수 없습니다.')
-#             else:
-#                 # item.category = get_object_or_404(Category, id=form.cleaned_data['category_tmp'])
-#                 item.user = request.user
-#                 item.photo = form.cleaned_data['photo']
-#                 form.save()
-#         return redirect('trade:item_detail', pk)
-#     else:
-#         form = ItemUpdateForm(instance=item)
-#     return render(request, 'trade/item_new.html',{
-#         'form': form
-#     })
 
 @method_decorator(login_required, name='dispatch')
 class ItemUpdate(UpdateView):
@@ -244,18 +159,12 @@ class ItemUpdate(UpdateView):
 
         self.object = form.save()
 
-        data = {'id':item.id, 'pay_status':item.get_pay_status_display()}
+        data = {'id': item.id, 'pay_status': item.get_pay_status_display()}
         return JsonResponse(data)
-
 
     def get_success_url(self):
         return reverse_lazy('trade:item_detail', kwargs={'pk': self.kwargs.get('pk')})
 
-
-# def item_delete(request, pk):
-#     item = get_object_or_404(Item, pk=pk)
-#     item.delete()
-#     return redirect('trade:item_list')
 
 @method_decorator(login_required, name='dispatch')
 class ItemDelete(DeleteView):
@@ -269,23 +178,10 @@ class ItemDelete(DeleteView):
             return redirect('root')
         return super().get(request, *args, **kwargs)
 
-
     def get_success_url(self):
         self.success_url = reverse_lazy('store:store_sell_list', kwargs={'pk': self.request.user.storeprofile.id})
         return super().get_success_url()
 
-# def comment_update(request, pk, cid):
-#     comment = get_object_or_404(ItemComment, pk=cid)
-#     if request.method == "POST":
-#         form = ItemCommentForm(request.POST, instance=comment)
-#         if form.is_valid():
-#             form.save()
-#         return redirect('trade:item_detail', pk)
-#     else:
-#         form = ItemCommentForm(instance=comment)
-#     return render(request, 'trade/comment_update.html',{
-#         'form':form
-#     })
 
 @method_decorator(login_required, name='dispatch')
 class CommentUpdate(UpdateView):
@@ -301,7 +197,6 @@ class CommentUpdate(UpdateView):
             return redirect('trade:item_detail', self.kwargs.get('pk'))
         return super().get(request, *args, **kwargs)
 
-
     def form_valid(self, form):
         comment = get_object_or_404(ItemComment, pk=self.kwargs.get(self.pk_url_kwarg))
         self.object = form.save()
@@ -309,10 +204,6 @@ class CommentUpdate(UpdateView):
         data = {'id': comment.id, 'msg': form.cleaned_data['message']}
         return JsonResponse(data)
 
-# def comment_delete(reuqest, pk, cid):
-#     comment = get_object_or_404(ItemComment, pk=cid)
-#     comment.delete()
-#     return redirect('trade:item_detail', pk)
 
 @method_decorator(login_required, name='dispatch')
 class CommentDelete(DeleteView):
@@ -337,46 +228,6 @@ class CommentDelete(DeleteView):
         data = {'id': id, 'cmt_ctn': cmt_ctn}
         return JsonResponse(data)
 
-# def order_new(request, item_id):
-#     item = get_object_or_404(Item, pk=item_id)
-#     form = None
-#     if item.pay_status == 'ready':
-#         buyer = get_object_or_404(Profile, user=request.user)
-#         if request.method == "POST":
-#             form = OrderForm(request.POST, instance=buyer)
-#             if form.is_valid():
-#                 order = Order.objects.create(user=request.user, item=item, name=item.title, amount=item.amount,
-#                     buyer_email=form.cleaned_data['email'],
-#                     buyer_name=form.cleaned_data['nick_name'],
-#                     buyer_tel=form.cleaned_data['phone'],
-#                     buyer_postcode=form.cleaned_data['post_code'],
-#                     buyer_addr=form.cleaned_data['address'] + form.cleaned_data['detail_address'],
-#                 )
-#                 if form.cleaned_data['pay_choice'] == 'import':
-#                     return redirect('trade:order_pay', item_id, str(order.merchant_uid))
-#                 elif form.cleaned_data['pay_choice'] == 'bank_trans':
-#                     Order.objects.filter(user=request.user,
-#                                          merchant_uid=order.merchant_uid,
-#                                          status='ready'
-#                                          ).update(status='reserv')
-#                     reserv_order = Order.objects.get(user=request.user, merchant_uid=order.merchant_uid, status='reserv')
-#                     reserv_order.update()
-#
-#                     return render(request, 'trade/seller_info.html', {
-#                         'seller': item.user
-#                     })
-#
-#             else:
-#                 messages.error(request, '유효하지 않은 상품입니다.')
-#         else:
-#             form = OrderForm(instance=buyer)
-#     else:
-#         messages.error(request, '이미 예약이 되었거나 판매완료 상품입니다.')
-#     return render(request, 'trade/order_form.html',{
-#         'item':item,
-#         'form':form,
-#     })
-
 
 # 물품 구매하기
 @method_decorator(login_required, name='dispatch')
@@ -397,17 +248,14 @@ class OrderNew(FormView):
 
         return super().get(request, *args, **kwargs)
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['item'] = get_object_or_404(Item, pk=self.kwargs.get('item_id'))
         return context
 
-
     def get_initial(self):
         self.initial = {'email': self.request.user.email}
         return super().get_initial()
-
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -415,7 +263,6 @@ class OrderNew(FormView):
             'instance': get_object_or_404(Profile, user=self.request.user),
         })
         return kwargs
-
 
     def form_valid(self, form):
         item = self.get_context_data()['item']
@@ -428,9 +275,9 @@ class OrderNew(FormView):
                                      phone=form.cleaned_data['phone'],
                                      post_code=form.cleaned_data['post_code'],
                                      address=form.cleaned_data['address'],
-                                     detail_address = form.cleaned_data['detail_address'],
-                                     requirement = form.cleaned_data['requirement'],
-                                     pay_choice= form.cleaned_data['pay_choice'],
+                                     detail_address=form.cleaned_data['detail_address'],
+                                     requirement=form.cleaned_data['requirement'],
+                                     pay_choice=form.cleaned_data['pay_choice'],
                                      )
 
         if form.cleaned_data['pay_choice'] == 'import':
@@ -458,22 +305,6 @@ class OrderNew(FormView):
         return redirect(next_url)
 
 
-
-# def order_pay(request, item_id, merchant_uid):
-#     order = get_object_or_404(Order, user=request.user, merchant_uid=merchant_uid, status='ready')
-#
-#     if request.method == 'POST':
-#         form = PayForm(request.POST, instance=order)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('accounts:profile')
-#     else:
-#         form = PayForm(instance=order)
-#     return render(request, 'trade/pay_form.html', {
-#         'form': form,
-#     })
-
-
 # Import 연동
 @method_decorator(login_required, name='dispatch')
 class OrderPay(CreateView):
@@ -482,16 +313,15 @@ class OrderPay(CreateView):
     template_name = 'trade/pay_form.html'
     success_url = reverse_lazy('trade:order_history')
 
-
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update({
-            'instance': get_object_or_404(Order, user=self.request.user, merchant_uid=self.kwargs.get('merchant_uid'), status='ready'),
+            'instance': get_object_or_404(Order, user=self.request.user, merchant_uid=self.kwargs.get('merchant_uid'),
+                                          status='ready'),
         })
         return kwargs
 
     def form_valid(self, form):
-
         # 물품 주문알림 메일 발송
         self.object = form.save()
         send_mail(
@@ -506,25 +336,10 @@ class OrderPay(CreateView):
         return redirect(self.get_success_url())
 
 
-
-# def order_cancle(request, order_id):
-#     '선택된 주문에 대해 결제취소요청을 합니다.'
-#
-#     try:
-#         queryset = Order.objects.get(id=order_id)
-#         queryset.cancel()
-#         messages.info(request, '주문을 취소하셨습니다.')
-#     except:
-#         messages.error(request, '유효하지 않은 상품입니다.')
-#
-#     return redirect('trade:trade_history')
-
-
 # 구매취소
 @method_decorator(login_required, name='dispatch')
 class OrderCancle(RedirectView):
     url = 'trade:order_history'
-
 
     def get(self, request, *args, **kwargs):
         try:
@@ -554,7 +369,6 @@ class OrderCancle(RedirectView):
 class OrderConfirm(RedirectView):
     url = 'trade:order_history'
 
-
     def get(self, request, *args, **kwargs):
         try:
             queryset = Order.objects.get(id=self.kwargs.get('order_id'))
@@ -570,7 +384,7 @@ class OrderConfirm(RedirectView):
                 messages.error(self.request, '거래가 취소된 상품입니다.')
                 return redirect(self.url)
 
-            elif queryset.status in ('reserv','paid'):
+            elif queryset.status in ('reserv', 'paid'):
                 queryset.status = 'success'
                 queryset.update()
 
@@ -610,18 +424,6 @@ class SellerConfirm(RedirectView):
             messages.error(self.request, '유효하지 않은 상품입니다.')
 
         return redirect(self.url)
-# @login_required
-# def trade_history(request):
-#     order_list = request.user.order_set.all()
-#     orders = Order.objects.all()
-#     sell_list = []
-#     for order in orders:
-#         if order.item.user == request.user:
-#             sell_list.append(order)
-#     return render(request, 'trade/trade_history.html',{
-#         'order_list': order_list,
-#         'sell_list': sell_list,
-#     })
 
 
 # 거래내역
@@ -634,7 +436,7 @@ class BaseHistory(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
-        page_numbers_range = 5  # Display only 5 page numbers
+        page_numbers_range = 5
         max_index = len(paginator.page_range)
 
         page = self.request.GET.get('page')
@@ -667,7 +469,6 @@ class OrderHistory(BaseHistory):
         context = super().get_context_data(**kwargs)
         context['order_ctn'] = self.queryset.count()
         return context
-
 
 
 # 판매내역
@@ -703,7 +504,7 @@ class TradeInfo(TemplateView):
             messages.error(self.request, '잘못된 접근입니다.')
             return redirect('root')
 
-        if not self.order.status in ('paid', 'reserv','success'):
+        if not self.order.status in ('paid', 'reserv', 'success'):
             messages.error(self.request, '잘못된 접근입니다.')
             return redirect('root')
 

@@ -9,6 +9,7 @@ from mptt.admin import DraggableMPTTAdmin
 from trade.models import Item
 from .models import Category
 
+
 # Register your models here.
 
 class InlineItemAdmin(admin.StackedInline):
@@ -29,6 +30,7 @@ class InlineItemAdmin(admin.StackedInline):
             )
             html = html + ht
         return mark_safe(html)
+
     item_photos.short_description = ("사진 자세히 보기")
 
     def get_edit_link(self, obj=None):
@@ -39,10 +41,12 @@ class InlineItemAdmin(admin.StackedInline):
                 text=("물품 상세 정보, 문의글 보러가기"),
             ))
         return "저장하시고 이용해주세요"
+
     get_edit_link.short_description = ("물품 자세히 보기")
 
     def has_add_permission(self, request, obj):
         return False
+
     def has_delete_permission(self, request, obj=None):
         return False
 
@@ -61,6 +65,7 @@ class CategoryFilter(SimpleListFilter):
         else:
             return queryset
 
+
 # @admin.register(Category)
 class CategoryAdmin(DraggableMPTTAdmin):
     # specify pixel amount for this ModelAdmin only:
@@ -68,7 +73,8 @@ class CategoryAdmin(DraggableMPTTAdmin):
     list_display = ('tree_actions', 'indented_title', 'item_count')  # Sane defaults.
     list_display_links = ('indented_title',)  # Sane defaults.
     inlines = [InlineItemAdmin]
-    list_filter =(CategoryFilter,)
+    list_filter = (CategoryFilter,)
+
     # ordering = ['indented_title']
 
     def get_queryset(self, request):
@@ -81,10 +87,6 @@ class CategoryAdmin(DraggableMPTTAdmin):
 
     def item_count(self, obj):
         return obj.item_set.all().count()
+
     item_count.short_description = '물품 개수'
     item_count.admin_order_field = '_item_ctn'
-
-
-
-
-

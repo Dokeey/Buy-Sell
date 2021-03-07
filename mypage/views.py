@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, TemplateView
 
@@ -18,11 +18,10 @@ class WishListLV(ListView):
         self.queryset = self.request.user.wishlist_set.all()
         return super().get_queryset()
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
-        page_numbers_range = 5  # Display only 5 page numbers
+        page_numbers_range = 5
         max_index = len(paginator.page_range)
 
         page = self.request.GET.get('page')
@@ -60,7 +59,6 @@ class WishListTV(TemplateView):
         return redirect(url)
 
 
-
 @method_decorator(login_required, name='dispatch')
 class FollowLV(ListView):
     model = Follow
@@ -75,7 +73,7 @@ class FollowLV(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         paginator = context['paginator']
-        page_numbers_range = 5  # Display only 5 page numbers
+        page_numbers_range = 5
         max_index = len(paginator.page_range)
 
         page = self.request.GET.get('page')

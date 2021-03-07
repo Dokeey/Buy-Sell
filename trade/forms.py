@@ -11,8 +11,6 @@ from django.utils.six import unichr
 from mptt.forms import TreeNodeChoiceField
 
 from .models import Item, ItemComment, Order
-from accounts.forms import ProfileForm
-
 
 
 class ItemForm(forms.ModelForm):
@@ -40,7 +38,7 @@ class ItemForm(forms.ModelForm):
         self.fields['photo'].widget.attrs.update({
             'class': 'form-control col-sm-10',
             'multiple': 'multiple',
-            'style' : 'display: none;',
+            'style': 'display: none;',
         })
         self.fields['category'].label = '종류'
         self.fields['category'].widget.attrs.update({
@@ -53,8 +51,7 @@ class ItemForm(forms.ModelForm):
 
     class Meta:
         model = Item
-        fields = ['title','desc','amount','photo','category', 'item_status']
-
+        fields = ['title', 'desc', 'amount', 'photo', 'category', 'item_status']
 
 
 class ItemUpdateForm(forms.ModelForm):
@@ -70,9 +67,9 @@ class ItemUpdateForm(forms.ModelForm):
         fields = ['pay_status']
 
 
-
 class ItemCommentForm(forms.ModelForm):
-    message = forms.CharField(widget=forms.Textarea(attrs={'rows':3, 'cols':50}))
+    message = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'cols': 50}))
+
     class Meta:
         model = ItemComment
         fields = ['message']
@@ -86,11 +83,10 @@ class ItemCommentForm(forms.ModelForm):
         })
 
 
-
 class PayForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['imp_uid',]
+        fields = ['imp_uid', ]
         widgets = {
             'imp_uid': forms.HiddenInput,
         }
@@ -111,7 +107,7 @@ class PayForm(forms.ModelForm):
         }
         return hidden_fields + render_to_string('trade/_iamport.html', {
             'json_fields': mark_safe(json.dumps(fields, ensure_ascii=False)),
-            'iamport_shop_id': settings.IAMPORT_SHOP_ID, # FIXME: 각자의 상점 아이디로 변경 가능
+            'iamport_shop_id': settings.IAMPORT_SHOP_ID,  # FIXME: 각자의 상점 아이디로 변경 가능
         })
 
     def save(self):
@@ -120,7 +116,6 @@ class PayForm(forms.ModelForm):
         # order.save()
         order.update()
         return order
-
 
 
 class OrderForm(forms.ModelForm):

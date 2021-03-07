@@ -8,6 +8,7 @@ from importlib import import_module
 
 SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
+
 class KickMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         is_user_logged_in = getattr(request.user, 'is_user_logged_in', False)
@@ -24,6 +25,7 @@ class KickMiddleware(MiddlewareMixin):
             UserSession.objects.create(user=request.user, session_key=session_key)
 
         return response
+
 
 class KickedMiddleware(MiddlewareMixin):
     def process_request(self, request):

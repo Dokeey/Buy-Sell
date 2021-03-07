@@ -9,33 +9,13 @@ from .models import Category
 from trade.models import Item
 
 
-# def categories(request, pk):
-#     category = get_object_or_404(Category, pk=pk)
-#     parent_category = category.get_ancestors()
-#     categories_items = []
-#
-#     for item in category.item_set.all():
-#         categories_items.append(item)
-#
-#     for children in category.get_children():
-#         for item in children.item_set.all():
-#             categories_items.append(item)
-#
-#     categories_items = sorted(categories_items, key=attrgetter('created_at'))
-#
-#     return render(request, 'category/categories.html', {
-#         'category': category,
-#         'parent_category': parent_category,
-#         'categories_items': categories_items,
-#     })
 class BaseItemList(ListView):
     model = Item
     context_object_name = 'items'
     paginate_by = 24
 
-
     def get_ordering(self):
-        ordering = self.request.GET.get('sort','-created_at')
+        ordering = self.request.GET.get('sort', '-created_at')
 
         if ordering == 'looks':
             ordering = 'hit_count_generic'
@@ -45,7 +25,6 @@ class BaseItemList(ListView):
             ordering = 'amount'
 
         return ordering
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -67,11 +46,10 @@ class BaseItemList(ListView):
         context['last_page'] = max_index
         context['page_range'] = page_range
 
-        context['sort'] = self.request.GET.get('sort','-created_at')
+        context['sort'] = self.request.GET.get('sort', '-created_at')
         context['item_ctn'] = paginator.count
 
         return context
-
 
 
 class SearchItemList(BaseItemList):
@@ -80,7 +58,7 @@ class SearchItemList(BaseItemList):
     def get(self, request, *args, **kwargs):
         self.query = self.request.GET.get('query', '').strip()
 
-        if self.query.replace(' ','') == '':
+        if self.query.replace(' ', '') == '':
             self.query = ''
 
         if self.query == '':
@@ -90,7 +68,7 @@ class SearchItemList(BaseItemList):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        self.cate = self.request.GET.get('cate','')
+        self.cate = self.request.GET.get('cate', '')
         self.qs = super().get_queryset()
         self.qs = self.qs.prefetch_related("user__storeprofile")
         self.qs = self.qs.prefetch_related("itemimage_set")
@@ -106,7 +84,8 @@ class SearchItemList(BaseItemList):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['all_category'] = self.qs.values('category__name', 'category__id').annotate(category_count=Count('id')).order_by('category__parent')
+        context['all_category'] = self.qs.values('category__name', 'category__id').annotate(
+            category_count=Count('id')).order_by('category__parent')
 
         context['query'] = self.query
         context['cate'] = self.cate
@@ -114,15 +93,12 @@ class SearchItemList(BaseItemList):
         return context
 
 
-
 class CategoryItemList(BaseItemList):
     template_name = 'category/category_item.html'
-
 
     def get(self, request, *args, **kwargs):
         self.category = get_object_or_404(Category, pk=self.kwargs.get('pk'))
         return super().get(self, request, *args, **kwargs)
-
 
     def get_queryset(self):
         self.flag = self.request.GET.get('parent', '')
@@ -137,7 +113,6 @@ class CategoryItemList(BaseItemList):
         self.queryset = items.filter(category__in=self.category_list)
 
         return super().get_queryset()
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

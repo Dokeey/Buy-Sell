@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.db import models
 
-# Create your models here.
 from trade.models import Item, Order
+
 
 class WishList(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="사용자", on_delete=models.CASCADE)
@@ -26,6 +26,7 @@ class ProxyOrder(Order):
 
 
 from store.models import StoreProfile
+
 
 class Follow(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="사용자", on_delete=models.CASCADE)

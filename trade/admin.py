@@ -72,14 +72,10 @@ class CategoryFilter(SimpleListFilter):
 
 @admin.register(ProxyCategory)
 class CategoryAdmin(DraggableMPTTAdmin):
-    # specify pixel amount for this ModelAdmin only:
-
     list_display = ('tree_actions', 'indented_title', 'item_count')  # Sane defaults.
     list_display_links = ('indented_title',)  # Sane defaults.
     inlines = [InlineItemAdmin]
     list_filter = (CategoryFilter,)
-
-    # ordering = ['indented_title']
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -152,7 +148,6 @@ class ItemAdmin(admin.ModelAdmin):
     list_display = ['hit_count', 'get_wishlist_count', 'pk', 'user', 'title', 'desc', 'amount', 'category',
                     'item_status', 'pay_status', 'updated_at']
     list_display_links = ['user', 'amount', 'title', 'desc']
-    # list_editable = ('title', 'desc')
     list_filter = (CategoryItmeFilter, 'item_status', 'pay_status', 'updated_at')
     search_fields = ('_username', 'title', 'desc')
     list_per_page = 50
@@ -170,7 +165,7 @@ class ItemAdmin(admin.ModelAdmin):
         return qs
 
     def get_user_link(self, obj):
-        if obj.pk:  # if object has already been saved and has a primary key, show link to it
+        if obj.pk:
             url = reverse('admin:accounts_user_change', args=[force_text(obj.user.pk)])
             return mark_safe("""<a href="{url}">{text}</a>""".format(
                 url=url,
