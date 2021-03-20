@@ -17,7 +17,6 @@ import socket
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -28,7 +27,6 @@ SECRET_KEY = '_ve!tya9hxp$#n$md(#@11o_x%de8dagvbm9j$+5z)$%&l%utx'
 DEBUG = os.environ.get('DEBUG', False)
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -52,10 +50,10 @@ INSTALLED_APPS = [
     'customer.apps.CustomerConfig',
     'policy.apps.PolicyConfig',
 
-    'imagekit', # image
-    'mptt', # category
-    'django_extensions', # models relation graph
-    'django_cleanup', # django delete media file
+    'imagekit',  # image
+    'mptt',  # category
+    'django_extensions',  # models relation graph
+    'django_cleanup',  # django delete media file
     # 'sslserver', # django SSL server module
     'django_summernote',
 
@@ -95,7 +93,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'buynsell.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -110,7 +107,6 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -130,7 +126,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -144,9 +139,6 @@ USE_L10N = True
 
 # USE_TZ = True
 USE_TZ = False
-
-
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
@@ -167,7 +159,7 @@ LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login')
 
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#EMAIL_USE_TLS = True
+# EMAIL_USE_TLS = True
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
@@ -176,7 +168,6 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 SERVER_EMAIL = os.environ.get('SERVER_EMAIL')
 DEFAULT_FROM_MAIL = 'BuynSell'
 
-
 from django.utils.translation import ugettext_lazy as _
 
 LANGUAGES = [  # Available languages
@@ -184,32 +175,31 @@ LANGUAGES = [  # Available languages
     ('ko_kr', _("한국어")),
 ]
 
-
 # IAMPORT API
-IAMPORT_SHOP_ID = 'iamport' # 가맹점 식별코드
-IAMPORT_API_KEY = 'imp_apikey' # REST API 키
-IAMPORT_API_SECRET = 'ekKoeW8RyKuT0zgaZsUtXXTLQ4AhPFW3ZGseDA6bkA5lamv9OqDMnxyeB9wqOsuO9W3Mx9YSJ4dTqJ3f' # REST API SECRET
+IAMPORT_SHOP_ID = 'iamport'  # 가맹점 식별코드
+IAMPORT_API_KEY = 'imp_apikey'  # REST API 키
+IAMPORT_API_SECRET = 'ekKoeW8RyKuT0zgaZsUtXXTLQ4AhPFW3ZGseDA6bkA5lamv9OqDMnxyeB9wqOsuO9W3Mx9YSJ4dTqJ3f'  # REST API SECRET
 
 # Hit Count
-HITCOUNT_KEEP_HIT_ACTIVE = { 'days': 1 }
-HITCOUNT_KEEP_HIT_IN_DATABASE = { 'days': 30 }
-
+HITCOUNT_KEEP_HIT_ACTIVE = {'days': 1}
+HITCOUNT_KEEP_HIT_IN_DATABASE = {'days': 30}
 
 # Message custom
 from django.contrib.messages import constants as messages
+
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
 # Model graph
 GRAPH_MODELS = {
-  'all_applications': True,
-  'group_models': True,
+    'all_applications': True,
+    'group_models': True,
 }
 
 # Session Time Out
-SESSION_COOKIE_AGE = 3600   # 1시간
-SESSION_SAVE_EVERY_REQUEST = True   # 리퀘스트시 세션 정보 갱신 허용
+SESSION_COOKIE_AGE = 3600  # 1시간
+SESSION_SAVE_EVERY_REQUEST = True  # 리퀘스트시 세션 정보 갱신 허용
 
 # KAKAO TALK API
 KAKAO_KEY_JS = os.environ.get('KAKAO_KEY_JS')
@@ -226,14 +216,14 @@ FACEBOOK_KEY = os.environ.get('FACEBOOK_KEY')
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 
 # summernote conf
-SUMMERNOTE_CONFIG  = {
-'summernote': {
+SUMMERNOTE_CONFIG = {
+    'summernote': {
 
         # Change editor size
         'width': '100%',
         'height': '480',
-       ' lang ' : 'ko-KR',
-}
+        ' lang ': 'ko-KR',
+    }
 }
 
 USE_AWS = False

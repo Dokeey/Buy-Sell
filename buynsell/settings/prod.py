@@ -1,6 +1,5 @@
 from .common import *
 
-
 # AWS Setting
 USE_AWS = True
 AWS_REGION = 'ap-northeast-2'
